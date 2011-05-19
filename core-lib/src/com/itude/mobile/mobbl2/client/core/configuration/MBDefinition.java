@@ -1,7 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.configuration;
 
 import java.util.Collection;
-import java.util.List;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefinition;

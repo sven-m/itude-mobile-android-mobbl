@@ -10,7 +10,6 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.MBDataHandlerBase;
-import com.itude.mobile.mobbl2.client.core.util.AssetUtil;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.exceptions.MBDataParsingException;
 

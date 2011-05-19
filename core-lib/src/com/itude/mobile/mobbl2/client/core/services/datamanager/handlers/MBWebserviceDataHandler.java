@@ -6,7 +6,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.webservices.MBWebservic
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.MBDataHandlerBase;
-import com.itude.mobile.mobbl2.client.core.util.AssetUtil;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 
 public class MBWebserviceDataHandler extends MBDataHandlerBase

@@ -22,7 +22,6 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBBundleNotFoundException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBResourceNotDefinedException;
-import com.itude.mobile.mobbl2.client.core.util.AssetUtil;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBBundleDefinition;
 import com.itude.mobile.mobbl2.client.core.util.MBCacheManager;

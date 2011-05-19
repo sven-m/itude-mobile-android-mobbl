@@ -11,7 +11,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition.MB
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBFileNotFoundException;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPageTypeException;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
-import com.itude.mobile.mobbl2.client.core.util.AssetUtil;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 
 public class MBMvcConfigurationParser extends MBConfigurationParser

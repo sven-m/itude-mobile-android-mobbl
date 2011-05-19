@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.itude.poms</groupId>
+		<artifactId>itude-hudson</artifactId>
+		<version>1.1</version>
+	</parent>
+	<groupId>com.itude.mobile.android.mobbl</groupId>
+	<version>0.0.0.1-SNAPSHOT</version>
+	<artifactId>core-lib</artifactId>
+	<packaging>apklib</packaging>
+	<name>Android Mobbl Core Lib</name>
+	<description>Android Mobbl Core Library</description>
+	<url>http://www.itude.com</url>
+	<inceptionYear>2011</inceptionYear>
+	<developers>
+		<developer>
+			<name>Wiebe Elsinga</name>
+			<id>w.elsinga</id>
+			<roles>
+				<role>Developer</role>
+				<role>Contributor</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<version>2.1_r1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>rhino</groupId>
+			<artifactId>js</artifactId>
+			<version>1.7R2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android-support</artifactId>
+			<version>4.0</version>
+		</dependency>
+	</dependencies>
+
+	<scm>
+		<connection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-lib</connection>
+		<developerConnection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-lib</developerConnection>
+		<url>http://svn/repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-lib</url>
+	</scm>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>maven-android-plugin</artifactId>
+				<configuration>
+					<sdk>
+						<platform>7</platform>
+					</sdk>
+				</configuration>
+				<extensions>true</extensions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+
+
+          
