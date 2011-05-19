@@ -11,7 +11,7 @@ public class MBApplicationCore extends MBApplicationController
   public void startController()
   {
     MBMetadataService.setConfigName("testconfig/testconfig.xml");
-//    MBMetadataService.setEndpointsName("testconfig/endpoints.xml");
+    MBMetadataService.setEndpointsName("testconfig/endpoints.xml");
     startApplication(MBApplicationFactory.getInstance());
   }
 }

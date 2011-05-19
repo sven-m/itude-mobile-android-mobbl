@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import android.widget.RelativeLayout;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
+import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 
 public class MBDialogController extends FragmentActivity
@@ -73,6 +75,8 @@ public class MBDialogController extends FragmentActivity
   private void viewInit()
   {
     RelativeLayout mainContainer = new RelativeLayout(this);
+    mainContainer.setId(UniqueIntegerGenerator.getId());
+    _dialogIds.put(_name, mainContainer.getId());
     mainContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
     FrameLayout fragmentContainer = new FrameLayout(this);
@@ -270,6 +274,8 @@ public class MBDialogController extends FragmentActivity
       }
 
     });*/
+
+    MBApplicationController.getInstance().setPage(id, page);
     
     if (displayMode != null)
     {

@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.ActivityGroup;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -334,9 +336,9 @@ public class MBViewManager extends ActivityGroup
       {
         String previousDialogName = ((MBDialogController) getLocalActivityManager().getCurrentActivity()).getName();
 
-        if (getViewController(dialogName, null) != getViewController(previousDialogName, null))
+/*        if (getViewController(dialogName, null) != getViewController(previousDialogName, null))
         {
-          MBApplicationController.getInstance().changedWindow(getViewController(previousDialogName, null), WindowChangeType.LEAVING);
+          MBApplicationController.getInstance().changedWindow(getViewController(previousDialogName, null), WindowChangeType.LEAVING);*/
 
           Intent dialogIntent = new Intent(MBApplicationController.getInstance().getApplicationContext(), MBDialogController.class);
           dialogIntent.putExtra("dialogName", dialogName);
@@ -351,11 +353,11 @@ public class MBViewManager extends ActivityGroup
             }
           });
 
-          if (getViewController(dialogName, null) != null)
+          /*if (getViewController(dialogName, null) != null)
           {
             MBApplicationController.getInstance().changedWindow(getViewController(dialogName, null), WindowChangeType.ACTIVATE);
           }
-        }
+        }*/
 
       }
     }
@@ -584,7 +586,7 @@ public class MBViewManager extends ActivityGroup
   {
     Log.d(Constants.APPLICATION_NAME, "MBViewManager.onConfigurationChanged");
 
-    getActiveViewController().handleOrientationChange(newConfig);
+//    getActiveViewController().handleOrientationChange(newConfig);
 
     super.onConfigurationChanged(newConfig);
   }

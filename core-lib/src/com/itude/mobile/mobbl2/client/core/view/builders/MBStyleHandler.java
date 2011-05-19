@@ -88,7 +88,7 @@ public class MBStyleHandler
    */
   public void styleButtonWithName(Button view, String style)
   {
-    if (style.equals(Constants.C_EDITABLEMATRIX_DELETEBUTTON))
+    if (Constants.C_EDITABLEMATRIX_DELETEBUTTON.equals(style))
     {
       StateListDrawable buttonStates = new StateListDrawable();
       Drawable imageEnabled = MBResourceService.getInstance().getImageByID("button-delete-normal");
@@ -103,7 +103,7 @@ public class MBStyleHandler
 
       view.setBackgroundDrawable(buttonStates);
     }
-    else if (style.equals(Constants.C_EDITABLEMATRIX_UPBUTTON))
+    else if (Constants.C_EDITABLEMATRIX_UPBUTTON.equals(style))
     {
       StateListDrawable buttonStates = new StateListDrawable();
       Drawable imageEnabled = MBResourceService.getInstance().getImageByID("button-arrow-up-normal");
@@ -118,7 +118,7 @@ public class MBStyleHandler
 
       view.setBackgroundDrawable(buttonStates);
     }
-    else if (style.equals(Constants.C_EDITABLEMATRIX_DOWNBUTTON))
+    else if (Constants.C_EDITABLEMATRIX_DOWNBUTTON.equals(style))
     {
       StateListDrawable buttonStates = new StateListDrawable();
       Drawable imageEnabled = MBResourceService.getInstance().getImageByID("button-arrow-down-normal");
