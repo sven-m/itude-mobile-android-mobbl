@@ -1,0 +1,22 @@
+<Books>
+	<Author name="Douglas Adams">
+		<Book title="The hitchhikers guide to the galaxy" isbn="0330287001" summary="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mattis augue ut mauris fringilla vulputate. Donec rutrum ante est. Aenean id nisl nec augue consectetur accumsan. Cras egestas pharetra sapien eget euismod. Praesent lobortis ultricies mauris posuere ultricies. Vestibulum interdum vehicula arcu, eu dictum tellus tempor vitae. Duis pharetra tristique quam dignissim iaculis. Nam tellus lacus, posuere nec elementum consectetur, posuere eget dui. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pellentesque nisl non libero porttitor mollis. Fusce vestibulum ante vitae arcu porttitor ut fringilla tortor interdum. Donec tincidunt nibh viverra ante accumsan placerat.
+
+Donec lobortis massa at erat fringilla vel ultricies tellus ullamcorper. Praesent commodo fermentum orci, sit amet elementum nisl pretium eu. Curabitur ut tellus ut massa ultrices mattis. Etiam massa lacus, tincidunt vel vulputate non, dapibus sit amet lectus. Mauris consequat tempus tellus ac lacinia. Curabitur lorem augue, suscipit nec suscipit nec, dictum quis quam. Maecenas sodales tempor congue. Donec et tortor sapien. Integer eget ipsum quam, in gravida libero. Suspendisse elementum erat sit amet ipsum scelerisque lacinia. Suspendisse potenti. Curabitur velit nisi, aliquet eget ultrices id, pharetra ac ante. Ut varius neque sed justo fringilla facilisis.
+
+Morbi at gravida mauris. Nam at quam aliquet velit cursus tincidunt. Suspendisse mollis ipsum nec magna facilisis viverra. Quisque varius, velit id tincidunt tincidunt, turpis velit aliquet dui, vel gravida augue neque sollicitudin libero. Sed massa nunc, lacinia vitae ultricies vel, varius vitae enim. Nulla facilisi. Morbi bibendum ipsum in augue bibendum id ornare ipsum lobortis. Pellentesque ac augue quis enim pellentesque congue. Sed eu suscipit lacus. Nunc quis nulla ac quam posuere auctor. Sed pellentesque justo eget quam varius in semper dui adipiscing. Etiam nec lacus tortor. Maecenas ut nisl lorem. Maecenas feugiat fermentum massa quis dignissim. " />
+		<Book title="So long and thanks for all the fish" isbn="0330287002" />
+		<Book title="Whatever" isbn="0330287002" />
+	</Author>
+	<Author name="Geronimo Stilton">
+		<Book title="Reis door de tijd" isbn="9085920272" />
+		<Book title="Fantasia" isbn="9085920167" />
+		<Book title="Fantasia II" isbn="9085920168" />
+		<Book title="Fantasia III" isbn="9085920169" />
+		<Book title="Fantasia IV" isbn="9085920169" />
+		<Book title="Fantasia VI" isbn="9085920169" />
+		<Book title="Fantasia VII" isbn="9085920169" />
+		<Book title="Fantasia VIII" isbn="9085920169" />
+		<Book title="Fantasia IX" isbn="9085920169" />
+	</Author>
+</Books>

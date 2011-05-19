@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.itude.mobile.mobbl2.client.core"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <uses-sdk android:minSdkVersion="4" />
+
+    <application android:name="MBApplicationCore">
+
+		<activity android:name="MBSplashScreen" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:noHistory="true" android:screenOrientation="portrait">
+           <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".controller.MBViewManager" android:configChanges="orientation" />
+		<activity android:name=".controller.MBDialogController" android:configChanges="orientation" />
+		<activity android:name=".controller.util.MBBasicViewController" />
+    </application>
+</manifest>
