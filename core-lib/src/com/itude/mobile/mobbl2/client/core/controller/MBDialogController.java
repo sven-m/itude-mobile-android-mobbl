@@ -1,7 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
@@ -51,7 +50,7 @@ public class MBDialogController extends FragmentActivity
 
   private void controllerInit()
   {
-    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+    //    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
     Intent intent = getIntent();
     String dialogName = intent.getStringExtra("dialogName");
@@ -87,7 +86,7 @@ public class MBDialogController extends FragmentActivity
     mainContainer.addView(fragmentContainer);
 
     setContentView(mainContainer);
-    
+
     String outcomeID = getIntent().getStringExtra("outcomeID");
     if (outcomeID != null)
     {
@@ -102,6 +101,17 @@ public class MBDialogController extends FragmentActivity
   {
     if (hasFocus) getParent().setTitle(getTitle());
     super.onWindowFocusChanged(hasFocus);
+  }
+
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event)
+  {
+    if (KeyEvent.KEYCODE_BACK == keyCode && getSupportFragmentManager().getBackStackEntryCount() == 0)
+    {
+      finish();
+      return true;
+    }
+    return false;
   }
 
   ////////////////////////////
@@ -122,7 +132,7 @@ public class MBDialogController extends FragmentActivity
   {
     getSupportFragmentManager().popBackStack();
   }
-  
+
   public void popViewsUntil(int untilWhichView)
   {
 
@@ -278,12 +288,12 @@ public class MBDialogController extends FragmentActivity
     });*/
 
     MBApplicationController.getInstance().setPage(id, page);
-    
+
     if (displayMode != null)
     {
       if (displayMode.equals("POP"))
       {
-//        popView();
+        //        popView();
       }
     }
 

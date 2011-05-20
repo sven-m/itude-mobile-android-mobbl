@@ -1,7 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.app.ActivityGroup;
@@ -13,11 +12,11 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.support.v4.view.MenuCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -58,7 +57,7 @@ public class MBViewManager extends ActivityGroup
   @Override
   protected void onCreate(android.os.Bundle savedInstanceState)
   {
-    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+    //    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
     super.onCreate(savedInstanceState);
 
@@ -137,6 +136,7 @@ public class MBViewManager extends ActivityGroup
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
       MenuItem menuItem = menu.add(Menu.NONE, dialogName.hashCode(), Menu.NONE, dialogDefinition.getTitle());
       menuItem.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+      MenuCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
   }
@@ -336,26 +336,26 @@ public class MBViewManager extends ActivityGroup
       {
         String previousDialogName = ((MBDialogController) getLocalActivityManager().getCurrentActivity()).getName();
 
-/*        if (getViewController(dialogName, null) != getViewController(previousDialogName, null))
+        /*        if (getViewController(dialogName, null) != getViewController(previousDialogName, null))
+                {
+                  MBApplicationController.getInstance().changedWindow(getViewController(previousDialogName, null), WindowChangeType.LEAVING);*/
+
+        Intent dialogIntent = MBApplicationFactory.getInstance().createIntent(dialogName);
+        Window window = this.getLocalActivityManager().startActivity(dialogName, dialogIntent);
+        final View view = window.getDecorView();
+        runOnUiThread(new Runnable()
         {
-          MBApplicationController.getInstance().changedWindow(getViewController(previousDialogName, null), WindowChangeType.LEAVING);*/
 
-          Intent dialogIntent = MBApplicationFactory.getInstance().createIntent(dialogName);
-          Window window = this.getLocalActivityManager().startActivity(dialogName, dialogIntent);
-          final View view = window.getDecorView();
-          runOnUiThread(new Runnable()
+          public void run()
           {
-
-            public void run()
-            {
-              setContentView(view);
-            }
-          });
-
-          /*if (getViewController(dialogName, null) != null)
-          {
-            MBApplicationController.getInstance().changedWindow(getViewController(dialogName, null), WindowChangeType.ACTIVATE);
+            setContentView(view);
           }
+        });
+
+        /*if (getViewController(dialogName, null) != null)
+        {
+          MBApplicationController.getInstance().changedWindow(getViewController(dialogName, null), WindowChangeType.ACTIVATE);
+        }
         }*/
 
       }
@@ -394,8 +394,8 @@ public class MBViewManager extends ActivityGroup
 
   public void postShowActivityIndicator()
   {
-    if (MBActivityIndicator.isActive()) _showActivityIndicatorQueue++;
-    showActivityIndicator();
+    //    if (MBActivityIndicator.isActive()) _showActivityIndicatorQueue++;
+    //    showActivityIndicator();
   }
 
   public void makeKeyAndVisible()
@@ -429,7 +429,7 @@ public class MBViewManager extends ActivityGroup
       return null;
     }
 
-//    return getActiveDialog().getCurrentActivity();
+    //    return getActiveDialog().getCurrentActivity();
     // TODO reimplement refresh events
     return null;
   }
@@ -461,7 +461,7 @@ public class MBViewManager extends ActivityGroup
 
   public void endModalDialog()
   {
-//    removeChild();
+    //    removeChild();
   }
 
   public MBViewState getCurrentViewState()
@@ -505,44 +505,44 @@ public class MBViewManager extends ActivityGroup
     imm.hideSoftInputFromWindow(triggeringView.getWindowToken(), 0);
   }
 
- /* public List<? extends MBBasicViewController> getAllViewControllers()
-  {
-    ArrayList<MBBasicViewController> result = new ArrayList<MBBasicViewController>();
+  /* public List<? extends MBBasicViewController> getAllViewControllers()
+   {
+     ArrayList<MBBasicViewController> result = new ArrayList<MBBasicViewController>();
 
-    for (int i = 0; i < getSortedDialogNames().size(); i++)
-    {
-      MBDialogController dc = getDialogWithName(getSortedDialogNames().get(i));
+     for (int i = 0; i < getSortedDialogNames().size(); i++)
+     {
+       MBDialogController dc = getDialogWithName(getSortedDialogNames().get(i));
 
-      if (dc != null)
-      {
-        for (int j = 0; j < dc.getSortedPageNames().size(); j++)
-        {
-          MBBasicViewController bvc = (MBBasicViewController) dc.getLocalActivityManager().getActivity(dc.getSortedPageNames().get(j));
+       if (dc != null)
+       {
+         for (int j = 0; j < dc.getSortedPageNames().size(); j++)
+         {
+           MBBasicViewController bvc = (MBBasicViewController) dc.getLocalActivityManager().getActivity(dc.getSortedPageNames().get(j));
 
-          if (bvc != null)
-          {
-            result.add(bvc);
-          }
-        }
-      }
+           if (bvc != null)
+           {
+             result.add(bvc);
+           }
+         }
+       }
 
-    }
+     }
 
-    return result;
-  }*/
+     return result;
+   }*/
 
   public MBBasicViewController getViewController(String dialogName, String viewID)
   {
- /*   MBDialogController dc = getDialogWithName(dialogName);
-    if (dc != null)
-    {
-      if (viewID == null)
-      {
-        return dc.getCurrentActivity();
-      }
+    /*   MBDialogController dc = getDialogWithName(dialogName);
+       if (dc != null)
+       {
+         if (viewID == null)
+         {
+           return dc.getCurrentActivity();
+         }
 
-      return (MBBasicViewController) dc.getLocalActivityManager().getActivity(viewID);
-    }*/
+         return (MBBasicViewController) dc.getLocalActivityManager().getActivity(viewID);
+       }*/
 
     return null;
   }
@@ -585,13 +585,8 @@ public class MBViewManager extends ActivityGroup
   {
     Log.d(Constants.APPLICATION_NAME, "MBViewManager.onConfigurationChanged");
 
-//    getActiveViewController().handleOrientationChange(newConfig);
+    //    getActiveViewController().handleOrientationChange(newConfig);
 
     super.onConfigurationChanged(newConfig);
-  }
-  
-  public int getOrientation()
-  {
-    return ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay().getOrientation();
   }
 }

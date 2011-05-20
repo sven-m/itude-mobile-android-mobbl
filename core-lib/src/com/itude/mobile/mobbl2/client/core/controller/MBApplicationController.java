@@ -31,6 +31,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowCha
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBNoDocumentException;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.DeviceUtil;
+import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 
 public class MBApplicationController extends Application
@@ -52,6 +53,7 @@ public class MBApplicationController extends Application
     Context context = getBaseContext();
     DataUtil.getInstance().setContext(context);
     DeviceUtil.getInstance().setContext(context);
+    MBDevice.getInstance();
     super.onCreate();
     _instance = this;
     _pages = new HashMap<String, MBPage>();
@@ -227,7 +229,7 @@ public class MBApplicationController extends Application
               // On the iPhone the current screen is being refreshed after dismissing an progress indicator
               // On Android this doesn't happen. To recreate this behaviour this code was introduced
               //TODO implement refresh mechanism. On dialog base or page? 
-//              (((MBDialogController) _viewManager.getCurrentActivity()).getCurrentActivity()).handleOnWindowActivated();
+              //              (((MBDialogController) _viewManager.getCurrentActivity()).getCurrentActivity()).handleOnWindowActivated();
             }
 
           }
