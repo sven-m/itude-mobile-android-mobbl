@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.itude.mobile.android.mobbl</groupId>
+		<artifactId>mobbl-core</artifactId>
+		<version>0.0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>mobbl-core-app</artifactId>
+	<packaging>apk</packaging>
+	<name>Android Mobbl Core App</name>
+	<description>Android Mobbl Core Whitelabel application</description>
+	<url>http://www.itude.com</url>
+	<inceptionYear>2011</inceptionYear>
+	<developers>
+		<developer>
+			<name>Wiebe Elsinga</name>
+			<id>w.elsinga</id>
+			<roles>
+				<role>Developer</role>
+				<role>Contributor</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>rhino</groupId>
+			<artifactId>js</artifactId>
+			<version>1.7R2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android-support</artifactId>
+			<version>4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.itude.mobile.android.mobbl</groupId>
+			<artifactId>mobbl-core-lib</artifactId>
+			<version>${project.version}</version>
+			<type>apklib</type>
+		</dependency>
+	</dependencies>
+
+	<scm>
+		<connection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-app</connection>
+		<developerConnection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-app</developerConnection>
+		<url>http://svn/repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-app</url>
+	</scm>
+
+	<build>
+		<defaultGoal>install</defaultGoal>
+		<finalName>${project.artifactId}-${project.version}</finalName>
+		<sourceDirectory>${project.basedir}/src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>maven-android-plugin</artifactId>
+				<!-- configuration> <emulator> <avd>Android2.1-u</avd> <wait>2000</wait> 
+					</emulator> <deleteConflictingFiles>true</deleteConflictingFiles> <undeployBeforeDeploy>true</undeployBeforeDeploy> 
+					</configuration> <executions> <execution> <goals> <goal>deploy</goal> </goals> 
+					</execution> </executions -->
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+		<profile>
+			<id>development</id>
+		</profile>
+		<profile>
+			<id>release</id>
+			<!-- via this activation the profile is automatically used when the release 
+				is done with the maven release plugin -->
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>enforce-signing-properties</id>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<configuration>
+									<rules>
+										<requireProperty>
+											<property>sign.alias</property>
+											<message>The 'sign.alias' property is missing.</message>
+										</requireProperty>
+										<requireProperty>
+											<property>sign.storepass</property>
+											<message>The 'sign.storepass' property is missing.</message>
+										</requireProperty>
+										<requireProperty>
+											<property>sign.keypass</property>
+											<message>The 'sign.keypass' property is missing.</message>
+										</requireProperty>
+									</rules>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- proguard can shrink the source classes and remove unused classes 
+						and more.. -->
+					<plugin>
+						<groupId>com.pyx4me</groupId>
+						<artifactId>proguard-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>proguard</goal>
+								</goals>
+							</execution>
+						</executions>
+						<!-- we need to override the dependency of the plugin to get a newer 
+							version of proguard -->
+						<dependencies>
+							<dependency>
+								<groupId>net.sf.proguard</groupId>
+								<artifactId>proguard</artifactId>
+								<version>4.4</version>
+								<scope>runtime</scope>
+							</dependency>
+						</dependencies>
+						<configuration>
+							<proguardVersion>4.4</proguardVersion>
+							<maxMemory>256m</maxMemory>
+							<injar>android-classes</injar>
+							<libs>
+								<lib>${rt.jar.path}</lib>
+								<lib>${jce.jar.path}</lib>
+							</libs>
+							<skip>false</skip>
+							<obfuscate>true</obfuscate>
+							<addMavenDescriptor>false</addMavenDescriptor>
+							<options>
+								<option>@proguard.cfg</option>
+							</options>
+						</configuration>
+					</plugin>
+					<!-- the apk need to be signed -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jarsigner-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>signing</id>
+								<goals>
+									<goal>sign</goal>
+									<goal>verify</goal>
+								</goals>
+								<phase>package</phase>
+								<inherited>true</inherited>
+								<configuration>
+									<removeExistingSignatures>true</removeExistingSignatures>
+									<includes>
+										<include>${project.build.directory}/${project.artifactId}-${project.version}.apk</include>
+									</includes>
+									<keystore>${basedir}/release/itude-release-key.keystore</keystore>
+									<alias>${sign.alias}</alias>
+									<storepass>${sign.storepass}</storepass>
+									<keypass>${sign.keypass}</keypass>
+									<verbose>true</verbose>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- the signed apk then needs to be zipaligned -->
+					<plugin>
+						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+						<artifactId>maven-android-plugin</artifactId>
+						<configuration>
+							<sign>
+								<debug>false</debug>
+							</sign>
+							<zipalign>
+								<verbose>true</verbose>
+								<inputApk>${project.build.directory}/${project.artifactId}-${project.version}.apk</inputApk>
+								<outputApk>${project.build.directory}/${project.artifactId}-${project.version}-signed-aligned.apk</outputApk>
+							</zipalign>
+						</configuration>
+						<executions>
+							<execution>
+								<id>alignApk</id>
+								<phase>package</phase>
+								<goals>
+									<goal>zipalign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<configuration>
+							<artifacts>
+								<artifact>
+									<file>${project.build.directory}/${project.artifactId}-${project.version}-signed-aligned.apk</file>
+									<type>apk</type>
+									<classifier>signed-aligned</classifier>
+								</artifact>
+								<artifact>
+									<file>${project.build.directory}/proguard_map.txt</file>
+									<type>map</type>
+									<classifier>release</classifier>
+								</artifact>
+							</artifacts>
+						</configuration>
+						<executions>
+							<execution>
+								<id>attach-signed-aligned</id>
+								<phase>package</phase>
+								<goals>
+									<goal>attach-artifact</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<!-- to avoid having to do symlinks to rt.jar like documented e.g. here 
+			http://bruehlicke.blogspot.com/2009/11/missing-rtjar-mac-os-x-using-proguard.html 
+			http://codebistro.com/2010/07/18/proguard-and-runtime-libraries-on-mac-os-x/ -->
+		<profile>
+			<id>linux</id>
+			<activation>
+				<os>
+					<family>unix</family>
+				</os>
+			</activation>
+			<properties>
+				<rt.jar.path>${env.JAVA_HOME}/jre/lib/rt.jar</rt.jar.path>
+				<jce.jar.path>${env.JAVA_HOME}/jre/lib/jce.jar</jce.jar.path>
+
+			</properties>
+		</profile>
+		<!-- mac profile has to be after unix since running on mac will trigger 
+			both -->
+		<profile>
+			<id>mac</id>
+			<activation>
+				<os>
+					<family>mac</family>
+				</os>
+			</activation>
+			<!-- absolute path -->
+			<properties>
+				<rt.jar.path>/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes/classes.jar</rt.jar.path>
+				<jce.jar.path>/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes/jce.jar</jce.jar.path>
+			</properties>
+		</profile>
+		<profile>
+			<id>windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<properties>
+				<rt.jar.path>${env.JAVA_HOME}/jre/lib/rt.jar</rt.jar.path>
+				<jce.jar.path>${env.JAVA_HOME}/jre/lib/jce.jar</jce.jar.path>
+			</properties>
+		</profile>
+	</profiles>
+</project>
+
+
+          
