@@ -55,7 +55,13 @@
 	</scm>
 
 	<build>
+		<defaultGoal>install</defaultGoal> 
+		<finalName>${project.artifactId}-${project.version}</finalName>
+		<sourceDirectory>${project.basedir}/src</sourceDirectory>
 		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>maven-android-plugin</artifactId>

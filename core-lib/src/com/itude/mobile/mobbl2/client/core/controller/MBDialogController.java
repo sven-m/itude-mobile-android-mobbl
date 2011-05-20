@@ -78,6 +78,8 @@ public class MBDialogController extends FragmentActivity
     mainContainer.setId(UniqueIntegerGenerator.getId());
     _dialogIds.put(_name, mainContainer.getId());
     mainContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+    mainContainer.setId(UniqueIntegerGenerator.getId());
+    _dialogIds.put(_name, mainContainer.getId());
 
     FrameLayout fragmentContainer = new FrameLayout(this);
     fragmentContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
