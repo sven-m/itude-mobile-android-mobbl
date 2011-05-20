@@ -55,9 +55,17 @@ public class MBApplicationFactory
     return null;
   }
 
-  public Intent createIntent(Context context, String pageName)
+  public MBBasicViewController createFragment(String pageName)
   {
-    return new Intent(context, MBBasicViewController.class);
+    return new MBBasicViewController();
+  }
+  
+  public Intent createIntent(String dialogName)
+  {
+    Intent dialogIntent = new Intent(MBApplicationController.getInstance().getApplicationContext(), MBDialogController.class);
+    dialogIntent.putExtra("dialogName", dialogName);
+    
+    return dialogIntent;
   }
 
   public MBEditableMatrixListener getEditableMatrixListener(String panelName)

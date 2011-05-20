@@ -340,8 +340,7 @@ public class MBViewManager extends ActivityGroup
         {
           MBApplicationController.getInstance().changedWindow(getViewController(previousDialogName, null), WindowChangeType.LEAVING);*/
 
-          Intent dialogIntent = new Intent(MBApplicationController.getInstance().getApplicationContext(), MBDialogController.class);
-          dialogIntent.putExtra("dialogName", dialogName);
+          Intent dialogIntent = MBApplicationFactory.getInstance().createIntent(dialogName);
           Window window = this.getLocalActivityManager().startActivity(dialogName, dialogIntent);
           final View view = window.getDecorView();
           runOnUiThread(new Runnable()
