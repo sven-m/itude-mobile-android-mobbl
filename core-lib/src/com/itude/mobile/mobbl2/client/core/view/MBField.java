@@ -520,7 +520,7 @@ public class MBField extends MBComponent
     // CURRENCY Symbols
     if ("EURO".equals(getStyle()))
     {
-      fieldValue = "€ " + fieldValue;
+      fieldValue = " € " + fieldValue;
     }
 
     return fieldValue;
