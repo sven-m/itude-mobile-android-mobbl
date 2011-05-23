@@ -12,15 +12,18 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
+import com.itude.mobile.mobbl2.client.core.view.dialogbuilders.MBDialogBuilderFactory;
+import com.itude.mobile.mobbl2.client.core.view.dialogbuilders.MBSingleDialogBuilder;
+import com.itude.mobile.mobbl2.client.core.view.dialogbuilders.MBSplitDialogBuilder;
 
 public class MBDialogController extends FragmentActivity
 {
@@ -32,11 +35,10 @@ public class MBDialogController extends FragmentActivity
   private Object                     _navigationController;
   private int                        _activityIndicatorCount;
   private boolean                    _temporary;
-  private String                     _dialogGroupName;
-  private String                     _position;
-  private final Stack<View>          _viewStack   = new Stack<View>();
-  private final Stack<String>        _pageIdStack = new Stack<String>();
-  private final Map<String, Integer> _dialogIds   = new HashMap<String, Integer>();
+  private final Stack<View>          _viewStack       = new Stack<View>();
+  private final Stack<String>        _pageIdStack     = new Stack<String>();
+  private final List<Integer>        _sortedDialogIds = new ArrayList<Integer>();
+  private final Map<String, Integer> _dialogIds       = new HashMap<String, Integer>();
 
   // Android lifecycle methods
 
@@ -60,9 +62,20 @@ public class MBDialogController extends FragmentActivity
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
       setIconName(dialogDefinition.getIcon());
       setDialogMode(dialogDefinition.getMode());
-      setDialogGroupName(dialogDefinition.getGroupName());
-      setPosition(dialogDefinition.getPosition());
       setTitle(dialogDefinition.getTitle());
+      if (dialogDefinition instanceof MBDialogGroupDefinition)
+      {
+        List<MBDialogDefinition> children = ((MBDialogGroupDefinition) dialogDefinition).getChildren();
+        for (MBDialogDefinition dialogDef : children)
+        {
+          int id = UniqueIntegerGenerator.getId();
+          addDialogChild(dialogDef.getName(), id);
+        }
+      }
+      else
+      {
+        addDialogChild(_name, UniqueIntegerGenerator.getId());
+      }
       _usesNavbar = ("STACK".equals(dialogDefinition.getMode()));
     }
     else
@@ -71,19 +84,36 @@ public class MBDialogController extends FragmentActivity
     }
   }
 
+  /**
+   * Store the id to be used as a reference to the view
+   * 
+   * @param name
+   * @param id
+   */
+  private void addDialogChild(String name, int id)
+  {
+    _dialogIds.put(name, id);
+    _sortedDialogIds.add(id);
+  }
+
   private void viewInit()
   {
-    RelativeLayout mainContainer = new RelativeLayout(this);
-    mainContainer.setId(UniqueIntegerGenerator.getId());
-    _dialogIds.put(_name, mainContainer.getId());
-    mainContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-    mainContainer.setId(UniqueIntegerGenerator.getId());
-    _dialogIds.put(_name, mainContainer.getId());
+    RelativeLayout mainContainer = null;
 
-    FrameLayout fragmentContainer = new FrameLayout(this);
-    fragmentContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-
-    mainContainer.addView(fragmentContainer);
+    // handle as a single dialog
+    if (_dialogIds.size() == 1)
+    {
+      MBSingleDialogBuilder builder = MBDialogBuilderFactory.getInstance().getSingleDialogBuilder();
+      builder.setSortedDialogIds(_sortedDialogIds);
+      mainContainer = (RelativeLayout) builder.buildDialog();
+    }
+    // handle as a group of dialogs
+    else if (_dialogIds.size() > 1)
+    {
+      MBSplitDialogBuilder splitDialogBuilder = MBDialogBuilderFactory.getInstance().getSplitDialogBuilder();
+      splitDialogBuilder.setSortedDialogIds(_sortedDialogIds);
+      mainContainer = (RelativeLayout) splitDialogBuilder.buildDialog();
+    }
 
     setContentView(mainContainer);
 

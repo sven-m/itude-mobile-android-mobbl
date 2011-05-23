@@ -20,18 +20,24 @@ import com.itude.mobile.mobbl2.client.core.services.exceptions.MBDomainNotDefine
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBPageNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
+import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 
 public class MBMetadataService
 {
   private final MBConfigurationDefinition _cfg;
 
   private static MBMetadataService        _instance;
-  private static String                   _configName    = "config.xml";
-  private static String                   _endpointsName = "endpoints.xml";
+  private static String                   _configName       = "config.xml";
+  private static String                   _phoneConfigName  = null;
+  private static String                   _tabletConfigName = null;
+  private static String                   _endpointsName    = "endpoints.xml";
 
   private MBMetadataService()
   {
     MBMvcConfigurationParser parser = new MBMvcConfigurationParser();
+    if (_phoneConfigName != null && MBDevice.getInstance().isPhone()) _configName = _phoneConfigName;
+    else if (_tabletConfigName != null && MBDevice.getInstance().isTablet()) _configName = _tabletConfigName;
+
     _cfg = (MBConfigurationDefinition) parser.parseData(DataUtil.getInstance().readFromAssetOrFile(_configName), _configName);
   }
 
@@ -48,6 +54,18 @@ public class MBMetadataService
   public static void setConfigName(String name)
   {
     _configName = name;
+    _instance = null;
+  }
+
+  public static void setPhoneConfigName(String name)
+  {
+    _phoneConfigName = name;
+    _instance = null;
+  }
+
+  public static void setTabletConfigName(String name)
+  {
+    _tabletConfigName = name;
     _instance = null;
   }
 
@@ -144,6 +162,21 @@ public class MBMetadataService
     }
 
     return dialogDef;
+  }
+
+  /**
+   * A dialog can either be part of a DialogGroup or exist on its own. In some cases it is
+   * desirable to get the name of the top dialog. This could either be just the dialog name,
+   * or it can be the name of its parent; which is a DialogGroup.
+   * 
+   * @param dialogName
+   * @return the dialog name of the Dialog or its parent, the DialogGroup (if there is one)
+   */
+  public MBDialogDefinition getTopDialogDefinitionForDialogName(String dialogName)
+  {
+    MBDialogDefinition def = getDefinitionForDialogName(dialogName);
+    if (def.getParent() != null) return getDefinitionForDialogName(def.getParent());
+    return def;
   }
 
   public MBDialogDefinition getFirstDialogDefinition()

@@ -1,11 +1,12 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
-import android.content.Context;
 import android.content.Intent;
 
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
+import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResultListener;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.helpers.MBEditableMatrixListener;
@@ -59,12 +60,14 @@ public class MBApplicationFactory
   {
     return new MBBasicViewController();
   }
-  
+
   public Intent createIntent(String dialogName)
   {
+    MBDialogDefinition dialogDef = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(dialogName);
+
     Intent dialogIntent = new Intent(MBApplicationController.getInstance().getApplicationContext(), MBDialogController.class);
-    dialogIntent.putExtra("dialogName", dialogName);
-    
+    dialogIntent.putExtra("dialogName", dialogDef.getName());
+
     return dialogIntent;
   }
 

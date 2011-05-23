@@ -10,7 +10,8 @@ public class MBApplicationCore extends MBApplicationController
   @Override
   public void startController()
   {
-    MBMetadataService.setConfigName("testconfig/testconfig.xml");
+    MBMetadataService.setPhoneConfigName("testconfig/testconfig.xml");
+    MBMetadataService.setTabletConfigName("testconfig/testconfig_tablet.xml");
     MBMetadataService.setEndpointsName("testconfig/endpoints.xml");
     startApplication(MBApplicationFactory.getInstance());
   }

@@ -22,6 +22,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
   private List<String>              _actionAttributes;
   private List<String>              _outcomeAttributes;
   private List<String>              _dialogAttributes;
+  private List<String>              _dialogGroupAttributes;
   private List<String>              _pageAttributes;
   private List<String>              _panelAttributes;
   private List<String>              _forEachAttributes;
@@ -93,6 +94,15 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _dialogAttributes.add("title");
       _dialogAttributes.add("mode");
       _dialogAttributes.add("icon");
+    }
+    if (_dialogGroupAttributes == null)
+    {
+      _dialogGroupAttributes = new ArrayList<String>();
+      _dialogGroupAttributes.add("xmlns");
+      _dialogGroupAttributes.add("name");
+      _dialogGroupAttributes.add("title");
+      _dialogGroupAttributes.add("mode");
+      _dialogGroupAttributes.add("icon");
     }
     if (_pageAttributes == null)
     {
@@ -303,6 +313,22 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       dialogDef.setMode(attributeDict.get("mode"));
       dialogDef.setIcon(attributeDict.get("icon"));
 
+      // On tablets, we can have a split view, which is defined as a DialogGroup in xml
+      MBDefinition lastDef = getStack().peek();
+      if (lastDef instanceof MBDialogGroupDefinition) dialogDef.setParent(lastDef.getName());
+
+      notifyProcessed(dialogDef);
+    }
+    else if (elementName.equals("DialogGroup"))
+    {
+      checkAttributesForElement(elementName, attributeDict, _dialogGroupAttributes);
+
+      MBDialogGroupDefinition dialogDef = new MBDialogGroupDefinition();
+      dialogDef.setName(attributeDict.get("name"));
+      dialogDef.setTitle(attributeDict.get("title"));
+      dialogDef.setMode(attributeDict.get("mode"));
+      dialogDef.setIcon(attributeDict.get("icon"));
+
       notifyProcessed(dialogDef);
     }
     else if (elementName.equals("Page"))
@@ -471,6 +497,17 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       MBFieldDefinition fieldDef = (MBFieldDefinition) getStack().get(getStack().size() - 1);
       fieldDef.setText(getCharacters());
     }
+    else if ("DialogGroup".equals(elementName))
+    {
+      // On tablets, we can have a split view in a tab. In XML they are defined as two dialogs in a dialogGroup.
+      // This means that the dialogs are automatically added to a dialogGroup. 
+      // That is why we need to make sure that the dialogs are also kept locally, like on the phone, because the local references are used to address the Dialogs
+      // Thats why we copy them here after the group has been added.
+      MBDefinition configDef = getStack().elementAt(getStack().size() - 2);
+      MBDialogGroupDefinition groupDef = (MBDialogGroupDefinition) getStack().peek();
+      for (MBDialogDefinition dialogDef : groupDef.getChildren())
+        configDef.addChildElement(dialogDef);
+    }
 
     if (!elementName.equals("Configuration") && !elementName.equals("Include"))
     {
@@ -484,8 +521,8 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
   {
     return element.equals("Configuration") || element.equals("Include") || element.equals("Document") || element.equals("Element")
            || element.equals("Attribute") || element.equals("Action") || element.equals("Outcome") || element.equals("Page")
-           || element.equals("Dialog") || element.equals("ForEach") || element.equals("Variable") || element.equals("Panel")
-           || element.equals("Field") || element.equals("Domain") || element.equals("DomainValidator");
+           || element.equals("Dialog") || element.equals("DialogGroup") || element.equals("ForEach") || element.equals("Variable")
+           || element.equals("Panel") || element.equals("Field") || element.equals("Domain") || element.equals("DomainValidator");
   }
 
   @Override

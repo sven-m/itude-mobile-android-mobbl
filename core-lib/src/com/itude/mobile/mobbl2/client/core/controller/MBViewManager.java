@@ -19,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
@@ -258,8 +257,8 @@ public class MBViewManager extends ActivityGroup
 
   private void addPageToDialog(MBPage page, String displayMode, boolean shouldSelectDialog)
   {
-
-    MBDialogController dialogController = getDialogWithName(page.getDialogName());
+    MBDialogDefinition topDefinition = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(page.getDialogName());
+    MBDialogController dialogController = getDialogWithName(topDefinition.getName());
     if (dialogController == null || dialogController.getTemporary())
     {
       activateDialogWithPage(page);
@@ -269,16 +268,16 @@ public class MBViewManager extends ActivityGroup
       dialogController.showPage(page, displayMode, page.getDialogName() + page.getPageName(), page.getDialogName());
     }
 
-    if (shouldSelectDialog) activateDialogWithName(page.getDialogName());
+    if (shouldSelectDialog) activateDialogWithName(topDefinition.getName());
   }
 
   public void activateDialogWithPage(MBPage page)
   {
     if (page != null)
     {
-      _dialogControllers.add(page.getDialogName());
-      Intent intent = new Intent(MBApplicationController.getInstance().getApplicationContext(), MBDialogController.class);
-      String dialogName = page.getDialogName();
+      String dialogName = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(page.getDialogName()).getName();
+      _dialogControllers.add(dialogName);
+      Intent intent = MBApplicationFactory.getInstance().createIntent(page.getDialogName());
 
       if (getViewController(dialogName, null) != getViewController(getActiveDialogName(), null))
       {
@@ -328,6 +327,9 @@ public class MBViewManager extends ActivityGroup
 
     if (dialogName != null)
     {
+      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+      if (dialogDefinition.getParent() != null) dialogName = dialogDefinition.getParent();
+
       if (!_sortedDialogNames.contains(dialogName)) _sortedDialogNames.add(dialogName);
 
       MBDialogController dialogController = getDialogWithName(dialogName);
@@ -345,7 +347,6 @@ public class MBViewManager extends ActivityGroup
         final View view = window.getDecorView();
         runOnUiThread(new Runnable()
         {
-
           public void run()
           {
             setContentView(view);

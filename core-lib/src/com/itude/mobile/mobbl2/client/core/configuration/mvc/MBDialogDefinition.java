@@ -9,19 +9,13 @@ public class MBDialogDefinition extends MBDefinition
   private String _title;
   private String _mode;
   private String _icon;
-  private String _groupName;
-  private String _position;
+  private String _parent;
 
   public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
   {
-    return StringUtilities.appendIndentString(p_appendToMe, level)
-                    .append("<Dialog name='")
-                    .append(getName())
-                    .append('\'')
-                    .append(getAttributeAsXml("mode", _mode))
-                    .append(getAttributeAsXml("title", _title))
-                    .append(getAttributeAsXml("icon", _icon))
-                    .append("/>\n");
+    return StringUtilities.appendIndentString(p_appendToMe, level).append("<Dialog name='").append(getName()).append('\'')
+        .append(getAttributeAsXml("mode", _mode)).append(getAttributeAsXml("title", _title)).append(getAttributeAsXml("icon", _icon))
+        .append("/>\n");
   }
 
   public void validateDefinition()
@@ -63,24 +57,13 @@ public class MBDialogDefinition extends MBDefinition
     _icon = icon;
   }
 
-  public String getGroupName()
+  public String getParent()
   {
-    // TODO Auto-generated method stub
-    return _groupName;
-  }
-  
-  public void setGroupName(String groupName){
-    _groupName = groupName;
+    return _parent;
   }
 
-  public String getPosition()
+  public void setParent(String parent)
   {
-    // TODO Auto-generated method stub
-    return _position;
+    _parent = parent;
   }
-
-  public void setPosition(String position){
-    _position = position;
-  }
-  
 }

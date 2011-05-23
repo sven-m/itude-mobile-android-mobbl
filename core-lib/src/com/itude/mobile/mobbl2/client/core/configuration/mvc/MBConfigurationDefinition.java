@@ -74,66 +74,48 @@ public class MBConfigurationDefinition extends MBDefinition
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level)
-           .append("<Configuration>\n")
-           .append(StringUtilities.getIndentStringWithLevel(level + 2))
-           .append("<Model>\n")
-           .append(StringUtilities.getIndentStringWithLevel(level + 4))
-           .append("<Domains>\n");
+    StringUtilities.appendIndentString(p_appendToMe, level).append("<Configuration>\n")
+        .append(StringUtilities.getIndentStringWithLevel(level + 2)).append("<Model>\n")
+        .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Domains>\n");
     for (MBDomainDefinition domain : _domainTypes.values())
     {
       domain.asXmlWithLevel(p_appendToMe, level + 6);
     }
-    StringUtilities.appendIndentString(p_appendToMe, level + 4)
-                .append("</Domains>\n")
-                .append(StringUtilities.getIndentStringWithLevel(level + 4))
-                .append("<Documents>\n");
+    StringUtilities.appendIndentString(p_appendToMe, level + 4).append("</Domains>\n")
+        .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Documents>\n");
     for (MBDocumentDefinition document : _documentTypes.values())
     {
       document.asXmlWithLevel(p_appendToMe, level + 6);
     }
-    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4))
-                .append("</Documents>\n")
-                .append(StringUtilities.getIndentStringWithLevel(level + 2))
-                .append("</Model>\n")
-                .append(StringUtilities.getIndentStringWithLevel(level + 2))
-                .append("<Controller>\n")
-                .append(StringUtilities.getIndentStringWithLevel(level + 4))
-                .append("<Actions>\n");
+    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Documents>\n")
+        .append(StringUtilities.getIndentStringWithLevel(level + 2)).append("</Model>\n")
+        .append(StringUtilities.getIndentStringWithLevel(level + 2)).append("<Controller>\n")
+        .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Actions>\n");
     for (MBActionDefinition acion : _actionTypes.values())
     {
       acion.asXmlWithLevel(p_appendToMe, level + 6);
     }
-    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4))
-              .append("</Actions>\n")
-              .append(StringUtilities.getIndentStringWithLevel(level + 4))
-              .append("<Wiring>\n");
+    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Actions>\n")
+        .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Wiring>\n");
     for (MBOutcomeDefinition outcome : _outcomeTypes)
     {
       outcome.asXmlWithLevel(p_appendToMe, level + 6);
     }
-    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4))
-                .append("</Wiring>\n")
-                .append(StringUtilities.getIndentStringWithLevel(level + 2))
-                .append("</Controller>\n")
-                .append(StringUtilities.getIndentStringWithLevel(level + 2))
-                .append("<View>\n")
-                .append(StringUtilities.getIndentStringWithLevel(level + 4))
-                .append("<Dialogs>\n");
+    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Wiring>\n")
+        .append(StringUtilities.getIndentStringWithLevel(level + 2)).append("</Controller>\n")
+        .append(StringUtilities.getIndentStringWithLevel(level + 2)).append("<View>\n")
+        .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Dialogs>\n");
     for (MBDialogDefinition dialog : _dialogs.values())
     {
       dialog.asXmlWithLevel(p_appendToMe, level + 6);
     }
-    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4))
-                .append("</Dialogs>\n");
+    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Dialogs>\n");
     for (MBPageDefinition page : _pageTypes.values())
     {
       page.asXmlWithLevel(p_appendToMe, level + 4);
     }
-    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 2))
-                .append("</View>\n")
-                .append(StringUtilities.getIndentStringWithLevel(level))
-                .append("</Configuration>\n");
+    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 2)).append("</View>\n")
+        .append(StringUtilities.getIndentStringWithLevel(level)).append("</Configuration>\n");
 
     return p_appendToMe;
   }
@@ -207,7 +189,7 @@ public class MBConfigurationDefinition extends MBDefinition
 
   public void addDomain(MBDomainDefinition domain)
   {
-    if (_domainTypes.containsKey(domain))
+    if (_domainTypes.containsKey(domain.getName()))
     {
       Log.w(Constants.APPLICATION_NAME, "Domain definition overridden: multiple definitions for domain with name " + domain.getName());
     }
@@ -216,18 +198,16 @@ public class MBConfigurationDefinition extends MBDefinition
 
   public void addDocument(MBDocumentDefinition document)
   {
-    if (_documentTypes.containsKey(document))
+    if (_documentTypes.containsKey(document.getName()))
     {
-      Log
-          .w(Constants.APPLICATION_NAME, "Document definition overridden: multiple definitions for document with name "
-                                         + document.getName());
+      Log.w(Constants.APPLICATION_NAME, "Document definition overridden: multiple definitions for document with name " + document.getName());
     }
     _documentTypes.put(document.getName(), document);
   }
 
   public void addAction(MBActionDefinition action)
   {
-    if (_actionTypes.containsKey(action))
+    if (_actionTypes.containsKey(action.getName()))
     {
       Log.w(Constants.APPLICATION_NAME, "Action definition overridden: multiple definitions for action with name " + action.getName());
     }
@@ -241,7 +221,7 @@ public class MBConfigurationDefinition extends MBDefinition
 
   public void addPage(MBPageDefinition page)
   {
-    if (_pageTypes.containsKey(page))
+    if (_pageTypes.containsKey(page.getName()))
     {
       Log.w(Constants.APPLICATION_NAME, "Page definition overridden: multiple definitions for page with name " + page.getName());
     }
@@ -250,7 +230,7 @@ public class MBConfigurationDefinition extends MBDefinition
 
   public void addDialog(MBDialogDefinition dialog)
   {
-    if (_dialogs.containsKey(dialog))
+    if (_dialogs.containsKey(dialog.getName()))
     {
       Log.w(Constants.APPLICATION_NAME, "Dialog definition overridden: multiple definitions for action with name " + dialog.getName());
     }
