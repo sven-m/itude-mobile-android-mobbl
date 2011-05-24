@@ -12,6 +12,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuCompat;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -123,7 +124,15 @@ public class MBViewManager extends ActivityGroup
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event)
   {
-    return getLocalActivityManager().getCurrentActivity().onKeyDown(keyCode, event);
+    if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
+    {
+      // Take care of calling this method on earlier versions of
+      // the platform where it doesn't exist.
+      ((FragmentActivity) getLocalActivityManager().getCurrentActivity()).onBackPressed();
+      return true;
+    }
+
+    return super.onKeyDown(keyCode, event);
   }
 
   /////////////////////////////////////////////////////
@@ -186,10 +195,10 @@ public class MBViewManager extends ActivityGroup
 
   public void showPage(MBPage page, String mode)
   {
-    showPage(page, mode, true);
+    showPage(page, mode, true, true);
   }
 
-  public void showPage(MBPage page, String displayMode, boolean shouldSelectDialog)
+  public void showPage(MBPage page, String displayMode, boolean shouldSelectDialog, boolean addToBackStack)
   {
 
     Log.d("MOBBL",
@@ -202,7 +211,7 @@ public class MBViewManager extends ActivityGroup
     }
     else if ("MODAL".equals(displayMode) && _modalController == null)
     {
-      addPageToDialog(page, displayMode, shouldSelectDialog);
+      addPageToDialog(page, displayMode, shouldSelectDialog, addToBackStack);
 
       // TODO: support nested modal dialogs
 
@@ -216,7 +225,7 @@ public class MBViewManager extends ActivityGroup
     }
     else
     {
-      addPageToDialog(page, displayMode, shouldSelectDialog);
+      addPageToDialog(page, displayMode, shouldSelectDialog, addToBackStack);
     }
   }
 
@@ -255,7 +264,7 @@ public class MBViewManager extends ActivityGroup
 
   }
 
-  private void addPageToDialog(MBPage page, String displayMode, boolean shouldSelectDialog)
+  private void addPageToDialog(MBPage page, String displayMode, boolean shouldSelectDialog, boolean addToBackStack)
   {
     MBDialogDefinition topDefinition = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(page.getDialogName());
     MBDialogController dialogController = getDialogWithName(topDefinition.getName());
@@ -265,7 +274,7 @@ public class MBViewManager extends ActivityGroup
     }
     else
     {
-      dialogController.showPage(page, displayMode, page.getDialogName() + page.getPageName(), page.getDialogName());
+      dialogController.showPage(page, displayMode, page.getDialogName() + page.getPageName(), page.getDialogName(), addToBackStack);
     }
 
     if (shouldSelectDialog) activateDialogWithName(topDefinition.getName());

@@ -396,7 +396,9 @@ public class MBApplicationController extends Application
         page.setDialogName(getActiveDialogName());
       }
       boolean doSelect = "yes".equals(selectPageInDialog) && !_suppressPageSelection;
-      _viewManager.showPage(page, displayMode, doSelect);
+      // don't add initial outcomes to the backstack
+      boolean addToBackStack = !"init".equals(causingOutcome.getOutcomeName()) && !"Controller".equals(causingOutcome.getOriginName());
+      _viewManager.showPage(page, displayMode, doSelect, addToBackStack);
       _viewManager.hideActivityIndicator();
     }
     catch (Exception e)

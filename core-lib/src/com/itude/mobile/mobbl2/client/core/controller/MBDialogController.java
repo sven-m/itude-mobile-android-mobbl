@@ -9,8 +9,8 @@ import java.util.Stack;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -18,7 +18,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
-import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.dialogbuilders.MBDialogBuilderFactory;
@@ -122,7 +121,7 @@ public class MBDialogController extends FragmentActivity
     {
       Log.d("MOBBL", "MBDialogController.onCreate: found outcomeID=" + outcomeID);
       MBPage page = MBApplicationController.getInstance().getPage(outcomeID);
-      showPage(page, null, outcomeID, page.getDialogName());
+      showPage(page, null, outcomeID, page.getDialogName(), false);
     }
   }
 
@@ -131,17 +130,6 @@ public class MBDialogController extends FragmentActivity
   {
     if (hasFocus) getParent().setTitle(getTitle());
     super.onWindowFocusChanged(hasFocus);
-  }
-
-  @Override
-  public boolean onKeyDown(int keyCode, KeyEvent event)
-  {
-    if (KeyEvent.KEYCODE_BACK == keyCode && getSupportFragmentManager().getBackStackEntryCount() == 0)
-    {
-      finish();
-      return true;
-    }
-    return false;
   }
 
   ////////////////////////////
@@ -285,7 +273,7 @@ public class MBDialogController extends FragmentActivity
     _temporary = temporary;
   }
 
-  public void showPage(MBPage page, String displayMode, String id, String dialogName)
+  public void showPage(MBPage page, String displayMode, String id, String dialogName, boolean addToBackStack)
   {
     /*final Intent intent = MBApplicationFactory.getInstance().createIntent(this, page.getPageName());
     intent.putExtra("id", id);
@@ -331,7 +319,9 @@ public class MBDialogController extends FragmentActivity
     Bundle args = new Bundle();
     args.putString("id", id);
     fragment.setArguments(args);
-    getSupportFragmentManager().beginTransaction().replace(_dialogIds.get(dialogName), fragment).commit();
+    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().replace(_dialogIds.get(dialogName), fragment);
+    if (addToBackStack) transaction.addToBackStack(null);
+    transaction.commit();
   }
 
   public void popPageAnimated(boolean animated)
