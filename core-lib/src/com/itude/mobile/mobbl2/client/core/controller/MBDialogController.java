@@ -105,14 +105,14 @@ public class MBDialogController extends FragmentActivity
     {
       MBSingleDialogBuilder builder = MBDialogBuilderFactory.getInstance().getSingleDialogBuilder();
       builder.setSortedDialogIds(_sortedDialogIds);
-      mainContainer = (RelativeLayout) builder.buildDialog();
+      mainContainer = (RelativeLayout) builder.build();
     }
     // handle as a group of dialogs
     else if (_dialogIds.size() > 1)
     {
       MBSplitDialogBuilder splitDialogBuilder = MBDialogBuilderFactory.getInstance().getSplitDialogBuilder();
       splitDialogBuilder.setSortedDialogIds(_sortedDialogIds);
-      mainContainer = (RelativeLayout) splitDialogBuilder.buildDialog();
+      mainContainer = (RelativeLayout) splitDialogBuilder.build();
     }
 
     setContentView(mainContainer);
