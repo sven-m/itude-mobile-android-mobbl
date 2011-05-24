@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 
 public class MBSplitDialogBuilder extends MBDialogBuilder
 {
@@ -29,7 +30,7 @@ public class MBSplitDialogBuilder extends MBDialogBuilder
       FrameLayout fragmentContainer = new FrameLayout(MBApplicationController.getInstance().getBaseContext());
       fragmentContainer.setId(sortedDialogIds.get(i));
 
-      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(MBScreenUtilities.getWidthPixelsForPercentage(20),
           RelativeLayout.LayoutParams.MATCH_PARENT);
       // position fragment containers next to each other
       if (i == 0)

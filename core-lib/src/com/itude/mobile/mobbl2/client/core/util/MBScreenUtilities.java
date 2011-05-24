@@ -41,4 +41,11 @@ public class MBScreenUtilities
     return (int) ((height / 100) * percentage);
   }
 
+  public final static int getWidthPixelsForPercentage(float percentage)
+  {
+    final float width = MBApplicationController.getInstance().getBaseContext().getResources().getDisplayMetrics().widthPixels;
+
+    return (int) ((width / 100) * percentage);
+  }
+
 }
