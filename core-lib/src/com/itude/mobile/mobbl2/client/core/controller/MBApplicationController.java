@@ -29,6 +29,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowChangeType;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBNoDocumentException;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
@@ -89,6 +90,8 @@ public class MBApplicationController extends Application
   public void startApplication(MBApplicationFactory applicationFactory)
   {
     Log.d("MOBBL", "MBApplicationController.startApplication");
+    Log.d(Constants.APPLICATION_NAME, "Device info:");
+    Log.d(Constants.APPLICATION_NAME, MBDevice.getInstance().toString());
 
     _applicationFactory = applicationFactory;
 

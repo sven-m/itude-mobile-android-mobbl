@@ -9,6 +9,7 @@ import java.util.Stack;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
+import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.dialogbuilders.MBDialogBuilderFactory;
@@ -139,11 +141,10 @@ public class MBDialogController extends FragmentActivity
    */
   public void clearAllViews()
   {
-    /*while (!_pageIdStack.isEmpty())
-      popView(true);*/
+    FragmentManager fragmentManager = getSupportFragmentManager();
 
-    //TODO implement using FragmentManager
-
+    if (fragmentManager.getBackStackEntryCount() > 0) fragmentManager.popBackStackImmediate(fragmentManager.getBackStackEntryAt(0).getId(),
+                                                                                            FragmentManager.POP_BACK_STACK_INCLUSIVE);
   }
 
   public void popView()
@@ -216,10 +217,10 @@ public class MBDialogController extends FragmentActivity
                                                                                                                                   .peek()),
                                                                 WindowChangeType.ACTIVATE);
           }
-        });
+        });*/
 
-        // Make sure no unnecessary views are being popped
-        MBApplicationController.getInstance().clearModalPageID();*/
+    // Make sure no unnecessary views are being popped
+    MBApplicationController.getInstance().clearModalPageID();
 
   }
 
@@ -305,37 +306,65 @@ public class MBDialogController extends FragmentActivity
 
     });*/
 
+    //    int pageOccurs = countPageOccurences(id);
+    //    if (pageOccurs > 0) id += pageOccurs;
+    //
+    //    final String finalId = id;
+
     MBApplicationController.getInstance().setPage(id, page);
 
-    if (displayMode != null)
+    if ("POP".equals(displayMode))
     {
-      if (displayMode.equals("POP"))
-      {
-        //        popView();
-      }
+      popView();
     }
 
     MBBasicViewController fragment = new MBBasicViewController();
     Bundle args = new Bundle();
     args.putString("id", id);
     fragment.setArguments(args);
-    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().replace(_dialogIds.get(dialogName), fragment);
+
+    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     if (addToBackStack) transaction.addToBackStack(null);
-    transaction.commit();
+
+    if (!MBDevice.getInstance().isPhone() && "MODAL".equals(displayMode)) transaction.add(fragment, id);
+    else transaction.replace(_dialogIds.get(dialogName), fragment, id);
+
+    // commitAllowingStateLoss makes sure that the transaction is being commit,
+    // even when the target activity is stopped. For now, this comes with the price,
+    // that the page being displayed will lose its state after a configuration change (e.g. an orientation change) 
+    transaction.commitAllowingStateLoss();
   }
+
+  //  /**
+  //   * Count the number occurrences of the same page id
+  //   * 
+  //   * LocalActivityManagers require an id to start an activity. If an id already exists, the view of that
+  //   * Activity is retained. To enable multiple Activity instances for one page, each id should be unique.
+  //   * To accomplish that, the id of a page is appended with the number of occurrences in the pageId stack.
+  //   * This method counts those occurrences.
+  //   * 
+  //   * For example, a stack could contain the following id's: home, about, detail, home1
+  //   * This stack contains two instances for Activity home
+  //   *  
+  //   * @param pageId
+  //   * @return
+  //   */
+  //  private int countPageOccurences(String pageId)
+  //  {
+  //    getSupportFragmentManager().
+  //    Enumeration<String> ids = _pageIdStack.elements();
+  //    int occurs = 0;
+  //    while (ids.hasMoreElements())
+  //    {
+  //      String id = ids.nextElement();
+  //      if (id.startsWith(pageId)) occurs++;
+  //    }
+  //
+  //    return occurs;
+  //  }
 
   public void popPageAnimated(boolean animated)
   {
-  }
-
-  public Object view()
-  {
-    return null;
-  }
-
-  public Object screenBoundsForDisplayMode(String displayMode)
-  {
-    return null;
   }
 
   public void setDialogGroupName(String groupName)
@@ -382,5 +411,4 @@ public class MBDialogController extends FragmentActivity
     }
 
   }*/
-
 }
