@@ -188,40 +188,10 @@ public class MBDialogController extends FragmentActivity
 
   public void endModalPage(String pageName)
   {
-    /*
-        for (int i = 0; i < _pageIdStack.size(); i++)
-        {
-
-          MBApplicationController.getInstance().changedWindow((MBBasicViewController) getLocalActivityManager()
-                                                                  .getActivity(_pageIdStack.peek()), WindowChangeType.LEAVING);
-
-          destroyActivity(_pageIdStack.peek());
-          _viewStack.pop();
-
-          if (_pageIdStack.peek().equals(pageName))
-          {
-            _pageIdStack.pop();
-            break;
-          }
-          _pageIdStack.pop();
-        }
-
-        runOnUiThread(new Runnable()
-        {
-
-          public void run()
-          {
-            setContentView(_viewStack.peek());
-
-            MBApplicationController.getInstance().changedWindow((MBBasicViewController) getLocalActivityManager().getActivity(_pageIdStack
-                                                                                                                                  .peek()),
-                                                                WindowChangeType.ACTIVATE);
-          }
-        });*/
+    getSupportFragmentManager().popBackStackImmediate(pageName, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
     // Make sure no unnecessary views are being popped
     MBApplicationController.getInstance().clearModalPageID();
-
   }
 
   public String getName()
@@ -276,41 +246,6 @@ public class MBDialogController extends FragmentActivity
 
   public void showPage(MBPage page, String displayMode, String id, String dialogName, boolean addToBackStack)
   {
-    /*final Intent intent = MBApplicationFactory.getInstance().createIntent(this, page.getPageName());
-    intent.putExtra("id", id);
-    MBApplicationController.getInstance().setPage(id, page);
-
-    int pageOccurs = countPageOccurences(id);
-    if (pageOccurs > 0) id += pageOccurs;
-
-    final String finalId = id;
-
-    if (displayMode != null)
-    {
-      if (displayMode.equals("POP"))
-      {
-        popView();
-      }
-    }
-    runOnUiThread(new Runnable()
-    {
-
-      public void run()
-      {
-
-        Window window = getLocalActivityManager().startActivity(finalId, intent);
-        View view = window.getDecorView();
-        pushView(finalId, view);
-
-      }
-
-    });*/
-
-    //    int pageOccurs = countPageOccurences(id);
-    //    if (pageOccurs > 0) id += pageOccurs;
-    //
-    //    final String finalId = id;
-
     MBApplicationController.getInstance().setPage(id, page);
 
     if ("POP".equals(displayMode))
@@ -324,10 +259,10 @@ public class MBDialogController extends FragmentActivity
     fragment.setArguments(args);
 
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-    if (addToBackStack) transaction.addToBackStack(null);
+    if (addToBackStack) transaction.addToBackStack(id);
 
     if (!MBDevice.getInstance().isPhone() && "MODAL".equals(displayMode)) transaction.add(fragment, id);
-    else transaction.replace(_dialogIds.get(dialogName), fragment, id);
+    else transaction.replace(_dialogIds.get(dialogName), fragment);
 
     // commitAllowingStateLoss makes sure that the transaction is being commit,
     // even when the target activity is stopped. For now, this comes with the price,
@@ -335,56 +270,8 @@ public class MBDialogController extends FragmentActivity
     transaction.commitAllowingStateLoss();
   }
 
-  //  /**
-  //   * Count the number occurrences of the same page id
-  //   * 
-  //   * LocalActivityManagers require an id to start an activity. If an id already exists, the view of that
-  //   * Activity is retained. To enable multiple Activity instances for one page, each id should be unique.
-  //   * To accomplish that, the id of a page is appended with the number of occurrences in the pageId stack.
-  //   * This method counts those occurrences.
-  //   * 
-  //   * For example, a stack could contain the following id's: home, about, detail, home1
-  //   * This stack contains two instances for Activity home
-  //   *  
-  //   * @param pageId
-  //   * @return
-  //   */
-  //  private int countPageOccurences(String pageId)
-  //  {
-  //    getSupportFragmentManager().
-  //    Enumeration<String> ids = _pageIdStack.elements();
-  //    int occurs = 0;
-  //    while (ids.hasMoreElements())
-  //    {
-  //      String id = ids.nextElement();
-  //      if (id.startsWith(pageId)) occurs++;
-  //    }
-  //
-  //    return occurs;
-  //  }
-
   public void popPageAnimated(boolean animated)
   {
-  }
-
-  public void setDialogGroupName(String groupName)
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  public void setPosition(String position)
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  public List<String> getSortedPageNames()
-  {
-    ArrayList<String> result = new ArrayList<String>();
-    result.addAll(_pageIdStack);
-
-    return result;
   }
 
   /*@Override
