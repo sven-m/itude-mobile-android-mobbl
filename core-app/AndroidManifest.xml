@@ -14,6 +14,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".controller.MBViewManager" android:configChanges="orientation" />
+        <activity android:name=".controller.MBTabletViewManager" android:configChanges="orientation" />
 		<activity android:name=".controller.MBDialogController" android:configChanges="orientation" />
 		<activity android:name=".controller.util.MBBasicViewController" />
     </application>
