@@ -157,7 +157,7 @@ public class MBViewManager extends ActivityGroup
         }
         else
         {
-          getActiveDialog().popViewsUntil(1);
+          getActiveDialog().clearAllViews();
         }
       }
     }
@@ -452,9 +452,8 @@ public class MBViewManager extends ActivityGroup
       MBDialogController dc = (MBDialogController) getLocalActivityManager().getActivity(_dialogControllers.get(i));
       if (dc != null)
       {
-        dc.popViewsUntil(1);
+        dc.clearAllViews();
       }
-
     }
   }
 

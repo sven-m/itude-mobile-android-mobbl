@@ -149,41 +149,8 @@ public class MBDialogController extends FragmentActivity
 
   public void popView()
   {
-    getSupportFragmentManager().popBackStack();
-  }
-
-  public void popViewsUntil(int untilWhichView)
-  {
-
-    /*while (_pageIdStack.size() > untilWhichView)
-    {
-      String pageNameToDestroy = _pageIdStack.peek();
-      Log.d("MOBBL", "MBDialogController.popAllViewsUntil popping pageName=" + pageNameToDestroy);
-
-      MBApplicationController.getInstance().changedWindow((MBBasicViewController) getLocalActivityManager()
-                                                              .getActivity(_pageIdStack.peek()), WindowChangeType.LEAVING);
-
-      _pageIdStack.pop();
-      _viewStack.pop();
-
-      destroyActivity(pageNameToDestroy);
-    }
-
-    // Make sure the first view will be used in the dialog
-    runOnUiThread(new Runnable()
-    {
-
-      public void run()
-      {
-        setContentView(_viewStack.peek());
-        MBApplicationController.getInstance().changedWindow((MBBasicViewController) getLocalActivityManager().getActivity(_pageIdStack
-                                                                                                                              .peek()),
-                                                            WindowChangeType.ACTIVATE);
-      }
-    });*/
-
-    // TODO implement using FragmentManager
-
+    if (getSupportFragmentManager().getBackStackEntryCount() == 0) finish();
+    else getSupportFragmentManager().popBackStack();
   }
 
   public void endModalPage(String pageName)
