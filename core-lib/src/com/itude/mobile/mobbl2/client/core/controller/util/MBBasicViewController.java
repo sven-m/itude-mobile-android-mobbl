@@ -37,14 +37,16 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   @Override
   public void onCreate(Bundle savedInstanceState)
   {
-    String outcomeID = getArguments().getString("id");
-    if (outcomeID != null)
+    if (getArguments() != null)
     {
-      Log.d("MOBBL", "MBBasicViewController.onCreate: found id=" + outcomeID);
-      MBPage page = MBApplicationController.getInstance().getPage(outcomeID);
-      setPage(page);
+      String outcomeID = getArguments().getString("id");
+      if (outcomeID != null)
+      {
+        Log.d("MOBBL", "MBBasicViewController.onCreate: found id=" + outcomeID);
+        MBPage page = MBApplicationController.getInstance().getPage(outcomeID);
+        setPage(page);
+      }
     }
-
     super.onCreate(savedInstanceState);
   }
 
@@ -80,14 +82,23 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
 
   public void rebuildView(boolean contentViewNeedsToBeSet)
   {
-    getPage().rebuild();
-
     if (contentViewNeedsToBeSet)
     {
-      ViewGroup view = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(getPage(), MBViewState.MBViewStatePlain);
-      MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(view);
-      getDialog().setContentView(view);
+      ViewGroup fragmentContainer = (ViewGroup) getView();
+
+      if (fragmentContainer != null)
+      {
+        fragmentContainer.removeAllViews();
+
+        ViewGroup view = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(getPage(), MBViewState.MBViewStatePlain);
+        MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(view);
+
+        fragmentContainer.addView(view);
+      }
+      else Log.w(Constants.APPLICATION_NAME, "Failed to refresh view for page " + getPage().getPageName()
+                                             + ", has the activity been created?");
     }
+    else getPage().rebuild();
   }
 
   public void handleException(Exception exception)

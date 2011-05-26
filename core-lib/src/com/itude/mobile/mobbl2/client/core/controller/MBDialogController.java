@@ -253,7 +253,7 @@ public class MBDialogController extends FragmentActivity
       popView();
     }
 
-    MBBasicViewController fragment = new MBBasicViewController();
+    MBBasicViewController fragment = MBApplicationFactory.getInstance().createFragment(page.getPageName());
     Bundle args = new Bundle();
     args.putString("id", id);
     fragment.setArguments(args);
