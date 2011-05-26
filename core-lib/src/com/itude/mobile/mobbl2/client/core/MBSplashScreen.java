@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageView;
 
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
+import com.itude.mobile.mobbl2.client.core.controller.MBViewManagerFactory;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 
@@ -15,11 +15,9 @@ public class MBSplashScreen extends Activity
   @Override
   protected void onCreate(Bundle savedInstanceState)
   {
-    // TODO Auto-generated method stub
     super.onCreate(savedInstanceState);
 
-    ImageView imageView = new ImageView(getApplicationContext());
-    imageView.setImageDrawable(MBResourceService.getInstance().getImageByID(Constants.C_SPLASHSCREEN));
+    ImageView imageView = createView();
 
     setContentView(imageView);
 
@@ -28,11 +26,18 @@ public class MBSplashScreen extends Activity
       @Override
       public void run()
       {
-        Intent viewManager = new Intent(getBaseContext(), MBViewManager.class);
+        Intent viewManager = new Intent(getBaseContext(), MBViewManagerFactory.getViewManagerClass());
         startActivity(viewManager);
       }
     };
     // Keep splashscreen visible for at least 1 second
     new Handler().postDelayed(thread, 1000);
+  }
+
+  protected ImageView createView()
+  {
+    ImageView imageView = new ImageView(getApplicationContext());
+    imageView.setImageDrawable(MBResourceService.getInstance().getImageByID(Constants.C_SPLASHSCREEN));
+    return imageView;
   }
 }
