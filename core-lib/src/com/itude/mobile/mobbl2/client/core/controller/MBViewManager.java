@@ -71,8 +71,15 @@ public class MBViewManager extends ActivityGroup
   @Override
   public boolean onCreateOptionsMenu(Menu menu)
   {
-    setupMenu(menu);
-    return super.onCreateOptionsMenu(menu);
+    for (String dialogName : getSortedDialogNames())
+    {
+      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+      MenuItem menuItem = menu.add(Menu.NONE, dialogName.hashCode(), Menu.NONE, dialogDefinition.getTitle());
+      menuItem.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+      MenuCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    return true;
   }
 
   @Override
@@ -136,18 +143,6 @@ public class MBViewManager extends ActivityGroup
   }
 
   /////////////////////////////////////////////////////
-
-  public void setupMenu(Menu menu)
-  {
-    for (String dialogName : getSortedDialogNames())
-    {
-      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      MenuItem menuItem = menu.add(Menu.NONE, dialogName.hashCode(), Menu.NONE, dialogDefinition.getTitle());
-      menuItem.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
-      MenuCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
-    }
-
-  }
 
   // Activate a dialog based on the hashed Name
   public void activateDialogWithID(int itemId)
