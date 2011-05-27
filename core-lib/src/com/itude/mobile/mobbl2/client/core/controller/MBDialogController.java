@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.RelativeLayout;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
@@ -58,7 +59,7 @@ public class MBDialogController extends FragmentActivity
    */
   private boolean controllerInit()
   {
-    //    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
     Intent intent = getIntent();
     String dialogName = intent.getStringExtra("dialogName");
@@ -164,7 +165,7 @@ public class MBDialogController extends FragmentActivity
 
   public void endModalPage(String pageName)
   {
-    getSupportFragmentManager().popBackStackImmediate(pageName, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    getSupportFragmentManager().popBackStack(pageName, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
     // Make sure no unnecessary views are being popped
     MBApplicationController.getInstance().clearModalPageID();

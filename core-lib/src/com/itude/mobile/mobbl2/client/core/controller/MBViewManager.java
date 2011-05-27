@@ -57,7 +57,7 @@ public class MBViewManager extends ActivityGroup
   @Override
   protected void onCreate(android.os.Bundle savedInstanceState)
   {
-    //    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
     super.onCreate(savedInstanceState);
 
