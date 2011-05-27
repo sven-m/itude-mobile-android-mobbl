@@ -47,16 +47,22 @@ public class MBDialogController extends FragmentActivity
   protected void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
-    controllerInit();
-    viewInit();
+    if (controllerInit())
+    {
+      viewInit();
+    }
   }
 
-  private void controllerInit()
+  /**
+   * @return true if initialization was successful, false otherwise
+   */
+  private boolean controllerInit()
   {
     //    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
     Intent intent = getIntent();
     String dialogName = intent.getStringExtra("dialogName");
+
     if (dialogName != null)
     {
       setName(dialogName);
@@ -78,10 +84,13 @@ public class MBDialogController extends FragmentActivity
         addDialogChild(_name, UniqueIntegerGenerator.getId());
       }
       _usesNavbar = ("STACK".equals(dialogDefinition.getMode()));
+
+      return true;
     }
     else
     {
       Log.w("MOBBL", "MBDialogController.onCreate: unable to find dialogName");
+      return false;
     }
   }
 
