@@ -399,8 +399,8 @@ public class MBViewManager extends ActivityGroup
 
   public void postShowActivityIndicator()
   {
-    //    if (MBActivityIndicator.isActive()) _showActivityIndicatorQueue++;
-    //    showActivityIndicator();
+    if (MBActivityIndicator.isActive()) _showActivityIndicatorQueue++;
+    showActivityIndicator();
   }
 
   public void makeKeyAndVisible()
