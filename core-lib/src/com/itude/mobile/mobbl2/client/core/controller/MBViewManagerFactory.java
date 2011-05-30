@@ -1,5 +1,8 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
+import android.util.Log;
+
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 
 /**
@@ -11,7 +14,18 @@ public class MBViewManagerFactory
 {
   public static Class<? extends MBViewManager> getViewManagerClass()
   {
-    if (MBDevice.getInstance().isTablet()) return MBTabletViewManager.class;
+    if (MBDevice.getInstance().isTablet())
+    {
+      try
+      {
+        return (Class<? extends MBViewManager>) Class.forName("com.itude.mobile.mobbl2.client.core.controller.MBTabletViewManager");
+      }
+      catch (ClassNotFoundException e)
+      {
+        Log.e(Constants.APPLICATION_NAME, "Error initializing MBTabletViewManager");
+        // Failed to load MBTabletViewManager, so return the default
+      }
+    }
     return MBViewManager.class;
   }
 }
