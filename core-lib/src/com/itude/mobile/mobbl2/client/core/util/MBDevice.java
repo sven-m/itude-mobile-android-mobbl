@@ -3,7 +3,7 @@ package com.itude.mobile.mobbl2.client.core.util;
 import android.os.Build;
 
 /**
- * @author coenhoutman
+ * @author Coen Houtman
  * 
  * The class provides methods for other classes to check what kind of device the application is running on.
  */
@@ -18,7 +18,7 @@ public class MBDevice
 
   private MBDevice()
   {
-    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.HONEYCOMB) _deviceType = DEVICE_TYPE_TABLET;
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) _deviceType = DEVICE_TYPE_TABLET;
     else _deviceType = DEVICE_TYPE_PHONE;
   }
 
