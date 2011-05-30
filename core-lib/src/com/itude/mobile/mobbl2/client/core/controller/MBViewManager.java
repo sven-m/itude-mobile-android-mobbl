@@ -204,7 +204,12 @@ public class MBViewManager extends ActivityGroup
     {
       showAlertView(page);
     }
-    else if ("MODAL".equals(displayMode) && _modalController == null)
+    else if (_modalController == null
+             && ("MODAL".equals(displayMode) || "MODALWITHCLOSEBUTTON".equals(displayMode) || "MODALFORMSHEET".equals(displayMode)
+                 || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode) || "MODALPAGESHEET".equals(displayMode)
+                 || "MODALPAGESHEETWITHCLOSEBUTTON".equals(displayMode) || "MODALFULLSCREEN".equals(displayMode)
+                 || "MODALFULLSCREENWITHCLOSEBUTTON".equals(displayMode) || "MODALCURRENTCONTEXT".equals(displayMode) || "MODALCURRENTCONTEXTWITHCLOSEBUTTON"
+                 .equals(displayMode)))
     {
       addPageToDialog(page, displayMode, shouldSelectDialog, addToBackStack);
 
@@ -509,6 +514,7 @@ public class MBViewManager extends ActivityGroup
     imm.hideSoftInputFromWindow(triggeringView.getWindowToken(), 0);
   }
 
+  // FIXME
   /* public List<? extends MBBasicViewController> getAllViewControllers()
    {
      ArrayList<MBBasicViewController> result = new ArrayList<MBBasicViewController>();
@@ -537,6 +543,7 @@ public class MBViewManager extends ActivityGroup
 
   public MBBasicViewController getViewController(String dialogName, String viewID)
   {
+    // FIXME
     /*   MBDialogController dc = getDialogWithName(dialogName);
        if (dc != null)
        {

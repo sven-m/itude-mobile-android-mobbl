@@ -25,6 +25,10 @@ import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
  */
 public class MBSplitDialogBuilder extends MBDialogBuilder
 {
+  /**
+   * @see com.itude.mobile.mobbl2.client.core.view.dialogbuilders.MBDialogBuilder#build()
+   * @return RelativeLayout
+   */
   @Override
   public ViewGroup build()
   {

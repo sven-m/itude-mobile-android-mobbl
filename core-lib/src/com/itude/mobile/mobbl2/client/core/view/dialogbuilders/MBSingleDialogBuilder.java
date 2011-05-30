@@ -21,6 +21,10 @@ import android.widget.RelativeLayout;
  */
 public class MBSingleDialogBuilder extends MBDialogBuilder
 {
+  /**
+   * @see com.itude.mobile.mobbl2.client.core.view.dialogbuilders.MBDialogBuilder#build()
+   * @return RelativeLayout
+   */
   @Override
   public ViewGroup build()
   {

@@ -37,6 +37,9 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   @Override
   public void onCreate(Bundle savedInstanceState)
   {
+    // setStyle has no effect when used as a normal Fragment, only when used as a dialog
+    setStyle(STYLE_NO_TITLE, getTheme());
+
     if (getArguments() != null)
     {
       String outcomeID = getArguments().getString("id");
@@ -53,7 +56,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
   {
-    if (getShowsDialog())
+    if (getShowsDialog() && false)
     {
       // TODO implement modal dialog frame
       return null;

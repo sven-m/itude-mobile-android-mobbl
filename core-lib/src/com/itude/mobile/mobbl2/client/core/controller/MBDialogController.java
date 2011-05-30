@@ -121,9 +121,9 @@ public class MBDialogController extends FragmentActivity
     // handle as a group of dialogs
     else if (_dialogIds.size() > 1)
     {
-      MBSplitDialogBuilder splitDialogBuilder = MBDialogBuilderFactory.getInstance().getSplitDialogBuilder();
-      splitDialogBuilder.setSortedDialogIds(_sortedDialogIds);
-      mainContainer = (RelativeLayout) splitDialogBuilder.build();
+      MBSplitDialogBuilder builder = MBDialogBuilderFactory.getInstance().getSplitDialogBuilder();
+      builder.setSortedDialogIds(_sortedDialogIds);
+      mainContainer = (RelativeLayout) builder.build();
     }
 
     setContentView(mainContainer);
@@ -153,8 +153,8 @@ public class MBDialogController extends FragmentActivity
   {
     FragmentManager fragmentManager = getSupportFragmentManager();
 
-    if (fragmentManager.getBackStackEntryCount() > 0) fragmentManager.popBackStackImmediate(fragmentManager.getBackStackEntryAt(0).getId(),
-                                                                                            FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    if (fragmentManager.getBackStackEntryCount() > 0) fragmentManager.popBackStack(fragmentManager.getBackStackEntryAt(0).getId(),
+                                                                                   FragmentManager.POP_BACK_STACK_INCLUSIVE);
   }
 
   public void popView()
@@ -238,7 +238,15 @@ public class MBDialogController extends FragmentActivity
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     if (addToBackStack) transaction.addToBackStack(id);
 
-    if (!MBDevice.getInstance().isPhone() && "MODAL".equals(displayMode)) transaction.add(fragment, id);
+    if (!MBDevice.getInstance().isPhone()
+        && ("MODAL".equals(displayMode) || "MODALWITHCLOSEBUTTON".equals(displayMode) || "MODALFORMSHEET".equals(displayMode)
+            || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode) || "MODALPAGESHEET".equals(displayMode)
+            || "MODALPAGESHEETWITHCLOSEBUTTON".equals(displayMode) || "MODALFULLSCREEN".equals(displayMode)
+            || "MODALFULLSCREENWITHCLOSEBUTTON".equals(displayMode) || "MODALCURRENTCONTEXT".equals(displayMode) || "MODALCURRENTCONTEXTWITHCLOSEBUTTON"
+            .equals(displayMode)))
+    {
+      transaction.add(fragment, id);
+    }
     else transaction.replace(_dialogIds.get(dialogName), fragment);
 
     // commitAllowingStateLoss makes sure that the transaction is being commit,

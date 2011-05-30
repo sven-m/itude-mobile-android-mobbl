@@ -216,7 +216,15 @@ public class MBApplicationController extends Application
 
           if (outcomeToProcess.getDialogName() != null) dialogs.add(outcomeToProcess.getDialogName());
 
-          if ("MODAL".equals(outcomeToProcess.getDisplayMode()))
+          if ("MODAL".equals(outcomeToProcess.getDisplayMode()) || "MODALWITHCLOSEBUTTON".equals(outcomeToProcess.getDisplayMode())
+              || "MODALFORMSHEET".equals(outcomeToProcess.getDisplayMode())
+              || "MODALFORMSHEETWITHCLOSEBUTTON".equals(outcomeToProcess.getDisplayMode())
+              || "MODALPAGESHEET".equals(outcomeToProcess.getDisplayMode())
+              || "MODALPAGESHEETWITHCLOSEBUTTON".equals(outcomeToProcess.getDisplayMode())
+              || "MODALFULLSCREEN".equals(outcomeToProcess.getDisplayMode())
+              || "MODALFULLSCREENWITHCLOSEBUTTON".equals(outcomeToProcess.getDisplayMode())
+              || "MODALCURRENTCONTEXT".equals(outcomeToProcess.getDisplayMode())
+              || "MODALCURRENTCONTEXTWITHCLOSEBUTTON".equals(outcomeToProcess.getDisplayMode()))
           {
             _outcomeWhichCausedModal = outcomeToProcess;
           }
