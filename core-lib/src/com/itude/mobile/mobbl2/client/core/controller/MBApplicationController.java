@@ -40,6 +40,7 @@ public class MBApplicationController extends Application
   private MBApplicationFactory                 _applicationFactory;
   private MBViewManager                        _viewManager;
   private boolean                              _suppressPageSelection;
+  private boolean                              _backStackEnabled;
   private MBOutcome                            _outcomeWhichCausedModal;
   private Map<String, MBPage>                  _pages;
   private Map<String, HashMap<String, MBPage>> _pagesForName;
@@ -112,8 +113,10 @@ public class MBApplicationController extends Application
     initialOutcome.setNoBackgroundProcessing(true);
 
     _suppressPageSelection = true;
+    _backStackEnabled = false;
     handleOutcome(initialOutcome);
     _suppressPageSelection = false;
+    _backStackEnabled = true;
     _viewManager.activateDialogWithName(MBMetadataService.getInstance().getFirstDialogDefinition().getName());
   }
 
@@ -302,7 +305,7 @@ public class MBApplicationController extends Application
             if (!"exception".equals(outcome.getOutcomeName())) _viewManager.showActivityIndicator();
             if (outcomeToProcess.getNoBackgroundProcessing())
             {
-              preparePageInBackground(new MBOutcome(outcomeToProcess), pageDef.getName(), selectPageInDialog);
+              preparePageInBackground(new MBOutcome(outcomeToProcess), pageDef.getName(), selectPageInDialog, _backStackEnabled);
             }
             else
             {
@@ -311,6 +314,7 @@ public class MBApplicationController extends Application
               runner.setOutcome(new MBOutcome(outcomeToProcess));
               runner.setPageName(pageDef.getName());
               runner.setSelectPageInDialog(selectPageInDialog);
+              runner.setBackStackEnabled(_backStackEnabled);
               runner.execute(new Object[0]);
             }
 
@@ -331,7 +335,7 @@ public class MBApplicationController extends Application
 
   ////////////// PAGE HANDLING
 
-  public Object[] preparePageInBackground(MBOutcome causingOutcome, String pageName, String selectPageInDialog)
+  public Object[] preparePageInBackground(MBOutcome causingOutcome, String pageName, String selectPageInDialog, Boolean backStackEnabled)
   {
     Object[] result = null;
     try
@@ -373,12 +377,12 @@ public class MBApplicationController extends Application
       }
       if (causingOutcome.getNoBackgroundProcessing())
       {
-        showResultingPage(causingOutcome, pageDefinition, document, selectPageInDialog);
+        showResultingPage(causingOutcome, pageDefinition, document, selectPageInDialog, backStackEnabled);
       }
       else
       {
         // calling AsyncTask calls showResultingPage in UI thread.
-        Object[] backgroundResult = {causingOutcome, pageDefinition, document, selectPageInDialog};
+        Object[] backgroundResult = {causingOutcome, pageDefinition, document, selectPageInDialog, backStackEnabled};
         result = backgroundResult;
       }
     }
@@ -389,14 +393,21 @@ public class MBApplicationController extends Application
     return result;
   }
 
-  public void showResultingPage(MBOutcome causingOutcome, MBPageDefinition pageDefinition, MBDocument document, String selectPageInDialog)
+  public void showResultingPage(MBOutcome causingOutcome, MBPageDefinition pageDefinition, MBDocument document, String selectPageInDialog,
+                                boolean backStackEnabled)
   {
     try
     {
       String displayMode = causingOutcome.getDisplayMode();
       MBViewState viewState = _viewManager.getCurrentViewState();
 
-      if ("MODAL".equals(displayMode)) viewState = MBViewState.MBViewStateModal;
+      if ("MODAL".equals(displayMode) || "MODALFORMSHEET".equals(displayMode) || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode)
+          || "MODALPAGESHEET".equals(displayMode) || "MODALPAGESHEETWITHCLOSEBUTTON".equals(displayMode)
+          || "MODALFULLSCREEN".equals(displayMode) || "MODALFULLSCREENWITHCLOSEBUTTON".equals(displayMode)
+          || "MODALCURRENTCONTEXT".equals(displayMode) || "MODALCURRENTCONTEXTWITHCLOSEBUTTON".equals(displayMode))
+      {
+        viewState = MBViewState.MBViewStateModal;
+      }
 
       MBPage page = _applicationFactory.createPage(pageDefinition, document, causingOutcome.getPath(), viewState);
       page.setController(this);
@@ -407,9 +418,7 @@ public class MBApplicationController extends Application
         page.setDialogName(getActiveDialogName());
       }
       boolean doSelect = "yes".equals(selectPageInDialog) && !_suppressPageSelection;
-      // don't add initial outcomes to the backstack
-      boolean addToBackStack = !"init".equals(causingOutcome.getOutcomeName()) && !"Controller".equals(causingOutcome.getOriginName());
-      _viewManager.showPage(page, displayMode, doSelect, addToBackStack);
+      _viewManager.showPage(page, displayMode, doSelect, backStackEnabled);
       _viewManager.hideActivityIndicator();
     }
     catch (Exception e)

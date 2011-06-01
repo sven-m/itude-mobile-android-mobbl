@@ -56,18 +56,15 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
   {
-    if (getShowsDialog() && false)
+    if (getShowsDialog())
     {
-      // TODO implement modal dialog frame
-      return null;
+      getArguments().getBoolean("cancelable", true);
     }
-    else
-    {
-      ViewGroup view = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(_page, MBViewState.MBViewStatePlain);
-      MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(view);
 
-      return view;
-    }
+    ViewGroup view = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(_page, MBViewState.MBViewStatePlain);
+    MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(view);
+
+    return view;
   }
 
   ////////////////////////////////////////

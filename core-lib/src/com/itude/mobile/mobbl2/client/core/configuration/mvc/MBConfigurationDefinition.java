@@ -45,6 +45,11 @@ public class MBConfigurationDefinition extends MBDefinition
 
   public void addAll(MBConfigurationDefinition otherConfig)
   {
+    if (_firstDialog == null)
+    {
+      _firstDialog = otherConfig.getFirstDialogDefinition();
+    }
+
     for (MBDocumentDefinition documentDef : otherConfig.getDocuments().values())
     {
       addDocument(documentDef);

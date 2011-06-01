@@ -245,6 +245,8 @@ public class MBDialogController extends FragmentActivity
             || "MODALFULLSCREENWITHCLOSEBUTTON".equals(displayMode) || "MODALCURRENTCONTEXT".equals(displayMode) || "MODALCURRENTCONTEXTWITHCLOSEBUTTON"
             .equals(displayMode)))
     {
+      //      args.putBoolean("cancelable", false);
+      //      fragment.setArguments(args);
       transaction.add(fragment, id);
     }
     else transaction.replace(_dialogIds.get(dialogName), fragment);
