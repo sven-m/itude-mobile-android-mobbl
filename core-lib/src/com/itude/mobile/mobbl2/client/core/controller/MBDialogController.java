@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
+import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
@@ -34,7 +35,6 @@ public class MBDialogController extends FragmentActivity
   private String                     _dialogMode;
   private boolean                    _usesNavbar;
   private Object                     _rootController;
-  private Object                     _navigationController;
   private int                        _activityIndicatorCount;
   private boolean                    _temporary;
   private final Stack<View>          _viewStack       = new Stack<View>();
@@ -165,10 +165,13 @@ public class MBDialogController extends FragmentActivity
 
   public void endModalPage(String pageName)
   {
-    getSupportFragmentManager().popBackStack(pageName, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    if (pageName != null)
+    {
+      getSupportFragmentManager().popBackStack(pageName, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-    // Make sure no unnecessary views are being popped
-    MBApplicationController.getInstance().clearModalPageID();
+      // Make sure no unnecessary views are being popped
+      MBApplicationController.getInstance().clearModalPageID();
+    }
   }
 
   public String getName()
@@ -238,15 +241,25 @@ public class MBDialogController extends FragmentActivity
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     if (addToBackStack) transaction.addToBackStack(id);
 
-    if (!MBDevice.getInstance().isPhone()
-        && ("MODAL".equals(displayMode) || "MODALWITHCLOSEBUTTON".equals(displayMode) || "MODALFORMSHEET".equals(displayMode)
-            || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode) || "MODALPAGESHEET".equals(displayMode)
-            || "MODALPAGESHEETWITHCLOSEBUTTON".equals(displayMode) || "MODALFULLSCREEN".equals(displayMode)
-            || "MODALFULLSCREENWITHCLOSEBUTTON".equals(displayMode) || "MODALCURRENTCONTEXT".equals(displayMode) || "MODALCURRENTCONTEXTWITHCLOSEBUTTON"
-            .equals(displayMode)))
+    if (!MBDevice.getInstance().isPhone() && page.getCurrentViewState() == MBViewState.MBViewStateModal)
     {
-      //      args.putBoolean("cancelable", false);
-      //      fragment.setArguments(args);
+      if ("MODAL".equals(displayMode) || "MODALFORMSHEET".equals(displayMode) || "MODALPAGESHEET".equals(displayMode)
+          || "MODALCURRENTCONTEXT".equals(displayMode))
+      {
+
+      }
+      else if ("MODALFULLSCREEN".equals(displayMode))
+      {
+        args.putBoolean("fullscreen", true);
+        fragment.setArguments(args);
+      }
+
+      if (displayMode.endsWith("WITHCLOSEBUTTON"))
+      {
+        args.putBoolean("closable", true);
+        fragment.setArguments(args);
+      }
+
       transaction.add(fragment, id);
     }
     else transaction.replace(_dialogIds.get(dialogName), fragment);

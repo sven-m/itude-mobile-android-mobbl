@@ -3,6 +3,10 @@ package com.itude.mobile.mobbl2.client.core.controller.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -10,6 +14,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
@@ -17,21 +25,35 @@ import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.services.MBEvent;
 import com.itude.mobile.mobbl2.client.core.services.MBEventListener;
+import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangedEventListener;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBPanelViewBuilder;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl2.client.core.view.components.MBHeader;
 
-public class MBBasicViewController extends DialogFragment implements MBEventListener, MBWindowChangedEventListener
+/**
+ * @author Coen Houtman
+ * 
+ * View controller for displaying one MBPage. An MBBasicViewController can be displayed in the following ways:
+ *  - fullscreen
+ *  - as part of a screen (Fragment)
+ *  - modal
+ *  - fullscreen modal
+ */
+public class MBBasicViewController extends DialogFragment implements MBEventListener, MBWindowChangedEventListener, OnClickListener
 {
   private MBPage              _page;
-  private ScrollView          _mainScrollView        = null;
-  private View                _rootView              = null;
-  private View                _mainScrollViewContent = null;
-  private final List<MBEvent> eventQueue             = new ArrayList<MBEvent>();
+  private ScrollView          _mainScrollView          = null;
+  private View                _rootView                = null;
+  private View                _mainScrollViewContent   = null;
+  private boolean             _isDialogClosable        = false;
+  private boolean             _isDialogFullscreen      = false;
+  private boolean             _isDialogUsingBackButton = false;
+  private final List<MBEvent> eventQueue               = new ArrayList<MBEvent>();
 
   /////////////////////////////////////////
   @Override
@@ -46,6 +68,12 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
       if (outcomeID != null)
       {
         Log.d("MOBBL", "MBBasicViewController.onCreate: found id=" + outcomeID);
+
+        if (getShowsDialog() && outcomeID != MBApplicationController.getInstance().getModalPageID())
+        {
+          _isDialogUsingBackButton = true;
+        }
+
         MBPage page = MBApplicationController.getInstance().getPage(outcomeID);
         setPage(page);
       }
@@ -54,17 +82,75 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   }
 
   @Override
+  public Dialog onCreateDialog(Bundle savedInstanceState)
+  {
+    _isDialogClosable = getArguments().getBoolean("closable", false);
+    _isDialogFullscreen = getArguments().getBoolean("fullscreen", false);
+
+    if (_isDialogClosable && MBDevice.getInstance().isTablet())
+    {
+      ViewGroup view = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(_page, MBViewState.MBViewStatePlain);
+      MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(view);
+
+      // unable to use the holo light theme as pre honeycomb doesn't know AlertDialog.Builder(context, theme) 
+      return new AlertDialog.Builder(getActivity()).setNeutralButton(MBLocalizationService.getInstance().getTextForKey("Close"), this)
+          .setView(view).create();
+    }
+
+    if (_isDialogFullscreen)
+    {
+      setStyle(STYLE_NO_TITLE, android.R.style.Theme);
+    }
+
+    return super.onCreateDialog(savedInstanceState);
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
   {
+    // do stuff when used as a dialog
     if (getShowsDialog())
     {
-      getArguments().getBoolean("cancelable", true);
+      setCancelable(_isDialogClosable || _isDialogUsingBackButton);
+
+      // view is already set in onCreateDialog for closable dialogs
+      if (_isDialogClosable)
+      {
+        return super.onCreateView(inflater, container, savedInstanceState);
+      }
     }
 
     ViewGroup view = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(_page, MBViewState.MBViewStatePlain);
     MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(view);
 
     return view;
+  }
+
+  /**
+   * @see android.support.v4.app.DialogFragment#onStart()
+   * 
+   * This method is used to do stuff with the AlertDialog created in onCreateDialog based
+   * on optional parameters passed to this DialogFragment.
+   */
+  @Override
+  public void onStart()
+  {
+    super.onStart();
+
+    // At this point, Dialog.show is invoked; resolves the issue of first calling requestFeature
+    // before doing view stuff. But this is only for the AlertDialog, i.e. closable dialogs
+    if (getShowsDialog() && _isDialogClosable)
+    {
+      FrameLayout layout = (FrameLayout) getDialog().findViewById(android.R.id.custom);
+      layout.setPadding(0, 0, 0, 0);
+
+      if (_isDialogFullscreen)
+      {
+        Window window = getDialog().getWindow();
+        window.setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+      }
+    }
   }
 
   ////////////////////////////////////////
@@ -257,5 +343,12 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   public boolean handleOrientationChange(Configuration config)
   {
     return false;
+  }
+
+  @Override
+  // onClick listener for closing all modal dialogs
+  public void onClick(DialogInterface arg0, int arg1)
+  {
+    MBViewManager.getInstance().endModalDialog(MBApplicationController.getInstance().getModalPageID());
   }
 }
