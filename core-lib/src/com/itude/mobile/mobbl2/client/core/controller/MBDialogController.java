@@ -236,12 +236,24 @@ public class MBDialogController extends FragmentActivity
     fragment.setArguments(args);
 
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-    if (addToBackStack) transaction.addToBackStack(id);
 
-    if (!MBDevice.getInstance().isPhone() && page.getCurrentViewState() == MBViewState.MBViewStateModal)
+    if (addToBackStack)
     {
+      transaction.addToBackStack(id);
+      if (MBDevice.getInstance().isTablet()) transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    if (MBDevice.getInstance().isTablet()
+        && (page.getCurrentViewState() == MBViewState.MBViewStateModal || MBApplicationController.getInstance().getModalPageID() != null))
+    {
+      if (MBApplicationController.getInstance().getModalPageID() != null)
+      {
+        displayMode = MBApplicationController.getInstance().getOutcomeWhichCausedModal().getDisplayMode();
+      }
+
       boolean fullscreen = false;
       boolean cancelable = false;
+
       if ("MODAL".equals(displayMode))
       {
         fullscreen = true;
@@ -256,7 +268,9 @@ public class MBDialogController extends FragmentActivity
         fullscreen = true;
       }
 
-      if (displayMode.endsWith("WITHCLOSEBUTTON"))
+      if ("MODALWITHCLOSEBUTTON".equals(displayMode) || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode)
+          || "MODALPAGESHEETWITHCLOSEBUTTON".equals(displayMode) || "MODALCURRENTCONTEXTWITHCLOSEBUTTON".equals(displayMode)
+          || "MODALFULLSCREENWITHCLOSEBUTTON".equals(displayMode))
       {
         args.putBoolean("closable", true);
         fragment.setArguments(args);

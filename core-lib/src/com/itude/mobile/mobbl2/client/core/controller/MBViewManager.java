@@ -47,7 +47,7 @@ public class MBViewManager extends ActivityGroup
   private ArrayList<String>    _sortedDialogNames;
   private String               _activeDialogName;
   private Dialog               _currentAlert;
-  private Object               _modalController;
+  //  private Object               _modalController;
   private boolean              _singlePageMode;
 
   private int                  _showActivityIndicatorQueue = 0;
@@ -204,25 +204,6 @@ public class MBViewManager extends ActivityGroup
     if (page.getPageType() == MBPageDefinition.MBPageType.MBPageTypesErrorPage || "POPUP".equals(displayMode))
     {
       showAlertView(page);
-    }
-    else if (_modalController == null
-             && ("MODAL".equals(displayMode) || "MODALWITHCLOSEBUTTON".equals(displayMode) || "MODALFORMSHEET".equals(displayMode)
-                 || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode) || "MODALPAGESHEET".equals(displayMode)
-                 || "MODALPAGESHEETWITHCLOSEBUTTON".equals(displayMode) || "MODALFULLSCREEN".equals(displayMode)
-                 || "MODALFULLSCREENWITHCLOSEBUTTON".equals(displayMode) || "MODALCURRENTCONTEXT".equals(displayMode) || "MODALCURRENTCONTEXTWITHCLOSEBUTTON"
-                 .equals(displayMode)))
-    {
-      addPageToDialog(page, displayMode, shouldSelectDialog, addToBackStack);
-
-      // TODO: support nested modal dialogs
-
-      //_modalController = [[MBNavigationController alloc] initWithRootViewController:[page viewController]];
-      // [[[MBViewBuilderFactory sharedInstance] styleHandler] styleNavigationBar:_modalController.navigationBar];
-      //[_tabController presentModalViewController:_modalController animated:TRUE];
-    }
-    else if (_modalController != null)
-    {
-      //[_modalController pushViewController:[page viewController] animated:TRUE];
     }
     else
     {
@@ -471,13 +452,13 @@ public class MBViewManager extends ActivityGroup
 
   public void endModalDialog()
   {
-    //    removeChild();
+    endModalDialog(MBApplicationController.getInstance().getModalPageID());
   }
 
   public MBViewState getCurrentViewState()
   {
     // Currently fullscreen is not implemented
-    if (_modalController != null) return MBViewState.MBViewStateModal;
+    //    if (_modalType != null) return MBViewState.MBViewStateModal;
     if (_dialogControllers.size() > 1) return MBViewState.MBViewStateTabbed;
     return MBViewState.MBViewStatePlain;
   }

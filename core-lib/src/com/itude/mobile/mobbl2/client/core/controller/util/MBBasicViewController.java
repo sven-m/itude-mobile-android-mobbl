@@ -154,6 +154,15 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     }
   }
 
+  @Override
+  public void onDismiss(DialogInterface dialog)
+  {
+    super.onDismiss(dialog);
+    MBApplicationController controller = MBApplicationController.getInstance();
+    MBPage rootModalPage = controller.getPage(controller.getModalPageID());
+    if (_page.equals(rootModalPage)) controller.clearModalPageID();
+  }
+
   ////////////////////////////////////////
 
   public MBPage getPage()
