@@ -47,13 +47,13 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBHeader;
 public class MBBasicViewController extends DialogFragment implements MBEventListener, MBWindowChangedEventListener, OnClickListener
 {
   private MBPage              _page;
-  private ScrollView          _mainScrollView          = null;
-  private View                _rootView                = null;
-  private View                _mainScrollViewContent   = null;
-  private boolean             _isDialogClosable        = false;
-  private boolean             _isDialogFullscreen      = false;
-  private boolean             _isDialogUsingBackButton = false;
-  private final List<MBEvent> eventQueue               = new ArrayList<MBEvent>();
+  private ScrollView          _mainScrollView        = null;
+  private View                _rootView              = null;
+  private View                _mainScrollViewContent = null;
+  private boolean             _isDialogClosable      = false;
+  private boolean             _isDialogFullscreen    = false;
+  private boolean             _isDialogCancelable    = false;                   //i.e. back button dismisses dialog when true
+  private final List<MBEvent> eventQueue             = new ArrayList<MBEvent>();
 
   /////////////////////////////////////////
   @Override
@@ -71,7 +71,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
 
         if (getShowsDialog() && outcomeID != MBApplicationController.getInstance().getModalPageID())
         {
-          _isDialogUsingBackButton = true;
+          _isDialogCancelable = true;
         }
 
         MBPage page = MBApplicationController.getInstance().getPage(outcomeID);
@@ -86,6 +86,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   {
     _isDialogClosable = getArguments().getBoolean("closable", false);
     _isDialogFullscreen = getArguments().getBoolean("fullscreen", false);
+    _isDialogCancelable = getArguments().getBoolean("cancelable", false) || _isDialogCancelable;
 
     if (_isDialogClosable && MBDevice.getInstance().isTablet())
     {
@@ -111,7 +112,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     // do stuff when used as a dialog
     if (getShowsDialog())
     {
-      setCancelable(_isDialogClosable || _isDialogUsingBackButton);
+      setCancelable(_isDialogClosable || _isDialogCancelable);
 
       // view is already set in onCreateDialog for closable dialogs
       if (_isDialogClosable)

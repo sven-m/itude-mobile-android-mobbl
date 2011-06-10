@@ -10,6 +10,7 @@ public class MBViewBuilderFactory
   private MBRowViewBuilder            _rowViewBuilder;
   private MBFieldViewBuilder          _fieldViewBuilder;
   private MBStyleHandler              _styleHandler;
+  private MBDialogViewBuilder         _dialogViewBuilder;
 
   private MBViewBuilderFactory()
   {
@@ -19,6 +20,7 @@ public class MBViewBuilderFactory
     _rowViewBuilder = new MBRowViewBuilder();
     _fieldViewBuilder = new MBFieldViewBuilder();
     _styleHandler = new MBStyleHandler();
+    _dialogViewBuilder = new MBDialogViewBuilder();
   }
 
   public static MBViewBuilderFactory getInstance()
@@ -98,6 +100,16 @@ public class MBViewBuilderFactory
   public void setStyleHandler(MBStyleHandler styleHandler)
   {
     _styleHandler = styleHandler;
+  }
+
+  public void setDialogViewBuilder(MBDialogViewBuilder dialogViewBuilder)
+  {
+    _dialogViewBuilder = dialogViewBuilder;
+  }
+
+  public MBDialogViewBuilder getDialogViewBuilder()
+  {
+    return _dialogViewBuilder;
   }
 
 }

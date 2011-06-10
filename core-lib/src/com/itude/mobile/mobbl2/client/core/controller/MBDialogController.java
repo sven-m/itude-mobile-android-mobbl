@@ -24,9 +24,8 @@ import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
-import com.itude.mobile.mobbl2.client.core.view.dialogbuilders.MBDialogBuilderFactory;
-import com.itude.mobile.mobbl2.client.core.view.dialogbuilders.MBSingleDialogBuilder;
-import com.itude.mobile.mobbl2.client.core.view.dialogbuilders.MBSplitDialogBuilder;
+import com.itude.mobile.mobbl2.client.core.view.builders.MBDialogViewBuilder.MBDialogType;
+import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 public class MBDialogController extends FragmentActivity
 {
@@ -114,16 +113,14 @@ public class MBDialogController extends FragmentActivity
     // handle as a single dialog
     if (_dialogIds.size() == 1)
     {
-      MBSingleDialogBuilder builder = MBDialogBuilderFactory.getInstance().getSingleDialogBuilder();
-      builder.setSortedDialogIds(_sortedDialogIds);
-      mainContainer = (RelativeLayout) builder.build();
+      mainContainer = (RelativeLayout) MBViewBuilderFactory.getInstance().getDialogViewBuilder()
+          .buildDialog(MBDialogType.Single, _sortedDialogIds);
     }
     // handle as a group of dialogs
     else if (_dialogIds.size() > 1)
     {
-      MBSplitDialogBuilder builder = MBDialogBuilderFactory.getInstance().getSplitDialogBuilder();
-      builder.setSortedDialogIds(_sortedDialogIds);
-      mainContainer = (RelativeLayout) builder.build();
+      mainContainer = (RelativeLayout) MBViewBuilderFactory.getInstance().getDialogViewBuilder()
+          .buildDialog(MBDialogType.Split, _sortedDialogIds);
     }
 
     setContentView(mainContainer);
@@ -243,20 +240,37 @@ public class MBDialogController extends FragmentActivity
 
     if (!MBDevice.getInstance().isPhone() && page.getCurrentViewState() == MBViewState.MBViewStateModal)
     {
-      if ("MODAL".equals(displayMode) || "MODALFORMSHEET".equals(displayMode) || "MODALPAGESHEET".equals(displayMode)
-          || "MODALCURRENTCONTEXT".equals(displayMode))
+      boolean fullscreen = false;
+      boolean cancelable = false;
+      if ("MODAL".equals(displayMode))
+      {
+        fullscreen = true;
+        cancelable = true;
+      }
+      else if ("MODALFORMSHEET".equals(displayMode) || "MODALPAGESHEET".equals(displayMode) || "MODALCURRENTCONTEXT".equals(displayMode))
       {
 
       }
       else if ("MODALFULLSCREEN".equals(displayMode))
       {
-        args.putBoolean("fullscreen", true);
-        fragment.setArguments(args);
+        fullscreen = true;
       }
 
       if (displayMode.endsWith("WITHCLOSEBUTTON"))
       {
         args.putBoolean("closable", true);
+        fragment.setArguments(args);
+      }
+
+      if (fullscreen)
+      {
+        args.putBoolean("fullscreen", true);
+        fragment.setArguments(args);
+      }
+
+      if (cancelable)
+      {
+        args.putBoolean("cancelable", true);
         fragment.setArguments(args);
       }
 

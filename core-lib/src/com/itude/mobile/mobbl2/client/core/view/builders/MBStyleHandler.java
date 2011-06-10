@@ -353,5 +353,4 @@ public class MBStyleHandler
     // TODO Auto-generated method stub
 
   }
-
 }
