@@ -53,19 +53,10 @@ public class MBStyleHandler
 
   public void styleTextfield(View view, MBField field)
   {
-    if (view instanceof EditText)
-    {
-
-      EditText textField = (EditText) view;
-      textField.setGravity(Gravity.LEFT);
-
-    }
-
   }
 
   public void styleTextView(TextView view, MBField field)
   {
-
   }
 
   public void styleButton(Button view, MBField field)
@@ -353,4 +344,5 @@ public class MBStyleHandler
     // TODO Auto-generated method stub
 
   }
+
 }
