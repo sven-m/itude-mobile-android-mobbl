@@ -17,9 +17,7 @@ public class MBSplashScreen extends Activity
   {
     super.onCreate(savedInstanceState);
 
-    ImageView imageView = createView();
-
-    setContentView(imageView);
+    setView();
 
     Thread thread = new Thread()
     {
@@ -34,10 +32,12 @@ public class MBSplashScreen extends Activity
     new Handler().postDelayed(thread, 1000);
   }
 
-  protected ImageView createView()
+  protected void setView()
   {
     ImageView imageView = new ImageView(getApplicationContext());
     imageView.setImageDrawable(MBResourceService.getInstance().getImageByID(Constants.C_SPLASHSCREEN));
-    return imageView;
+    
+    setContentView(imageView);
+    
   }
 }
