@@ -297,7 +297,7 @@ class ReadFromAll
   
   public TwinResult<byte[], Reader> read(String p_filename)
   {
-    Reader theReaderThatRead = _fromGlb;
+    Reader theReaderThatRead = _fromAsset;
     byte[] result = theReaderThatRead.read(p_filename); 
     if (result == null)
     {
@@ -305,7 +305,7 @@ class ReadFromAll
       result = theReaderThatRead.read(p_filename);
       if (result == null)
       {
-        theReaderThatRead = _fromAsset;
+        theReaderThatRead = _fromGlb;
         result = theReaderThatRead.read(p_filename);
         if (result == null)
           theReaderThatRead = null;
