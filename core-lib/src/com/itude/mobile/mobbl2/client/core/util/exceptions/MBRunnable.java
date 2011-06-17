@@ -8,6 +8,13 @@ public abstract class MBRunnable implements Runnable
   private MBPage _page = null;
 
   /**
+   * Default constructor
+   */
+  public MBRunnable()
+  {
+  }
+
+  /**
    * @param page the page
    */
   public MBRunnable(MBPage page)
