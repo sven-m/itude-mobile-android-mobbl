@@ -238,13 +238,15 @@ public class MBApplicationController extends Application
               _viewManager.endModalDialog(getModalPageID());
               _viewManager.hideActivityIndicator();
             }
-            else
-            {
-              // On the iPhone the current screen is being refreshed after dismissing an progress indicator
-              // On Android this doesn't happen. To recreate this behaviour this code was introduced
-              //TODO implement refresh mechanism. On dialog base or page? 
-              //              (((MBDialogController) _viewManager.getCurrentActivity()).getCurrentActivity()).handleOnWindowActivated();
-            }
+            ((MBDialogController) _viewManager.getCurrentActivity()).handleAllOnWindowActivated();
+
+            //            else
+            //            {
+            //              // On the iPhone the current screen is being refreshed after dismissing an progress indicator
+            //              // On Android this doesn't happen. To recreate this behaviour this code was introduced
+            //              //TODO implement refresh mechanism. On dialog base or page? 
+            //              //              (((MBDialogController) _viewManager.getCurrentActivity()).getCurrentActivity()).handleOnWindowActivated();
+            //            }
 
           }
           else if ("ENDMODAL_CONTINUE".equals(outcomeToProcess.getDisplayMode()))
@@ -491,10 +493,10 @@ public class MBApplicationController extends Application
   ////////EVENT HANDLING
   public void addEventToAllListeners(MBEvent event)
   {
-    /*for (MBBasicViewController vc : getViewManager().getAllViewControllers())
+    for (MBBasicViewController vc : getViewManager().getAllFragements())
     {
       vc.addEventToQueue(event);
-    }*/
+    }
   }
 
   public void addEventToPage(MBEvent event, String pageName)

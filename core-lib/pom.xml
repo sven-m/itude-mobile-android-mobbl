@@ -46,6 +46,10 @@
 			<artifactId>android-support</artifactId>
 			<version>4.0</version>
 		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+		</dependency>
 	</dependencies>
 
 	<scm>
@@ -55,7 +59,7 @@
 	</scm>
 
 	<build>
-		<defaultGoal>install</defaultGoal> 
+		<defaultGoal>install</defaultGoal>
 		<finalName>${project.artifactId}-${project.version}</finalName>
 		<sourceDirectory>${project.basedir}/src</sourceDirectory>
 		<plugins>

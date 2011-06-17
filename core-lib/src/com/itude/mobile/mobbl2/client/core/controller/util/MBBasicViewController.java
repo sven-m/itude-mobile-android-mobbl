@@ -29,6 +29,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangedEventListener;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
+import com.itude.mobile.mobbl2.client.core.util.exceptions.MBRunnable;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBPanelViewBuilder;
@@ -176,25 +177,36 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     _page.setViewController(this);
   }
 
-  public void rebuildView(boolean contentViewNeedsToBeSet)
+  public void rebuildView(final boolean contentViewNeedsToBeSet)
   {
-    if (contentViewNeedsToBeSet)
+
+    MBPage page = getPage();
+    page.rebuildView();
+    
+    MBRunnable runnable = new MBRunnable(page)
     {
-      ViewGroup fragmentContainer = (ViewGroup) getView();
-
-      if (fragmentContainer != null)
+      @Override
+      public void runMethod()
       {
-        fragmentContainer.removeAllViews();
+        if (contentViewNeedsToBeSet)
+        {
+          ViewGroup fragmentContainer = (ViewGroup) getView();
 
-        ViewGroup view = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(getPage(), MBViewState.MBViewStatePlain);
-        MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(view);
+          if (fragmentContainer != null)
+          {
+            fragmentContainer.removeAllViews();
 
-        fragmentContainer.addView(view);
+            ViewGroup view = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(getPage(), MBViewState.MBViewStatePlain);
+            MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(view);
+
+            fragmentContainer.addView(view);
+          }
+          else Log.w(Constants.APPLICATION_NAME, "Failed to refresh view for page " + getPage().getPageName()
+                                                 + ", has the activity been created?");
+        }
       }
-      else Log.w(Constants.APPLICATION_NAME, "Failed to refresh view for page " + getPage().getPageName()
-                                             + ", has the activity been created?");
-    }
-    else getPage().rebuild();
+    };
+    getActivity().runOnUiThread(runnable);
   }
 
   public void handleException(Exception exception)

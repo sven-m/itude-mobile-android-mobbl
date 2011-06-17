@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -14,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
@@ -296,6 +298,76 @@ public class MBDialogController extends FragmentActivity
     // even when the target activity is stopped. For now, this comes with the price,
     // that the page being displayed will lose its state after a configuration change (e.g. an orientation change) 
     transaction.commitAllowingStateLoss();
+  }
+
+  public List<MBBasicViewController> getAllFragments()
+  {
+    List<MBBasicViewController> lijst = new ArrayList<MBBasicViewController>();
+
+    for (int i = 0; i < _sortedDialogIds.size(); i++)
+    {
+      MBBasicViewController fragment = (MBBasicViewController) getSupportFragmentManager().findFragmentById(_sortedDialogIds.get(i));
+      if (fragment != null) lijst.add(fragment);
+    }
+
+    return lijst;
+  }
+
+  public MBBasicViewController findFragment(String name)
+  {
+    MBBasicViewController fragment = null;
+
+    if (!_dialogIds.isEmpty())
+    {
+      Integer frID = _dialogIds.get(name);
+      if (frID != null)
+      {
+        fragment = (MBBasicViewController) getSupportFragmentManager().findFragmentById(frID);
+      }
+    }
+    return fragment;
+  }
+
+  /**
+   * 
+   */
+  public void handleAllOnWindowActivated()
+  {
+    List<MBBasicViewController> allFragments = getAllFragments();
+
+    for (int i = 0; i < allFragments.size(); i++)
+    {
+      handleOnWindowActivated(allFragments.get(i));
+    }
+  }
+
+  /**
+   * 
+   */
+  public void handleAllOnLeavingWindow()
+  {
+    List<MBBasicViewController> allFragments = getAllFragments();
+
+    for (int i = 0; i < allFragments.size(); i++)
+    {
+      handleOnLeavingWindow(allFragments.get(i));
+    }
+  }
+
+  /**
+    * @param id id of the dialog
+    */
+  public void handleOnWindowActivated(MBBasicViewController vc)
+  {
+    if (vc != null) vc.handleOnWindowActivated();
+  }
+
+  /**
+   * @param id id of the dialog
+   */
+  public void handleOnLeavingWindow(MBBasicViewController vc)
+  {
+    if (vc != null) vc.handleOnLeavingWindow();
   }
 
   public void popPageAnimated(boolean animated)

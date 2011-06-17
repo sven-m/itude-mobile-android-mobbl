@@ -263,11 +263,11 @@ public class MBField extends MBComponent
     _valueIfNil = valueIfNil;
   }
 
-  public boolean getHidden()
+  public boolean isHidden()
   {
     return _hidden;
   }
-
+  
   public void setHidden(boolean hidden)
   {
     _hidden = hidden;

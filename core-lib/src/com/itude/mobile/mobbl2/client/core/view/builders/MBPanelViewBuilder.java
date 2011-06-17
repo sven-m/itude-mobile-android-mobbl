@@ -142,7 +142,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
   }
 
-  private void buildChildrenForEditableMatrix(List<? extends MBComponent> children, ViewGroup parent, MBViewManager.MBViewState viewState)
+  public void buildChildrenForEditableMatrix(List<? extends MBComponent> children, ViewGroup parent, MBViewManager.MBViewState viewState)
   {
 
     int previousSiblingId = -1;
@@ -171,8 +171,13 @@ public class MBPanelViewBuilder extends MBViewBuilder
       }
       else
       {
-        LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-        childView.setLayoutParams(params);
+        // If first item is not an empty matrix header set the layoutparams 
+        if (!(child instanceof MBPanel && ((MBPanel) child).getType() != null
+              && ((MBPanel) child).getType().equals(Constants.C_MATRIXHEADER) && ((MBPanel) child).getChildren().size() <= 0))
+        {
+          LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+          childView.setLayoutParams(params);
+        }
       }
 
       parent.addView(childView);
@@ -553,7 +558,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
       if (mbComponent instanceof MBField)
       {
         MBField field = (MBField) mbComponent;
-        if (!field.getHidden())
+        if (!field.isHidden())
         {
           if (Constants.C_FIELD_MATRIXTITLE.equals(field.getType()))
           {
@@ -684,7 +689,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
       if (mbComponent instanceof MBField)
       {
         MBField field = (MBField) mbComponent;
-        if (!field.getHidden())
+        if (!field.isHidden())
         {
           if (Constants.C_FIELD_MATRIXTITLE.equals(field.getType()))
           {

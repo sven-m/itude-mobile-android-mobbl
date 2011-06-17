@@ -85,12 +85,10 @@ public class MBStyleHandler
       Drawable imageEnabled = MBResourceService.getInstance().getImageByID("button-delete-normal");
       Drawable imagePressed = MBResourceService.getInstance().getImageByID("button-delete-pressed");
       Drawable imageDisabled = MBResourceService.getInstance().getImageByID("button-delete-disabled");
-      //Drawable imageFocussed = MBResourceService.getInstance().getImageByID("button-delete-focussed");
 
       buttonStates.addState(new int[]{R.attr.state_pressed}, imagePressed);
       buttonStates.addState(new int[]{R.attr.state_enabled}, imageEnabled);
       buttonStates.addState(new int[]{-R.attr.state_enabled}, imageDisabled);
-      //buttonStates.addState(new int[]{R.attr.state_focused}, imageFocussed);
 
       view.setBackgroundDrawable(buttonStates);
     }
@@ -100,12 +98,10 @@ public class MBStyleHandler
       Drawable imageEnabled = MBResourceService.getInstance().getImageByID("button-arrow-up-normal");
       Drawable imagePressed = MBResourceService.getInstance().getImageByID("button-arrow-up-pressed");
       Drawable imageDisabled = MBResourceService.getInstance().getImageByID("button-arrow-up-disabled");
-      //Drawable imageFocussed = MBResourceService.getInstance().getImageByID("button-arrow-up-focussed");
 
       buttonStates.addState(new int[]{R.attr.state_pressed}, imagePressed);
       buttonStates.addState(new int[]{R.attr.state_enabled}, imageEnabled);
       buttonStates.addState(new int[]{-R.attr.state_enabled}, imageDisabled);
-      //buttonStates.addState(new int[]{R.attr.state_focused}, imageFocussed);
 
       view.setBackgroundDrawable(buttonStates);
     }
@@ -115,12 +111,10 @@ public class MBStyleHandler
       Drawable imageEnabled = MBResourceService.getInstance().getImageByID("button-arrow-down-normal");
       Drawable imagePressed = MBResourceService.getInstance().getImageByID("button-arrow-down-pressed");
       Drawable imageDisabled = MBResourceService.getInstance().getImageByID("button-arrow-down-disabled");
-      //Drawable imageFocussed = MBResourceService.getInstance().getImageByID("button-arrow-down-focussed");
 
       buttonStates.addState(new int[]{R.attr.state_pressed}, imagePressed);
       buttonStates.addState(new int[]{R.attr.state_enabled}, imageEnabled);
       buttonStates.addState(new int[]{-R.attr.state_enabled}, imageDisabled);
-      //buttonStates.addState(new int[]{R.attr.state_focused}, imageFocussed);
 
       view.setBackgroundDrawable(buttonStates);
     }

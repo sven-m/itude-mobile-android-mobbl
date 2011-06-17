@@ -1,6 +1,10 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import android.app.Activity;
 import android.app.ActivityGroup;
@@ -196,7 +200,7 @@ public class MBViewManager extends ActivityGroup
   public void showPage(MBPage page, String displayMode, boolean shouldSelectDialog, boolean addToBackStack)
   {
 
-    Log.d("MOBBL",
+    Log.d(Constants.APPLICATION_NAME,
           "ViewManager: showPage name=" + page.getPageName() + " dialog=" + page.getDialogName() + " mode=" + displayMode + " type="
               + page.getPageType() + " orientation=" + ((MBPageDefinition) page.getDefinition()).getOrientationPermissions()
               + " backStack=" + addToBackStack);
@@ -232,17 +236,27 @@ public class MBViewManager extends ActivityGroup
                                                                                            .getValueForPath("/message[0]/@text()"));
     }
 
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setMessage(message).setTitle(title).setCancelable(true).setNeutralButton("Ok", new DialogInterface.OnClickListener()
     {
       public void onClick(DialogInterface dialog, int id)
       {
         dialog.cancel();
+        ((MBDialogController) getLocalActivityManager().getCurrentActivity()).handleAllOnWindowActivated();
       }
     });
-    Dialog dialog = builder.create();
-    dialog.show();
-    setCurrentAlert(dialog);
+
+    runOnUiThread(new Runnable()
+    {
+
+      @Override
+      public void run()
+      {
+        Dialog dialog = builder.create();
+        dialog.show();
+        setCurrentAlert(dialog);
+      }
+    });
 
   }
 
@@ -267,12 +281,22 @@ public class MBViewManager extends ActivityGroup
     if (page != null)
     {
       String dialogName = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(page.getDialogName()).getName();
+      Log.d("Wiebe", "MBViewManager.activateDialogWithPage: dialogName=" + dialogName);
+
       _dialogControllers.add(dialogName);
       Intent intent = MBApplicationFactory.getInstance().createIntent(page.getDialogName());
 
-      if (getViewController(dialogName, null) != getViewController(getActiveDialogName(), null))
+      // FIXME Wiebe en Ali
+      if (!CollectionUtils.isEqualCollection(getViewControllers(dialogName), getViewControllers(getActiveDialogName())))
       {
-        MBApplicationController.getInstance().changedWindow(getViewController(getActiveDialogName(), null), WindowChangeType.LEAVING);
+
+        MBDialogController dialogController = getDialogWithName(getActiveDialogName());
+        // skip if the DialogController is already activated or not created yet.
+        if (dialogController != null && dialogController != this.getLocalActivityManager().getCurrentActivity())
+        {
+          Log.d("Wiebe", "MBViewManager.activateDialogWithPage: handleAllOnLeavingWindow op " + getActiveDialogName());
+          dialogController.handleAllOnLeavingWindow();
+        }
       }
 
       if (dialogName == null)
@@ -286,16 +310,17 @@ public class MBViewManager extends ActivityGroup
       MBApplicationController.getInstance().setPage(id, page);
       intent.putExtra("outcomeID", id);
       //
-      Log.d("MOBBL", "MBViewManager.activateDialogWithPage: dialogName=" + dialogName + " and id=" + id);
+      Log.d("Wiebe", "MBViewManager.activateDialogWithPage: dialogName=" + dialogName + " and id=" + id);
       Window window = getLocalActivityManager().startActivity(dialogName, intent);
       View view = window.getDecorView();
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
       setTitle(dialogDefinition.getTitle());
       setContentView(view);
 
-      if (getViewController(dialogName, id) != null)
+      if (findViewController(dialogName, id) != null)
       {
-        MBApplicationController.getInstance().changedWindow(getViewController(dialogName, id), WindowChangeType.ACTIVATE);
+        Log.d("Wiebe", "MBViewManager.activateDialogWithPage: findViewController");
+        MBApplicationController.getInstance().changedWindow(findViewController(dialogName, id), WindowChangeType.ACTIVATE);
       }
 
     }
@@ -314,7 +339,7 @@ public class MBViewManager extends ActivityGroup
 
   public void activateDialogWithName(String dialogName)
   {
-    Log.d("MOBBL", "MBViewManager.activateDialogWithName: dialogName=" + dialogName);
+    Log.d("Wiebe", "MBViewManager.activateDialogWithName: dialogName=" + dialogName);
 
     if (dialogName != null)
     {
@@ -329,9 +354,16 @@ public class MBViewManager extends ActivityGroup
       {
         String previousDialogName = ((MBDialogController) getLocalActivityManager().getCurrentActivity()).getName();
 
-        /*        if (getViewController(dialogName, null) != getViewController(previousDialogName, null))
-                {
-                  MBApplicationController.getInstance().changedWindow(getViewController(previousDialogName, null), WindowChangeType.LEAVING);*/
+        // FIXME Wiebe en Ali
+        if (!CollectionUtils.isEqualCollection(getViewControllers(dialogName), getViewControllers(previousDialogName)))
+        {
+          MBDialogController previousDialogController = getDialogWithName(previousDialogName);
+          if (previousDialogController != null)
+          {
+            Log.d("Wiebe", "MBViewManager.activateDialogWithName: handleAllOnLeavingWindow bij " + previousDialogName);
+            previousDialogController.handleAllOnLeavingWindow();
+          }
+        }
 
         Intent dialogIntent = MBApplicationFactory.getInstance().createIntent(dialogName);
         Window window = this.getLocalActivityManager().startActivity(dialogName, dialogIntent);
@@ -344,12 +376,10 @@ public class MBViewManager extends ActivityGroup
           }
         });
 
-        /*if (getViewController(dialogName, null) != null)
+        if (getViewControllers(dialogName).size() > 0)
         {
-          MBApplicationController.getInstance().changedWindow(getViewController(dialogName, null), WindowChangeType.ACTIVATE);
+          dialogController.handleAllOnWindowActivated();
         }
-        }*/
-
       }
     }
   }
@@ -523,21 +553,39 @@ public class MBViewManager extends ActivityGroup
      return result;
    }*/
 
-  public MBBasicViewController getViewController(String dialogName, String viewID)
+  public List<MBBasicViewController> getViewControllers(String dialogName)
   {
-    // FIXME
-    /*   MBDialogController dc = getDialogWithName(dialogName);
-       if (dc != null)
-       {
-         if (viewID == null)
-         {
-           return dc.getCurrentActivity();
-         }
+    Log.d(Constants.APPLICATION_NAME, "MBViewManager.getViewControllers: dialogName=" + dialogName);
 
-         return (MBBasicViewController) dc.getLocalActivityManager().getActivity(viewID);
-       }*/
+    List<MBBasicViewController> lijst = new ArrayList<MBBasicViewController>();
 
-    return null;
+    if (dialogName != null)
+    {
+      MBDialogController dc = getDialogWithName(dialogName);
+      if (dc != null)
+      {
+        List<MBBasicViewController> fragments = dc.getAllFragments();
+        if (!fragments.isEmpty()) lijst.addAll(fragments);
+      }
+    }
+    return lijst;
+
+  }
+
+  public MBBasicViewController findViewController(String dialogName, String viewID)
+  {
+    MBBasicViewController controller = null;
+    Log.d(Constants.APPLICATION_NAME, "MBViewManager.findViewController: dialogName=" + dialogName + "' viewId=" + viewID);
+    // FIXME Wiebe en Ali
+    if (dialogName != null && viewID != null)
+    {
+      MBDialogController dc = getDialogWithName(dialogName);
+      if (dc != null)
+      {
+        controller = dc.findFragment(viewID);
+      }
+    }
+    return controller;
   }
 
   /**
@@ -581,5 +629,20 @@ public class MBViewManager extends ActivityGroup
     //    getActiveViewController().handleOrientationChange(newConfig);
 
     super.onConfigurationChanged(newConfig);
+  }
+
+  public List<MBBasicViewController> getAllFragements()
+  {
+    List<MBBasicViewController> lijst = new ArrayList<MBBasicViewController>();
+    // Walk trough all dialogControllers
+    for (int i = 0; i < _dialogControllers.size(); i++)
+    {
+      // Pop all controller apart from first one
+      MBDialogController dc = (MBDialogController) getLocalActivityManager().getActivity(_dialogControllers.get(i));
+      //TODO Duplicaten er nog eens uit halen.
+      if (dc != null && !dc.getAllFragments().isEmpty()) lijst.addAll(dc.getAllFragments());
+    }
+
+    return lijst;
   }
 }
