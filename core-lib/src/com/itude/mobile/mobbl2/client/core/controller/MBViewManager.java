@@ -1,6 +1,5 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -281,20 +280,17 @@ public class MBViewManager extends ActivityGroup
     if (page != null)
     {
       String dialogName = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(page.getDialogName()).getName();
-      Log.d("Wiebe", "MBViewManager.activateDialogWithPage: dialogName=" + dialogName);
+      Log.d(Constants.APPLICATION_NAME, "MBViewManager.activateDialogWithPage: dialogName=" + dialogName);
 
       _dialogControllers.add(dialogName);
       Intent intent = MBApplicationFactory.getInstance().createIntent(page.getDialogName());
 
-      // FIXME Wiebe en Ali
       if (!CollectionUtils.isEqualCollection(getViewControllers(dialogName), getViewControllers(getActiveDialogName())))
       {
-
         MBDialogController dialogController = getDialogWithName(getActiveDialogName());
         // skip if the DialogController is already activated or not created yet.
         if (dialogController != null && dialogController != this.getLocalActivityManager().getCurrentActivity())
         {
-          Log.d("Wiebe", "MBViewManager.activateDialogWithPage: handleAllOnLeavingWindow op " + getActiveDialogName());
           dialogController.handleAllOnLeavingWindow();
         }
       }
@@ -310,7 +306,6 @@ public class MBViewManager extends ActivityGroup
       MBApplicationController.getInstance().setPage(id, page);
       intent.putExtra("outcomeID", id);
       //
-      Log.d("Wiebe", "MBViewManager.activateDialogWithPage: dialogName=" + dialogName + " and id=" + id);
       Window window = getLocalActivityManager().startActivity(dialogName, intent);
       View view = window.getDecorView();
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
@@ -319,7 +314,6 @@ public class MBViewManager extends ActivityGroup
 
       if (findViewController(dialogName, id) != null)
       {
-        Log.d("Wiebe", "MBViewManager.activateDialogWithPage: findViewController");
         MBApplicationController.getInstance().changedWindow(findViewController(dialogName, id), WindowChangeType.ACTIVATE);
       }
 
@@ -339,7 +333,7 @@ public class MBViewManager extends ActivityGroup
 
   public void activateDialogWithName(String dialogName)
   {
-    Log.d("Wiebe", "MBViewManager.activateDialogWithName: dialogName=" + dialogName);
+    Log.d(Constants.APPLICATION_NAME, "MBViewManager.activateDialogWithName: dialogName=" + dialogName);
 
     if (dialogName != null)
     {
@@ -354,13 +348,11 @@ public class MBViewManager extends ActivityGroup
       {
         String previousDialogName = ((MBDialogController) getLocalActivityManager().getCurrentActivity()).getName();
 
-        // FIXME Wiebe en Ali
         if (!CollectionUtils.isEqualCollection(getViewControllers(dialogName), getViewControllers(previousDialogName)))
         {
           MBDialogController previousDialogController = getDialogWithName(previousDialogName);
           if (previousDialogController != null)
           {
-            Log.d("Wiebe", "MBViewManager.activateDialogWithName: handleAllOnLeavingWindow bij " + previousDialogName);
             previousDialogController.handleAllOnLeavingWindow();
           }
         }
@@ -576,7 +568,6 @@ public class MBViewManager extends ActivityGroup
   {
     MBBasicViewController controller = null;
     Log.d(Constants.APPLICATION_NAME, "MBViewManager.findViewController: dialogName=" + dialogName + "' viewId=" + viewID);
-    // FIXME Wiebe en Ali
     if (dialogName != null && viewID != null)
     {
       MBDialogController dc = getDialogWithName(dialogName);
