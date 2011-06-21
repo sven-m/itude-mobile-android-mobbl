@@ -19,6 +19,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBInvalidOutcomeException;
+import com.itude.mobile.mobbl2.client.core.controller.util.MBActivityIndicator;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
@@ -475,7 +476,7 @@ public class MBApplicationController extends Application
     // This might mess up the count of the activity indicators if more than one page is being constructed in the background;
     // however most of the times this will work out; so:
     //    _viewManager.hideActivityIndicatorForDialog(outcome.getDialogName());
-    _viewManager.hideActivityIndicator(true);
+    if (MBActivityIndicator.isActive()) _viewManager.hideActivityIndicator();
 
     // See if there is an outcome defined for this particular exception
     ArrayList<MBOutcomeDefinition> outcomeDefinitions = (ArrayList<MBOutcomeDefinition>) metadataService

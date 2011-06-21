@@ -22,7 +22,7 @@ public class MBActivityIndicator
       public void run()
       {
         _dialog = ProgressDialog.show(activity, MBLocalizationService.getInstance().getTextForKey("title_loading"), MBLocalizationService
-            .getInstance().getTextForKey("msg_loading"), true, false);
+            .getInstance().getTextForKey("msg_loading"), true, true);
       }
     });
   }
