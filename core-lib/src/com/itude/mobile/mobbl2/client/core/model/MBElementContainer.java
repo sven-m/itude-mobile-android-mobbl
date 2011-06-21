@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
+
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
@@ -18,10 +23,11 @@ import com.itude.mobile.mobbl2.client.core.model.exceptions.MBIndexOutOfBoundsEx
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBNoIndexSpecifiedException;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.MBScriptService;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDynamicAttributeComparator;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
-public class MBElementContainer
+public class MBElementContainer implements Parcelable
 {
   private Map<String, List<MBElement>> _elements; // Dictionaryoflistsofelements
   private MBElementContainer           _parent;
@@ -187,7 +193,7 @@ public class MBElementContainer
 
   public <T> T getValueForPath(String path)
   {
-    return (T)getValueForPath(path, null);
+    return (T) getValueForPath(path, null);
   }
 
   public <T> T getValueForPath(String path, List<String> translatedPathComponents)
@@ -228,7 +234,7 @@ public class MBElementContainer
             pathComponents.remove(0);
           }
 
-          return (T)doc.getValueForPathComponents(pathComponents, path, true, translatedPathComponents);
+          return (T) doc.getValueForPathComponents(pathComponents, path, true, translatedPathComponents);
         }
         else
         {
@@ -237,7 +243,7 @@ public class MBElementContainer
       }
     }
 
-    return (T)getValueForPathComponents(pathComponents, path, true, translatedPathComponents);
+    return (T) getValueForPathComponents(pathComponents, path, true, translatedPathComponents);
   }
 
   public void setValue(String value, String path)
@@ -335,14 +341,14 @@ public class MBElementContainer
       {
         return null;
       }
-      String message = "Index " + idx + " exceeds " + (allElementsWithSameNameAsChild.size() - 1) + " for " + childElementName + " in path " + originalPath;
+      String message = "Index " + idx + " exceeds " + (allElementsWithSameNameAsChild.size() - 1) + " for " + childElementName
+                       + " in path " + originalPath;
       throw new MBIndexOutOfBoundsException(message);
     }
 
     MBElement root = allElementsWithSameNameAsChild.get(idx);
-    if (translatedPathComponents != null)
-      translatedPathComponents.add(root.getName() + "[" + idx + "]");
-    return (T)root.getValueForPathComponents(pathComponents, originalPath, nillIfMissing, translatedPathComponents);
+    if (translatedPathComponents != null) translatedPathComponents.add(root.getName() + "[" + idx + "]");
+    return (T) root.getValueForPathComponents(pathComponents, originalPath, nillIfMissing, translatedPathComponents);
   }
 
   private String[] splitPathOnBrackets(String fullPath)
@@ -356,13 +362,12 @@ public class MBElementContainer
       rootNameParts = new String[2];
       rootNameParts[0] = fullPath.substring(0, indexOpenBracket); // hello
       int indexCloseBracket = fullPath.indexOf(']', indexOpenBracket);
-      if (indexCloseBracket<0)
-        rootNameParts[1] = fullPath.substring(indexOpenBracket + 1);
+      if (indexCloseBracket < 0) rootNameParts[1] = fullPath.substring(indexOpenBracket + 1);
       else
       {
-        rootNameParts[1] = fullPath.substring(indexOpenBracket + 1, indexCloseBracket); 
+        rootNameParts[1] = fullPath.substring(indexOpenBracket + 1, indexCloseBracket);
       }
-        
+
     }
     else
     {
@@ -555,5 +560,60 @@ public class MBElementContainer
 
     getDocument().clearPathCache();
   }
+
+  // Parcelable stuff
+
+  protected MBElementContainer(Parcel in)
+  {
+    this();
+
+    Bundle elementsBundle = in.readBundle();
+
+    for (String key : elementsBundle.keySet())
+    {
+      MBElement[] elements = (MBElement[]) elementsBundle.getParcelableArray(key);
+      _elements.put(key, Arrays.asList(elements));
+    }
+
+    _parent = in.readParcelable(null);
+  }
+
+  @Override
+  public int describeContents()
+  {
+    return Constants.C_PARCELABLE_TYPE_ELEMENT_CONTAINER;
+  }
+
+  @Override
+  public void writeToParcel(Parcel out, int flags)
+  {
+    Bundle elementsBundle = new Bundle();
+
+    for (String key : _elements.keySet())
+    {
+      List<MBElement> list = _elements.get(key);
+      elementsBundle.putParcelableArray(key, (MBElement[]) list.toArray());
+    }
+
+    out.writeBundle(elementsBundle);
+    out.writeParcelable(_parent, flags);
+  }
+
+  public static final Parcelable.Creator<MBElementContainer> CREATOR = new Creator<MBElementContainer>()
+                                                                     {
+                                                                       @Override
+                                                                       public MBElementContainer[] newArray(int size)
+                                                                       {
+                                                                         return new MBElementContainer[size];
+                                                                       }
+
+                                                                       @Override
+                                                                       public MBElementContainer createFromParcel(Parcel in)
+                                                                       {
+                                                                         return new MBElementContainer(in);
+                                                                       }
+                                                                     };
+
+  // End of parcelable stuff
 
 }

@@ -8,6 +8,8 @@ import java.util.Map;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 
 import com.itude.mobile.mobbl2.client.core.MBException;
@@ -16,10 +18,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefi
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
-import com.itude.mobile.mobbl2.client.core.controller.background.MBPerformActionInBackgroundRunner;
-import com.itude.mobile.mobbl2.client.core.controller.background.MBPreparePageInBackgroundRunner;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBInvalidOutcomeException;
-import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBNoOutcomesDefinedException;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
@@ -33,6 +32,7 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
+import com.itude.mobile.mobbl2.client.core.util.exceptions.MBRunnable;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 
 public class MBApplicationController extends Application
@@ -45,6 +45,7 @@ public class MBApplicationController extends Application
   private Map<String, MBPage>                  _pages;
   private Map<String, HashMap<String, MBPage>> _pagesForName;
   private String                               _modalPageID;
+  private MBOutcomeHandler                     _outcomeHandler;
 
   private static MBApplicationController       _instance = null;
 
@@ -60,6 +61,16 @@ public class MBApplicationController extends Application
     _instance = this;
     _pages = new HashMap<String, MBPage>();
     _pagesForName = new HashMap<String, HashMap<String, MBPage>>();
+
+    MBOutcomeHandlerThread outcomeHandlerThread = new MBOutcomeHandlerThread("outcomeHandler");
+    outcomeHandlerThread.start();
+
+    // FIXME
+    while ((_outcomeHandler = outcomeHandlerThread.getOutcomeHandler()) == null)
+    {
+      Log.d(Constants.APPLICATION_NAME, "Waiting for OutcomeHandler to settle down...");
+    }
+    Log.d(Constants.APPLICATION_NAME, "OutcomeHandler settled, continue startup");
   }
 
   ////////////////////////////////////////////////
@@ -115,9 +126,28 @@ public class MBApplicationController extends Application
     _suppressPageSelection = true;
     _backStackEnabled = false;
     handleOutcome(initialOutcome);
+
+    _outcomeHandler.sendEmptyMessage(Constants.C_MESSAGE_INITIAL_OUTCOMES_FINISHED);
+  }
+
+  /* (non-Javadoc)
+   * Visibility should be as strict as possible (as always). Because this method is called
+   * from the MBOutcomeHandler the visibility is set to package (controller).
+   */
+  void finishedInitialOutcomes()
+  {
+    if (MBDevice.getInstance().isTablet()) _viewManager.supportInvalidateOptionsMenu();
+
     _suppressPageSelection = false;
     _backStackEnabled = true;
-    _viewManager.activateDialogWithName(MBMetadataService.getInstance().getFirstDialogDefinition().getName());
+    _viewManager.runOnUiThread(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        activateDialogWithName(MBMetadataService.getInstance().getFirstDialogDefinition().getName());
+      }
+    });
   }
 
   private String getActiveDialogName()
@@ -132,207 +162,24 @@ public class MBApplicationController extends Application
 
   public void handleOutcome(MBOutcome outcome)
   {
-    try
-    {
-      doHandleOutcome(outcome);
-    }
-    catch (Exception e)
-    {
-      handleException(e, outcome);
-    }
+    handleOutcome(outcome, true);
   }
 
-  private void doHandleOutcome(MBOutcome outcome)
+  /**
+   * @param outcome
+   * @param throwException true if Mobbl needs to handle exceptions that may occur, false otherwise (e.g. when the outcome already is an exception)
+   */
+  private void handleOutcome(MBOutcome outcome, boolean throwException)
   {
-    Log.d("MOBBL", "MBApplicationController.handleOutcome: " + outcome);
+    Bundle data = new Bundle();
 
-    // Make sure that the (external) document cache of the document itself is cleared since this
-    // might interfere with the preconditions that are evaluated later on. Also: if the document is transferred
-    // the next page / action will also have fresh copies
-    if (outcome != null && outcome.getDocument() != null)
-    {
-      outcome.getDocument().clearAllCaches();
-    }
+    data.putParcelable("outcome", outcome);
+    data.putBoolean("throwException", throwException);
 
-    MBMetadataService metadataService = MBMetadataService.getInstance();
+    final Message msg = _outcomeHandler.obtainMessage();
+    msg.setData(data);
 
-    ArrayList<MBOutcomeDefinition> outcomeDefinitions = (ArrayList<MBOutcomeDefinition>) metadataService
-        .getOutcomeDefinitionsForOrigin(outcome.getOriginName(), outcome.getOutcomeName(), false);
-    if (outcomeDefinitions.size() == 0)
-    {
-      String msg = "No outcome defined for origin=" + outcome.getOriginName() + " outcome=" + outcome.getOutcomeName();
-      throw new MBNoOutcomesDefinedException(msg);
-    }
-
-    boolean shouldPersist = false;
-    for (MBOutcomeDefinition outcomeDef : outcomeDefinitions)
-    {
-      shouldPersist |= outcomeDef.getPersist();
-    }
-
-    if (shouldPersist)
-    {
-      if (outcome.getDocument() == null) Log
-          .w("MOBBL",
-             "MBApplicationController.doHandleOutcome: origin="
-                 + outcome.getOriginName()
-                 + "and name="
-                 + outcome.getOutcomeName()
-                 + " has persistDocument=TRUE but there is no document (probably the outcome originates from an action; which cannot have a document)");
-      else MBDataManagerService.getInstance().storeDocument(outcome.getDocument());
-    }
-
-    ArrayList<String> dialogs = new ArrayList<String>();
-    String selectPageInDialog = "yes";
-
-    // We need to make sure that the order of the dialog tabs conforms to the order of the outcomes
-    // This is not necessarily the case because preparing of page A might take longer in the background than page B
-    // Because of this, page B migh be places on a tab prior to page A which is undesired. We handle this by
-    // notifying the view handler of the dialogs used by the outcome in sequental order. The viewmanager will then
-    // use this information to sort the tabs
-
-    for (MBOutcomeDefinition outcomeDef : outcomeDefinitions)
-    {
-
-      if ("RESET_CONTROLLER".equals(outcomeDef.getAction()))
-      {
-        resetController();
-      }
-      else
-      {
-
-        // Create a working copy of the outcome; we manipulate the outcome below and we want the passed outcome to be left unchanged (good practise)
-        MBOutcome outcomeToProcess = new MBOutcome(outcomeDef);
-
-        outcomeToProcess.setPath(outcome.getPath());
-        outcomeToProcess.setDocument(outcome.getDocument());
-        outcomeToProcess.setDialogName(outcome.getDialogName());
-        outcomeToProcess.setNoBackgroundProcessing(outcome.getNoBackgroundProcessing() || outcomeDef.getNoBackgroundProcessing());
-
-        if (outcomeToProcess.isPreConditionValid())
-        {
-
-          // Update a possible switch of dialog/display mode set by the outcome definition
-          if (outcomeDef.getDialog() != null) outcomeToProcess.setDialogName(outcomeDef.getDialog());
-          if (outcomeDef.getDisplayMode() != null) outcomeToProcess.setDisplayMode(outcomeDef.getDisplayMode());
-          if (outcomeToProcess.getOriginDialogName() == null) outcomeToProcess.setOriginDialogName(outcomeToProcess.getDialogName());
-
-          if (outcomeToProcess.getDialogName() != null) dialogs.add(outcomeToProcess.getDialogName());
-
-          if ("MODAL".equals(outcomeToProcess.getDisplayMode()) || "MODALWITHCLOSEBUTTON".equals(outcomeToProcess.getDisplayMode())
-              || "MODALFORMSHEET".equals(outcomeToProcess.getDisplayMode())
-              || "MODALFORMSHEETWITHCLOSEBUTTON".equals(outcomeToProcess.getDisplayMode())
-              || "MODALPAGESHEET".equals(outcomeToProcess.getDisplayMode())
-              || "MODALPAGESHEETWITHCLOSEBUTTON".equals(outcomeToProcess.getDisplayMode())
-              || "MODALFULLSCREEN".equals(outcomeToProcess.getDisplayMode())
-              || "MODALFULLSCREENWITHCLOSEBUTTON".equals(outcomeToProcess.getDisplayMode())
-              || "MODALCURRENTCONTEXT".equals(outcomeToProcess.getDisplayMode())
-              || "MODALCURRENTCONTEXTWITHCLOSEBUTTON".equals(outcomeToProcess.getDisplayMode()))
-          {
-            _outcomeWhichCausedModal = outcomeToProcess;
-          }
-          else if ("ENDMODAL".equals(outcomeToProcess.getDisplayMode()))
-          {
-            if (getModalPageID() != null)
-            {
-              _viewManager.endModalDialog(getModalPageID());
-              _viewManager.hideActivityIndicator();
-            }
-            ((MBDialogController) _viewManager.getCurrentActivity()).handleAllOnWindowActivated();
-
-            //            else
-            //            {
-            //              // On the iPhone the current screen is being refreshed after dismissing an progress indicator
-            //              // On Android this doesn't happen. To recreate this behaviour this code was introduced
-            //              //TODO implement refresh mechanism. On dialog base or page? 
-            //              //              (((MBDialogController) _viewManager.getCurrentActivity()).getCurrentActivity()).handleOnWindowActivated();
-            //            }
-
-          }
-          else if ("ENDMODAL_CONTINUE".equals(outcomeToProcess.getDisplayMode()))
-          {
-            _viewManager.endModalDialog();
-            handleOutcome(_outcomeWhichCausedModal);
-            //
-            _outcomeWhichCausedModal = null;
-          }
-          else if ("POP".equals(outcomeToProcess.getDisplayMode()))
-          {
-            _viewManager.popPage(outcomeToProcess.getDialogName());
-          }
-          else if ("POPALL".equals(outcomeToProcess.getDisplayMode()))
-          {
-            _viewManager.endDialog(outcomeToProcess.getDialogName(), true);
-          }
-          else if ("CLEAR".equals(outcomeToProcess.getDisplayMode()))
-          {
-            _viewManager.resetView();
-          }
-          else if ("END".equals(outcomeToProcess.getDisplayMode()))
-          {
-            _viewManager.endDialog(outcomeToProcess.getDialogName(), false);
-            dialogs.remove(outcomeToProcess.getDialogName());
-          }
-          else
-          {
-            _viewManager.activateDialogWithName(outcomeToProcess.getDialogName());
-          }
-
-          MBActionDefinition actionDef = metadataService.getDefinitionForActionName(outcomeDef.getAction(), false);
-
-          if (actionDef != null)
-          {
-            _viewManager.showActivityIndicator();
-            if (outcomeToProcess.getNoBackgroundProcessing())
-            {
-              performActionInBackground(new MBOutcome(outcomeToProcess), actionDef);
-            }
-            else
-            {
-              MBPerformActionInBackgroundRunner runner = new MBPerformActionInBackgroundRunner();
-
-              runner.setController(this);
-              runner.setOutcome(new MBOutcome(outcomeToProcess));
-              runner.setActionDefinition(actionDef);
-              runner.execute(new Object[0]);
-            }
-          }
-
-          MBPageDefinition pageDef = metadataService.getDefinitionForPageName(outcomeDef.getAction(), false);
-          if (pageDef != null)
-          {
-            /*CH: Exception pages prepare in the background. Android has trouble if the
-            activity indicator is shown. Somehow this problem does not occur when preparing 
-            a normal page*/
-            if (!"exception".equals(outcome.getOutcomeName())) _viewManager.showActivityIndicator();
-            if (outcomeToProcess.getNoBackgroundProcessing())
-            {
-              preparePageInBackground(new MBOutcome(outcomeToProcess), pageDef.getName(), selectPageInDialog, _backStackEnabled);
-            }
-            else
-            {
-              MBPreparePageInBackgroundRunner runner = new MBPreparePageInBackgroundRunner();
-              runner.setController(this);
-              runner.setOutcome(new MBOutcome(outcomeToProcess));
-              runner.setPageName(pageDef.getName());
-              runner.setSelectPageInDialog(selectPageInDialog);
-              runner.setBackStackEnabled(_backStackEnabled);
-              runner.execute(new Object[0]);
-            }
-
-            selectPageInDialog = "no";
-          }
-          if (actionDef == null && pageDef == null && !"none".equals(outcomeDef.getAction()))
-          {
-            StringBuffer tmp = new StringBuffer();
-            String msg = "Invalid outcome; no action or page with name " + outcomeDef.getAction() + " defined. See outcome origin="
-                         + outcomeDef.getOrigin() + "action=" + outcomeDef.getName() + " Check \n"
-                         + outcomeDef.asXmlWithLevel(tmp, 5).toString();
-            throw new MBInvalidOutcomeException(msg);
-          }
-        }
-      }
-    }
+    _outcomeHandler.sendMessage(msg);
   }
 
   ////////////// PAGE HANDLING
@@ -396,11 +243,11 @@ public class MBApplicationController extends Application
   }
 
   public void showResultingPage(MBOutcome causingOutcome, MBPageDefinition pageDefinition, MBDocument document, String selectPageInDialog,
-                                boolean backStackEnabled)
+                                final boolean backStackEnabled)
   {
     try
     {
-      String displayMode = causingOutcome.getDisplayMode();
+      final String displayMode = causingOutcome.getDisplayMode();
       MBViewState viewState = _viewManager.getCurrentViewState();
 
       if ("MODAL".equals(displayMode) || "MODALFORMSHEET".equals(displayMode) || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode)
@@ -411,7 +258,7 @@ public class MBApplicationController extends Application
         viewState = MBViewState.MBViewStateModal;
       }
 
-      MBPage page = _applicationFactory.createPage(pageDefinition, document, causingOutcome.getPath(), viewState);
+      final MBPage page = _applicationFactory.createPage(pageDefinition, document, causingOutcome.getPath(), viewState);
       page.setController(this);
       page.setDialogName(causingOutcome.getDialogName());
       // Fallback on the lastly selected dialog if there is no dialog set in the outcome:
@@ -419,8 +266,16 @@ public class MBApplicationController extends Application
       {
         page.setDialogName(getActiveDialogName());
       }
-      boolean doSelect = "yes".equals(selectPageInDialog) && !_suppressPageSelection;
-      _viewManager.showPage(page, displayMode, doSelect, backStackEnabled);
+      final boolean doSelect = "yes".equals(selectPageInDialog) && !_suppressPageSelection;
+      _viewManager.runOnUiThread(new MBRunnable(page)
+      {
+
+        @Override
+        public void runMethod()
+        {
+          _viewManager.showPage(page, displayMode, doSelect, backStackEnabled);
+        }
+      });
       _viewManager.hideActivityIndicator();
     }
     catch (Exception e)
@@ -447,9 +302,9 @@ public class MBApplicationController extends Application
 
       MBOutcome actionOutcome = action.execute(causingOutcome.getDocument(), causingOutcome.getPath());
 
+      _viewManager.hideActivityIndicator();
       if (actionOutcome == null)
       {
-        _viewManager.hideActivityIndicator();
         Log.d("MOBBL", "MBApplicationController.performActionInBackground: " + "No outcome produced by action " + actionDef.getName()
                        + " (outcome == null); no further procesing.");
       }
@@ -480,7 +335,8 @@ public class MBApplicationController extends Application
       if (actionOutcome.getDialogName() == null) actionOutcome.setDialogName(causingOutcome.getDialogName());
       actionOutcome.setOriginName(actionDef.getName());
 
-      handleOutcome(actionOutcome);
+      //      handleOutcome(actionOutcome);
+      _outcomeHandler.handleOutcomeSynchronously(actionOutcome, true);
     }
     catch (Exception e)
     {
@@ -653,7 +509,7 @@ public class MBApplicationController extends Application
       genericExceptionHandler.setDialogName(outcome.getDialogName());
       genericExceptionHandler.setPath(outcome.getPath());
 
-      doHandleOutcome(genericExceptionHandler);
+      _outcomeHandler.handleOutcomeSynchronously(genericExceptionHandler, false);
     }
   }
 
@@ -727,5 +583,15 @@ public class MBApplicationController extends Application
   public void clearModalPageID()
   {
     _modalPageID = null;
+  }
+
+  public boolean getBackStackEnabled()
+  {
+    return _backStackEnabled;
+  }
+
+  public MBOutcomeHandler getOutcomeHandler()
+  {
+    return _outcomeHandler;
   }
 }

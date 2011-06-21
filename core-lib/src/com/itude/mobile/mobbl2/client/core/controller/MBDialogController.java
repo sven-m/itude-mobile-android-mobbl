@@ -242,7 +242,6 @@ public class MBDialogController extends FragmentActivity
     if (addToBackStack)
     {
       transaction.addToBackStack(id);
-      if (MBDevice.getInstance().isTablet()) transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     if (MBDevice.getInstance().isTablet()

@@ -8,36 +8,41 @@ import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 public class MBActivityIndicator
 {
   private static ProgressDialog _dialog = null;
-  private static boolean        _active = false;
+  private static int            _queue  = 0;
 
   public static void show(final Activity activity)
   {
+    if (_queue++ > 0)
+    {
+      return;
+    }
+
     activity.runOnUiThread(new Runnable()
     {
       public void run()
       {
         _dialog = ProgressDialog.show(activity, MBLocalizationService.getInstance().getTextForKey("title_loading"), MBLocalizationService
             .getInstance().getTextForKey("msg_loading"), true, false);
-        _active = true;
       }
     });
   }
 
   public static void dismiss(final Activity activity)
   {
+    if (--_queue > 0) return;
+
     activity.runOnUiThread(new Runnable()
     {
-
       public void run()
       {
         _dialog.dismiss();
-        _active = false;
+        _dialog = null;
       }
     });
   }
 
   public static boolean isActive()
   {
-    return _active;
+    return _queue > 0;
   }
 }

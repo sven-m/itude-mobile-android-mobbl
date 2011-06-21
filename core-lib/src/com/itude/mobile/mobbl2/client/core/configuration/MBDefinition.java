@@ -2,6 +2,9 @@ package com.itude.mobile.mobbl2.client.core.configuration;
 
 import java.util.Collection;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
@@ -14,10 +17,16 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.webservices.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBResultListenerDefinition;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 
-public class MBDefinition
+public class MBDefinition implements Parcelable
 {
   private String _name;
+
+  public MBDefinition()
+  {
+
+  }
 
   public String getName()
   {
@@ -117,4 +126,40 @@ public class MBDefinition
   {
     return asXmlWithLevel(new StringBuffer(), 0).toString();
   }
+
+  //Parcelable stuff
+
+  protected MBDefinition(Parcel in)
+  {
+    _name = in.readString();
+  }
+
+  @Override
+  public int describeContents()
+  {
+    return Constants.C_PARCELABLE_TYPE_DEFINITION;
+  }
+
+  @Override
+  public void writeToParcel(Parcel out, int flags)
+  {
+    out.writeString(_name);
+  }
+
+  public static final Parcelable.Creator<MBDefinition> CREATOR = new Creator<MBDefinition>()
+                                                               {
+                                                                 @Override
+                                                                 public MBDefinition[] newArray(int size)
+                                                                 {
+                                                                   return new MBDefinition[size];
+                                                                 }
+
+                                                                 @Override
+                                                                 public MBDefinition createFromParcel(Parcel in)
+                                                                 {
+                                                                   return new MBDefinition(in);
+                                                                 }
+                                                               };
+
+  // End of parcelable stuff
 }

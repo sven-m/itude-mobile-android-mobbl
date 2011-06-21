@@ -4,11 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBCannotAssignException;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBDocumentOperationDelegate;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBDocument extends MBElementContainer
@@ -142,7 +147,7 @@ public class MBDocument extends MBElementContainer
     if (path != null)
     {
       int posAt = path.indexOf('@');
-      if (posAt < 0 || path.indexOf('@', posAt + 1) >= 0) return (T)getValueForPath(path, null);
+      if (posAt < 0 || path.indexOf('@', posAt + 1) >= 0) return (T) getValueForPath(path, null);
 
       String componentBeforeAt = path.substring(0, posAt);
       //      assert path.substring(posAt + 1).length() > 0;
@@ -225,5 +230,78 @@ public class MBDocument extends MBElementContainer
   {
     return this;
   }
+
+  //Parcelable stuff
+
+  private MBDocument(Parcel in)
+  {
+    super(in);
+
+    _sharedContext = new HashMap<String, MBDocument>();
+    _pathCache = new HashMap<String, MBElement>();
+
+    _definition = in.readParcelable(null);
+    Bundle sharedContext = in.readBundle();
+    Bundle pathCache = in.readBundle();
+    _argumentsUsed = in.readParcelable(null);
+
+    for (String key : sharedContext.keySet())
+    {
+      _sharedContext.put(key, (MBDocument) sharedContext.get(key));
+    }
+
+    for (String key : pathCache.keySet())
+    {
+      _pathCache.put(key, (MBElement) pathCache.get(key));
+    }
+  }
+
+  @Override
+  public int describeContents()
+  {
+    return Constants.C_PARCELABLE_TYPE_DOCUMENT;
+  }
+
+  @Override
+  public void writeToParcel(Parcel out, int flags)
+  {
+    Bundle sharedContext = new Bundle();
+
+    for (String key : _sharedContext.keySet())
+    {
+      sharedContext.putParcelable(key, _sharedContext.get(key));
+    }
+
+    Bundle pathCache = new Bundle();
+
+    for (String key : _pathCache.keySet())
+    {
+      pathCache.putParcelable(key, _pathCache.get(key));
+    }
+
+    out.writeParcelable(_definition, flags);
+
+    out.writeBundle(sharedContext);
+    out.writeBundle(pathCache);
+
+    out.writeParcelable(_argumentsUsed, flags);
+  }
+
+  public static final Parcelable.Creator<MBDocument> CREATOR = new Creator<MBDocument>()
+                                                             {
+                                                               @Override
+                                                               public MBDocument[] newArray(int size)
+                                                               {
+                                                                 return new MBDocument[size];
+                                                               }
+
+                                                               @Override
+                                                               public MBDocument createFromParcel(Parcel in)
+                                                               {
+                                                                 return new MBDocument(in);
+                                                               }
+                                                             };
+
+  // End of parcelable stuff
 
 }

@@ -5,10 +5,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBCannotAssignException;
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBInvalidAttributeNameException;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBElement extends MBElementContainer
@@ -247,7 +252,7 @@ public class MBElement extends MBElementContainer
     }
     else
     {
-      return (T)super.getValueForPathComponents(pathComponents, originalPath, nillIfMissing, translatedPathComponents);
+      return (T) super.getValueForPathComponents(pathComponents, originalPath, nillIfMissing, translatedPathComponents);
     }
   }
 
@@ -325,5 +330,58 @@ public class MBElement extends MBElementContainer
     StringBuffer rt = new StringBuffer();
     return asXmlWithLevel(rt, 0).toString();
   }
+
+  // Parcelable stuff
+
+  private MBElement(Parcel in)
+  {
+    _values = new HashMap<String, String>();
+
+    Bundle valueBundle = in.readBundle();
+
+    for (String key : valueBundle.keySet())
+    {
+      _values.put(key, valueBundle.getString(key));
+    }
+
+    _definition = in.readParcelable(null);
+  }
+
+  @Override
+  public int describeContents()
+  {
+    return Constants.C_PARCELABLE_TYPE_ELEMENT;
+  }
+
+  @Override
+  public void writeToParcel(Parcel out, int flags)
+  {
+    Bundle valueBundle = new Bundle();
+
+    for (String key : _values.keySet())
+    {
+      valueBundle.putString(key, _values.get(key));
+    }
+
+    out.writeBundle(valueBundle);
+    out.writeParcelable(_definition, flags);
+  }
+
+  public static final Parcelable.Creator<MBElement> CREATOR = new Creator<MBElement>()
+                                                            {
+                                                              @Override
+                                                              public MBElement[] newArray(int size)
+                                                              {
+                                                                return new MBElement[size];
+                                                              }
+
+                                                              @Override
+                                                              public MBElement createFromParcel(Parcel in)
+                                                              {
+                                                                return new MBElement(in);
+                                                              }
+                                                            };
+
+  // End of parcelable stuff
 
 }

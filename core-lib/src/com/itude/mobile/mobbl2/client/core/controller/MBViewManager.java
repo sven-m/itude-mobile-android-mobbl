@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 
+import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
@@ -36,6 +37,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowChangeType;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 
 public class MBViewManager extends ActivityGroup
@@ -52,8 +54,6 @@ public class MBViewManager extends ActivityGroup
   private Dialog               _currentAlert;
   //  private Object               _modalController;
   private boolean              _singlePageMode;
-
-  private int                  _showActivityIndicatorQueue = 0;
 
   ///////////////////// Android lifecycle methods
 
@@ -200,7 +200,7 @@ public class MBViewManager extends ActivityGroup
   {
 
     Log.d(Constants.APPLICATION_NAME,
-          "ViewManager: showPage name=" + page.getPageName() + " dialog=" + page.getDialogName() + " mode=" + displayMode + " type="
+          "MBViewManager: showPage name=" + page.getPageName() + " dialog=" + page.getDialogName() + " mode=" + displayMode + " type="
               + page.getPageType() + " orientation=" + ((MBPageDefinition) page.getDefinition()).getOrientationPermissions()
               + " backStack=" + addToBackStack);
 
@@ -397,19 +397,12 @@ public class MBViewManager extends ActivityGroup
 
   public void showActivityIndicator()
   {
-    if (!MBActivityIndicator.isActive()) MBActivityIndicator.show(this);
+    MBActivityIndicator.show(this);
   }
 
   public void hideActivityIndicator()
   {
-    if (_showActivityIndicatorQueue > 0) _showActivityIndicatorQueue--;
-    else if (MBActivityIndicator.isActive() && _showActivityIndicatorQueue == 0) MBActivityIndicator.dismiss(MBViewManager.this);
-  }
-
-  public void postShowActivityIndicator()
-  {
-    if (MBActivityIndicator.isActive()) _showActivityIndicatorQueue++;
-    showActivityIndicator();
+    MBActivityIndicator.dismiss(this);
   }
 
   public void makeKeyAndVisible()
@@ -635,5 +628,19 @@ public class MBViewManager extends ActivityGroup
     }
 
     return lijst;
+  }
+
+  /**
+   * Copied from FragmentActivity.java in the Android Compatibility Package. Invoke this method
+   * to invalidate the options menu, but avoiding linker errors due to SDK incompatibility.
+   */
+  public void supportInvalidateOptionsMenu()
+  {
+    if (MBDevice.getInstance().isTablet())
+    {
+      // If we are running on HC or greater, we can use the framework
+      // API to invalidate the options menu.
+      ActivityCompatHoneycomb.invalidateOptionsMenu(this);
+    }
   }
 }

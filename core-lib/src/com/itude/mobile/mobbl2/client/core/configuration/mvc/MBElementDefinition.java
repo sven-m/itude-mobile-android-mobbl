@@ -5,8 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBElementDefinition extends MBDefinition
@@ -29,14 +33,8 @@ public class MBElementDefinition extends MBDefinition
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level)
-                  .append("<Element name='")
-                  .append(getName())
-                  .append("' minOccurs='")
-                  .append(_minOccurs)
-                  .append("' maxOccurs='")
-                  .append(_maxOccurs)
-                  .append("'>\n");
+    StringUtilities.appendIndentString(p_appendToMe, level).append("<Element name='").append(getName()).append("' minOccurs='")
+        .append(_minOccurs).append("' maxOccurs='").append(_maxOccurs).append("'>\n");
     for (MBAttributeDefinition attr : _attributesSorted)
     {
       attr.asXmlWithLevel(p_appendToMe, level + 2);
@@ -45,8 +43,7 @@ public class MBElementDefinition extends MBDefinition
     {
       elemDef.asXmlWithLevel(p_appendToMe, level + 2);
     }
-    return StringUtilities.appendIndentString(p_appendToMe, level)
-                        .append("</Element>\n");
+    return StringUtilities.appendIndentString(p_appendToMe, level).append("</Element>\n");
   }
 
   @Override
@@ -214,5 +211,69 @@ public class MBElementDefinition extends MBDefinition
   {
     _maxOccurs = maxOccurs;
   }
+
+  //Parcelable stuff
+
+  private MBElementDefinition(Parcel in)
+  {
+    super(in);
+
+    MBAttributeDefinition[] attributes = (MBAttributeDefinition[]) in.readParcelableArray(null);
+    MBElementDefinition[] children = (MBElementDefinition[]) in.readParcelableArray(null);
+    _minOccurs = in.readInt();
+    _maxOccurs = in.readInt();
+
+    _attributes = new HashMap<String, MBAttributeDefinition>();
+    _attributesSorted = new ArrayList<MBAttributeDefinition>();
+    _children = new HashMap<String, MBElementDefinition>();
+    _childrenSorted = new ArrayList<MBElementDefinition>();
+
+    for (MBAttributeDefinition def : attributes)
+    {
+      addAttribute(def);
+    }
+
+    for (MBElementDefinition def : children)
+    {
+      addElement(def);
+    }
+  }
+
+  @Override
+  public int describeContents()
+  {
+    return Constants.C_PARCELABLE_TYPE_ELEMENT_DEFINITION;
+  }
+
+  @Override
+  public void writeToParcel(Parcel out, int flags)
+  {
+    super.writeToParcel(out, flags);
+
+    MBAttributeDefinition[] attributes = (MBAttributeDefinition[]) _attributesSorted.toArray();
+    MBElementDefinition[] children = (MBElementDefinition[]) _childrenSorted.toArray();
+
+    out.writeParcelableArray(attributes, flags);
+    out.writeParcelableArray(children, flags);
+    out.writeInt(_minOccurs);
+    out.writeInt(_maxOccurs);
+  }
+
+  public static final Parcelable.Creator<MBElementDefinition> CREATOR = new Creator<MBElementDefinition>()
+                                                                      {
+                                                                        @Override
+                                                                        public MBElementDefinition[] newArray(int size)
+                                                                        {
+                                                                          return new MBElementDefinition[size];
+                                                                        }
+
+                                                                        @Override
+                                                                        public MBElementDefinition createFromParcel(Parcel in)
+                                                                        {
+                                                                          return new MBElementDefinition(in);
+                                                                        }
+                                                                      };
+
+  // End of parcelable stuff
 
 }

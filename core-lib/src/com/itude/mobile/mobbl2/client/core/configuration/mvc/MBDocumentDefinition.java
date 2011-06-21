@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBEmptyPathException;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidElementNameException;
@@ -12,11 +16,12 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvali
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBUnknownVariableException;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBDocumentDefinition extends MBDefinition
 {
-//  private final List<MBElementDefinition>        _elementsSorted;
+  //  private final List<MBElementDefinition>        _elementsSorted;
   private final Map<String, MBElementDefinition> _elements = new TreeMap<String, MBElementDefinition>();
   private String                                 _dataManager;
   private boolean                                _autoCreate;
@@ -35,18 +40,12 @@ public class MBDocumentDefinition extends MBDefinition
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level)
-                  .append("<Document name='")
-                  .append(getName())
-                  .append("' dataManager='")
-                  .append(_dataManager)
-                  .append("' autoCreate='" + _autoCreate)
-                  .append("'>\n");
+    StringUtilities.appendIndentString(p_appendToMe, level).append("<Document name='").append(getName()).append("' dataManager='")
+        .append(_dataManager).append("' autoCreate='" + _autoCreate).append("'>\n");
     for (MBElementDefinition elem : _elements.values())
       elem.asXmlWithLevel(p_appendToMe, level + 2);
-    
-    return StringUtilities.appendIndentString(p_appendToMe, level)
-                        .append("</Document>\n");
+
+    return StringUtilities.appendIndentString(p_appendToMe, level).append("</Document>\n");
   }
 
   @Override
@@ -210,5 +209,61 @@ public class MBDocumentDefinition extends MBDefinition
   {
     _autoCreate = autoCreate;
   }
+
+  //Parcelable stuff
+
+  private MBDocumentDefinition(Parcel in)
+  {
+    super(in);
+
+    Bundle elements = in.readBundle();
+    _dataManager = in.readString();
+    _autoCreate = (Boolean) in.readValue(null);
+
+    for (String key : elements.keySet())
+    {
+      _elements.put(key, (MBElementDefinition) elements.get(key));
+    }
+  }
+
+  @Override
+  public int describeContents()
+  {
+    return Constants.C_PARCELABLE_TYPE_DOCUMENT_DEFINITION;
+  }
+
+  @Override
+  public void writeToParcel(Parcel out, int flags)
+  {
+    super.writeToParcel(out, flags);
+
+    Bundle elements = new Bundle();
+
+    for (String key : _elements.keySet())
+    {
+      elements.putParcelable(key, _elements.get(key));
+    }
+
+    out.writeBundle(elements);
+    out.writeString(_dataManager);
+    out.writeValue(_autoCreate);
+  }
+
+  public static final Parcelable.Creator<MBDocumentDefinition> CREATOR = new Creator<MBDocumentDefinition>()
+                                                                       {
+                                                                         @Override
+                                                                         public MBDocumentDefinition[] newArray(int size)
+                                                                         {
+                                                                           return new MBDocumentDefinition[size];
+                                                                         }
+
+                                                                         @Override
+                                                                         public MBDocumentDefinition createFromParcel(Parcel in)
+                                                                         {
+                                                                           return new MBDocumentDefinition(in);
+                                                                         }
+                                                                       };
+
+  // End of parcelable stuff
 
 }

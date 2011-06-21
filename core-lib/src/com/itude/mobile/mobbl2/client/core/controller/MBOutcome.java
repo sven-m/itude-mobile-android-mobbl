@@ -1,12 +1,18 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
+
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNotBooleanException;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 
-public class MBOutcome
+public class MBOutcome implements Parcelable
 {
   private String     _originName;
   private String     _outcomeName;
@@ -132,7 +138,6 @@ public class MBOutcome
 
   public MBOutcome(MBOutcome outcome)
   {
-    ;
     _originName = outcome.getOriginName();
     _outcomeName = outcome.getOutcomeName();
     _originDialogName = outcome.getOriginDialogName();
@@ -148,7 +153,6 @@ public class MBOutcome
 
   public MBOutcome(MBOutcomeDefinition definition)
   {
-    ;
     _originName = definition.getOrigin();
     _outcomeName = definition.getName();
     _dialogName = definition.getDialog();
@@ -163,7 +167,6 @@ public class MBOutcome
 
   public MBOutcome(String outcomeName, MBDocument document)
   {
-
     _outcomeName = outcomeName;
     _document = document;
   }
@@ -205,6 +208,80 @@ public class MBOutcome
     return isValid;
   }
 
+  // Parcel stuff
+
+  /**
+   * Private constructor to create an instance of MBOutcome based on a previously
+   * created/written Parcel.
+   * @param in
+   */
+  private MBOutcome(Parcel in)
+  {
+    Log.d("coen", "MBOutcome from parcel");
+    Bundle data = in.readBundle();
+
+    _originName = data.getString("originName");
+    _outcomeName = data.getString("outcomeName");
+    _dialogName = data.getString("dialogName");
+    _originDialogName = data.getString("originDialogName");
+    _displayMode = data.getString("displayMode");
+    _path = data.getString("path");
+    _preCondition = data.getString("preCondition");
+
+    _persist = data.getBoolean("persist");
+    _transferDocument = data.getBoolean("transferDocument");
+    _noBackgroundProcessing = data.getBoolean("noBackgroundProcessing");
+
+    _document = data.getParcelable("document");
+  }
+
+  @Override
+  public int describeContents()
+  {
+    return Constants.C_PARCELABLE_TYPE_OUTCOME;
+  }
+
+  @Override
+  public void writeToParcel(Parcel out, int flags)
+  {
+    Log.d("coen", "writeToParcel");
+
+    Bundle data = new Bundle();
+
+    data.putString("originName", _originName);
+    data.putString("outcomeName", _outcomeName);
+    data.putString("dialogName", _dialogName);
+    data.putString("originDialogName", _originDialogName);
+    data.putString("displayMode", _displayMode);
+    data.putString("path", _path);
+    data.putString("preCondition", _preCondition);
+
+    data.putBoolean("persist", _persist);
+    data.putBoolean("transferDocument", _transferDocument);
+    data.putBoolean("noBackgroundProcessing", _noBackgroundProcessing);
+
+    data.putParcelable("document", _document);
+
+    out.writeBundle(data);
+  }
+
+  public static final Parcelable.Creator<MBOutcome> CREATOR = new Creator<MBOutcome>()
+                                                            {
+                                                              @Override
+                                                              public MBOutcome[] newArray(int size)
+                                                              {
+                                                                return new MBOutcome[size];
+                                                              }
+
+                                                              @Override
+                                                              public MBOutcome createFromParcel(Parcel in)
+                                                              {
+                                                                return new MBOutcome(in);
+                                                              }
+                                                            };
+
+  // End of parcel stuff
+
   @Override
   public String toString()
   {
@@ -212,5 +289,4 @@ public class MBOutcome
            + getPath() + " persist=" + getPersist() + " displayMode=" + getDisplayMode() + " preCondition=" + getPreCondition()
            + " noBackgroundProsessing=" + getNoBackgroundProcessing();
   }
-
 }
