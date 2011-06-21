@@ -475,7 +475,7 @@ public class MBApplicationController extends Application
     // This might mess up the count of the activity indicators if more than one page is being constructed in the background;
     // however most of the times this will work out; so:
     //    _viewManager.hideActivityIndicatorForDialog(outcome.getDialogName());
-    _viewManager.hideActivityIndicator();
+    _viewManager.hideActivityIndicator(true);
 
     // See if there is an outcome defined for this particular exception
     ArrayList<MBOutcomeDefinition> outcomeDefinitions = (ArrayList<MBOutcomeDefinition>) metadataService

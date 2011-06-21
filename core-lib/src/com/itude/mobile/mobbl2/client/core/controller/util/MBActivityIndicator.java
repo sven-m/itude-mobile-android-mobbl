@@ -27,10 +27,21 @@ public class MBActivityIndicator
     });
   }
 
-  public static void dismiss(final Activity activity)
+  public static void dismiss(final Activity activity, boolean force)
   {
-    if (--_queue > 0) return;
+    if (force)
+    {
+      doDismiss(activity);
+      _queue = 0;
+    }
+    else if (--_queue == 0)
+    {
+      doDismiss(activity);
+    }
+  }
 
+  private static void doDismiss(final Activity activity)
+  {
     activity.runOnUiThread(new Runnable()
     {
       public void run()

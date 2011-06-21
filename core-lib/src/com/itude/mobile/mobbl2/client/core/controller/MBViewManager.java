@@ -402,7 +402,12 @@ public class MBViewManager extends ActivityGroup
 
   public void hideActivityIndicator()
   {
-    MBActivityIndicator.dismiss(this);
+    hideActivityIndicator(false);
+  }
+
+  public void hideActivityIndicator(boolean force)
+  {
+    MBActivityIndicator.dismiss(this, force);
   }
 
   public void makeKeyAndVisible()
