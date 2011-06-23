@@ -2,6 +2,7 @@ package com.itude.mobile.mobbl2.client.core.controller;
 
 import java.util.ArrayList;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBNoOutcomesDef
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.exceptions.MBRunnable;
 
 /**
  * @author Coen Houtman
@@ -211,7 +213,7 @@ public class MBOutcomeHandler extends Handler
             });
           }
 
-          MBActionDefinition actionDef = metadataService.getDefinitionForActionName(outcomeDef.getAction(), false);
+          final MBActionDefinition actionDef = metadataService.getDefinitionForActionName(outcomeDef.getAction(), false);
 
           if (actionDef != null)
           {
@@ -222,16 +224,24 @@ public class MBOutcomeHandler extends Handler
             }
             else
             {
-              MBPerformActionInBackgroundRunner runner = new MBPerformActionInBackgroundRunner();
+              // AsyncTasks must be created and executed on the UI Thread!
+              viewManager.runOnUiThread(new Runnable()
+              {
+                @Override
+                public void run()
+                {
+                  MBPerformActionInBackgroundRunner runner = new MBPerformActionInBackgroundRunner();
 
-              runner.setController(applicationController);
-              runner.setOutcome(new MBOutcome(outcomeToProcess));
-              runner.setActionDefinition(actionDef);
-              runner.execute(new Object[0]);
+                  runner.setController(applicationController);
+                  runner.setOutcome(new MBOutcome(outcomeToProcess));
+                  runner.setActionDefinition(actionDef);
+                  runner.execute(new Object[0]);
+                }
+              });
             }
           }
 
-          MBPageDefinition pageDef = metadataService.getDefinitionForPageName(outcomeDef.getAction(), false);
+          final MBPageDefinition pageDef = metadataService.getDefinitionForPageName(outcomeDef.getAction(), false);
           if (pageDef != null)
           {
             /*CH: Exception pages prepare in the background. Android has trouble if the
@@ -248,13 +258,25 @@ public class MBOutcomeHandler extends Handler
             }
             else
             {
-              MBPreparePageInBackgroundRunner runner = new MBPreparePageInBackgroundRunner();
-              runner.setController(applicationController);
-              runner.setOutcome(new MBOutcome(outcomeToProcess));
-              runner.setPageName(pageDef.getName());
-              runner.setSelectPageInDialog(selectPageInDialog);
-              runner.setBackStackEnabled(applicationController.getBackStackEnabled());
-              runner.execute(new Object[0]);
+              // AsyncTasks must be created and executed on the UI Thread!
+              Bundle bundle = new Bundle();
+              bundle.putString("selectPageInDialog", selectPageInDialog);
+
+              Runnable runnable = new MBRunnable(null, bundle)
+              {
+                @Override
+                public void runMethod()
+                {
+                  MBPreparePageInBackgroundRunner runner = new MBPreparePageInBackgroundRunner();
+                  runner.setController(applicationController);
+                  runner.setOutcome(new MBOutcome(outcomeToProcess));
+                  runner.setPageName(pageDef.getName());
+                  runner.setSelectPageInDialog(getStringParameter("selectPageInDialog"));
+                  runner.setBackStackEnabled(applicationController.getBackStackEnabled());
+                  runner.execute(new Object[0]);
+                }
+              };
+              viewManager.runOnUiThread(runnable);
             }
 
             selectPageInDialog = "no";

@@ -19,7 +19,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBInvalidOutcomeException;
-import com.itude.mobile.mobbl2.client.core.controller.util.MBActivityIndicator;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
@@ -62,16 +61,6 @@ public class MBApplicationController extends Application
     _instance = this;
     _pages = new HashMap<String, MBPage>();
     _pagesForName = new HashMap<String, HashMap<String, MBPage>>();
-
-    MBOutcomeHandlerThread outcomeHandlerThread = new MBOutcomeHandlerThread("outcomeHandler");
-    outcomeHandlerThread.start();
-
-    // FIXME
-    while ((_outcomeHandler = outcomeHandlerThread.getOutcomeHandler()) == null)
-    {
-      Log.d(Constants.APPLICATION_NAME, "Waiting for OutcomeHandler to settle down...");
-    }
-    Log.d(Constants.APPLICATION_NAME, "OutcomeHandler settled, continue startup");
   }
 
   ////////////////////////////////////////////////
@@ -105,6 +94,8 @@ public class MBApplicationController extends Application
     Log.d("MOBBL", "MBApplicationController.startApplication");
     Log.d(Constants.APPLICATION_NAME, "Device info:");
     Log.d(Constants.APPLICATION_NAME, MBDevice.getInstance().toString());
+
+    startOutcomeHandler();
 
     _applicationFactory = applicationFactory;
 
@@ -476,7 +467,7 @@ public class MBApplicationController extends Application
     // This might mess up the count of the activity indicators if more than one page is being constructed in the background;
     // however most of the times this will work out; so:
     //    _viewManager.hideActivityIndicatorForDialog(outcome.getDialogName());
-    if (MBActivityIndicator.isActive()) _viewManager.hideActivityIndicator();
+    _viewManager.hideActivityIndicator();
 
     // See if there is an outcome defined for this particular exception
     ArrayList<MBOutcomeDefinition> outcomeDefinitions = (ArrayList<MBOutcomeDefinition>) metadataService
@@ -539,6 +530,33 @@ public class MBApplicationController extends Application
   public void resetControllerPreservingCurrentDialog()
   {
     _viewManager.resetViewPreservingCurrentDialog();
+  }
+
+  public void startOutcomeHandler()
+  {
+    if (_outcomeHandler != null)
+    {
+      Log.w(Constants.APPLICATION_NAME, "Outcome handler already started, so skipping");
+      return;
+    }
+
+    MBOutcomeHandlerThread outcomeHandlerThread = new MBOutcomeHandlerThread("outcomeHandler");
+    outcomeHandlerThread.start();
+
+    while ((_outcomeHandler = outcomeHandlerThread.getOutcomeHandler()) == null)
+    {
+      Log.d(Constants.APPLICATION_NAME, "Waiting for OutcomeHandler to settle down...");
+    }
+    Log.d(Constants.APPLICATION_NAME, "OutcomeHandler settled, continue startup");
+  }
+
+  public void stopOutcomeHandler()
+  {
+    if (_outcomeHandler != null)
+    {
+      _outcomeHandler.getLooper().quit();
+      _outcomeHandler = null;
+    }
   }
 
   /////////////////////////////////////////////////////////////////////////

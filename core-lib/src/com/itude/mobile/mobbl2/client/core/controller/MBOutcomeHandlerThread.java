@@ -1,33 +1,27 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
-import android.os.Looper;
-import android.util.Log;
+import android.os.HandlerThread;
 
-public class MBOutcomeHandlerThread extends Thread
+public class MBOutcomeHandlerThread extends HandlerThread
 {
+  private MBOutcomeHandler _outcomeHandler;
+
   public MBOutcomeHandlerThread(String name)
   {
     super(name);
-    // TODO Auto-generated constructor stub
   }
-
-  private MBOutcomeHandler _outcomeHandler;
 
   @Override
   public void run()
   {
-    try
-    {
-      Looper.prepare();
+    super.run();
+    _outcomeHandler = null;
+  }
 
-      _outcomeHandler = new MBOutcomeHandler();
-
-      Looper.loop();
-    }
-    catch (Throwable e)
-    {
-      Log.e("MOBBL", "Thread stopped due to error, good luck with it", e);
-    }
+  @Override
+  protected void onLooperPrepared()
+  {
+    _outcomeHandler = new MBOutcomeHandler();
   }
 
   public MBOutcomeHandler getOutcomeHandler()

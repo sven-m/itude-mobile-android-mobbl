@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -15,7 +14,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;

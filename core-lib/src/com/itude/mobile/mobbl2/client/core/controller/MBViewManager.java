@@ -72,6 +72,26 @@ public class MBViewManager extends ActivityGroup
   }
 
   @Override
+  protected void onRestart()
+  {
+    super.onRestart();
+
+    MBApplicationController.getInstance().startOutcomeHandler();
+  }
+
+  @Override
+  protected void onStop()
+  {
+    super.onStop();
+
+    MBApplicationController.getInstance().stopOutcomeHandler();
+  }
+
+  ///////////////////// 
+
+  ///////////////////// Android methods
+
+  @Override
   public boolean onCreateOptionsMenu(Menu menu)
   {
     for (String dialogName : getSortedDialogNames())
@@ -400,14 +420,12 @@ public class MBViewManager extends ActivityGroup
     MBActivityIndicator.show(this);
   }
 
-  public void hideActivityIndicator()
+  public synchronized void hideActivityIndicator()
   {
-    hideActivityIndicator(false);
-  }
-
-  public void hideActivityIndicator(boolean force)
-  {
-    MBActivityIndicator.dismiss(this, force);
+    if (MBActivityIndicator.isActive())
+    {
+      MBActivityIndicator.dismiss(this);
+    }
   }
 
   public void makeKeyAndVisible()
@@ -622,17 +640,17 @@ public class MBViewManager extends ActivityGroup
 
   public List<MBBasicViewController> getAllFragements()
   {
-    List<MBBasicViewController> lijst = new ArrayList<MBBasicViewController>();
+    List<MBBasicViewController> list = new ArrayList<MBBasicViewController>();
     // Walk trough all dialogControllers
     for (int i = 0; i < _dialogControllers.size(); i++)
     {
       // Pop all controller apart from first one
       MBDialogController dc = (MBDialogController) getLocalActivityManager().getActivity(_dialogControllers.get(i));
       //TODO Duplicaten er nog eens uit halen.
-      if (dc != null && !dc.getAllFragments().isEmpty()) lijst.addAll(dc.getAllFragments());
+      if (dc != null && !dc.getAllFragments().isEmpty()) list.addAll(dc.getAllFragments());
     }
 
-    return lijst;
+    return list;
   }
 
   /**

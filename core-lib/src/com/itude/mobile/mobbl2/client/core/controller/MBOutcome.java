@@ -3,7 +3,6 @@ package com.itude.mobile.mobbl2.client.core.controller;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition;
@@ -217,7 +216,6 @@ public class MBOutcome implements Parcelable
    */
   private MBOutcome(Parcel in)
   {
-    Log.d("coen", "MBOutcome from parcel");
     Bundle data = in.readBundle();
 
     _originName = data.getString("originName");
@@ -244,8 +242,6 @@ public class MBOutcome implements Parcelable
   @Override
   public void writeToParcel(Parcel out, int flags)
   {
-    Log.d("coen", "writeToParcel");
-
     Bundle data = new Bundle();
 
     data.putString("originName", _originName);
