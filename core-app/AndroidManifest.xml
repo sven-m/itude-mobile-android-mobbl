@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.itude.mobile.mobbl2.client.core"
       android:versionCode="1"
-      android:versionName="1.0">
+      android:versionName="${project.version}">
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="11"/>
 
-    <application android:name="MBApplicationCore">
+    <application android:name="MBApplicationCore" android:debuggable="true">
 
 		<activity android:name="MBSplashScreen" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:noHistory="true">
            <intent-filter>

@@ -56,6 +56,12 @@
 			<version>${project.version}</version>
 			<type>apklib</type>
 		</dependency>
+		<dependency>
+			<groupId>com.itude.mobile.android.tools</groupId>
+			<artifactId>xml-obfuscator</artifactId>
+			<version>0.1</version>
+			<type>jar</type>
+		</dependency>
 	</dependencies>
 
 	<scm>
@@ -68,23 +74,79 @@
 		<defaultGoal>install</defaultGoal>
 		<finalName>${project.artifactId}-${project.version}</finalName>
 		<sourceDirectory>${project.basedir}/src</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>${project.basedir}/assets</directory>
+				<filtering>true</filtering>
+				<targetPath>${project.build.directory}/filtered-assets</targetPath>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+
+			<resource>
+				<directory>${project.basedir}</directory>
+				<filtering>true</filtering>
+				<targetPath>${project.build.directory}/filtered-manifest</targetPath>
+				<includes>
+					<include>AndroidManifest.xml</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>resources</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>maven-android-plugin</artifactId>
-				<!-- configuration> <emulator> <avd>Android2.1-u</avd> <wait>2000</wait> 
-					</emulator> <deleteConflictingFiles>true</deleteConflictingFiles> <undeployBeforeDeploy>true</undeployBeforeDeploy> 
-					</configuration> <executions> <execution> <goals> <goal>deploy</goal> </goals> 
-					</execution> </executions -->
+				<configuration>
+					<androidManifestFile>${project.build.directory}/filtered-manifest/AndroidManifest.xml</androidManifestFile>
+					<assetsDirectory>${project.build.directory}/filtered-assets</assetsDirectory>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
 	<profiles>
 		<profile>
 			<id>development</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.google.code.maven-replacer-plugin</groupId>
+						<artifactId>maven-replacer-plugin</artifactId>
+						<version>1.3.8</version>
+						<executions>
+							<execution>
+								<phase>compile</phase>
+								<goals>
+									<goal>replace</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<file>target/filtered-manifest/AndroidManifest.xml</file>
+							<replacements>
+								<replacement>
+									<token>android:debuggable=&quot;false&quot;</token>
+									<value>android:debuggable=&quot;true&quot;</value>
+								</replacement>
+							</replacements>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 		<profile>
 			<id>release</id>
@@ -92,6 +154,47 @@
 				is done with the maven release plugin -->
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>com.google.code.maven-replacer-plugin</groupId>
+						<artifactId>maven-replacer-plugin</artifactId>
+						<version>1.3.8</version>
+						<executions>
+							<execution>
+								<phase>compile</phase>
+								<goals>
+									<goal>replace</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<file>target/filtered-manifest/AndroidManifest.xml</file>
+							<replacements>
+								<replacement>
+									<token>android:debuggable=&quot;true&quot;</token>
+									<value>android:debuggable=&quot;false&quot;</value>
+								</replacement>
+							</replacements>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.1.1</version>
+						<executions>
+							<execution>
+								<phase>compile</phase>
+								<goals>
+									<goal>java</goal>
+								</goals>
+								<configuration>
+									<mainClass>com.itude.mobile.mobbl2.obf.XmlObfuscator</mainClass>
+									<arguments>
+										<argument>${project.build.directory}/filtered-assets</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 					<plugin>
 						<artifactId>maven-enforcer-plugin</artifactId>
 						<executions>
@@ -283,7 +386,4 @@
 			</properties>
 		</profile>
 	</profiles>
-</project>
-
-
-          
+</project>   
