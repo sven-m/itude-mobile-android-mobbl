@@ -267,7 +267,7 @@ public class MBField extends MBComponent
   {
     return _hidden;
   }
-  
+
   public void setHidden(boolean hidden)
   {
     _hidden = hidden;
@@ -629,8 +629,11 @@ public class MBField extends MBComponent
   // OnItemSelectedListener Methods
   public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
   {
-    String value = getDomain().getDomainValidators().get(position).getValue();
-    setValue(value);
+    if (!getDomain().getDomainValidators().isEmpty())
+    {
+      String value = getDomain().getDomainValidators().get(position).getValue();
+      setValue(value);
+    }
   }
 
   public void onNothingSelected(AdapterView<?> parent)
