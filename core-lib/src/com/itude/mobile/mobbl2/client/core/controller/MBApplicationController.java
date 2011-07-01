@@ -140,6 +140,8 @@ public class MBApplicationController extends Application
         activateDialogWithName(MBMetadataService.getInstance().getFirstDialogDefinition().getName());
       }
     });
+
+    if (MBDevice.getInstance().isTablet()) MBTabletViewManager.getInstance().populateActionBar();
   }
 
   private String getActiveDialogName()
@@ -327,8 +329,7 @@ public class MBApplicationController extends Application
       if (actionOutcome.getDialogName() == null) actionOutcome.setDialogName(causingOutcome.getDialogName());
       actionOutcome.setOriginName(actionDef.getName());
 
-      //      handleOutcome(actionOutcome);
-      _outcomeHandler.handleOutcomeSynchronously(actionOutcome, true);
+      _outcomeHandler.handleOutcomeSynchronously(actionOutcome, false);
     }
     catch (Exception e)
     {

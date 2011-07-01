@@ -46,14 +46,14 @@ public class MBViewManager extends ActivityGroup
     MBViewStateFullScreen, MBViewStatePlain, MBViewStateTabbed, MBViewStateModal
   };
 
-  private static MBViewManager _instance;
+  protected static MBViewManager _instance;
 
-  private ArrayList<String>    _dialogControllers;
-  private ArrayList<String>    _sortedDialogNames;
-  private String               _activeDialogName;
-  private Dialog               _currentAlert;
+  private ArrayList<String>      _dialogControllers;
+  private ArrayList<String>      _sortedDialogNames;
+  private String                 _activeDialogName;
+  private Dialog                 _currentAlert;
   //  private Object               _modalController;
-  private boolean              _singlePageMode;
+  private boolean                _singlePageMode;
 
   ///////////////////// Android lifecycle methods
 
@@ -94,6 +94,11 @@ public class MBViewManager extends ActivityGroup
   @Override
   public boolean onCreateOptionsMenu(Menu menu)
   {
+    if (MBDevice.getInstance().isTablet())
+    {
+      return false;
+    }
+
     for (String dialogName : getSortedDialogNames())
     {
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
@@ -652,6 +657,9 @@ public class MBViewManager extends ActivityGroup
 
     return list;
   }
+  
+  // Tablet specific methods. Some methods are implemented also to run on smartphone.
+  // Others are for tablet only.
 
   /**
    * Copied from FragmentActivity.java in the Android Compatibility Package. Invoke this method
@@ -666,4 +674,20 @@ public class MBViewManager extends ActivityGroup
       ActivityCompatHoneycomb.invalidateOptionsMenu(this);
     }
   }
+
+  public void invalidateActionBar()
+  {
+    throw new UnsupportedOperationException("This method is not supported on smartphone");
+  }
+
+  public void populateActionBar()
+  {
+    populateActionBar(0);
+  }
+
+  public void populateActionBar(int select)
+  {
+    throw new UnsupportedOperationException("This method is not support on smartphone");
+  }
+
 }
