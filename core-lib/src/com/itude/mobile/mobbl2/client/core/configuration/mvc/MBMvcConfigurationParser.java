@@ -30,6 +30,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
   private List<String>              _domainAttributes;
   private List<String>              _domainValidatorAttributes;
   private List<String>              _variableAttributes;
+  private List<String>              _toolAttributes;
   private MBConfigurationDefinition _rootConfig;
 
   @Override
@@ -193,6 +194,16 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _domainValidatorAttributes.add("lowerBound");
       _domainValidatorAttributes.add("upperBound");
     }
+    if (_toolAttributes == null)
+    {
+      _toolAttributes = new ArrayList<String>();
+      _toolAttributes.add("xmlns");
+      _toolAttributes.add("name");
+      _toolAttributes.add("action");
+      _toolAttributes.add("type");
+      _toolAttributes.add("icon");
+      _toolAttributes.add("title");
+    }
 
     MBConfigurationDefinition conf = (MBConfigurationDefinition) super.parseData(data, documentName);
 
@@ -215,7 +226,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
   @Override
   public boolean processElement(String elementName, Map<String, String> attributeDict)
   {
-
     if (elementName.equals("Configuration"))
     {
       checkAttributesForElement(elementName, attributeDict, _configAttributes);
@@ -481,6 +491,19 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
 
       notifyProcessed(validatorDef);
     }
+    else if (elementName.equals("Tool"))
+    {
+      checkAttributesForElement(elementName, attributeDict, _toolAttributes);
+
+      MBToolDefinition toolDef = new MBToolDefinition();
+      toolDef.setName(attributeDict.get("name"));
+      toolDef.setType(attributeDict.get("type"));
+      toolDef.setAction(attributeDict.get("action"));
+      toolDef.setIcon(attributeDict.get("icon"));
+      toolDef.setTitle(attributeDict.get("title"));
+
+      notifyProcessed(toolDef);
+    }
     else
     {
       return false;
@@ -522,14 +545,16 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
     return element.equals("Configuration") || element.equals("Include") || element.equals("Document") || element.equals("Element")
            || element.equals("Attribute") || element.equals("Action") || element.equals("Outcome") || element.equals("Page")
            || element.equals("Dialog") || element.equals("DialogGroup") || element.equals("ForEach") || element.equals("Variable")
-           || element.equals("Panel") || element.equals("Field") || element.equals("Domain") || element.equals("DomainValidator");
+           || element.equals("Panel") || element.equals("Field") || element.equals("Domain") || element.equals("DomainValidator")
+           || element.equals("Tool");
   }
 
   @Override
   public boolean isIgnoredElement(String element)
   {
     return element.equals("Model") || element.equals("Dialogs") || element.equals("Domains") || element.equals("Documents")
-           || element.equals("Controller") || element.equals("Actions") || element.equals("Wiring") || element.equals("View");
+           || element.equals("Controller") || element.equals("Actions") || element.equals("Wiring") || element.equals("View")
+           || element.equals("Toolbar");
   }
 
   private void addExceptionDocument(MBConfigurationDefinition conf)
@@ -773,4 +798,13 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
     _domainValidatorAttributes = domainValidatorAttributes;
   }
 
+  public List<String> getToolAttributes()
+  {
+    return _toolAttributes;
+  }
+
+  public void setToolAttributes(List<String> toolAttributes)
+  {
+    _toolAttributes = toolAttributes;
+  }
 }

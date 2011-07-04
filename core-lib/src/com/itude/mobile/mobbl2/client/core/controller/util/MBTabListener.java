@@ -20,7 +20,7 @@ public class MBTabListener implements MBTabListenerI
   @Override
   public void onTabReselected(MBTab tab)
   {
-    // TODO Auto-generated method stub
+    MBViewManager.getInstance().activateDialogWithID(_dialogId);
   }
 
   @Override

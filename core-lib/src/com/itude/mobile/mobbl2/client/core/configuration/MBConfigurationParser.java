@@ -26,6 +26,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainValidatorDe
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBConfigurationParser extends DefaultHandler
@@ -165,6 +166,12 @@ public class MBConfigurationParser extends DefaultHandler
   }
 
   public void notifyProcessed(MBDialogDefinition definition)
+  {
+    getStack().peek().addChildElement(definition);
+    getStack().push(definition);
+  }
+
+  public void notifyProcessed(MBToolDefinition definition)
   {
     getStack().peek().addChildElement(definition);
     getStack().push(definition);

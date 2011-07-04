@@ -13,6 +13,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBMvcConfigurationParser;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBActionNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBDialogNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBDocumentNotDefinedException;
@@ -216,6 +217,11 @@ public class MBMetadataService
       throw new MBActionNotDefinedException(message);
     }
     return outcomeDefs;
+  }
+
+  public List<MBToolDefinition> getTools()
+  {
+    return new ArrayList<MBToolDefinition>(_cfg.getTools().values());
   }
 
   public MBConfigurationDefinition getConfiguration()

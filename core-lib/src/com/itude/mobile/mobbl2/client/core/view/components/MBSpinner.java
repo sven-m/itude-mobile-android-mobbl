@@ -1,12 +1,16 @@
 package com.itude.mobile.mobbl2.client.core.view.components;
 
-import android.app.ActionBar;
 import android.content.Context;
-import android.view.Gravity;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.itude.mobile.mobbl2.client.core.util.MBDevice;
+import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 
 /**
  * @author Coen Houtman
@@ -17,10 +21,12 @@ import android.widget.TextView;
  */
 public class MBSpinner extends Spinner
 {
-  private View _promptView = null;
-  private int  _mode;
-  private int  _widthMeasureSpec;
-  private int  _heightMeasureSpec;
+  private TextView       _textView = null;
+  private ImageView      _icon     = null;
+  private RelativeLayout _layout   = null;
+  private int            _mode;
+  private int            _widthMeasureSpec;
+  private int            _heightMeasureSpec;
 
   public MBSpinner(Context context)
   {
@@ -30,21 +36,20 @@ public class MBSpinner extends Spinner
   public MBSpinner(Context context, int mode)
   {
     super(context, mode);
+    if (MBDevice.getInstance().isPhone())
+    {
+      throw new UnsupportedOperationException("This widget is not designed for smartphone environments");
+    }
     _mode = mode;
 
-    //    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-    //    layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
-    //    setLayoutParams(layoutParams);
-
-    //FIXME using ActionBar.LayoutParams is way too specific here. Maybe use the comment above in a way that it does work.
-    ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(Gravity.FILL);
-    setLayoutParams(layoutParams);
+    int spinnerDrawableId = getResources().getIdentifier("spinner_cab_background_holo_dark", "drawable", "android");
+    setBackgroundResource(spinnerDrawableId);
   }
 
   @Override
   protected void onLayout(boolean changed, int l, int t, int r, int b)
   {
-    if (_promptView == null)
+    if (_textView == null)
     {
       super.onLayout(changed, l, t, r, b);
     }
@@ -55,9 +60,14 @@ public class MBSpinner extends Spinner
 
       removeAllViewsInLayout();
 
-      setupChild(_promptView);
+      View view = _textView;
+      if (_layout != null)
+      {
+        view = _layout;
+      }
+      setupChild(view);
 
-      View sel = _promptView;
+      View sel = view;
       int width = sel.getMeasuredWidth();
       int selectedOffset = childrenLeft + (childrenWidth / 2) - (width / 2);
       sel.offsetLeftAndRight(selectedOffset);
@@ -94,7 +104,7 @@ public class MBSpinner extends Spinner
   @Override
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
   {
-    if (_promptView == null)
+    if (_textView == null)
     {
       super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
@@ -103,26 +113,37 @@ public class MBSpinner extends Spinner
       int widthSize;
       int heightSize;
 
-      int paddingLeft = super.getPaddingLeft() > _promptView.getPaddingLeft() ? super.getPaddingLeft() : _promptView.getPaddingLeft();
-      int paddingTop = super.getPaddingTop() > _promptView.getPaddingTop() ? super.getPaddingTop() : _promptView.getPaddingTop();
-      int paddingRight = super.getPaddingRight() > _promptView.getPaddingRight() ? super.getPaddingRight() : _promptView.getPaddingRight();
-      int paddingBottom = super.getPaddingBottom() > _promptView.getPaddingBottom() ? super.getPaddingBottom() : _promptView
-          .getPaddingBottom();
+      View view = _textView;
+      if (_layout != null)
+      {
+        view = _layout;
+      }
+
+      int paddingLeft = super.getPaddingLeft() > view.getPaddingLeft() ? super.getPaddingLeft() : view.getPaddingLeft();
+      int paddingTop = super.getPaddingTop() > view.getPaddingTop() ? super.getPaddingTop() : view.getPaddingTop();
+      int paddingRight = super.getPaddingRight() > view.getPaddingRight() ? super.getPaddingRight() : view.getPaddingRight();
+      int paddingBottom = super.getPaddingBottom() > view.getPaddingBottom() ? super.getPaddingBottom() : view.getPaddingBottom();
 
       setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
 
       int preferredHeight = 0;
       int preferredWidth = 0;
 
-      View view = _promptView;
       if (view.getLayoutParams() == null)
       {
         view.setLayoutParams(generateDefaultLayoutParams());
       }
       measureChild(view, widthMeasureSpec, heightMeasureSpec);
+      preferredWidth = view.getMeasuredWidth();
+
+      for (int i = 0; i < getAdapter().getCount(); i++)
+      {
+        int measuredWidth = measureChildForWidth(getAdapter().getView(i, null, this), widthMeasureSpec, heightMeasureSpec);
+        preferredWidth = Math.max(measuredWidth, preferredWidth);
+      }
 
       preferredHeight = view.getMeasuredHeight() + getPaddingTop() + getPaddingBottom();
-      preferredWidth = view.getMeasuredWidth() + getPaddingLeft() + getPaddingRight();
+      preferredWidth = preferredWidth + getPaddingLeft() + getPaddingRight();
 
       preferredHeight = Math.max(preferredHeight, getSuggestedMinimumHeight());
       preferredWidth = Math.max(preferredWidth, getSuggestedMinimumWidth());
@@ -137,20 +158,41 @@ public class MBSpinner extends Spinner
     }
   }
 
+  private int measureChildForWidth(View view, int widthMeasureSpec, int heightMeasureSpec)
+  {
+    measureChild(view, widthMeasureSpec, heightMeasureSpec);
+    return view.getMeasuredWidth();
+  }
+
   public int getMode()
   {
     return _mode;
   }
 
-  public void setPromptView(View promptView)
+  public void setText(CharSequence text)
   {
-    //FIXME don't take a View, but only allow to add prompt text and an optional accompanying image
+    _textView = new TextView(getContext());
+    _textView.setSingleLine();
+    _textView.setText(text);
+    _textView.setTextSize(18);
+  }
 
-    _promptView = promptView;
-    if (_promptView instanceof TextView)
-    {
-      ((TextView) _promptView).setTextSize(18);
-      ((TextView) _promptView).setTextColor(getContext().getResources().getColor(android.R.color.primary_text_dark));
-    }
+  public void setIcon(Drawable drawable)
+  {
+    _icon = new ImageView(getContext());
+    _icon.setImageDrawable(drawable);
+    _icon.setId(UniqueIntegerGenerator.getId());
+
+    _layout = new RelativeLayout(getContext());
+    _layout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+
+    RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+    iconParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+    _layout.addView(_icon, iconParams);
+
+    RelativeLayout.LayoutParams textParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+    textParams.addRule(RelativeLayout.RIGHT_OF, _icon.getId());
+    textParams.addRule(RelativeLayout.CENTER_VERTICAL);
+    _layout.addView(_textView, textParams);
   }
 }

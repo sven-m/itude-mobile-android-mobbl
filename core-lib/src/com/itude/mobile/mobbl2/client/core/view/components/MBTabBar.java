@@ -23,8 +23,10 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
  */
 public class MBTabBar extends LinearLayout implements OnClickListener
 {
-  private List<MBTab> _tabs        = null;
-  private MBTab       _selectedTab = null;
+  private List<MBTab>     _tabs        = null;
+  private MBTab           _selectedTab = null;
+
+  public static final int FIRST_TAB    = 0;
 
   public MBTabBar(Context context)
   {

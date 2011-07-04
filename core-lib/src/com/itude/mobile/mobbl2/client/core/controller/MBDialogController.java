@@ -8,6 +8,7 @@ import java.util.Stack;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -40,6 +41,7 @@ public class MBDialogController extends FragmentActivity
   private final Stack<String>        _pageIdStack     = new Stack<String>();
   private final List<Integer>        _sortedDialogIds = new ArrayList<Integer>();
   private final Map<String, Integer> _dialogIds       = new HashMap<String, Integer>();
+  private boolean                    _clearDialog     = false;
 
   // Android lifecycle methods
 
@@ -148,6 +150,19 @@ public class MBDialogController extends FragmentActivity
    */
   public void clearAllViews()
   {
+    if (getName().equals(MBViewManager.getInstance().getActiveDialogName()))
+    {
+      doClearAllViews();
+    }
+    else
+    {
+      _clearDialog = true;
+    }
+  }
+
+  private void doClearAllViews()
+  {
+    _clearDialog = false;
     FragmentManager fragmentManager = getSupportFragmentManager();
 
     if (fragmentManager.getBackStackEntryCount() > 0) fragmentManager.popBackStack(fragmentManager.getBackStackEntryAt(0).getId(),
@@ -156,8 +171,13 @@ public class MBDialogController extends FragmentActivity
 
   public void popView()
   {
-    if (getSupportFragmentManager().getBackStackEntryCount() == 0) finish();
+    if (isBackStackEmpty()) finish();
     else getSupportFragmentManager().popBackStack();
+  }
+
+  public boolean isBackStackEmpty()
+  {
+    return getSupportFragmentManager().getBackStackEntryCount() == 0;
   }
 
   public void endModalPage(String pageName)
@@ -299,15 +319,31 @@ public class MBDialogController extends FragmentActivity
 
   public List<MBBasicViewController> getAllFragments()
   {
-    List<MBBasicViewController> lijst = new ArrayList<MBBasicViewController>();
+    return getAllFragments(MBBasicViewController.class);
+  }
 
-    for (int i = 0; i < _sortedDialogIds.size(); i++)
+  /**
+   * @param type
+   * @return 
+   * @return
+   * 
+   * Get a list of fragments of a specific type
+   */
+  public <T extends MBBasicViewController> List<T> getAllFragments(Class<T> clazz)
+  {
+    ArrayList<T> list = new ArrayList<T>();
+
+    for (Integer dialogId : _sortedDialogIds)
     {
-      MBBasicViewController fragment = (MBBasicViewController) getSupportFragmentManager().findFragmentById(_sortedDialogIds.get(i));
-      if (fragment != null) lijst.add(fragment);
+      Fragment fragment = getSupportFragmentManager().findFragmentById(dialogId);
+
+      if (fragment != null && clazz.isInstance(fragment))
+      {
+        list.add((T) fragment);
+      }
     }
 
-    return lijst;
+    return list;
   }
 
   public MBBasicViewController findFragment(String name)
@@ -356,6 +392,10 @@ public class MBDialogController extends FragmentActivity
     */
   public void handleOnWindowActivated(MBBasicViewController vc)
   {
+    if (_clearDialog)
+    {
+      doClearAllViews();
+    }
     if (vc != null) vc.handleOnWindowActivated();
   }
 

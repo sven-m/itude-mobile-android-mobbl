@@ -32,6 +32,7 @@ public class MBConfigurationDefinition extends MBDefinition
   private final Map<String, MBPageDefinition>     _pageTypes;
   private final Map<String, MBDialogDefinition>   _dialogs;
   private MBDialogDefinition                      _firstDialog;
+  private final Map<String, MBToolDefinition>     _tools;
 
   public MBConfigurationDefinition()
   {
@@ -41,6 +42,7 @@ public class MBConfigurationDefinition extends MBDefinition
     _outcomeTypes = new ArrayList<MBOutcomeDefinition>();
     _dialogs = new HashMap<String, MBDialogDefinition>();
     _pageTypes = new HashMap<String, MBPageDefinition>();
+    _tools = new HashMap<String, MBToolDefinition>();
   }
 
   public void addAll(MBConfigurationDefinition otherConfig)
@@ -73,6 +75,10 @@ public class MBConfigurationDefinition extends MBDefinition
     for (MBPageDefinition pageDef : otherConfig.getPages().values())
     {
       addPage(pageDef);
+    }
+    for (MBToolDefinition toolDef : otherConfig.getTools().values())
+    {
+      addTool(toolDef);
     }
   }
 
@@ -192,6 +198,12 @@ public class MBConfigurationDefinition extends MBDefinition
     addPage(child);
   }
 
+  @Override
+  public void addChildElement(MBToolDefinition child)
+  {
+    addTool(child);
+  }
+
   public void addDomain(MBDomainDefinition domain)
   {
     if (_domainTypes.containsKey(domain.getName()))
@@ -245,6 +257,16 @@ public class MBConfigurationDefinition extends MBDefinition
       _firstDialog = dialog;
     }
     _dialogs.put(dialog.getName(), dialog);
+  }
+
+  public void addTool(MBToolDefinition tool)
+  {
+    if (_tools.containsKey(tool.getName()))
+    {
+      Log.w(Constants.APPLICATION_NAME, "Tool definition overridden: multiple definitions for tool with name " + tool.getName());
+    }
+
+    _tools.put(tool.getName(), tool);
   }
 
   public MBDomainDefinition getDefinitionForDomainName(String domainName)
@@ -350,4 +372,8 @@ public class MBConfigurationDefinition extends MBDefinition
     return _firstDialog;
   }
 
+  public Map<String, MBToolDefinition> getTools()
+  {
+    return _tools;
+  }
 }

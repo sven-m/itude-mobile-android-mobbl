@@ -45,6 +45,7 @@ public class MBTab extends RelativeLayout
     textViewParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
     _textView = new TextView(context);
+    _textView.setSingleLine();
     _textView.setPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
     _textView.setLayoutParams(textViewParams);
     _textView.setTextSize(18);
@@ -102,6 +103,7 @@ public class MBTab extends RelativeLayout
     _customViewSet = true;
 
     _textView.setVisibility(View.GONE);
+    _icon.setVisibility(View.GONE);
 
     RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     viewParams.addRule(RelativeLayout.RIGHT_OF, _icon.getId());
