@@ -41,7 +41,6 @@ public class MBFieldViewBuilder extends MBViewBuilder
     View view = null;
 
     if (Constants.C_FIELD_INPUT.equals(field.getType())) view = buildTextField(field);
-    else if (Constants.C_FIELD_USERNAME.equals(field.getType())) view = buildTextField(field);
     else if (Constants.C_FIELD_PASSWORD.equals(field.getType())) view = buildTextField(field);
     else if (Constants.C_FIELD_BUTTON.equals(field.getType())) view = buildButton(field);
     else if (Constants.C_FIELD_LABEL.equals(field.getType())) view = buildLabel(field);
@@ -273,10 +272,6 @@ public class MBFieldViewBuilder extends MBViewBuilder
     {
       inputField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
       inputField.setTransformationMethod(new PasswordTransformationMethod());
-    }
-    else if (field.getType() != null && field.getType().equals(Constants.C_FIELD_USERNAME))
-    {
-      inputField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
     }
 
     getStyleHandler().styleTextfield(inputField, field);

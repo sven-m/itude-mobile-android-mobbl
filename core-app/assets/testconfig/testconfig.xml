@@ -233,7 +233,7 @@
 
 	  <Page name="SETTINGS" document="SettingsDocument" title="Settings">
 		<Panel type="SECTION" style="LIST">
-			<Field label="Username" type="USERNAMEFIELD" path="/Settings[0]/@username" />
+			<Field label="Username" type="PASSWORDFIELD" path="/Settings[0]/@username" />
 			<Field label="Password" type="PASSWORDFIELD" path="/Settings[0]/@password" dataType="int" />
 			<Field label="Max Tries" type="INPUTFIELD" path="/Settings[0]/@maxTries" dataType="int" />
 			<Field label="Fine in €" type="INPUTFIELD" path="/Settings[0]/@fine" dataType="float" />

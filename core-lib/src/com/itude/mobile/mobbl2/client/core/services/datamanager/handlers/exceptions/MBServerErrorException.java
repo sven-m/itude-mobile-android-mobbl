@@ -13,7 +13,6 @@ public class MBServerErrorException extends MBException
   public MBServerErrorException(String msg)
   {
     super(msg);
-    // TODO Auto-generated constructor stub
   }
 
 }

@@ -32,7 +32,6 @@ public interface Constants
   public static final String C_FIELD_IMAGE                                 = "IMAGE";
   public static final String C_FIELD_ICON                                  = "ICON";
   public static final String C_FIELD_INPUT                                 = "INPUTFIELD";
-  public static final String C_FIELD_USERNAME                              = "USERNAMEFIELD";
   public static final String C_FIELD_PASSWORD                              = "PASSWORDFIELD";
   public static final String C_FIELD_DROPDOWNLIST                          = "DROPDOWNLIST";
   public static final String C_FIELD_CHECKBOX                              = "CHECKBOX";

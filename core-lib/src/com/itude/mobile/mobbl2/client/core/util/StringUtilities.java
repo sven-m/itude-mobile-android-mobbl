@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import android.text.InputType;
+import android.text.method.NumberKeyListener;
 import android.util.Log;
 
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
@@ -23,6 +25,8 @@ public class StringUtilities
 {
 
   private static Locale                     defaultFormattingLocale;
+
+  private static NumberKeyListener          _currencyNumberKeyListener;
 
   private static ThreadLocal<DecimalFormat> TLFormatter3Dec = new ThreadLocal<DecimalFormat>()
                                                             {
@@ -532,6 +536,20 @@ public class StringUtilities
     return result.toString();
   }
 
+  /**
+   * @param value value
+   * @return true if {@link String} value is not null and lenght > 0
+   */
+  public static boolean isNotEmpty(String value)
+  {
+    return !isEmpty(value);
+  }
+
+  /**
+   * @param value value
+   * @return true if {@link String} value is null or lenght > 0
+   */
+
   public static boolean isEmpty(String value)
   {
     if (value == null || value.length() == 0)
@@ -542,6 +560,29 @@ public class StringUtilities
     {
       return false;
     }
+  }
+
+  public static NumberKeyListener getCurrencyNumberKeyListener()
+  {
+    if (_currencyNumberKeyListener == null)
+    {
+      _currencyNumberKeyListener = new NumberKeyListener()
+      {
+
+        public int getInputType()
+        {
+          return InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
+        }
+
+        @Override
+        protected char[] getAcceptedChars()
+        {
+          return new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ','};
+        }
+      };
+    }
+
+    return _currencyNumberKeyListener;
   }
 
 }
