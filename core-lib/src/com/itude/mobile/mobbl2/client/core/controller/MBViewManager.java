@@ -29,6 +29,7 @@ import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatH
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
+import com.itude.mobile.mobbl2.client.core.controller.helpers.MBActivityHelper;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBActivityIndicator;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBIndeterminateProgressIndicator;
@@ -38,6 +39,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowChangeType;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
+import com.itude.mobile.mobbl2.client.core.util.helper.MBSecurityHelper;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 
 public class MBViewManager extends ActivityGroup
@@ -85,6 +87,16 @@ public class MBViewManager extends ActivityGroup
     super.onStop();
 
     MBApplicationController.getInstance().stopOutcomeHandler();
+  }
+  
+  @Override
+  protected void onPause()
+  {
+    if (MBActivityHelper.isApplicationBroughtToBackground(this))
+    {
+      MBSecurityHelper.getInstance().logOutIfCheckNotSelected();
+    }
+    super.onPause();
   }
 
   ///////////////////// 
@@ -140,6 +152,7 @@ public class MBViewManager extends ActivityGroup
 
           public void onClick(DialogInterface dialog, int which)
           {
+            MBSecurityHelper.getInstance().logOutIfCheckNotSelected();
             finish();
           }
         }).setNegativeButton(negative, new OnClickListener()
@@ -638,12 +651,16 @@ public class MBViewManager extends ActivityGroup
   {
     Log.d(Constants.APPLICATION_NAME, "MBViewManager.onConfigurationChanged");
 
-    //    getActiveViewController().handleOrientationChange(newConfig);
+    // Tell all ViewControllers about the configuration change
+    for (MBBasicViewController controller : getAllFragments())
+    {
+      controller.handleOrientationChange(newConfig);
+    }
 
     super.onConfigurationChanged(newConfig);
   }
 
-  public List<MBBasicViewController> getAllFragements()
+  public List<MBBasicViewController> getAllFragments()
   {
     List<MBBasicViewController> list = new ArrayList<MBBasicViewController>();
     // Walk trough all dialogControllers
@@ -657,10 +674,10 @@ public class MBViewManager extends ActivityGroup
 
     return list;
   }
-
+  
   // Tablet specific methods. Some methods are implemented also to run on smartphone.
   // Others are for tablet only.
-
+  
   /**
    * Copied from FragmentActivity.java in the Android Compatibility Package. Invoke this method
    * to invalidate the options menu, but avoiding linker errors due to SDK incompatibility.

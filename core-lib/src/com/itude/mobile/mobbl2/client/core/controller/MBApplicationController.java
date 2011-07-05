@@ -342,7 +342,7 @@ public class MBApplicationController extends Application
   ////////EVENT HANDLING
   public void addEventToAllListeners(MBEvent event)
   {
-    for (MBBasicViewController vc : getViewManager().getAllFragements())
+    for (MBBasicViewController vc : getViewManager().getAllFragments())
     {
       vc.addEventToQueue(event);
     }

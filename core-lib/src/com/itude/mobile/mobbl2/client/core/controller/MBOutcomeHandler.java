@@ -141,7 +141,8 @@ public class MBOutcomeHandler extends Handler
         {
 
           // Update a possible switch of dialog/display mode set by the outcome definition
-          if (outcomeDef.getDialog() != null) outcomeToProcess.setDialogName(outcomeDef.getDialog());
+          if (outcomeDef.getDialog() != null && MBApplicationController.getInstance().getModalPageID() == null) outcomeToProcess
+              .setDialogName(outcomeDef.getDialog());
           if (outcomeDef.getDisplayMode() != null) outcomeToProcess.setDisplayMode(outcomeDef.getDisplayMode());
           if (outcomeToProcess.getOriginDialogName() == null) outcomeToProcess.setOriginDialogName(outcomeToProcess.getDialogName());
 
