@@ -59,6 +59,18 @@ public class MBTabBar extends LinearLayout implements OnClickListener
     return _selectedTab;
   }
 
+  public MBTab getTab(int tabId)
+  {
+    for (MBTab tab : _tabs)
+    {
+      if (tabId == tab.getTabId())
+      {
+        return tab;
+      }
+    }
+    return null;
+  }
+
   public int indexOfSelectedTab()
   {
     return indexOf(_selectedTab);
@@ -74,22 +86,37 @@ public class MBTabBar extends LinearLayout implements OnClickListener
    * 
    * Select the tab at the specified position. If the position is out of range, the request is ignored.
    */
-  public void selectTab(int position)
+  public void selectTab(int position, boolean invalidate)
   {
-    MBTab tab;
+    if (position == indexOfSelectedTab())
+    {
+      _selectedTab.reselect();
+      return;
+    }
+
     try
     {
-      tab = _tabs.get(position);
+      MBTab tab = _tabs.get(position);
+
+      _selectedTab.unselect();
+      tab.select();
+      _selectedTab = tab;
+
+      if (invalidate)
+      {
+        MBTabletViewManager.getInstance().invalidateActionBar();
+      }
     }
     catch (Exception e)
     {
       Log.e(Constants.APPLICATION_NAME, "Unable to select tab with position: " + position, e);
-      return;
     }
+  }
 
-    _selectedTab.unselect();
-    tab.select();
-    _selectedTab = tab;
+  public void selectTab(MBTab tab, boolean invalidate)
+  {
+    int position = indexOf(tab);
+    selectTab(position, invalidate);
   }
 
   /* (non-Javadoc)
@@ -99,18 +126,7 @@ public class MBTabBar extends LinearLayout implements OnClickListener
   public void onClick(View view)
   {
     MBTab tab = (MBTab) view;
-
-    if (tab == _selectedTab)
-    {
-      tab.reselect();
-    }
-    else
-    {
-      tab.select();
-      _selectedTab.unselect();
-      _selectedTab = tab;
-      MBTabletViewManager.getInstance().invalidateActionBar();
-    }
+    selectTab(tab, true);
   }
 
 }

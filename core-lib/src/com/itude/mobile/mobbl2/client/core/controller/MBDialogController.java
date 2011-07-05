@@ -139,7 +139,10 @@ public class MBDialogController extends FragmentActivity
   @Override
   public void onWindowFocusChanged(boolean hasFocus)
   {
-    if (hasFocus) getParent().setTitle(getTitle());
+    if (hasFocus)
+    {
+      getParent().setTitle(getTitle());
+    }
     super.onWindowFocusChanged(hasFocus);
   }
 
@@ -307,7 +310,12 @@ public class MBDialogController extends FragmentActivity
         fragment.setArguments(args);
       }
 
-      transaction.add(fragment, id);
+      Fragment dialogFragment = getSupportFragmentManager().findFragmentByTag("dialog");
+      if (dialogFragment != null)
+      {
+        transaction.remove(dialogFragment);
+      }
+      transaction.add(fragment, "dialog");
     }
     else transaction.replace(_dialogIds.get(dialogName), fragment);
 
@@ -366,6 +374,11 @@ public class MBDialogController extends FragmentActivity
    */
   public void handleAllOnWindowActivated()
   {
+    if (MBDevice.getInstance().isTablet())
+    {
+      MBViewManager.getInstance().selectTab(getName().hashCode());
+    }
+
     List<MBBasicViewController> allFragments = getAllFragments();
 
     for (int i = 0; i < allFragments.size(); i++)

@@ -97,7 +97,18 @@ public class MBTabletViewManager extends MBViewManager
     if (tabBar != null)
     {
       resetViewPreservingCurrentDialog();
-      tabBar.selectTab(MBTabBar.FIRST_TAB);
+      tabBar.selectTab(MBTabBar.FIRST_TAB, true);
+    }
+  }
+
+  @Override
+  public void selectTab(int id)
+  {
+    MBTabBar tabBar = getTabBar();
+    if (tabBar != null)
+    {
+      MBTab tab = tabBar.getTab(id);
+      tabBar.selectTab(tabBar.indexOf(tab), true);
     }
   }
 
@@ -149,16 +160,16 @@ public class MBTabletViewManager extends MBViewManager
             spinner.setText(dialogDefinition.getTitle());
             spinner.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
 
-            tabBar.addTab(new MBTab(MBTabletViewManager.this).setView(spinner));
+            tabBar.addTab(new MBTab(MBTabletViewManager.this).setView(spinner).setTabId(dialogName.hashCode()));
           }
           else
           {
             tabBar.addTab(new MBTab(MBTabletViewManager.this)
                 .setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon())).setText(dialogDefinition.getTitle())
-                .setListener(new MBTabListener(dialogName.hashCode())));
+                .setListener(new MBTabListener(dialogName.hashCode())).setTabId(dialogName.hashCode()));
           }
         }
-        tabBar.selectTab(select);
+        tabBar.selectTab(select, false);
         actionBar.setCustomView(tabBar, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
             ActionBar.LayoutParams.MATCH_PARENT, Gravity.LEFT));
       }

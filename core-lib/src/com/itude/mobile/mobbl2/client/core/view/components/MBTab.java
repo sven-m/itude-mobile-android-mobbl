@@ -15,6 +15,7 @@ import com.itude.mobile.mobbl2.client.core.view.listeners.MBTabListenerI;
 
 public class MBTab extends RelativeLayout
 {
+  private int            _tabId;
   private ImageView      _icon          = null;
   private TextView       _textView      = null;
   private MBTabListenerI _listener      = null;
@@ -54,7 +55,7 @@ public class MBTab extends RelativeLayout
     addView(_textView);
   }
 
-  public void select()
+  void select()
   {
     setSelected(true);
 
@@ -64,7 +65,7 @@ public class MBTab extends RelativeLayout
     }
   }
 
-  public void unselect()
+  void unselect()
   {
     setSelected(false);
 
@@ -122,5 +123,16 @@ public class MBTab extends RelativeLayout
     _listener = listener;
 
     return this;
+  }
+
+  public MBTab setTabId(int tabId)
+  {
+    _tabId = tabId;
+    return this;
+  }
+
+  public int getTabId()
+  {
+    return _tabId;
   }
 }
