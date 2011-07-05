@@ -42,31 +42,31 @@ public class MBPanelViewBuilder extends MBViewBuilder
     ViewGroup view;
 
     String panelType = panel.getType();
-    if ("PLAIN".equals(panelType))
+    if (Constants.C_PLAIN.equals(panelType))
     {
       view = buildBasicPanel(panel, viewState);
     }
-    else if ("LIST".equals(panelType))
+    else if (Constants.C_LIST.equals(panelType))
     {
       view = buildListPanel(panel);
     }
-    else if ("SECTION".equals(panelType))
+    else if (Constants.C_SECTION.equals(panelType))
     {
       view = buildSectionPanel(panel);
     }
-    else if ("ROW".equals(panelType))
+    else if (Constants.C_ROW.equals(panelType))
     {
       view = buildRowPanel(panel);
     }
-    else if ("MATRIX".equals(panelType))
+    else if (Constants.C_MATRIX.equals(panelType))
     {
       view = buildMatrix(panel, null);
     }
-    else if ("MATRIX-HEADER".equals(panelType))
+    else if (Constants.C_MATRIXHEADER.equals(panelType))
     {
       view = buildMatrixHeaderPanel(panel);
     }
-    else if ("MATRIX-ROW".equals(panelType))
+    else if (Constants.C_MATRIXROW.equals(panelType))
     {
       view = buildMatrixRowPanel(panel);
     }
@@ -90,13 +90,14 @@ public class MBPanelViewBuilder extends MBViewBuilder
     result.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
     result.setOrientation(LinearLayout.VERTICAL);
     buildChildren(panel.getChildren(), result, viewState);
+    
+    getStyleHandler().styleMatrixContainer(result);
 
     if (panel.getOutcomeName() != null && panel.getOutcomeName().length() > 0)
     {
       result.setOnClickListener(panel);
     }
 
-    getStyleHandler().styleMatrixContainer(result);
 
     return result;
   }
@@ -1085,6 +1086,33 @@ public class MBPanelViewBuilder extends MBViewBuilder
     getStyleHandler().styleDivider(divider);
     parent.addView(divider);
     //
+  }
+  
+  public ViewGroup buildClickabletMatrixPanel(ViewGroup parent)
+  {
+    int matrixId = UniqueIntegerGenerator.getId();
+    parent.setId(matrixId);
+
+    // We create a container so we can add an leaf to show this section is clickable
+    RelativeLayout container = new RelativeLayout(parent.getContext());
+    container.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+    container.addView(parent);
+
+    // Add the leaf to the container
+    ImageView leaf = new ImageView(parent.getContext());
+
+    RelativeLayout.LayoutParams indicatorParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+        RelativeLayout.LayoutParams.WRAP_CONTENT);
+    indicatorParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+    indicatorParams.addRule(RelativeLayout.ALIGN_BOTTOM, matrixId);
+
+    // Indicator will be positioned on the bottom right of the parent
+    leaf.setLayoutParams(indicatorParams);
+    leaf.setImageDrawable(MBResourceService.getInstance().getImageByID(Constants.C_LEAF));
+
+    container.addView(leaf);
+
+    return container;
   }
 
 }

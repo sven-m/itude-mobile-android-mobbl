@@ -9,10 +9,13 @@ public interface Constants
   public static String       C_SPLASHSCREEN                                = "whitelabel-splashscreen";
   public static String       C_ENCODING                                    = "UTF-8";
   public static String       C_ARROW                                       = "arrow";
+  public static String       C_LEAF                                        = "leaf";
 
   //container types
   public static final String C_SECTION                                     = "SECTION";
   public static final String C_ROW                                         = "ROW";
+  public static final String C_LIST                                        = "LIST";
+  public static final String C_PLAIN                                       = "PLAIN";
   public static final String C_MATRIXHEADER                                = "MATRIX-HEADER";
   public static final String C_MATRIXROW                                   = "MATRIX-ROW";
   public static final String C_MATRIXTITLEROW                              = "MATRIX-ROW-TITLE";
