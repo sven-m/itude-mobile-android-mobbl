@@ -12,9 +12,13 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ProgressBar;
 
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBToolDefinition;
+import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNotBooleanException;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBTabListener;
+import com.itude.mobile.mobbl2.client.core.model.MBDocument;
+import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
@@ -45,16 +49,19 @@ public class MBTabletViewManager extends MBViewManager
 
     for (MBToolDefinition def : tools)
     {
-      MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), Menu.NONE, def.getTitle());
-      menuItem.setIcon(MBResourceService.getInstance().getImageByID(def.getIcon()));
-      // TODO do show as action in config
-      int showAsActionFlag = MenuItem.SHOW_AS_ACTION_IF_ROOM;
-      if ("REFRESH".equals(def.getType()))
+      if (isPreConditionValid(def))
       {
-        _refreshId = def.getName().hashCode();
-        showAsActionFlag = MenuItem.SHOW_AS_ACTION_ALWAYS;
+        MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), Menu.NONE, def.getTitle());
+        menuItem.setIcon(MBResourceService.getInstance().getImageByID(def.getIcon()));
+        // TODO do show as action in config
+        int showAsActionFlag = MenuItem.SHOW_AS_ACTION_IF_ROOM;
+        if ("REFRESH".equals(def.getType()))
+        {
+          _refreshId = def.getName().hashCode();
+          showAsActionFlag = MenuItem.SHOW_AS_ACTION_ALWAYS;
+        }
+        menuItem.setShowAsAction(showAsActionFlag);
       }
-      menuItem.setShowAsAction(showAsActionFlag);
     }
 
     return true;
@@ -184,10 +191,18 @@ public class MBTabletViewManager extends MBViewManager
   @Override
   final public void invalidateActionBar()
   {
-    // throw away current MBActionBar and create a new one
-    getActionBar().setCustomView(null);
+    runOnUiThread(new MBRunnable()
+    {
+      @Override
+      public void runMethod()
+      {
+        invalidateOptionsMenu();
+        // throw away current MBActionBar and create a new one
+        getActionBar().setCustomView(null);
 
-    populateActionBar();
+        populateActionBar();
+      }
+    });
   }
 
   @Override
@@ -234,5 +249,28 @@ public class MBTabletViewManager extends MBViewManager
         }
       });
     }
+  }
+
+  private boolean isPreConditionValid(MBToolDefinition def)
+  {
+    if (def.getPreCondition() == null)
+    {
+      return true;
+    }
+
+    MBDocument doc = MBDataManagerService.getInstance().loadDocument(MBConfigurationDefinition.DOC_SYSTEM_EMPTY);
+
+    String result = doc.evaluateExpression(def.getPreCondition());
+    if ("1".equals(result) || "YES".equalsIgnoreCase(result) || "TRUE".equalsIgnoreCase(result))
+    {
+      return true;
+    }
+    if ("0".equals(result) || "NO".equalsIgnoreCase(result) || "FALSE".equalsIgnoreCase(result))
+    {
+      return false;
+    }
+    String msg = "Expression of tool with name=" + def.getName() + " precondition=" + def.getPreCondition() + " is not boolean (result="
+                 + result + ")";
+    throw new MBExpressionNotBooleanException(msg);
   }
 }

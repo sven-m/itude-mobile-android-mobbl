@@ -120,7 +120,13 @@ public class MBConfigurationDefinition extends MBDefinition
     {
       dialog.asXmlWithLevel(p_appendToMe, level + 6);
     }
-    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Dialogs>\n");
+    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Dialogs>\n")
+        .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Toolbar>\n");
+    for (MBToolDefinition tool : _tools.values())
+    {
+      tool.asXmlWithLevel(p_appendToMe, level + 6);
+    }
+    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Toolbar>\n");
     for (MBPageDefinition page : _pageTypes.values())
     {
       page.asXmlWithLevel(p_appendToMe, level + 4);

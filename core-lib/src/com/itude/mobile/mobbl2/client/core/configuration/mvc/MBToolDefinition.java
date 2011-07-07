@@ -9,6 +9,7 @@ public class MBToolDefinition extends MBDefinition
   private String _action;
   private String _icon;
   private String _title;
+  private String _preCondition;
 
   public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
   {
@@ -55,5 +56,15 @@ public class MBToolDefinition extends MBDefinition
   public String getTitle()
   {
     return _title;
+  }
+
+  public void setPreCondition(String preCondition)
+  {
+    _preCondition = preCondition;
+  }
+
+  public String getPreCondition()
+  {
+    return _preCondition;
   }
 }

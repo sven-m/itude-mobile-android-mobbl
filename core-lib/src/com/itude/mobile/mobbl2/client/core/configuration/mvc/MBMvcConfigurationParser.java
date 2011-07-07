@@ -203,6 +203,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _toolAttributes.add("type");
       _toolAttributes.add("icon");
       _toolAttributes.add("title");
+      _toolAttributes.add("preCondition");
     }
 
     MBConfigurationDefinition conf = (MBConfigurationDefinition) super.parseData(data, documentName);
@@ -501,6 +502,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       toolDef.setAction(attributeDict.get("action"));
       toolDef.setIcon(attributeDict.get("icon"));
       toolDef.setTitle(attributeDict.get("title"));
+      toolDef.setPreCondition(attributeDict.get("preCondition"));
 
       notifyProcessed(toolDef);
     }
