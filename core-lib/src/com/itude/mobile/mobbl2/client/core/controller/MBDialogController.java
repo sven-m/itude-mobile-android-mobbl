@@ -310,12 +310,12 @@ public class MBDialogController extends FragmentActivity
         fragment.setArguments(args);
       }
 
-      Fragment dialogFragment = getSupportFragmentManager().findFragmentByTag("dialog");
+      Fragment dialogFragment = getSupportFragmentManager().findFragmentByTag(MBApplicationController.getInstance().getModalPageID());
       if (dialogFragment != null)
       {
         transaction.remove(dialogFragment);
       }
-      transaction.add(fragment, "dialog");
+      transaction.add(fragment, id);
     }
     else transaction.replace(_dialogIds.get(dialogName), fragment);
 
@@ -374,11 +374,6 @@ public class MBDialogController extends FragmentActivity
    */
   public void handleAllOnWindowActivated()
   {
-    if (MBDevice.getInstance().isTablet())
-    {
-      MBViewManager.getInstance().selectTab(getName().hashCode());
-    }
-
     List<MBBasicViewController> allFragments = getAllFragments();
 
     for (int i = 0; i < allFragments.size(); i++)

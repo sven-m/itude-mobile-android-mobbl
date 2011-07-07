@@ -4,13 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
-
-import com.itude.mobile.mobbl2.client.core.controller.MBTabletViewManager;
-import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 /**
  * @author Coen Houtman
@@ -21,18 +15,22 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
  * Basically, this is a {@link android.widget.LinearLayout} with a horizontal orientation. It maintains a list
  * of MBTab instances and is responsible for controlling tab bar-like functionality.
  */
-public class MBTabBar extends LinearLayout implements OnClickListener
+public class MBTabBar extends LinearLayout
 {
-  private List<MBTab>     _tabs        = null;
-  private MBTab           _selectedTab = null;
-
-  public static final int FIRST_TAB    = 0;
+  private List<MBTab> _tabs        = null;
+  private MBTab       _selectedTab = null;
+ 
+  private int         _tabPaddingLeft = 0;
+  private int         _tabPaddingTop = 0;
+  private int         _tabPaddingRight = 0;
+  private int         _tabPaddingBottom = 0;
 
   public MBTabBar(Context context)
   {
     super(context);
 
     setOrientation(HORIZONTAL);
+    setMotionEventSplittingEnabled(false);
 
     _tabs = new ArrayList<MBTab>();
   }
@@ -44,14 +42,23 @@ public class MBTabBar extends LinearLayout implements OnClickListener
    */
   public void addTab(MBTab tab)
   {
-    tab.setOnClickListener(this);
+    tab.setTabBar(this);
+    tab.setPadding(_tabPaddingLeft, _tabPaddingTop, _tabPaddingRight, _tabPaddingBottom);
     _tabs.add(tab);
+
     addView(tab);
     if (_selectedTab == null)
     {
-      tab.setSelected(true);
-      _selectedTab = tab;
+      selectTab(tab);
     }
+  }
+
+  public void setTabPadding(int left, int top, int right, int bottom)
+  {
+    _tabPaddingLeft = left;
+    _tabPaddingTop = top;
+    _tabPaddingRight = right;
+    _tabPaddingBottom = bottom;
   }
 
   public MBTab getSelectedTab()
@@ -59,7 +66,7 @@ public class MBTabBar extends LinearLayout implements OnClickListener
     return _selectedTab;
   }
 
-  public MBTab getTab(int tabId)
+  public MBTab findTabById(int tabId)
   {
     for (MBTab tab : _tabs)
     {
@@ -81,52 +88,21 @@ public class MBTabBar extends LinearLayout implements OnClickListener
     return _tabs.indexOf(tab);
   }
 
-  /**
-   * @param position
-   * 
-   * Select the tab at the specified position. If the position is out of range, the request is ignored.
-   */
-  public void selectTab(int position, boolean invalidate)
+  public void selectTab(MBTab tab)
   {
-    if (position == indexOfSelectedTab())
+    if (tab.equals(_selectedTab))
     {
       _selectedTab.reselect();
-      return;
     }
-
-    try
+    else
     {
-      MBTab tab = _tabs.get(position);
-
-      _selectedTab.unselect();
-      tab.select();
-      _selectedTab = tab;
-
-      if (invalidate)
+      if (_selectedTab != null)
       {
-        MBTabletViewManager.getInstance().invalidateActionBar();
+        _selectedTab.unselect();
       }
+
+      tab.doSelect();
+      _selectedTab = tab;
     }
-    catch (Exception e)
-    {
-      Log.e(Constants.APPLICATION_NAME, "Unable to select tab with position: " + position, e);
-    }
   }
-
-  public void selectTab(MBTab tab, boolean invalidate)
-  {
-    int position = indexOf(tab);
-    selectTab(position, invalidate);
-  }
-
-  /* (non-Javadoc)
-   * @see android.view.View.OnClickListener#onClick(android.view.View)
-   */
-  @Override
-  public void onClick(View view)
-  {
-    MBTab tab = (MBTab) view;
-    selectTab(tab, true);
-  }
-
 }

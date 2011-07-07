@@ -88,7 +88,7 @@ public class MBViewManager extends ActivityGroup
 
     MBApplicationController.getInstance().stopOutcomeHandler();
   }
-  
+
   @Override
   protected void onPause()
   {
@@ -139,7 +139,14 @@ public class MBViewManager extends ActivityGroup
       String firstDialog = firstDialogDefinition.getName();
       if (!childController.getName().equals(firstDialog))
       {
-        activateDialogWithName(firstDialog);
+        if (MBDevice.getInstance().isPhone())
+        {
+          activateDialogWithName(firstDialog);
+        }
+        else if (MBDevice.getInstance().isTablet())
+        {
+          selectTab(firstDialog.hashCode());
+        }
         setTitle(firstDialogDefinition.getTitle());
       }
       else
@@ -472,10 +479,10 @@ public class MBViewManager extends ActivityGroup
 
   public MBBasicViewController getActiveViewController()
   {
-//    if (getActiveDialog() == null)
-//    {
-//      return null;
-//    }
+    //    if (getActiveDialog() == null)
+    //    {
+    //      return null;
+    //    }
 
     //    return getActiveDialog().getCurrentActivity();
     // TODO reimplement refresh events
@@ -674,10 +681,10 @@ public class MBViewManager extends ActivityGroup
 
     return list;
   }
-  
+
   // Tablet specific methods. Some methods are implemented also to run on smartphone.
   // Others are for tablet only.
-  
+
   /**
    * Copied from FragmentActivity.java in the Android Compatibility Package. Invoke this method
    * to invalidate the options menu, but avoiding linker errors due to SDK incompatibility.
@@ -698,11 +705,6 @@ public class MBViewManager extends ActivityGroup
   }
 
   public void populateActionBar()
-  {
-    populateActionBar(0);
-  }
-
-  public void populateActionBar(int select)
   {
     throw new UnsupportedOperationException("This method is not support on smartphone");
   }

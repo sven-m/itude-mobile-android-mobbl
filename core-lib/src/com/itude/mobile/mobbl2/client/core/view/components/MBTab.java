@@ -3,9 +3,12 @@ package com.itude.mobile.mobbl2.client.core.view.components;
 import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -13,13 +16,20 @@ import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.listeners.MBTabListenerI;
 
-public class MBTab extends RelativeLayout
+public class MBTab extends RelativeLayout implements OnClickListener
 {
   private int            _tabId;
-  private ImageView      _icon          = null;
-  private TextView       _textView      = null;
-  private MBTabListenerI _listener      = null;
-  private boolean        _customViewSet = false;
+  private MBTabBar       _tabBar     = null;
+  private ImageView      _icon       = null;
+  private TextView       _textView   = null;
+  private View           _activeView = null;
+  private MBTabListenerI _listener   = null;
+
+  private View           _leftSpacer;
+  private View           _rightSpacer;
+  private LinearLayout   _content;
+
+  private int[]          _oldPadding = null;
 
   public MBTab(Context context)
   {
@@ -27,41 +37,80 @@ public class MBTab extends RelativeLayout
 
     setFocusable(true);
     setClickable(true);
+    setOnClickListener(this);
 
     int tabDrawableId = getResources().getIdentifier("tab_indicator_holo", "drawable", "android");
     setBackgroundResource(tabDrawableId);
 
     setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, MBScreenUtilities.convertDimensionPixelsToPixels(56)));
 
-    RelativeLayout.LayoutParams imageParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-    imageParams.addRule(RelativeLayout.CENTER_VERTICAL);
+    RelativeLayout.LayoutParams leftSpacerParams = new RelativeLayout.LayoutParams(0, 0);
+    leftSpacerParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+
+    _leftSpacer = new View(context);
+    _leftSpacer.setId(UniqueIntegerGenerator.getId());
+    _leftSpacer.setLayoutParams(leftSpacerParams);
+
+    RelativeLayout.LayoutParams contentParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+    contentParams.addRule(RelativeLayout.RIGHT_OF, _leftSpacer.getId());
+    contentParams.addRule(RelativeLayout.CENTER_VERTICAL);
+
+    _content = new LinearLayout(context);
+    _content.setId(UniqueIntegerGenerator.getId());
+    _content.setLayoutParams(contentParams);
+    _content.setOrientation(LinearLayout.HORIZONTAL);
+    _content.setGravity(Gravity.CENTER_VERTICAL);
 
     _icon = new ImageView(context);
     _icon.setId(UniqueIntegerGenerator.getId());
-    _icon.setLayoutParams(imageParams);
-    _icon.setVisibility(View.GONE);
-
-    RelativeLayout.LayoutParams textViewParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-    textViewParams.addRule(RelativeLayout.RIGHT_OF, _icon.getId());
-    textViewParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
     _textView = new TextView(context);
+    _textView.setId(UniqueIntegerGenerator.getId());
     _textView.setSingleLine();
-    _textView.setPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
-    _textView.setLayoutParams(textViewParams);
     _textView.setTextSize(18);
 
-    addView(_icon);
-    addView(_textView);
+    _content.addView(_icon);
+    _content.addView(_textView);
+
+    RelativeLayout.LayoutParams rightSpacerParams = new RelativeLayout.LayoutParams(0, 0);
+    rightSpacerParams.addRule(RelativeLayout.RIGHT_OF, _content.getId());
+
+    _rightSpacer = new View(context);
+    _rightSpacer.setLayoutParams(rightSpacerParams);
+
+    addView(_leftSpacer);
+    addView(_content);
+    addView(_rightSpacer);
   }
 
-  void select()
+  public void select()
   {
+    if (_tabBar == null)
+    {
+      throw new IllegalStateException("There must be a relation with the tab bar this tab is placed in");
+    }
+
+    _tabBar.selectTab(this);
+  }
+
+  void doSelect()
+  {
+    if (isSelected())
+    {
+      reselect();
+      return;
+    }
+
     setSelected(true);
 
     if (_listener != null)
     {
       _listener.onTabSelected(this);
+    }
+
+    if (_activeView != null)
+    {
+      changeActiveView();
     }
   }
 
@@ -73,9 +122,14 @@ public class MBTab extends RelativeLayout
     {
       _listener.onTabUnselected(this);
     }
+
+    if (_activeView != null)
+    {
+      changeActiveView();
+    }
   }
 
-  public void reselect()
+  void reselect()
   {
     if (_listener != null)
     {
@@ -83,37 +137,43 @@ public class MBTab extends RelativeLayout
     }
   }
 
+  private void changeActiveView()
+  {
+    _content.removeAllViews();
+    if (isSelected())
+    {
+      _oldPadding = new int[]{getPaddingLeft(), getPaddingTop(), getPaddingRight(), getPaddingBottom()};
+      setPadding(0, 0, 0, 0);
+      _content.addView(_activeView);
+    }
+    else
+    {
+      if (_oldPadding != null)
+      {
+        setPadding(_oldPadding[0], _oldPadding[1], _oldPadding[2], _oldPadding[3]);
+      }
+      _content.addView(_icon);
+      _content.addView(_textView);
+    }
+  }
+
   public MBTab setIcon(Drawable drawable)
   {
     _icon.setImageDrawable(drawable);
-    _icon.setVisibility(View.VISIBLE);
 
     return this;
   }
 
   public MBTab setText(CharSequence text)
   {
-    if (_customViewSet) throw new IllegalStateException("Unable to set text after custom view is set");
-
     _textView.setText(text);
+
     return this;
   }
 
-  public MBTab setView(View view)
+  public MBTab setActiveView(View view)
   {
-    _customViewSet = true;
-
-    _textView.setVisibility(View.GONE);
-    _icon.setVisibility(View.GONE);
-
-    RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-    viewParams.addRule(RelativeLayout.RIGHT_OF, _icon.getId());
-    viewParams.addRule(RelativeLayout.CENTER_VERTICAL);
-
-    view.setPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
-    view.setLayoutParams(viewParams);
-
-    addView(view);
+    _activeView = view;
 
     return this;
   }
@@ -134,5 +194,28 @@ public class MBTab extends RelativeLayout
   public int getTabId()
   {
     return _tabId;
+  }
+
+  void setTabBar(MBTabBar tabBar)
+  {
+    _tabBar = tabBar;
+  }
+
+  public MBTab setLeftPadding(int pixels)
+  {
+    _leftSpacer.getLayoutParams().width = pixels;
+    return this;
+  }
+
+  public MBTab setRightPadding(int pixels)
+  {
+    _leftSpacer.getLayoutParams().width = pixels;
+    return this;
+  }
+
+  @Override
+  public void onClick(View view)
+  {
+    select();
   }
 }

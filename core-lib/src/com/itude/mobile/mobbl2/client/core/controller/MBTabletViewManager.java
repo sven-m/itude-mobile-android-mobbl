@@ -97,7 +97,9 @@ public class MBTabletViewManager extends MBViewManager
     if (tabBar != null)
     {
       resetViewPreservingCurrentDialog();
-      tabBar.selectTab(MBTabBar.FIRST_TAB, true);
+      int firstDialog = MBMetadataService.getInstance().getFirstDialogDefinition().getName().hashCode();
+      MBTab tab = tabBar.findTabById(firstDialog);
+      tab.select();
     }
   }
 
@@ -107,8 +109,8 @@ public class MBTabletViewManager extends MBViewManager
     MBTabBar tabBar = getTabBar();
     if (tabBar != null)
     {
-      MBTab tab = tabBar.getTab(id);
-      tabBar.selectTab(tabBar.indexOf(tab), true);
+      MBTab tab = tabBar.findTabById(id);
+      tab.select();
     }
   }
 
@@ -126,7 +128,7 @@ public class MBTabletViewManager extends MBViewManager
   }
 
   @Override
-  final public void populateActionBar(final int select)
+  final public void populateActionBar()
   {
     runOnUiThread(new Runnable()
     {
@@ -140,13 +142,14 @@ public class MBTabletViewManager extends MBViewManager
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
 
         MBTabBar tabBar = new MBTabBar(MBTabletViewManager.this);
+        tabBar.setTabPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
 
         for (String dialogName : getSortedDialogNames())
         {
           MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
 
           //FIXME create something in the config
-          if (select == 0 && getSortedDialogNames().indexOf(dialogName) == 0)
+          if (getSortedDialogNames().indexOf(dialogName) == 0)
           {
             ArrayAdapter<CharSequence> arrayAdapter = new ArrayAdapter<CharSequence>(MBTabletViewManager.this,
                 android.R.layout.simple_spinner_dropdown_item);
@@ -156,11 +159,14 @@ public class MBTabletViewManager extends MBViewManager
             arrayAdapter.add("Favorieten");
 
             MBSpinner spinner = new MBSpinner(MBTabletViewManager.this);
+            spinner.setPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
             spinner.setAdapter(arrayAdapter);
             spinner.setText(dialogDefinition.getTitle());
             spinner.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
 
-            tabBar.addTab(new MBTab(MBTabletViewManager.this).setView(spinner).setTabId(dialogName.hashCode()));
+            tabBar.addTab(new MBTab(MBTabletViewManager.this).setActiveView(spinner)
+                .setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon())).setText(dialogDefinition.getTitle())
+                .setTabId(dialogName.hashCode()).setListener(new MBTabListener(dialogName.hashCode())));
           }
           else
           {
@@ -169,7 +175,6 @@ public class MBTabletViewManager extends MBViewManager
                 .setListener(new MBTabListener(dialogName.hashCode())).setTabId(dialogName.hashCode()));
           }
         }
-        tabBar.selectTab(select, false);
         actionBar.setCustomView(tabBar, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
             ActionBar.LayoutParams.MATCH_PARENT, Gravity.LEFT));
       }
@@ -179,13 +184,10 @@ public class MBTabletViewManager extends MBViewManager
   @Override
   final public void invalidateActionBar()
   {
-    MBTabBar tabBar = (MBTabBar) getActionBar().getCustomView();
-    int index = tabBar.indexOfSelectedTab();
-
     // throw away current MBActionBar and create a new one
     getActionBar().setCustomView(null);
 
-    populateActionBar(index);
+    populateActionBar();
   }
 
   @Override
