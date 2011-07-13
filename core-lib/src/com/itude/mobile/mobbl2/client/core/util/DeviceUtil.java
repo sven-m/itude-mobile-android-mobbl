@@ -3,7 +3,7 @@ package com.itude.mobile.mobbl2.client.core.util;
 import android.content.Context;
 import android.provider.Settings;
 
-public class DeviceUtil
+public final class DeviceUtil
 {
   private static DeviceUtil _instance;
   private Context           _context;

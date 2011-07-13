@@ -13,7 +13,7 @@ import android.util.Log;
 
 import com.itude.mobile.mobbl2.client.core.util.exceptions.MBDataParsingException;
 
-public class FileUtil
+public final class FileUtil
 {
 
   private static FileUtil _instance;

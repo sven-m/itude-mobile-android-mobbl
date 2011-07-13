@@ -94,10 +94,19 @@ public class MBViewManager extends ActivityGroup
   {
     if (MBActivityHelper.isApplicationBroughtToBackground(this))
     {
+      stopAlert();
       MBSecurityHelper.getInstance().logOutIfCheckNotSelected();
     }
     super.onPause();
   }
+  
+  private void stopAlert()
+  {
+    Dialog currentAlert = getCurrentAlert();
+    if (currentAlert != null) currentAlert.dismiss();
+  }
+  
+  
 
   ///////////////////// 
 

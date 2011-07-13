@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.itude.mobile.mobbl2.client.core.util.exceptions.MBDataParsingException;
 
-public class AssetUtil
+public final class AssetUtil
 {
   private static AssetUtil _instance;
   private Context          _context;

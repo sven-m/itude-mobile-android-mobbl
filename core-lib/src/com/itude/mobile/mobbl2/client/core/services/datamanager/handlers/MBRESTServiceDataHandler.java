@@ -105,8 +105,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
       {
         byte[] data = dataString.getBytes();
 
-        responseDoc = MBDocumentFactory.getInstance().getDocumentWithData(
-                                                                          data,
+        responseDoc = MBDocumentFactory.getInstance().getDocumentWithData(data,
                                                                           getDocumentFactoryType(),
                                                                           MBMetadataService.getInstance()
                                                                               .getDefinitionForDocumentName(documentName));
@@ -144,9 +143,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
         serverException.setName("Server message");
         throw serverException;
       }
-      {
-        throw new RuntimeException(e);
-      }
+      throw new RuntimeException(e);
     }
   }
 

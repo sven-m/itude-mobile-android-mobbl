@@ -7,10 +7,14 @@ import android.app.ProgressDialog;
 
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 
-public class MBActivityIndicator
+public final class MBActivityIndicator
 {
   private static ProgressDialog _dialog = null;
   private static AtomicInteger  _queue  = new AtomicInteger(0);
+
+  private MBActivityIndicator()
+  {
+  }
 
   public static void show(final Activity activity)
   {

@@ -13,7 +13,7 @@ import org.apache.commons.codec.binary.Base64;
 import android.content.Context;
 import android.util.Log;
 
-public class DataUtil
+public final class DataUtil
 {
 
   private static DataUtil _instance;
