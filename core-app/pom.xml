@@ -34,17 +34,14 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>rhino</groupId>
 			<artifactId>js</artifactId>
-			<version>1.7R2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android-support</artifactId>
-			<version>4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-collections</groupId>
@@ -59,7 +56,7 @@
 		<dependency>
 			<groupId>com.itude.mobile.android.tools</groupId>
 			<artifactId>xml-obfuscator</artifactId>
-			<version>0.1</version>
+			<version>${xml.obfuscator.version}</version>
 			<type>jar</type>
 		</dependency>
 	</dependencies>
