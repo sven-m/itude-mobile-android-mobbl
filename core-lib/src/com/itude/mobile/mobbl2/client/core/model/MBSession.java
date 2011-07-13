@@ -37,7 +37,7 @@ public class MBSession implements MBSessionInterface
   {
   }
 
-  public boolean loggedOn()
+  public boolean isLoggedOn()
   {
     return false;
   }

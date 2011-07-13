@@ -47,6 +47,7 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBHeader;
  */
 public class MBBasicViewController extends DialogFragment implements MBEventListener, MBWindowChangedEventListener, OnClickListener
 {
+  private ViewGroup           _contentView;
   private MBPage              _page;
   private ScrollView          _mainScrollView        = null;
   private View                _rootView              = null;
@@ -122,10 +123,17 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
       }
     }
 
-    ViewGroup view = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(_page, MBViewState.MBViewStatePlain);
-    MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(view);
+    if (_contentView == null)
+    {
+      _contentView = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(_page, MBViewState.MBViewStatePlain);
+      MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(_contentView);
+    }
+    else
+    {
+      ((ViewGroup) _contentView.getParent()).removeView(_contentView);
+    }
 
-    return view;
+    return _contentView;
   }
 
   /**
@@ -182,7 +190,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
 
     MBPage page = getPage();
     page.rebuildView();
-    
+
     MBRunnable runnable = new MBRunnable(page)
     {
       @Override

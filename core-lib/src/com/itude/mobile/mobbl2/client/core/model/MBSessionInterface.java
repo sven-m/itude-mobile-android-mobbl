@@ -6,6 +6,6 @@ public interface MBSessionInterface
 
   public void logOff();
 
-  public boolean loggedOn();
+  public boolean isLoggedOn();
 
 }
