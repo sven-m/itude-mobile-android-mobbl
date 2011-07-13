@@ -31,12 +31,27 @@
 			<dependency>
 				<groupId>com.google.android</groupId>
 				<artifactId>android</artifactId>
-				<version>3.0</version>
+				<version>${android.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-collections</groupId>
 				<artifactId>commons-collections</artifactId>
 				<version>3.2</version>
+			</dependency>
+            <dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>1.4</version>
+			</dependency>
+			<dependency>
+				<groupId>rhino</groupId>
+				<artifactId>js</artifactId>
+				<version>1.7R2</version>
+			</dependency>
+            <dependency>
+				<groupId>com.google.android</groupId>
+				<artifactId>android-support</artifactId>
+				<version>4.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -82,7 +97,7 @@
                     <version>2.9.0-beta-4</version>
                     <configuration>
 						<sdk>
-							<platform>7</platform>
+							<platform>11</platform>
 						</sdk>
 						<jvmArguments>
 							<argument>-Xms256m</argument>
@@ -102,6 +117,12 @@
             </plugins>
         </pluginManagement>
     </build>
+    
+    <properties>
+        <xml.obfuscator.version>0.1</xml.obfuscator.version>
+        <core.lib.version>${project.version}</core.lib.version>
+        <android.version>3.0</android.version>
+    </properties>
     
 </project>
 
