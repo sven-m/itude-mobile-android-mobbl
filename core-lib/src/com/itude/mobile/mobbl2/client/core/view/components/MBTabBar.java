@@ -17,12 +17,12 @@ import android.widget.LinearLayout;
  */
 public class MBTabBar extends LinearLayout
 {
-  private List<MBTab> _tabs        = null;
-  private MBTab       _selectedTab = null;
- 
-  private int         _tabPaddingLeft = 0;
-  private int         _tabPaddingTop = 0;
-  private int         _tabPaddingRight = 0;
+  private List<MBTab> _tabs             = null;
+  private MBTab       _selectedTab      = null;
+
+  private int         _tabPaddingLeft   = 0;
+  private int         _tabPaddingTop    = 0;
+  private int         _tabPaddingRight  = 0;
   private int         _tabPaddingBottom = 0;
 
   public MBTabBar(Context context)
@@ -47,7 +47,8 @@ public class MBTabBar extends LinearLayout
     _tabs.add(tab);
 
     addView(tab);
-    if (_selectedTab == null)
+    // select the first tab by default
+    if (_tabs.size() == 1)
     {
       selectTab(tab);
     }
@@ -61,6 +62,9 @@ public class MBTabBar extends LinearLayout
     _tabPaddingBottom = bottom;
   }
 
+  /**
+   * @return the selected tab or null if there is no tab selected
+   */
   public MBTab getSelectedTab()
   {
     return _selectedTab;
@@ -90,7 +94,7 @@ public class MBTabBar extends LinearLayout
 
   public void selectTab(MBTab tab)
   {
-    if (tab.equals(_selectedTab))
+    if (tab != null && tab.equals(_selectedTab))
     {
       _selectedTab.reselect();
     }
@@ -101,7 +105,10 @@ public class MBTabBar extends LinearLayout
         _selectedTab.unselect();
       }
 
-      tab.doSelect();
+      if (tab != null)
+      {
+        tab.doSelect();
+      }
       _selectedTab = tab;
     }
   }

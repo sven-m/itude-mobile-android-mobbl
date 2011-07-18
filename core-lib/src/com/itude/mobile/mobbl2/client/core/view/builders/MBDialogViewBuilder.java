@@ -95,6 +95,7 @@ public class MBDialogViewBuilder
       if (i == _sortedDialogIds.size() - 1) layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
       fragmentContainer.setLayoutParams(layoutParams);
+      getStyleHandler().styleBackground(fragmentContainer);
       container.addView(fragmentContainer);
     }
 
@@ -112,5 +113,10 @@ public class MBDialogViewBuilder
     mainContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
     return mainContainer;
+  }
+
+  public MBStyleHandler getStyleHandler()
+  {
+    return MBViewBuilderFactory.getInstance().getStyleHandler();
   }
 }

@@ -99,14 +99,12 @@ public class MBViewManager extends ActivityGroup
     }
     super.onPause();
   }
-  
+
   private void stopAlert()
   {
     Dialog currentAlert = getCurrentAlert();
     if (currentAlert != null) currentAlert.dismiss();
   }
-  
-  
 
   ///////////////////// 
 
@@ -558,6 +556,11 @@ public class MBViewManager extends ActivityGroup
 
   public void clearDialog(String dialogName)
   {
+    MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+    if (dialogDefinition.getParent() != null)
+    {
+      dialogName = dialogDefinition.getParent();
+    }
     MBDialogController controller = getDialogWithName(dialogName);
     if (controller != null) controller.clearAllViews();
   }

@@ -3,6 +3,8 @@ package com.itude.mobile.mobbl2.client.core.controller;
 import java.util.List;
 
 import android.app.ActionBar;
+import android.app.SearchManager;
+import android.content.Context;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -11,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
@@ -38,6 +41,7 @@ public class MBTabletViewManager extends MBViewManager
 {
   private Menu _menu      = null;
   private int  _refreshId = -1;
+  private int  _searchId  = -1;
 
   // Android hooks
   @Override
@@ -53,12 +57,55 @@ public class MBTabletViewManager extends MBViewManager
       {
         MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), Menu.NONE, def.getTitle());
         menuItem.setIcon(MBResourceService.getInstance().getImageByID(def.getIcon()));
+
         // TODO do show as action in config
         int showAsActionFlag = MenuItem.SHOW_AS_ACTION_IF_ROOM;
         if ("REFRESH".equals(def.getType()))
         {
           _refreshId = def.getName().hashCode();
           showAsActionFlag = MenuItem.SHOW_AS_ACTION_ALWAYS;
+        }
+        else if ("SEARCH".equals(def.getType()))
+        {
+          _searchId = def.getName().hashCode();
+
+          final SearchView searchView = new SearchView(MBViewManager.getInstance().getApplicationContext());
+          SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+          searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+          searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+          {
+            @Override
+            public boolean onQueryTextSubmit(String query)
+            {
+              searchView.clearFocus();
+              getTabBar().selectTab(null);
+              return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText)
+            {
+              return false;
+            }
+          });
+          searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener()
+          {
+            @Override
+            public boolean onSuggestionSelect(int position)
+            {
+              return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position)
+            {
+              searchView.clearFocus();
+              getTabBar().selectTab(null);
+              return false;
+            }
+          });
+
+          menuItem.setActionView(searchView);
         }
         menuItem.setShowAsAction(showAsActionFlag);
       }
@@ -70,6 +117,12 @@ public class MBTabletViewManager extends MBViewManager
   @Override
   public boolean onOptionsItemSelected(MenuItem item)
   {
+    if (item.getItemId() == _searchId)
+    {
+      onSearchRequested();
+      return true;
+    }
+
     if (item.getItemId() == android.R.id.home)
     {
       onHomeSelected();
@@ -163,6 +216,8 @@ public class MBTabletViewManager extends MBViewManager
             arrayAdapter.add("Indices");
             arrayAdapter.add("AEX");
             arrayAdapter.add("AMX");
+            arrayAdapter.add("Opties");
+            arrayAdapter.add("Futures");
             arrayAdapter.add("Favorieten");
 
             MBSpinner spinner = new MBSpinner(MBTabletViewManager.this);
@@ -177,9 +232,14 @@ public class MBTabletViewManager extends MBViewManager
           }
           else
           {
-            tabBar.addTab(new MBTab(MBTabletViewManager.this)
-                .setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon())).setText(dialogDefinition.getTitle())
-                .setListener(new MBTabListener(dialogName.hashCode())).setTabId(dialogName.hashCode()));
+            MBTab tab = new MBTab(MBTabletViewManager.this).setText(dialogDefinition.getTitle())
+                .setListener(new MBTabListener(dialogName.hashCode())).setTabId(dialogName.hashCode());
+
+            if (dialogDefinition.getIcon() != null)
+            {
+              tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+            }
+            tabBar.addTab(tab);
           }
         }
         actionBar.setCustomView(tabBar, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
