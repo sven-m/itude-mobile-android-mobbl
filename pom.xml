@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.itude.mobile.android.mobbl</groupId>
 	<artifactId>mobbl-core</artifactId>
-	<version>1.0.2.0</version>
+	<version>1.0.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Android Mobbl Core</name>
 	<description>Android Mobbl Core</description>
@@ -76,9 +76,9 @@
     </profiles>
 	
 	<scm>
-		<connection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/tags/mobbl-core-1.0.2.0</connection>
-		<developerConnection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/tags/mobbl-core-1.0.2.0</developerConnection>
-		<url>http://svn/repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/tags/mobbl-core-1.0.2.0</url>
+		<connection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk</connection>
+		<developerConnection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk</developerConnection>
+		<url>http://svn/repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk</url>
 	</scm>
 
 	<build>
