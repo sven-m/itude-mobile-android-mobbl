@@ -41,7 +41,6 @@ public class MBTabletViewManager extends MBViewManager
 {
   private Menu _menu      = null;
   private int  _refreshId = -1;
-  private int  _searchId  = -1;
 
   // Android hooks
   @Override
@@ -67,8 +66,6 @@ public class MBTabletViewManager extends MBViewManager
         }
         else if ("SEARCH".equals(def.getType()))
         {
-          _searchId = def.getName().hashCode();
-
           final SearchView searchView = new SearchView(MBViewManager.getInstance().getApplicationContext());
           SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
           searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -117,12 +114,6 @@ public class MBTabletViewManager extends MBViewManager
   @Override
   public boolean onOptionsItemSelected(MenuItem item)
   {
-    if (item.getItemId() == _searchId)
-    {
-      onSearchRequested();
-      return true;
-    }
-
     if (item.getItemId() == android.R.id.home)
     {
       onHomeSelected();
@@ -135,6 +126,8 @@ public class MBTabletViewManager extends MBViewManager
       {
         if (def.getAction() != null)
         {
+          getTabBar().selectTab(null);
+
           MBOutcome outcome = new MBOutcome();
           outcome.setOriginName(def.getName());
           outcome.setOutcomeName(def.getAction());
@@ -174,7 +167,7 @@ public class MBTabletViewManager extends MBViewManager
     }
   }
 
-  private MBTabBar getTabBar()
+  public MBTabBar getTabBar()
   {
     try
     {
@@ -187,8 +180,7 @@ public class MBTabletViewManager extends MBViewManager
     }
   }
 
-  @Override
-  final public void populateActionBar()
+  private void populateActionBar()
   {
     runOnUiThread(new Runnable()
     {
@@ -249,18 +241,39 @@ public class MBTabletViewManager extends MBViewManager
   }
 
   @Override
-  final public void invalidateActionBar()
+  public final void invalidateActionBar(final boolean selectFirstTab)
   {
     runOnUiThread(new MBRunnable()
     {
       @Override
       public void runMethod()
       {
+        MBTabBar tabBar = getTabBar();
+        int selectedTab = -1;
+        if (tabBar != null)
+        {
+          selectedTab = tabBar.indexOfSelectedTab();
+        }
+
         invalidateOptionsMenu();
         // throw away current MBActionBar and create a new one
         getActionBar().setCustomView(null);
 
         populateActionBar();
+
+        tabBar = getTabBar();
+        if (tabBar != null)
+        {
+          if (selectFirstTab)
+          {
+            MBTab tab = tabBar.getTab(0);
+            tabBar.selectTab(tab);
+          }
+          else if (selectedTab >= 0)
+          {
+            tabBar.selectTab(tabBar.getTab(selectedTab));
+          }
+        }
       }
     });
   }

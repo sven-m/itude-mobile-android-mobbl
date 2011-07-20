@@ -130,7 +130,11 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     }
     else
     {
-      ((ViewGroup) _contentView.getParent()).removeView(_contentView);
+      ViewGroup parent = (ViewGroup) _contentView.getParent();
+      if (parent != null)
+      {
+        parent.removeView(_contentView);
+      }
     }
 
     return _contentView;

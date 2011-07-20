@@ -390,9 +390,16 @@ public class MBViewManager extends ActivityGroup
     if (dialogName != null)
     {
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      if (dialogDefinition.getParent() != null) dialogName = dialogDefinition.getParent();
+      if (dialogDefinition.getParent() != null)
+      {
+        dialogName = dialogDefinition.getParent();
+        dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+      }
 
-      if (!_sortedDialogNames.contains(dialogName)) _sortedDialogNames.add(dialogName);
+      if ("TRUE".equals(dialogDefinition.getAddToNavbar()) && !_sortedDialogNames.contains(dialogName))
+      {
+        _sortedDialogNames.add(dialogName);
+      }
 
       MBDialogController dialogController = getDialogWithName(dialogName);
       // skip if the DialogController is already activated or not created yet.
@@ -711,14 +718,9 @@ public class MBViewManager extends ActivityGroup
     }
   }
 
-  public void invalidateActionBar()
+  public void invalidateActionBar(boolean selectFirstTab)
   {
     throw new UnsupportedOperationException("This method is not supported on smartphone");
-  }
-
-  public void populateActionBar()
-  {
-    throw new UnsupportedOperationException("This method is not support on smartphone");
   }
 
   public void showProgressIndicatorInTool()

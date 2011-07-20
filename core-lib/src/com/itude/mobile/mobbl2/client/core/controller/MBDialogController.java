@@ -85,7 +85,7 @@ public class MBDialogController extends FragmentActivity
       {
         addDialogChild(_name, UniqueIntegerGenerator.getId());
       }
-      _usesNavbar = ("STACK".equals(dialogDefinition.getMode()));
+      _usesNavbar = ("STACK".equals(dialogDefinition.getMode()) || "TRUE".equals(dialogDefinition.getAddToNavbar()));
 
       return true;
     }

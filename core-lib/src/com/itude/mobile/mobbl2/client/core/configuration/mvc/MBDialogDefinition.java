@@ -10,12 +10,13 @@ public class MBDialogDefinition extends MBDefinition
   private String _mode;
   private String _icon;
   private String _parent;
+  private String _addToNavbar;
 
   public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
   {
     return StringUtilities.appendIndentString(p_appendToMe, level).append("<Dialog name='").append(getName()).append('\'')
         .append(getAttributeAsXml("mode", _mode)).append(getAttributeAsXml("title", _title)).append(getAttributeAsXml("icon", _icon))
-        .append("/>\n");
+        .append(getAttributeAsXml("addToNavbar", _addToNavbar)).append("/>\n");
   }
 
   public void validateDefinition()
@@ -65,5 +66,15 @@ public class MBDialogDefinition extends MBDefinition
   public void setParent(String parent)
   {
     _parent = parent;
+  }
+
+  public String getAddToNavbar()
+  {
+    return _addToNavbar;
+  }
+
+  public void setAddToNavbar(String addToNavbar)
+  {
+    _addToNavbar = addToNavbar;
   }
 }

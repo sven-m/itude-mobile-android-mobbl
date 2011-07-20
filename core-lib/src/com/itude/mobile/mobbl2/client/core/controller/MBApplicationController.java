@@ -128,20 +128,26 @@ public class MBApplicationController extends Application
    */
   void finishedInitialOutcomes()
   {
-    if (MBDevice.getInstance().isTablet()) _viewManager.supportInvalidateOptionsMenu();
-
+    //    if (MBDevice.getInstance().isTablet()) _viewManager.supportInvalidateOptionsMenu();
+    //
     _suppressPageSelection = false;
     _backStackEnabled = true;
-    _viewManager.runOnUiThread(new Runnable()
+    if (MBDevice.getInstance().isPhone())
     {
-      @Override
-      public void run()
+      _viewManager.runOnUiThread(new Runnable()
       {
-        activateDialogWithName(MBMetadataService.getInstance().getFirstDialogDefinition().getName());
-      }
-    });
+        @Override
+        public void run()
+        {
+          activateDialogWithName(MBMetadataService.getInstance().getFirstDialogDefinition().getName());
+        }
+      });
+    }
 
-    if (MBDevice.getInstance().isTablet()) MBTabletViewManager.getInstance().populateActionBar();
+    if (MBDevice.getInstance().isTablet())
+    {
+      MBTabletViewManager.getInstance().invalidateActionBar(true);
+    }
   }
 
   private String getActiveDialogName()

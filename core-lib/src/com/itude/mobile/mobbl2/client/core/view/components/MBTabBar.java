@@ -47,11 +47,6 @@ public class MBTabBar extends LinearLayout
     _tabs.add(tab);
 
     addView(tab);
-    // select the first tab by default
-    if (_tabs.size() == 1)
-    {
-      selectTab(tab);
-    }
   }
 
   public void setTabPadding(int left, int top, int right, int bottom)
@@ -80,6 +75,11 @@ public class MBTabBar extends LinearLayout
       }
     }
     return null;
+  }
+
+  public MBTab getTab(int position)
+  {
+    return _tabs.get(position);
   }
 
   public int indexOfSelectedTab()

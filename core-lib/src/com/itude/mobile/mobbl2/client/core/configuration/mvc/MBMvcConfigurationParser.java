@@ -95,6 +95,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _dialogAttributes.add("title");
       _dialogAttributes.add("mode");
       _dialogAttributes.add("icon");
+      _dialogAttributes.add("addToNavbar");
     }
     if (_dialogGroupAttributes == null)
     {
@@ -104,6 +105,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _dialogGroupAttributes.add("title");
       _dialogGroupAttributes.add("mode");
       _dialogGroupAttributes.add("icon");
+      _dialogGroupAttributes.add("addToNavbar");
     }
     if (_pageAttributes == null)
     {
@@ -323,6 +325,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       dialogDef.setTitle(attributeDict.get("title"));
       dialogDef.setMode(attributeDict.get("mode"));
       dialogDef.setIcon(attributeDict.get("icon"));
+      dialogDef.setAddToNavbar(attributeDict.get("addToNavbar"));
 
       // On tablets, we can have a split view, which is defined as a DialogGroup in xml
       MBDefinition lastDef = getStack().peek();
@@ -339,6 +342,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       dialogDef.setTitle(attributeDict.get("title"));
       dialogDef.setMode(attributeDict.get("mode"));
       dialogDef.setIcon(attributeDict.get("icon"));
+      dialogDef.setAddToNavbar(attributeDict.get("addToNavbar"));
 
       notifyProcessed(dialogDef);
     }
