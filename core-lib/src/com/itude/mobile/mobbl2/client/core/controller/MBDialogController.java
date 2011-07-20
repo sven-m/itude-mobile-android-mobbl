@@ -281,23 +281,19 @@ public class MBDialogController extends FragmentActivity
         fullscreen = true;
         cancelable = true;
       }
-      else if ("MODALFORMSHEET".equals(displayMode) || "MODALPAGESHEET".equals(displayMode) || "MODALCURRENTCONTEXT".equals(displayMode))
+      if (displayMode != null)
       {
+        if (displayMode.contains("FULLSCREEN"))
+        {
+          fullscreen = true;
+        }
 
+        if (displayMode.contains("WITHCLOSEBUTTON"))
+        {
+          args.putBoolean("closable", true);
+          fragment.setArguments(args);
+        }
       }
-      else if ("MODALFULLSCREEN".equals(displayMode))
-      {
-        fullscreen = true;
-      }
-
-      if ("MODALWITHCLOSEBUTTON".equals(displayMode) || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode)
-          || "MODALPAGESHEETWITHCLOSEBUTTON".equals(displayMode) || "MODALCURRENTCONTEXTWITHCLOSEBUTTON".equals(displayMode)
-          || "MODALFULLSCREENWITHCLOSEBUTTON".equals(displayMode))
-      {
-        args.putBoolean("closable", true);
-        fragment.setArguments(args);
-      }
-
       if (fullscreen)
       {
         args.putBoolean("fullscreen", true);
