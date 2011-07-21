@@ -415,29 +415,4 @@ public class MBDialogController extends FragmentActivity
   public void popPageAnimated(boolean animated)
   {
   }
-
-  /*@Override
-  public MBBasicViewController getCurrentActivity()
-  {
-    return getCurrentActivity(true);
-  }*/
-
-  /*public MBBasicViewController getCurrentActivity(boolean getTopOfStackIfCurrentActivityNotAvailable)
-  {
-    if (getLocalActivityManager().getCurrentActivity() == null && !getTopOfStackIfCurrentActivityNotAvailable)
-    {
-      return null;
-    }
-
-    MBBasicViewController currentActivity = (MBBasicViewController) getLocalActivityManager().getCurrentActivity();
-    if (currentActivity == null && _pageIdStack.size() > 0)
-    {
-      return (MBBasicViewController) getLocalActivityManager().getActivity(_pageIdStack.peek());
-    }
-    else
-    {
-      return currentActivity;
-    }
-
-  }*/
 }
