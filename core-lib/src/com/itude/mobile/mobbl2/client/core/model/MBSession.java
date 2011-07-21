@@ -1,6 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.model;
 
-public class MBSession implements MBSessionInterface
+public final class MBSession implements MBSessionInterface
 {
 
   private static MBSessionInterface _instance;

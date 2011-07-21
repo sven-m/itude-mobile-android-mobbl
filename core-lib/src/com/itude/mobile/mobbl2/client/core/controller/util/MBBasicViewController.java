@@ -69,7 +69,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
       String outcomeID = getArguments().getString("id");
       if (outcomeID != null)
       {
-        Log.d("MOBBL", "MBBasicViewController.onCreate: found id=" + outcomeID);
+        Log.d(Constants.APPLICATION_NAME, "MBBasicViewController.onCreate: found id=" + outcomeID);
 
         if (getShowsDialog() && outcomeID != MBApplicationController.getInstance().getModalPageID())
         {

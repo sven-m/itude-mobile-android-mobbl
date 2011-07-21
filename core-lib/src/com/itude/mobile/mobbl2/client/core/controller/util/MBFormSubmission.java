@@ -12,6 +12,7 @@ import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBServerErrorMe
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBFormSubmission implements MBAction
 {
@@ -53,12 +54,12 @@ public class MBFormSubmission implements MBAction
         setRequestParameter(value, attributeName, request);
       }
     }
-    Log.d("MOBBL", "REQUEST = " + request);
+    Log.d(Constants.APPLICATION_NAME, "REQUEST = " + request);
 
     // retrieve generic response
     MBDocument response = MBDataManagerService.getInstance().loadDocument("MBGenericResponse", request);
 
-    Log.d("MOBBL", "RESPONSE = " + response);
+    Log.d(Constants.APPLICATION_NAME, "RESPONSE = " + response);
 
     String body = response.getValueForPath("Response[0]/@body");
     String error = response.getValueForPath("Response[0]/@error");
@@ -66,7 +67,7 @@ public class MBFormSubmission implements MBAction
     // if error, throw error with errormessage
     if (error != null && error.trim().length() > 0)
     {
-      Log.e("MOBBL", "Error returned by server: " + error);
+      Log.e(Constants.APPLICATION_NAME, "Error returned by server: " + error);
       // use body rather than error since server-side puts error code in error and error message in body
       throw new MBServerErrorMessageException(body);
     }

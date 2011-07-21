@@ -7,6 +7,7 @@ import java.util.Map;
 
 import android.util.Log;
 
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBProperties;
 
 public class MBLocalizationService
@@ -85,7 +86,7 @@ public class MBLocalizationService
     String text = dict.get(key);
     if (text == null)
     {
-      Log.w("MOBBL", "Warning: no translation defined for key '" + key + "' using languageCode=" + getCurrentLanguage());
+      Log.w(Constants.APPLICATION_NAME, "Warning: no translation defined for key '" + key + "' using languageCode=" + getCurrentLanguage());
       // add the missing translation to prevent future warnings
       dict.put(key, key);
       text = key;

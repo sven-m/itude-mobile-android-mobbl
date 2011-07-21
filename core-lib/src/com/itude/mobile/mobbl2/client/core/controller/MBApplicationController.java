@@ -91,7 +91,7 @@ public class MBApplicationController extends Application
 
   public void startApplication(MBApplicationFactory applicationFactory)
   {
-    Log.d("MOBBL", "MBApplicationController.startApplication");
+    Log.d(Constants.APPLICATION_NAME, "MBApplicationController.startApplication");
     Log.d(Constants.APPLICATION_NAME, "Device info:");
     Log.d(Constants.APPLICATION_NAME, MBDevice.getInstance().toString());
 
@@ -296,7 +296,7 @@ public class MBApplicationController extends Application
       MBAction action = _applicationFactory.createAction(actionDef.getClassName());
       if (action == null)
       {
-        Log.d("MOBBL", "MBApplicationController.performActionInBackground: " + "No outcome produced by action " + actionDef.getName()
+        Log.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action " + actionDef.getName()
                        + " (outcome == null); no further procesing.");
       }
 
@@ -305,7 +305,7 @@ public class MBApplicationController extends Application
       _viewManager.hideActivityIndicator();
       if (actionOutcome == null)
       {
-        Log.d("MOBBL", "MBApplicationController.performActionInBackground: " + "No outcome produced by action " + actionDef.getName()
+        Log.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action " + actionDef.getName()
                        + " (outcome == null); no further procesing.");
       }
       else
@@ -426,9 +426,9 @@ public class MBApplicationController extends Application
 
   public void handleException(Exception exception, MBOutcome outcome)
   {
-    Log.w("MOBBL", "________EXCEPTION RAISED______________________________________________________________");
-    Log.w("MOBBL", exception);
-    Log.w("MOBBL", "______________________________________________________________________________________");
+    Log.w(Constants.APPLICATION_NAME, "________EXCEPTION RAISED______________________________________________________________");
+    Log.w(Constants.APPLICATION_NAME, exception);
+    Log.w(Constants.APPLICATION_NAME, "______________________________________________________________________________________");
 
     MBDocument exceptionDocument = MBDataManagerService.getInstance().loadDocument(MBConfigurationDefinition.DOC_SYSTEM_EXCEPTION);
     String name = MBLocalizationService.getInstance().getTextForKey("General error");
@@ -493,13 +493,13 @@ public class MBApplicationController extends Application
                                                                                                            "exception", false);
       if (outcomeDefinitions.size() == 0)
       {
-        Log.w("MOBBL", "No outcome with origin=" + outcome.getOriginName()
+        Log.w(Constants.APPLICATION_NAME, "No outcome with origin=" + outcome.getOriginName()
                        + " name=exception defined to handle errors; so re-throwing exception");
         throw new RuntimeException(exception);
       }
       if ("exception".equals(outcome.getOutcomeName()))
       {
-        Log.w("MOBBL",
+        Log.w(Constants.APPLICATION_NAME,
               "Error in handling an outcome with name=exception (i.e. the error handling in the controller is probably misconfigured) Re-throwing exception");
         throw new RuntimeException(exception);
       }

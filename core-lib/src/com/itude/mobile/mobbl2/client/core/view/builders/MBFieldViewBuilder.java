@@ -52,7 +52,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
     else if (Constants.C_FIELD_TEXT.equals(field.getType())) view = buildTextView(field);
     else
     {
-      Log.w("MOBBL", "MBFieldViewBuilder.buildFieldView(): Failed to build unsupported view type " + field.getType());
+      Log.w(Constants.APPLICATION_NAME, "MBFieldViewBuilder.buildFieldView(): Failed to build unsupported view type " + field.getType());
     }
 
     return view;
@@ -154,7 +154,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
       }
       else
       {
-        Log.w("MOBBL",
+        Log.w(Constants.APPLICATION_NAME,
               "MBFieldViewBuilder.buildMatrixCell(): Failed to calculate delta because documentDiff.valueOfAForPath return null for path "
                   + path);
       }

@@ -28,7 +28,7 @@ public class MBOutcomeHandler extends Handler
   @Override
   public void handleMessage(Message msg)
   {
-    Log.d("MOBBL", "MBOutcomeHandler.handleMessage(): " + msg.what);
+    Log.d(Constants.APPLICATION_NAME, "MBOutcomeHandler.handleMessage(): " + msg.what);
     if (msg.what == Constants.C_MESSAGE_INITIAL_OUTCOMES_FINISHED)
     {
       MBApplicationController.getInstance().finishedInitialOutcomes();
@@ -70,7 +70,7 @@ public class MBOutcomeHandler extends Handler
 
   private void handleOutcome(MBOutcome outcome)
   {
-    Log.d("MOBBL", "MBOutcomeHandler.handleOutcome: " + outcome);
+    Log.d(Constants.APPLICATION_NAME, "MBOutcomeHandler.handleOutcome: " + outcome);
 
     // Make sure that the (external) document cache of the document itself is cleared since this
     // might interfere with the preconditions that are evaluated later on. Also: if the document is transferred
@@ -99,7 +99,7 @@ public class MBOutcomeHandler extends Handler
     if (shouldPersist)
     {
       if (outcome.getDocument() == null) Log
-          .w("MOBBL",
+          .w(Constants.APPLICATION_NAME,
              "MBApplicationController.doHandleOutcome: origin="
                  + outcome.getOriginName()
                  + "and name="

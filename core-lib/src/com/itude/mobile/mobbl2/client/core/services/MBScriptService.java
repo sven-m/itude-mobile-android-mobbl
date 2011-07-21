@@ -10,9 +10,12 @@ import org.mozilla.javascript.ContextFactory;
 import android.util.Log;
 
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBScriptErrorException;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 
-public class MBScriptService
+public final class MBScriptService
 {
+  private static final String ERROR_MARKER = "SCRIPT_ERROR: ";
+  
   private static MBScriptService _instance = null;
   
   // map needs synchronization because it is not read-only in the evaluate code
@@ -65,8 +68,8 @@ public class MBScriptService
     String result = COMPUTED_EXPRESSIONS.get(expression);
     if (result != null)
       return result;
-    Log.d("MOBBL", "expression for ScriptService=" + expression);
-    String ERROR_MARKER = "SCRIPT_ERROR: ";
+    Log.d(Constants.APPLICATION_NAME, "expression for ScriptService=" + expression);
+    
     String stub = "function x(){ try { return " + expression + "; } catch(e) { return '" + ERROR_MARKER + "'+e; } } x(); ";
     result = "";
 

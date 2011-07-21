@@ -66,7 +66,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     MBEndPointDefinition endPoint = getEndPointForDocument(documentName);
     if (endPoint == null)
     {
-      Log.w("MOBBL", "No endpoint defined for document name " + documentName);
+      Log.w(Constants.APPLICATION_NAME, "No endpoint defined for document name " + documentName);
       return null;
     }
     // C.H: Log.isLoggable is not working as expected. To get it to work, each developer should
@@ -74,7 +74,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     // the android market.
     //    boolean debugLoggingEnabled = Log.isLoggable(Constants.APPLICATION_NAME, Log.DEBUG);
     boolean debugLoggingEnabled = true;
-    Log.d("MOBBL", "MBRESTServiceDataHandler:loadDocument " + documentName + " from " + endPoint.getEndPointUri());
+    Log.d(Constants.APPLICATION_NAME, "MBRESTServiceDataHandler:loadDocument " + documentName + " from " + endPoint.getEndPointUri());
 
     String dataString = null;
     MBDocument responseDoc = null;
@@ -125,8 +125,8 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     // TODO: clean up exception handling
     catch (Exception e)
     {
-      Log.d("MOBBL", "Sent xml:\n" + body);
-      Log.d("MOBBL", "Received:\n" + dataString);
+      Log.d(Constants.APPLICATION_NAME, "Sent xml:\n" + body);
+      Log.d(Constants.APPLICATION_NAME, "Received:\n" + dataString);
       if (e instanceof RuntimeException)
       {
         throw (RuntimeException) e;
@@ -182,7 +182,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     String responseMessage = httpResponse.getStatusLine().getReasonPhrase();
     if (responseCode != HttpStatus.SC_OK)
     {
-      Log.e("MOBBL", "MBRESTServiceDataHandler.loadDocument: Received HTTP responseCode=" + responseCode + ": " + responseMessage);
+      Log.e(Constants.APPLICATION_NAME, "MBRESTServiceDataHandler.loadDocument: Received HTTP responseCode=" + responseCode + ": " + responseMessage);
     }
 
     HttpEntity entity = httpResponse.getEntity();

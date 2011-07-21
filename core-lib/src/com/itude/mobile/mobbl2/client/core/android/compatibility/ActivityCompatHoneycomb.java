@@ -25,8 +25,12 @@ import android.app.Activity;
  * Implementation of activity compatibility that can call Honeycomb APIs.
  * Copied from Android Compatibility Package.
  */
-public class ActivityCompatHoneycomb
+public final class ActivityCompatHoneycomb
 {
+  private ActivityCompatHoneycomb()
+  {
+  }
+
   public static void invalidateOptionsMenu(final Activity activity)
   {
     activity.runOnUiThread(new Runnable()

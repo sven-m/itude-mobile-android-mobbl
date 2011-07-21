@@ -3,7 +3,7 @@ package com.itude.mobile.mobbl2.client.core.util.helper;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBSession;
 
-public class MBSecurityHelper implements MBSecurityInterface
+public final class MBSecurityHelper implements MBSecurityInterface
 {
 
   private static MBSecurityInterface _instance;

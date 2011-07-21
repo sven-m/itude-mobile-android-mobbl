@@ -22,6 +22,7 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBBundleNotFoundException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBResourceNotDefinedException;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBBundleDefinition;
 import com.itude.mobile.mobbl2.client.core.util.MBCacheManager;
@@ -116,18 +117,18 @@ public class MBResourceService
     {
       if (error != null)
       {
-        Log.w("MOBBL", "Warning: could not load file for resource=" + resourceId, error);
+        Log.w(Constants.APPLICATION_NAME, "Warning: could not load file for resource=" + resourceId, error);
       }
       else
 
       {
-        Log.w("MOBBL", "Warning: could not load file for resource=" + resourceId);
+        Log.w(Constants.APPLICATION_NAME, "Warning: could not load file for resource=" + resourceId);
       }
       return null;
     }
 
     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-    if (bitmap == null) Log.w("MOBBL", "Could not create image for resource=" + resourceId);
+    if (bitmap == null) Log.w(Constants.APPLICATION_NAME, "Could not create image for resource=" + resourceId);
 
     Resources res = MBApplicationController.getInstance().getBaseContext().getResources();
 
@@ -157,11 +158,11 @@ public class MBResourceService
 
         if (data == null)
         {
-          Log.w("MOBBL", "Warning: could not load file=" + fileName + " based on URL=" + urlString);
+          Log.w(Constants.APPLICATION_NAME, "Warning: could not load file=" + fileName + " based on URL=" + urlString);
         }
         if (isPng)
         {
-          Log.i("MOBBL", "png placed in cache: " + urlString);
+          Log.i(Constants.APPLICATION_NAME, "png placed in cache: " + urlString);
           _pngCache.put(urlString, data);
         }
 
@@ -169,7 +170,7 @@ public class MBResourceService
       }
       catch (Exception e)
       {
-        Log.w("MOBBL", "Warning: could not load file=" + fileName + " based on URL=" + urlString);
+        Log.w(Constants.APPLICATION_NAME, "Warning: could not load file=" + fileName + " based on URL=" + urlString);
       }
     }
 

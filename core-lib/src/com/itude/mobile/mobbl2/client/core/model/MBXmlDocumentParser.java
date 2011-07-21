@@ -94,8 +94,8 @@ public class MBXmlDocumentParser extends DefaultHandler
       }
       catch (Exception e)
       {
-        Log.d("MOBBL", new String(data));
-        Log.e("MOBBL", "MBXmlDocumentParser.doParseFragment (for the data, see debug log above)", e);
+        Log.d(Constants.APPLICATION_NAME, new String(data));
+        Log.e(Constants.APPLICATION_NAME, "MBXmlDocumentParser.doParseFragment (for the data, see debug log above)", e);
       }
     }
   }

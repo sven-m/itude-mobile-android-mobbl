@@ -45,7 +45,7 @@ public final class FileUtil
     try
     {
       File root = _context.getFilesDir();
-      Log.d("MOBBL", "FileUtil.getByteArray: reading from file " + fileName);
+      Log.d(Constants.APPLICATION_NAME, "FileUtil.getByteArray: reading from file " + fileName);
       int read;
       byte[] buffer = new byte[1024];
       File file = new File(root, fileName);
@@ -85,13 +85,13 @@ public final class FileUtil
     try
     {
       File root = _context.getFilesDir();
-      Log.d("MOBBL", "FileUtil.writeToFile: writing to file " + fileName);
+      Log.d(Constants.APPLICATION_NAME, "FileUtil.writeToFile: writing to file " + fileName);
 
       int lastPathSeparator = fileName.lastIndexOf(File.separator);
       if (lastPathSeparator > -1)
       {
         String directoryName = fileName.substring(0, lastPathSeparator);
-        Log.d("MOBBL", "FileUtil.writeToFile: creating directory " + directoryName);
+        Log.d(Constants.APPLICATION_NAME, "FileUtil.writeToFile: creating directory " + directoryName);
         File dir = new File(root, directoryName);
         dir.mkdirs();
       }
@@ -104,7 +104,7 @@ public final class FileUtil
     }
     catch (Exception e)
     {
-      Log.w("MOBBL", "FileUtil.writeToFile: error writing file " + fileName, e);
+      Log.w(Constants.APPLICATION_NAME, "FileUtil.writeToFile: error writing file " + fileName, e);
     }
     finally
     {
@@ -199,7 +199,7 @@ public final class FileUtil
     try
     {
       File root = _context.getFilesDir();
-      Log.d("MOBBL", "FileUtil.remove: removing file " + fileName);
+      Log.d(Constants.APPLICATION_NAME, "FileUtil.remove: removing file " + fileName);
 
       File file = new File(root, fileName);
 
@@ -217,7 +217,7 @@ public final class FileUtil
     }
     catch (Exception e)
     {
-      Log.w("MOBBL", "FileUtil.remove: error removing file " + fileName, e);
+      Log.w(Constants.APPLICATION_NAME, "FileUtil.remove: error removing file " + fileName, e);
     }
 
     return success;

@@ -86,13 +86,13 @@ public class MBField extends MBComponent
         }
         else
         {
-          Log.w("MOBBL", fieldDef.getWidth() + " could not be parsed als int");
+          Log.w(Constants.APPLICATION_NAME, fieldDef.getWidth() + " could not be parsed als int");
         }
 
       }
       catch (NumberFormatException e)
       {
-        Log.d("MOBBL", fieldDef.toString(), e);
+        Log.d(Constants.APPLICATION_NAME, fieldDef.toString(), e);
       }
     }
     if (fieldDef.getHeight() != null)
@@ -103,7 +103,7 @@ public class MBField extends MBComponent
       }
       catch (NumberFormatException e)
       {
-        Log.d("MOBBL", fieldDef.toString(), e);
+        Log.d(Constants.APPLICATION_NAME, fieldDef.toString(), e);
       }
     }
 
@@ -337,7 +337,7 @@ public class MBField extends MBComponent
   {
     if (_cachedValueSet == true)
     {
-      //      Log.e("MOBBL", "returning cached value for field " + getName());
+      //      Log.e(Constants.APPLICATION_NAME, "returning cached value for field " + getName());
       return _cachedValue;
     }
     String result = null;
@@ -432,7 +432,7 @@ public class MBField extends MBComponent
       catch (MBInvalidPathException e)
       {
         // Button outcomes do not map to an attribute
-        Log.d("MOBBL", "MBField.getAttributeDefinition() with path=" + path
+        Log.d(Constants.APPLICATION_NAME, "MBField.getAttributeDefinition() with path=" + path
                        + " does not map to an attribute. Probably an outcomePath for a Button.");
       }
     }
@@ -584,7 +584,7 @@ public class MBField extends MBComponent
     {
       // dead code?
       p_appendToMe.append("<MBField errorInDefinition='" + e.getClass().getSimpleName() + ", " + e.getCause() + "'/>\n");
-      Log.d("MOBBL", e.getMessage(), e);
+      Log.d(Constants.APPLICATION_NAME, e.getMessage(), e);
     }
 
     return p_appendToMe;

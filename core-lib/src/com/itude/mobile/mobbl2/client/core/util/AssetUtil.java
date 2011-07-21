@@ -79,7 +79,7 @@ public final class AssetUtil
       }
     }
 
-    if (bytes.toByteArray().length == 0) Log.w("MOBBL", "AssetUtil.getByteArray: file not found with fileName=");
+    if (bytes.toByteArray().length == 0) Log.w(Constants.APPLICATION_NAME, "AssetUtil.getByteArray: file not found with fileName=");
     return bytes.toByteArray();
   }
 

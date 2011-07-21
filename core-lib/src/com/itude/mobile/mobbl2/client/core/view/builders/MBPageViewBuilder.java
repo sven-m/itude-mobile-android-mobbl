@@ -29,7 +29,6 @@ public class MBPageViewBuilder extends MBViewBuilder
     view.setScrollContainer(true);
     view.setFadingEdgeLength(0);
     view.setVerticalFadingEdgeEnabled(false);
-    //    view.setBackgroundColor(0xFFEEEEEE);
 
     if (page.getTitle() != null)
     {
@@ -37,17 +36,6 @@ public class MBPageViewBuilder extends MBViewBuilder
       headerContainer.setOrientation(LinearLayout.VERTICAL);
       headerContainer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 
-      /*LinearLayout header = new LinearLayout(view.getContext());
-      header.setOrientation(LinearLayout.VERTICAL);
-
-      getStyleHandler().stylePageHeader(header);
-      header.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-      headerContainer.addView(header);
-
-      TextView title = new TextView(header.getContext());
-      title.setText(page.getTitle());
-      getStyleHandler().stylePageHeaderTitle(title);
-      */
       MBHeader header = new MBHeader(headerContainer.getContext());
       header.setTag(Constants.C_PAGE_CONTENT_HEADER_VIEW);
       header.getTitleView().setText(page.getTitle());
@@ -97,22 +85,8 @@ public class MBPageViewBuilder extends MBViewBuilder
     if (page.getTitle() != null)
     {
       LinearLayout headerContainer = new LinearLayout(context);
-      //      headerContainer.setTag(Constants.C_PAGE_CONTENT_HEADER_VIEW);
       headerContainer.setOrientation(LinearLayout.VERTICAL);
       headerContainer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-
-      /*LinearLayout header = new LinearLayout(context);
-      header.setOrientation(LinearLayout.VERTICAL);
-
-      getStyleHandler().stylePageHeader(header);
-      header.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-      headerContainer.addView(header);
-
-      TextView title = new TextView(header.getContext());
-      title.setText(page.getTitle());
-      getStyleHandler().stylePageHeaderTitle(title);
-
-      header.addView(title);*/
 
       MBHeader header = new MBHeader(headerContainer.getContext());
       header.setTag(Constants.C_PAGE_CONTENT_HEADER_VIEW);

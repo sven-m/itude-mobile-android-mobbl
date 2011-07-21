@@ -22,6 +22,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefini
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
@@ -91,7 +92,7 @@ public class MBDialogController extends FragmentActivity
     }
     else
     {
-      Log.w("MOBBL", "MBDialogController.onCreate: unable to find dialogName");
+      Log.w(Constants.APPLICATION_NAME, "MBDialogController.onCreate: unable to find dialogName");
       return false;
     }
   }
@@ -130,7 +131,7 @@ public class MBDialogController extends FragmentActivity
     String outcomeID = getIntent().getStringExtra("outcomeID");
     if (outcomeID != null)
     {
-      Log.d("MOBBL", "MBDialogController.onCreate: found outcomeID=" + outcomeID);
+      Log.d(Constants.APPLICATION_NAME, "MBDialogController.onCreate: found outcomeID=" + outcomeID);
       MBPage page = MBApplicationController.getInstance().getPage(outcomeID);
       showPage(page, null, outcomeID, page.getDialogName(), false);
     }
