@@ -73,7 +73,8 @@ public class MBTabletViewManager extends MBViewManager
           {
             @Override
             public boolean onQueryTextSubmit(String query)
-            {
+            {   
+              // Enter drukken.
               searchView.clearFocus();
               getTabBar().selectTab(null);
               return false;
@@ -95,7 +96,8 @@ public class MBTabletViewManager extends MBViewManager
 
             @Override
             public boolean onSuggestionClick(int position)
-            {
+            { 
+              //lijst klikken
               searchView.clearFocus();
               getTabBar().selectTab(null);
               return false;
