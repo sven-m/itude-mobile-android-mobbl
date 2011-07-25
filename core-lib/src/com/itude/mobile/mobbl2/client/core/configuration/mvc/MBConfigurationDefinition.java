@@ -382,4 +382,18 @@ public class MBConfigurationDefinition extends MBDefinition
   {
     return _tools;
   }
+
+  public List<MBToolDefinition> getToolDefinitionsForType(String type)
+  {
+    ArrayList<MBToolDefinition> result = new ArrayList<MBToolDefinition>();
+
+    for (MBToolDefinition toolDef : _tools.values())
+    {
+      if (type.equals(toolDef.getType()))
+      {
+        result.add(toolDef);
+      }
+    }
+    return result;
+  }
 }

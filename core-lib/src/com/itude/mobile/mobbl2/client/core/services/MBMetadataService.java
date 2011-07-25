@@ -19,11 +19,12 @@ import com.itude.mobile.mobbl2.client.core.services.exceptions.MBDialogNotDefine
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBDocumentNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBDomainNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBPageNotDefinedException;
+import com.itude.mobile.mobbl2.client.core.services.exceptions.MBToolNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 
-public class MBMetadataService
+public final class MBMetadataService
 {
   private final MBConfigurationDefinition _cfg;
 
@@ -222,6 +223,18 @@ public class MBMetadataService
   public List<MBToolDefinition> getTools()
   {
     return new ArrayList<MBToolDefinition>(_cfg.getTools().values());
+  }
+
+  public List<MBToolDefinition> getToolDefinitionsForType(String type)
+  {
+    List<MBToolDefinition> toolDefs = _cfg.getToolDefinitionsForType(type);
+
+    if (toolDefs.size() == 0)
+    {
+      String message = "Tool with type=" + type + " not defined";
+      throw new MBToolNotDefinedException(message);
+    }
+    return toolDefs;
   }
 
   public MBConfigurationDefinition getConfiguration()

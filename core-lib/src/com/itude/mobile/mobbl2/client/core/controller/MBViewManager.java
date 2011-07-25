@@ -737,4 +737,10 @@ public class MBViewManager extends ActivityGroup
   {
     throw new UnsupportedOperationException("This method is not support on smartphone");
   }
+
+  public void hideSearchView()
+  {
+    throw new UnsupportedOperationException("This method is not support on smartphone");
+  }
+
 }

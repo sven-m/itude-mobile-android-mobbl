@@ -9,6 +9,9 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
@@ -69,40 +72,6 @@ public class MBTabletViewManager extends MBViewManager
           final SearchView searchView = new SearchView(MBViewManager.getInstance().getApplicationContext());
           SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
           searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-          searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
-          {
-            @Override
-            public boolean onQueryTextSubmit(String query)
-            {   
-              // Enter drukken.
-              searchView.clearFocus();
-              getTabBar().selectTab(null);
-              return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText)
-            {
-              return false;
-            }
-          });
-          searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener()
-          {
-            @Override
-            public boolean onSuggestionSelect(int position)
-            {
-              return false;
-            }
-
-            @Override
-            public boolean onSuggestionClick(int position)
-            { 
-              //lijst klikken
-              searchView.clearFocus();
-              getTabBar().selectTab(null);
-              return false;
-            }
-          });
 
           menuItem.setActionView(searchView);
         }
@@ -128,8 +97,6 @@ public class MBTabletViewManager extends MBViewManager
       {
         if (def.getAction() != null)
         {
-          getTabBar().selectTab(null);
-
           MBOutcome outcome = new MBOutcome();
           outcome.setOriginName(def.getName());
           outcome.setOutcomeName(def.getAction());
@@ -159,6 +126,31 @@ public class MBTabletViewManager extends MBViewManager
   }
 
   @Override
+  public void activateDialogWithName(String dialogName)
+  {
+    super.activateDialogWithName(dialogName);
+
+    if (dialogName != null)
+    {
+      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+      if (dialogDefinition.getParent() != null)
+      {
+        dialogName = dialogDefinition.getParent();
+        dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+      }
+
+      if (!"TRUE".equals(dialogDefinition.getAddToNavbar()))
+      {
+        MBTabBar tabBar = getTabBar();
+        if (tabBar != null)
+        {
+          tabBar.selectTab(null);
+        }
+      }
+    }
+  }
+
+  @Override
   public void selectTab(int id)
   {
     MBTabBar tabBar = getTabBar();
@@ -169,7 +161,7 @@ public class MBTabletViewManager extends MBViewManager
     }
   }
 
-  public MBTabBar getTabBar()
+  private MBTabBar getTabBar()
   {
     try
     {
@@ -205,8 +197,16 @@ public class MBTabletViewManager extends MBViewManager
           //FIXME create something in the config
           if (getSortedDialogNames().indexOf(dialogName) == 0)
           {
+            final MBSpinner spinner = new MBSpinner(MBTabletViewManager.this);
             ArrayAdapter<CharSequence> arrayAdapter = new ArrayAdapter<CharSequence>(MBTabletViewManager.this,
                 android.R.layout.simple_spinner_dropdown_item);
+            //            {
+            //              @Override
+            //              public boolean isEnabled(int position)
+            //              {
+            //                return (position != spinner.getSelectedItemPosition());
+            //              }
+            //            };
             arrayAdapter.add("Indices");
             arrayAdapter.add("AEX");
             arrayAdapter.add("AMX");
@@ -214,11 +214,55 @@ public class MBTabletViewManager extends MBViewManager
             arrayAdapter.add("Futures");
             arrayAdapter.add("Favorieten");
 
-            MBSpinner spinner = new MBSpinner(MBTabletViewManager.this);
             spinner.setPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
             spinner.setAdapter(arrayAdapter);
             spinner.setText(dialogDefinition.getTitle());
             spinner.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+            spinner.setOnItemSelectedListener(new OnItemSelectedListener()
+            {
+
+              @Override
+              public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+              {
+                String outcomeName = null;
+                switch (position)
+                {
+                  case 0 :
+                    outcomeName = "OUTCOME-page_indices";
+                    break;
+                  case 1 :
+                    outcomeName = "OUTCOME-page_mainindex_cis";
+                    break;
+                  case 2 :
+                    outcomeName = "OUTCOME-page_midindex_cis";
+                    break;
+                  case 3 :
+                    outcomeName = "OUTCOME-page_indices";
+                    break;
+                  case 4 :
+                    outcomeName = "OUTCOME-page_indices";
+                    break;
+                  case 5 :
+                    outcomeName = "OUTCOME-tab_favourites";
+                    break;
+                  default :
+                    break;
+                }
+
+                if (outcomeName != null)
+                {
+                  MBOutcome outcome = new MBOutcome(outcomeName, null);
+                  outcome.setOriginName("tab");
+                  outcome.setDialogName("DIALOG-split_shares_left");
+                  MBApplicationController.getInstance().handleOutcome(outcome);
+                }
+              }
+
+              @Override
+              public void onNothingSelected(AdapterView<?> arg0)
+              {
+              }
+            });
 
             tabBar.addTab(new MBTab(MBTabletViewManager.this).setActiveView(spinner)
                 .setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon())).setText(dialogDefinition.getTitle())

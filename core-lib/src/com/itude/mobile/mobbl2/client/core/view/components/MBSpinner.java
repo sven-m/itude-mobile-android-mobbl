@@ -49,11 +49,9 @@ public class MBSpinner extends Spinner
   @Override
   protected void onLayout(boolean changed, int l, int t, int r, int b)
   {
-    if (_textView == null)
-    {
-      super.onLayout(changed, l, t, r, b);
-    }
-    else
+    super.onLayout(changed, l, t, r, b);
+
+    if (_textView != null)
     {
       int childrenLeft = getPaddingLeft();
       int childrenWidth = getRight() - getLeft() - getPaddingLeft() - getPaddingRight();
@@ -104,11 +102,9 @@ public class MBSpinner extends Spinner
   @Override
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
   {
-    if (_textView == null)
-    {
-      super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-    else
+    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+    if (_textView != null)
     {
       int widthSize;
       int heightSize;
