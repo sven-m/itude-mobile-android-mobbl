@@ -253,6 +253,10 @@ public class MBDialogController extends FragmentActivity
     {
       popView();
     }
+    else if ("REPLACE".equals(displayMode))
+    {
+      addToBackStack = false;
+    }
 
     MBBasicViewController fragment = MBApplicationFactory.getInstance().createFragment(page.getPageName());
     Bundle args = new Bundle();
@@ -350,7 +354,7 @@ public class MBDialogController extends FragmentActivity
 
     return list;
   }
-  
+
   public MBBasicViewController findFragment(String name)
   {
     MBBasicViewController fragment = null;
