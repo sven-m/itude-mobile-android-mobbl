@@ -51,8 +51,8 @@ public interface Constants
 
   // field datatypes
   public static final String C_FIELD_DATATYPE_INT                          = "int";
-  public static final String C_FIELD_DATATYPE_double                       = "double";
-  public static final String C_FIELD_DATATYPE_float                        = "float";
+  public static final String C_FIELD_DATATYPE_DOUBLE                       = "double";
+  public static final String C_FIELD_DATATYPE_FLOAT                        = "float";
 
   // button styles
   public static final String C_FIELD_STYLE_NAVIGATION                      = "NAVIGATION";
@@ -99,6 +99,7 @@ public interface Constants
   public static final String C_EDITABLEMATRIX_PERMISSION_DRAGGABLE         = "DRAGGABLE";
   public static final String C_EDITABLEMATRIX_PERMISSION_SELECTABLE        = "SELECTABLE";
   public static final String C_EDITABLEMATRIX_PERMISSION_CLICKABLE         = "CLICKABLE";
+  public static final String C_EDITABLEMATRIX_PERMISSION_LONGCLICKABLE     = "LONGCLICKABLE";
 
   // Properties
   public static final String C_PROPERTY_HTTPS_ALLOW_ALL_CERTIFICATES       = "allowAllHttpsCertificates";

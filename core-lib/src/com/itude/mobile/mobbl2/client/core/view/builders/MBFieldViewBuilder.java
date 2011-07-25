@@ -232,8 +232,8 @@ public class MBFieldViewBuilder extends MBViewBuilder
       }
     }
     else if (field.getDataType() != null
-             && (field.getDataType().equals(Constants.C_FIELD_DATATYPE_double) || field.getDataType()
-                 .equals(Constants.C_FIELD_DATATYPE_float)))
+             && (field.getDataType().equals(Constants.C_FIELD_DATATYPE_DOUBLE) || field.getDataType()
+                 .equals(Constants.C_FIELD_DATATYPE_FLOAT)))
     {
       inputField.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 

@@ -90,14 +90,13 @@ public class MBPanelViewBuilder extends MBViewBuilder
     result.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
     result.setOrientation(LinearLayout.VERTICAL);
     buildChildren(panel.getChildren(), result, viewState);
-    
+
     getStyleHandler().styleMatrixContainer(result);
 
     if (panel.getOutcomeName() != null && panel.getOutcomeName().length() > 0)
     {
       result.setOnClickListener(panel);
     }
-
 
     return result;
   }
@@ -108,7 +107,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     Context context = MBApplicationController.getInstance().getBaseContext();
 
     // An EditableMatrix without any permissions equals a default Matrix
-    if (!panel.isChildrenDeletable() && !panel.isChildrenDraggable() && !panel.isChildrenSelectable())
+    if (!panel.isChildrenDeletable() && !panel.isChildrenDraggable() && !panel.isChildrenSelectable() && !panel.isChildrenLongClickable())
     {
       return buildMatrix(panel, viewState);
     }
@@ -1087,7 +1086,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     parent.addView(divider);
     //
   }
-  
+
   public ViewGroup buildClickabletMatrixPanel(ViewGroup parent)
   {
     int matrixId = UniqueIntegerGenerator.getId();

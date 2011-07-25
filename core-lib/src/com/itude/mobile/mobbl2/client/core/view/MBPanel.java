@@ -25,14 +25,15 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   private String  _path;
   private String  _translatedPath;
   private String  _mode;
-  private boolean _childrenDeletable    = false;
-  private boolean _childrenDraggable    = false;
-  private boolean _childrenSelectable   = false;
-  private boolean _childrenClickable    = false;
-  private Double  _diffableMarkerValue  = null;
-  private Double  _diffablePrimaryValue = null;
+  private boolean _childrenDeletable     = false;
+  private boolean _childrenDraggable     = false;
+  private boolean _childrenSelectable    = false;
+  private boolean _childrenClickable     = false;
+  private boolean _childrenLongClickable = false;
+  private Double  _diffableMarkerValue   = null;
+  private Double  _diffablePrimaryValue  = null;
   private double  _diffablePrimaryDelta;
-  private boolean _diffableMaster       = false;
+  private boolean _diffableMaster        = false;
 
   public MBPanel(MBPanelDefinition definition, MBDocument document, MBComponentContainer parent)
   {
@@ -175,15 +176,15 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   }
 
   @Override
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level).append("<MBPanel ").append(attributeAsXml("type", _type)).append(" ")
+    StringUtilities.appendIndentString(appendToMe, level).append("<MBPanel ").append(attributeAsXml("type", _type)).append(" ")
         .append(attributeAsXml("title", _title)).append(" ").append(attributeAsXml("width", _width)).append(" ")
         .append(attributeAsXml("height", _height)).append(" ").append(attributeAsXml("outcomeName", getOutcomeName())).append(" ")
         .append(attributeAsXml("path", getPath())).append(">\n");
 
-    childrenAsXmlWithLevel(p_appendToMe, level + 2);
-    return StringUtilities.appendIndentString(p_appendToMe, level).append("</MBPanel>\n");
+    childrenAsXmlWithLevel(appendToMe, level + 2);
+    return StringUtilities.appendIndentString(appendToMe, level).append("</MBPanel>\n");
   }
 
   @Override
@@ -228,9 +229,9 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     return _outcomeName;
   }
 
-  public void setPath(String _path)
+  public void setPath(String path)
   {
-    this._path = _path;
+    _path = path;
   }
 
   public String getPath()
@@ -343,6 +344,10 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
         {
           _childrenClickable = true;
         }
+        else if (permission.equals(Constants.C_EDITABLEMATRIX_PERMISSION_LONGCLICKABLE))
+        {
+          _childrenLongClickable = true;
+        }
       }
     }
 
@@ -366,6 +371,11 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   public boolean isChildrenClickable()
   {
     return _childrenClickable;
+  }
+
+  public boolean isChildrenLongClickable()
+  {
+    return _childrenLongClickable;
   }
 
   public void setDiffableMarkerValue(Double value)

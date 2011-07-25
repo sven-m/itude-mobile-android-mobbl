@@ -491,18 +491,6 @@ public class MBViewManager extends ActivityGroup
     return (MBDialogController) getCurrentActivity();
   }
 
-  public MBBasicViewController getActiveViewController()
-  {
-    //    if (getActiveDialog() == null)
-    //    {
-    //      return null;
-    //    }
-
-    //    return getActiveDialog().getCurrentActivity();
-    // TODO reimplement refresh events
-    return null;
-  }
-
   public void resetView()
   {
   }

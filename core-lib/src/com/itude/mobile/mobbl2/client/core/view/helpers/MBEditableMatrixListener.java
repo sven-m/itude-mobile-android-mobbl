@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
@@ -106,6 +107,26 @@ public abstract class MBEditableMatrixListener
     return true;
   }
 
+  public boolean onPrepareLongClickableRow(final int itemAtPosition, View rowView)
+  {
+
+    rowView.setOnLongClickListener(new OnLongClickListener()
+    {
+
+      public boolean onLongClick(View v)
+      {
+        if (onBeforeLongRowClick(itemAtPosition))
+        {
+          return onLongRowClick(itemAtPosition);
+        }
+
+        return false;
+      }
+    });
+
+    return true;
+  }
+
   public boolean onPrepareDeleteButton(final int itemAtPosition, View rowView)
   {
     if (rowView != null)
@@ -163,6 +184,16 @@ public abstract class MBEditableMatrixListener
   }
 
   public boolean onRowClick(int itemAtPosition)
+  {
+    return true;
+  }
+
+  public boolean onBeforeLongRowClick(int itemAtPosition)
+  {
+    return true;
+  }
+
+  public boolean onLongRowClick(int itemAtPosition)
   {
     return true;
   }
@@ -353,6 +384,12 @@ public abstract class MBEditableMatrixListener
     if (_matrixPanel.isChildrenClickable())
     {
       onPrepareClickableRow(itemAtPosition, rowView);
+    }
+
+    // Add row onLongClickListener if allowed
+    if (_matrixPanel.isChildrenLongClickable())
+    {
+      onPrepareLongClickableRow(itemAtPosition, rowView);
     }
 
     // Add delete onclicklistener if allowed

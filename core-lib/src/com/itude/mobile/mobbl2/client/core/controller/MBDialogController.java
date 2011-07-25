@@ -350,7 +350,7 @@ public class MBDialogController extends FragmentActivity
 
     return list;
   }
-
+  
   public MBBasicViewController findFragment(String name)
   {
     MBBasicViewController fragment = null;

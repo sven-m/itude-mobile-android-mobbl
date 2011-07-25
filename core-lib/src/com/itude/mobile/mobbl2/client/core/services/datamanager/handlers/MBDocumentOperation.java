@@ -122,7 +122,7 @@ public class MBDocumentOperation implements Runnable
       else
       {
         store();
-        getDelegate().processResult(null);
+        getDelegate().processResult(getDocument());
       }
     }
     catch (Exception e)

@@ -117,7 +117,7 @@ public class MBEditableMatrix extends LinearLayout
     }
 
     MBViewBuilderFactory.getInstance().getPanelViewBuilder()
-        .buildChildren(matrixPanel.getChildren(), getCurrentContentView(), matrixPanel.getPage().getCurrentViewState());
+        .buildChildrenForEditableMatrix(matrixPanel.getChildren(), getCurrentContentView(), matrixPanel.getPage().getCurrentViewState());
 
     connectMatrixListener();
   }
