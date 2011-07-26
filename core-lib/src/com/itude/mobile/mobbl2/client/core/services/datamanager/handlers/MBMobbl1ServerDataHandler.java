@@ -37,8 +37,8 @@ public class MBMobbl1ServerDataHandler extends MBRESTServiceDataHandler
 
     // TODO: Retrieve these settings from a property file somewhere
     String universeID = MBProperties.getInstance().getValueForProperty("mobblUniverseID");
-    String UIDPrefix = MBProperties.getInstance().getValueForProperty("UIDPrefix");
-    String UID = UIDPrefix + DeviceUtil.getInstance().getUniqueID();
+    String uidPrefix = MBProperties.getInstance().getValueForProperty("UIDPrefix");
+    String uid = uidPrefix + DeviceUtil.getInstance().getUniqueID();
     String secret = MBProperties.getInstance().getValueForProperty("mobblSecret");
 
     // package the incoming document in a StrayClient envelope
@@ -77,13 +77,13 @@ public class MBMobbl1ServerDataHandler extends MBRESTServiceDataHandler
     SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     String dateTime = formatter.format(currentDate);
 
-    String messageID = StringUtilities.md5(dateTime + UID + secret);
+    String messageID = StringUtilities.md5(dateTime + uid + secret);
     //
     sendData.setAttributeValue("http://straysystems.com/xsd/strayclient", "xmlns");
     sendData.setAttributeValue("SendData", "command");
     sendData.setAttributeValue(universeID, "universeID");
     sendData.setAttributeValue(dateTime, "dateTime");
-    sendData.setAttributeValue(UID, "iPhoneUID");
+    sendData.setAttributeValue(uid, "iPhoneUID");
     // TODO iPhoneUID will need to be changed back to uniqueDeviceID --> mobbls.alex.com does not support this yet
     //    sendData.setAttributeValue(UID, "uniqueDeviceID");
     sendData.setAttributeValue(messageID, "messageID");
