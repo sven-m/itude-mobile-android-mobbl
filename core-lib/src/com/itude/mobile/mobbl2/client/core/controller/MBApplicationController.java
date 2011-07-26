@@ -448,7 +448,6 @@ public class MBApplicationController extends Application
         {
           name = titleName;
         }
-        //        name = MBLocalizationService.getInstance().getTextForKey(((MBException) local).getName());
         description = MBLocalizationService.getInstance().getTextForKey(local.getMessage());
       }
     }

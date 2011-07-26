@@ -83,6 +83,7 @@ public interface Constants
   public static final String C_BUTTON_DELETE                               = "BUTTON-DELETE";
   public static final String C_BUTTON_UP                                   = "BUTTON-UP";
   public static final String C_BUTTON_DOWN                                 = "BUTTON-DOWN";
+  public static final String C_BUTTON_FULLSCREEN                           = "BUTTON-FULLSCREEN";
 
   // EditableMatrix 
   public static final String C_EDITABLEMATRIX_EDITBUTTON                   = "EDITABLEMATRIX-EDITBUTTON";
