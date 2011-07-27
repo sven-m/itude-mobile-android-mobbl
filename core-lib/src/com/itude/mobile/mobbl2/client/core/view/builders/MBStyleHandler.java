@@ -338,7 +338,7 @@ public class MBStyleHandler
   {
   }
 
-  public void applyDropDownView(View dropdownView)
+  public void styleSelectedItem(View view)
   {
   }
 

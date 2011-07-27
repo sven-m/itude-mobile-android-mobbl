@@ -21,7 +21,7 @@ public class MBArrayAdapter extends ArrayAdapter<CharSequence>
     View v = super.getDropDownView(position, convertView, parent);
     if (getSelectedElement() == position) 
     {
-      MBViewBuilderFactory.getInstance().getStyleHandler().applyDropDownView(v);
+      MBViewBuilderFactory.getInstance().getStyleHandler().styleSelectedItem(v);
     }
       
     return v;
