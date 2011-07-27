@@ -196,9 +196,9 @@ public class MBTabletViewManager extends MBViewManager
         {
           MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
 
-          if (dialogDefinition.getOptions() != null)
+          if (dialogDefinition.getDomain() != null)
           {
-            MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDefinition.getOptions());
+            MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDefinition.getDomain());
 
             final MBArrayAdapter spinnerAdapter = new MBArrayAdapter(MBTabletViewManager.this, android.R.layout.simple_spinner_item);
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -235,7 +235,7 @@ public class MBTabletViewManager extends MBViewManager
 
                 if (dialogDef != null)
                 {
-                  MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDef.getOptions());
+                  MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDef.getDomain());
                   String value = domainDef.getDomainValidators().get(position).getValue();
 
                   if (value != null)

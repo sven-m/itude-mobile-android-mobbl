@@ -420,16 +420,15 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   {
     if (MBDevice.getInstance().isTablet())
     {
-      ViewGroup parent = parent(v);
+      ViewGroup parent = getParent(v);
       if (parent != null)
       {
-        ViewGroup parentparent = parent(parent);
+        ViewGroup parentparent = getParent(parent);
         if (parentparent != null)
         {
-          childrenchildren(parentparent);
+          setSelectedFalseOnAllChildren(parentparent);
         }
       }
-
       v.setSelected(true);
     }
 
@@ -444,7 +443,7 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   }
 
   // FIXME moet eigenlijk meteen weg.
-  public ViewGroup parent(View v)
+  public ViewGroup getParent(View v)
   {
 
     ViewGroup group = null;
@@ -460,18 +459,18 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   }
 
   // FIXME moet eigenlijk meteen weg.
-  public void childrenchildren(ViewGroup group)
+  public void setSelectedFalseOnAllChildren(ViewGroup group)
   {
     for (int i = 0; i < group.getChildCount(); i++)
     {
       View child = group.getChildAt(i);
       child.setSelected(false);
-      child(child);
+      setSelectedFalseOnChild(child);
     }
   }
 
   // FIXME moet eigenlijk meteen weg.
-  public void child(View childchild)
+  public void setSelectedFalseOnChild(View childchild)
   {
     if (childchild instanceof ViewGroup)
     {

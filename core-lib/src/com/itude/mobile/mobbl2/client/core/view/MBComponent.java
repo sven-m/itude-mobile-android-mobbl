@@ -144,24 +144,24 @@ public class MBComponent
   {
     if (expression == null || expression.indexOf('{') < 0) return expression;
 
-    StringBuilder result = new StringBuilder();; // we really want to end this statement
+    StringBuilder result = new StringBuilder(); // we really want to end this statement
 
-    int positionOf$ = 0;
-    int previousPositionOf$ = 0;
+    int positionOf = 0;
+    int previousPositionOf = 0;
 
     boolean evalToNil = false;
-    while ((positionOf$ = expression.indexOf("${", previousPositionOf$)) > -1)
+    while ((positionOf = expression.indexOf("${", previousPositionOf)) > -1)
     {
       // get everything before the ${
-      result.append(expression.substring(previousPositionOf$, positionOf$));
+      result.append(expression.substring(previousPositionOf, positionOf));
       // for the next while-iteration, make sure we skip the ${ we are now processing
-      previousPositionOf$ = positionOf$ + 2;
+      previousPositionOf = positionOf + 2;
 
-      int endingAccolade;
-      if ((endingAccolade = expression.indexOf('}', positionOf$ + 2)) != -1)
+      int endingAccolade = expression.indexOf('}', positionOf + 2);
+      if (endingAccolade != -1)
       {
-        previousPositionOf$ = endingAccolade + 1;
-        String theExpressionFound = expression.substring(positionOf$ + 2, endingAccolade);
+        previousPositionOf = endingAccolade + 1;
+        String theExpressionFound = expression.substring(positionOf + 2, endingAccolade);
 
         String resultOfTheExpresion = evaluateExpression(theExpressionFound);
         if (resultOfTheExpresion != null)
@@ -176,7 +176,7 @@ public class MBComponent
     }
 
     // get the remainder of the original expression
-    result.append(expression.substring(previousPositionOf$));
+    result.append(expression.substring(previousPositionOf));
 
     if (result.length() == 0 && evalToNil) return null;
     else return result.toString();
@@ -268,9 +268,9 @@ public class MBComponent
     return null;
   }
 
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    return p_appendToMe;
+    return appendToMe;
   }
 
   public String attributeAsXml(String name, Object attrValue)

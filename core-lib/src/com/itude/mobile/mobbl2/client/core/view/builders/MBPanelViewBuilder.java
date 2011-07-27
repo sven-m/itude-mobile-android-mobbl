@@ -349,14 +349,14 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
     // Bottom and (possible) top border params
     RelativeLayout.LayoutParams bottomBorderParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, 1);
-    for (Integer ID : (List<Integer>) childIds.get("RowChildIDs"))
+    for (Integer id : (List<Integer>) childIds.get("RowChildIDs"))
     {
       if (topBorderID != -1)
       {
-        ((RelativeLayout.LayoutParams) rowPanel.findViewById(ID).getLayoutParams()).addRule(RelativeLayout.BELOW, ID);
+        ((RelativeLayout.LayoutParams) rowPanel.findViewById(id).getLayoutParams()).addRule(RelativeLayout.BELOW, id);
       }
 
-      bottomBorderParams.addRule(RelativeLayout.BELOW, ID);
+      bottomBorderParams.addRule(RelativeLayout.BELOW, id);
     }
     //
 
@@ -535,9 +535,9 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
   }
 
-  private boolean isFieldWithType(MBComponent p_child, String p_type)
+  private boolean isFieldWithType(MBComponent child, String type)
   {
-    return p_child instanceof MBField && ((MBField) p_child).getType() != null && ((MBField) p_child).getType().equals(p_type);
+    return child instanceof MBField && ((MBField) child).getType() != null && ((MBField) child).getType().equals(type);
   }
 
   private ViewGroup buildMatrixHeaderPanel(MBPanel panel)
@@ -566,7 +566,10 @@ public class MBPanelViewBuilder extends MBViewBuilder
           }
           else
           {
-            if (field.getStyle() == null) field.setStyle(Constants.C_FIELD_STYLE_MATRIXCOLUMN);
+            if (field.getStyle() == null)
+            {
+              field.setStyle(Constants.C_FIELD_STYLE_MATRIXCOLUMN);
+            }
             matrixLabels.add(mbComponent);
           }
         }
@@ -765,20 +768,19 @@ public class MBPanelViewBuilder extends MBViewBuilder
       rowPanel.setFocusable(true);
       rowPanel.setOnClickListener(panel);
       getStyleHandler().styleClickableRow(rowPanel);
-
     }
 
     return rowPanel;
   }
 
-  private int buildMatrixRowPanelLabels(MBPanel p_panel, RelativeLayout p_rowPanel, ArrayList<MBComponent> p_matrixRowLabels,
-                                        int p_currentId, int leftBorderId, int rightBorderId)
+  private int buildMatrixRowPanelLabels(MBPanel panel, RelativeLayout rowPanel, ArrayList<MBComponent> matrixRowLabels, int currentId,
+                                        int leftBorderId, int rightBorderId)
   {
     // Row with labels
-    if (p_matrixRowLabels.isEmpty()) return p_currentId;
+    if (matrixRowLabels.isEmpty()) return currentId;
     RelativeLayout.LayoutParams rowParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
         RelativeLayout.LayoutParams.WRAP_CONTENT);
-    if (p_currentId != -1) rowParams.addRule(RelativeLayout.BELOW, p_currentId);
+    if (currentId != -1) rowParams.addRule(RelativeLayout.BELOW, currentId);
 
     if (leftBorderId != -1)
     {
@@ -789,29 +791,29 @@ public class MBPanelViewBuilder extends MBViewBuilder
       rowParams.addRule(RelativeLayout.LEFT_OF, rightBorderId);
     }
 
-    LinearLayout row = new LinearLayout(p_rowPanel.getContext());
+    LinearLayout row = new LinearLayout(rowPanel.getContext());
     row.setLayoutParams(rowParams);
     row.setOrientation(LinearLayout.HORIZONTAL);
 
-    getStyleHandler().styleMatrixRow(p_panel, row);
+    getStyleHandler().styleMatrixRow(panel, row);
 
     // Add children to panel
     //    buildChildren(p_matrixRowLabels, row, false, p_bounds, null);
-    buildMatrixRowPanelChildren(p_matrixRowLabels, row, false);
+    buildMatrixRowPanelChildren(matrixRowLabels, row, false);
 
-    p_rowPanel.addView(row);
-    p_currentId = UniqueIntegerGenerator.getId();
-    row.setId(p_currentId);
+    rowPanel.addView(row);
+    currentId = UniqueIntegerGenerator.getId();
+    row.setId(currentId);
 
-    return p_currentId;
+    return currentId;
   }
 
-  private void buildMatrixRowPanelChildren(ArrayList<MBComponent> p_matrixRowLabels, ViewGroup parent, boolean buildingHeaderPanelChildren)
+  private void buildMatrixRowPanelChildren(ArrayList<MBComponent> matrixRowLabels, ViewGroup parent, boolean buildingHeaderPanelChildren)
   {
 
     boolean needsToProcessFirstLabel = true;
 
-    for (MBComponent child : p_matrixRowLabels)
+    for (MBComponent child : matrixRowLabels)
     {
 
       View childView = child.buildViewWithMaxBounds(null);
@@ -850,27 +852,27 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
   }
 
-  private int buildMatrixRowPanelHeader(MBPanel p_panel, RelativeLayout p_rowPanel, ArrayList<MBComponent> p_matrixRowTitles,
-                                        int p_currentId, int leftBorderId, int rightBorderId)
+  private int buildMatrixRowPanelHeader(MBPanel panel, RelativeLayout rowPanel, ArrayList<MBComponent> matrixRowTitles, int currentId,
+                                        int leftBorderId, int rightBorderId)
   {
 
-    if (p_matrixRowTitles.isEmpty()) return p_currentId;
-    if (p_matrixRowTitles.size() > 1)
+    if (matrixRowTitles.isEmpty()) return currentId;
+    if (matrixRowTitles.size() > 1)
     {
-      LinearLayout rowHeaderLabel = new LinearLayout(p_rowPanel.getContext());
-      getStyleHandler().styleMatrixRow(p_panel, rowHeaderLabel);
+      LinearLayout rowHeaderLabel = new LinearLayout(rowPanel.getContext());
+      getStyleHandler().styleMatrixRow(panel, rowHeaderLabel);
       rowHeaderLabel.setOrientation(LinearLayout.HORIZONTAL);
-      buildChildren(p_matrixRowTitles, rowHeaderLabel, null);
-      p_rowPanel.addView(rowHeaderLabel);
+      buildChildren(matrixRowTitles, rowHeaderLabel, null);
+      rowPanel.addView(rowHeaderLabel);
 
-      p_currentId = UniqueIntegerGenerator.getId();
-      rowHeaderLabel.setId(p_currentId);
+      currentId = UniqueIntegerGenerator.getId();
+      rowHeaderLabel.setId(currentId);
     }
     else
     {
-      buildChildren(p_matrixRowTitles, p_rowPanel, null);
+      buildChildren(matrixRowTitles, rowPanel, null);
       // get the last child added to the rowpanel (this is our one and only label)
-      View current = p_rowPanel.getChildAt(p_rowPanel.getChildCount() - 1);
+      View current = rowPanel.getChildAt(rowPanel.getChildCount() - 1);
       current.setPadding(MBScreenUtilities.FOUR, MBScreenUtilities.TWO, MBScreenUtilities.FOUR, MBScreenUtilities.TWO);
       // Position the view between the borders (if necessary)
       if (leftBorderId != -1 || rightBorderId != -1)
@@ -892,11 +894,11 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
       }
 
-      p_currentId = UniqueIntegerGenerator.getId();
-      current.setId(p_currentId);
+      currentId = UniqueIntegerGenerator.getId();
+      current.setId(currentId);
     }
 
-    return p_currentId;
+    return currentId;
   }
 
   private ViewGroup buildEditableMatrixRowPanel(MBPanel panel)

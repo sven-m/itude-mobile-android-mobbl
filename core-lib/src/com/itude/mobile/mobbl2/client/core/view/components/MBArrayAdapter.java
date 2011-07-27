@@ -23,7 +23,6 @@ public class MBArrayAdapter extends ArrayAdapter<CharSequence>
     {
       MBViewBuilderFactory.getInstance().getStyleHandler().styleSelectedItem(v);
     }
-      
     return v;
   }
 
