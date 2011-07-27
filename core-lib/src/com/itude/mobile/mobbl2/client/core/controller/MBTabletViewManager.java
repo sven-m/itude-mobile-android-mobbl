@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ProgressBar;
@@ -30,6 +29,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBRunnable;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
+import com.itude.mobile.mobbl2.client.core.view.components.MBArrayAdapter;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSpinner;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
@@ -198,24 +198,19 @@ public class MBTabletViewManager extends MBViewManager
           if (getSortedDialogNames().indexOf(dialogName) == 0)
           {
             final MBSpinner spinner = new MBSpinner(MBTabletViewManager.this);
-            ArrayAdapter<CharSequence> arrayAdapter = new ArrayAdapter<CharSequence>(MBTabletViewManager.this,
-                android.R.layout.simple_spinner_dropdown_item);
-            //            {
-            //              @Override
-            //              public boolean isEnabled(int position)
-            //              {
-            //                return (position != spinner.getSelectedItemPosition());
-            //              }
-            //            };
-            arrayAdapter.add("Indices");
-            arrayAdapter.add("AEX");
-            arrayAdapter.add("AMX");
-            arrayAdapter.add("Opties");
-            arrayAdapter.add("Futures");
-            arrayAdapter.add("Favorieten");
+            final MBArrayAdapter dropdownAdapter = new MBArrayAdapter(MBTabletViewManager.this,
+                android.R.layout.simple_spinner_item);
+            dropdownAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            dropdownAdapter.add("Indices");
+            dropdownAdapter.add("AEX");
+            dropdownAdapter.add("AMX");
+            dropdownAdapter.add("Opties");
+            dropdownAdapter.add("Futures");
+            dropdownAdapter.add("Favorieten");
 
             spinner.setPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
-            spinner.setAdapter(arrayAdapter);
+            spinner.setAdapter(dropdownAdapter);
             spinner.setText(dialogDefinition.getTitle());
             spinner.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
             spinner.setOnItemSelectedListener(new OnItemSelectedListener()
@@ -224,7 +219,9 @@ public class MBTabletViewManager extends MBViewManager
               @Override
               public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
               {
+                dropdownAdapter.setSelectedElement(position);
                 String outcomeName = null;
+
                 switch (position)
                 {
                   case 0 :
@@ -392,4 +389,5 @@ public class MBTabletViewManager extends MBViewManager
                  + result + ")";
     throw new MBExpressionNotBooleanException(msg);
   }
+
 }

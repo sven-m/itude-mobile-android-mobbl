@@ -332,13 +332,14 @@ public class MBStyleHandler
 
   public void stylePageIndicatorBar(MBPageIndicatorBar indicatorBar)
   {
-
   }
 
   public void styleDiffableValue(TextView label, double delta)
   {
-    // TODO Auto-generated method stub
+  }
 
+  public void applyDropDownView(View dropdownView)
+  {
   }
 
 }
