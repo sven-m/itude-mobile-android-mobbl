@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPanelDefinition;
@@ -11,6 +12,7 @@ import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.MathUtilities;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
@@ -416,6 +418,21 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   // android.view.View.OnClickListener method
   public void onClick(View v)
   {
+    if (MBDevice.getInstance().isTablet())
+    {
+      ViewGroup parent = parent(v);
+      if (parent != null)
+      {
+        ViewGroup parentparent = parent(parent);
+        if (parentparent != null)
+        {
+          childrenchildren(parentparent);
+        }
+      }
+
+      v.setSelected(true);
+    }
+
     if (getPath() != null)
     {
       handleOutcome(getOutcomeName(), getAbsoluteDataPath() + "/" + getPath());
@@ -423,6 +440,47 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     else
     {
       handleOutcome(getOutcomeName(), getAbsoluteDataPath());
+    }
+  }
+
+  // FIXME moet eigenlijk meteen weg.
+  public ViewGroup parent(View v)
+  {
+
+    ViewGroup group = null;
+    if (v.getParent() != null)
+    {
+      ViewParent parent = v.getParent();
+      if (parent instanceof ViewGroup)
+      {
+        group = (ViewGroup) parent;
+      }
+    }
+    return group;
+  }
+
+  // FIXME moet eigenlijk meteen weg.
+  public void childrenchildren(ViewGroup group)
+  {
+    for (int i = 0; i < group.getChildCount(); i++)
+    {
+      View child = group.getChildAt(i);
+      child.setSelected(false);
+      child(child);
+    }
+  }
+
+  // FIXME moet eigenlijk meteen weg.
+  public void child(View childchild)
+  {
+    if (childchild instanceof ViewGroup)
+    {
+      ViewGroup group = (ViewGroup) childchild;
+      for (int i = 0; i < group.getChildCount(); i++)
+      {
+        View child = group.getChildAt(i);
+        child.setSelected(false);
+      }
     }
   }
 
