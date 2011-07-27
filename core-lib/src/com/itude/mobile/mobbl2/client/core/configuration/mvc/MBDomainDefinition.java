@@ -43,17 +43,17 @@ public class MBDomainDefinition extends MBDefinition
   }
 
   @Override
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level).append("<Domain name='").append(getName()).append("' type='").append(_type)
+    StringUtilities.appendIndentString(appendToMe, level).append("<Domain name='").append(getName()).append("' type='").append(_type)
         .append("'").append(getAttributeAsXml("maxLength", _maxLength)).append(">\n");
 
     for (MBDomainValidatorDefinition vld : _validators)
     {
-      vld.asXmlWithLevel(p_appendToMe, level + 2);
+      vld.asXmlWithLevel(appendToMe, level + 2);
     }
 
-    return StringUtilities.appendIndentString(p_appendToMe, level).append("</Domain>\n");
+    return StringUtilities.appendIndentString(appendToMe, level).append("</Domain>\n");
   }
 
   public String getType()

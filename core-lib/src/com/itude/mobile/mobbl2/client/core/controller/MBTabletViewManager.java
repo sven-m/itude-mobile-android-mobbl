@@ -19,6 +19,8 @@ import android.widget.SearchView;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainValidatorDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNotBooleanException;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBTabListener;
@@ -194,23 +196,22 @@ public class MBTabletViewManager extends MBViewManager
         {
           MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
 
-          //FIXME create something in the config
-          if (getSortedDialogNames().indexOf(dialogName) == 0)
+          if (dialogDefinition.getOptions() != null)
           {
+            MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDefinition.getOptions());
+
+            final MBArrayAdapter spinnerAdapter = new MBArrayAdapter(MBTabletViewManager.this, android.R.layout.simple_spinner_item);
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            for (MBDomainValidatorDefinition domDef : domainDef.getDomainValidators())
+            {
+              spinnerAdapter.add(domDef.getTitle());
+            }
+
             final MBSpinner spinner = new MBSpinner(MBTabletViewManager.this);
-            final MBArrayAdapter dropdownAdapter = new MBArrayAdapter(MBTabletViewManager.this,
-                android.R.layout.simple_spinner_item);
-            dropdownAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            dropdownAdapter.add("Indices");
-            dropdownAdapter.add("AEX");
-            dropdownAdapter.add("AMX");
-            dropdownAdapter.add("Opties");
-            dropdownAdapter.add("Futures");
-            dropdownAdapter.add("Favorieten");
-
+            spinner.setId(dialogDefinition.getName().hashCode());
+            spinner.setAdapter(spinnerAdapter);
             spinner.setPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
-            spinner.setAdapter(dropdownAdapter);
             spinner.setText(dialogDefinition.getTitle());
             spinner.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
             spinner.setOnItemSelectedListener(new OnItemSelectedListener()
@@ -219,46 +220,40 @@ public class MBTabletViewManager extends MBViewManager
               @Override
               public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
               {
-                dropdownAdapter.setSelectedElement(position);
-                String outcomeName = null;
+                spinnerAdapter.setSelectedElement(position);
+                MBDialogDefinition dialogDef = null;
 
-                switch (position)
+                List<MBDialogDefinition> dialogs = MBMetadataService.getInstance().getDialogs();
+                for (int i = 0; i < dialogs.size() && dialogDef == null; i++)
                 {
-                  case 0 :
-                    outcomeName = "OUTCOME-page_indices";
-                    break;
-                  case 1 :
-                    outcomeName = "OUTCOME-page_mainindex_cis";
-                    break;
-                  case 2 :
-                    outcomeName = "OUTCOME-page_midindex_cis";
-                    break;
-                  case 3 :
-                    outcomeName = "OUTCOME-page_indices";
-                    break;
-                  case 4 :
-                    outcomeName = "OUTCOME-page_indices";
-                    break;
-                  case 5 :
-                    outcomeName = "OUTCOME-tab_favourites";
-                    break;
-                  default :
-                    break;
+                  MBDialogDefinition dialog = dialogs.get(i);
+                  if (dialog.getName().hashCode() == parent.getId())
+                  {
+                    dialogDef = dialog;
+                  }
                 }
 
-                if (outcomeName != null)
+                if (dialogDef != null)
                 {
-                  MBOutcome outcome = new MBOutcome(outcomeName, null);
-                  outcome.setOriginName("tab");
-                  outcome.setDialogName("DIALOG-split_shares_left");
-                  MBApplicationController.getInstance().handleOutcome(outcome);
+                  MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDef.getOptions());
+                  String value = domainDef.getDomainValidators().get(position).getValue();
+
+                  if (value != null)
+                  {
+                    MBOutcome outcome = new MBOutcome(value, null);
+                    outcome.setOriginName(dialogDef.getName());
+                    //                    outcome.setDialogName("DIALOG-split_shares_left");
+                    MBApplicationController.getInstance().handleOutcome(outcome);
+                  }
+
                 }
               }
 
               @Override
-              public void onNothingSelected(AdapterView<?> arg0)
+              public void onNothingSelected(AdapterView<?> parent)
               {
               }
+
             });
 
             tabBar.addTab(new MBTab(MBTabletViewManager.this).setActiveView(spinner)
@@ -389,5 +384,4 @@ public class MBTabletViewManager extends MBViewManager
                  + result + ")";
     throw new MBExpressionNotBooleanException(msg);
   }
-
 }

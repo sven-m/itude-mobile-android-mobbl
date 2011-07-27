@@ -296,8 +296,8 @@ public class MBApplicationController extends Application
       MBAction action = _applicationFactory.createAction(actionDef.getClassName());
       if (action == null)
       {
-        Log.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action " + actionDef.getName()
-                       + " (outcome == null); no further procesing.");
+        Log.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action "
+                                          + actionDef.getName() + " (outcome == null); no further procesing.");
       }
 
       MBOutcome actionOutcome = action.execute(causingOutcome.getDocument(), causingOutcome.getPath());
@@ -305,8 +305,8 @@ public class MBApplicationController extends Application
       _viewManager.hideActivityIndicator();
       if (actionOutcome == null)
       {
-        Log.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action " + actionDef.getName()
-                       + " (outcome == null); no further procesing.");
+        Log.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action "
+                                          + actionDef.getName() + " (outcome == null); no further procesing.");
       }
       else
       {
@@ -493,7 +493,7 @@ public class MBApplicationController extends Application
       if (outcomeDefinitions.size() == 0)
       {
         Log.w(Constants.APPLICATION_NAME, "No outcome with origin=" + outcome.getOriginName()
-                       + " name=exception defined to handle errors; so re-throwing exception");
+                                          + " name=exception defined to handle errors; so re-throwing exception");
         throw new RuntimeException(exception);
       }
       if ("exception".equals(outcome.getOutcomeName()))
