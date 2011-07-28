@@ -80,43 +80,46 @@ public class MBStyleHandler
   {
     if (Constants.C_EDITABLEMATRIX_DELETEBUTTON.equals(style))
     {
-      StateListDrawable buttonStates = new StateListDrawable();
-      Drawable imageEnabled = MBResourceService.getInstance().getImageByID("button-delete-normal");
-      Drawable imagePressed = MBResourceService.getInstance().getImageByID("button-delete-pressed");
-      Drawable imageDisabled = MBResourceService.getInstance().getImageByID("button-delete-disabled");
-
-      buttonStates.addState(new int[]{R.attr.state_pressed}, imagePressed);
-      buttonStates.addState(new int[]{R.attr.state_enabled}, imageEnabled);
-      buttonStates.addState(new int[]{-R.attr.state_enabled}, imageDisabled);
-
-      view.setBackgroundDrawable(buttonStates);
+      view.setBackgroundDrawable(getStatedButtonBackground("button-delete-normal", "button-delete-pressed", "button-delete-disabled"));
     }
     else if (Constants.C_EDITABLEMATRIX_UPBUTTON.equals(style))
     {
-      StateListDrawable buttonStates = new StateListDrawable();
-      Drawable imageEnabled = MBResourceService.getInstance().getImageByID("button-arrow-up-normal");
-      Drawable imagePressed = MBResourceService.getInstance().getImageByID("button-arrow-up-pressed");
-      Drawable imageDisabled = MBResourceService.getInstance().getImageByID("button-arrow-up-disabled");
-
-      buttonStates.addState(new int[]{R.attr.state_pressed}, imagePressed);
-      buttonStates.addState(new int[]{R.attr.state_enabled}, imageEnabled);
-      buttonStates.addState(new int[]{-R.attr.state_enabled}, imageDisabled);
-
-      view.setBackgroundDrawable(buttonStates);
+      view.setBackgroundDrawable(getStatedButtonBackground("button-arrow-up-normal", "button-arrow-up-pressed", "button-arrow-up-disabled"));
     }
     else if (Constants.C_EDITABLEMATRIX_DOWNBUTTON.equals(style))
     {
-      StateListDrawable buttonStates = new StateListDrawable();
-      Drawable imageEnabled = MBResourceService.getInstance().getImageByID("button-arrow-down-normal");
-      Drawable imagePressed = MBResourceService.getInstance().getImageByID("button-arrow-down-pressed");
-      Drawable imageDisabled = MBResourceService.getInstance().getImageByID("button-arrow-down-disabled");
-
-      buttonStates.addState(new int[]{R.attr.state_pressed}, imagePressed);
-      buttonStates.addState(new int[]{R.attr.state_enabled}, imageEnabled);
-      buttonStates.addState(new int[]{-R.attr.state_enabled}, imageDisabled);
-
-      view.setBackgroundDrawable(buttonStates);
+      view.setBackgroundDrawable(getStatedButtonBackground("button-arrow-down-normal", "button-arrow-down-pressed", "button-arrow-down-disabled"));
     }
+    else if (Constants.C_EDITABLEMATRIX_DRAGBUTTON.equals(style))
+    {
+      view.setBackgroundDrawable(MBResourceService.getInstance().getImageByID("button-drag"));
+    }
+  }
+  
+  protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed)
+  {
+    StateListDrawable buttonStates = new StateListDrawable();
+    Drawable imageEnabled = MBResourceService.getInstance().getImageByID(stateNormal);
+    Drawable imageFocused = MBResourceService.getInstance().getImageByID(statePressed);
+
+    if (statePressed != null) buttonStates.addState(new int[]{R.attr.state_pressed}, imageFocused);
+    if (stateNormal != null) buttonStates.addState(new int[]{R.attr.state_enabled}, imageEnabled);
+
+    return buttonStates;
+  }
+
+  protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed, String stateDisabled)
+  {
+    StateListDrawable buttonStates = new StateListDrawable();
+    Drawable imageEnabled = MBResourceService.getInstance().getImageByID(stateNormal);
+    Drawable imageFocused = MBResourceService.getInstance().getImageByID(statePressed);
+    Drawable imageDisabled = MBResourceService.getInstance().getImageByID(stateDisabled);
+
+    if (statePressed != null) buttonStates.addState(new int[]{R.attr.state_pressed}, imageFocused);
+    if (stateNormal != null) buttonStates.addState(new int[]{R.attr.state_enabled}, imageEnabled);
+    if (stateDisabled != null) buttonStates.addState(new int[]{-R.attr.state_enabled}, imageDisabled);
+
+    return buttonStates;
   }
 
   public void styleImageButtonWithName(ImageButton view, String style)

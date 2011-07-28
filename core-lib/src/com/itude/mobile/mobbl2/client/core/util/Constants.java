@@ -80,9 +80,6 @@ public interface Constants
   public static final String C_PAGE_ORIENTATION_PERMISSION_ANY             = "ANY";
 
   public static final String C_BUTTON_REFRESH                              = "BUTTON-REFRESH";
-  public static final String C_BUTTON_DELETE                               = "BUTTON-DELETE";
-  public static final String C_BUTTON_UP                                   = "BUTTON-UP";
-  public static final String C_BUTTON_DOWN                                 = "BUTTON-DOWN";
   public static final String C_BUTTON_FULLSCREEN                           = "BUTTON-FULLSCREEN";
 
   // EditableMatrix 
@@ -90,6 +87,7 @@ public interface Constants
   public static final String C_EDITABLEMATRIX_LEFTBUTTONSCONTAINER         = "EDITABLEMATRIX-LEFTBUTTONSCONTAINER";
   public static final String C_EDITABLEMATRIX_CHECKBOX                     = "EDITABLEMATRIX-CHECKBOX";
   public static final String C_EDITABLEMATRIX_DELETEBUTTON                 = "EDITABLEMATRIX-DELETEBUTTON";
+  public static final String C_EDITABLEMATRIX_DRAGBUTTON                   = "EDITABLEMATRIX-DRAGBUTTON";
   public static final String C_EDITABLEMATRIX_RIGHTBUTTONSCONTAINER        = "EDITABLEMATRIX-RIGHTBUTTONSCONTAINER";
   public static final String C_EDITABLEMATRIX_UPBUTTON                     = "EDITABLEMATRIX-UPBUTTON";
   public static final String C_EDITABLEMATRIX_DOWNBUTTON                   = "EDITABLEMATRIX-DOWNBUTTON";
