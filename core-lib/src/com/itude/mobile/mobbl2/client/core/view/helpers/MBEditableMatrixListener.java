@@ -3,13 +3,19 @@ package com.itude.mobile.mobbl2.client.core.view.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.ClipData;
+import android.graphics.Color;
+import android.view.DragEvent;
 import android.view.View;
+import android.view.View.DragShadowBuilder;
 import android.view.View.OnClickListener;
+import android.view.View.OnDragListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.components.MBEditableMatrix;
 
@@ -217,6 +223,50 @@ public abstract class MBEditableMatrixListener
   {
     final View rowView = _rowViews.get(itemAtPosition);
 
+    final Button dragButton = (Button) rowView.findViewWithTag(Constants.C_EDITABLEMATRIX_RIGHTBUTTONSCONTAINER)
+        .findViewWithTag(Constants.C_EDITABLEMATRIX_DRAGBUTTON);
+
+    dragButton.setOnLongClickListener(new OnLongClickListener()
+    {
+
+      @Override
+      public boolean onLongClick(View v)
+      {
+        ClipData data = ClipData.newPlainText("bla", "bla");
+        v.startDrag(data, new DragShadowBuilder(rowView), null, 0);
+        return true;
+      }
+
+    });
+
+    rowView.setOnDragListener(new OnDragListener()
+    {
+
+      public boolean onDrag(View v, DragEvent event)
+      {
+        switch (event.getAction())
+        {
+          case DragEvent.ACTION_DRAG_STARTED :
+            v.setBackgroundColor(Color.TRANSPARENT);
+            break;
+          case DragEvent.ACTION_DROP :
+            v.setBackgroundColor(Color.GRAY);
+            break;
+          default :
+            break;
+        }
+        return true;
+      }
+    });
+
+    return true;
+  }
+
+  public boolean onPrepareUpDownControls(final int itemAtPosition)
+  {
+
+    final View rowView = _rowViews.get(itemAtPosition);
+
     final Button upButton = (Button) rowView.findViewWithTag(Constants.C_EDITABLEMATRIX_RIGHTBUTTONSCONTAINER)
         .findViewWithTag(Constants.C_EDITABLEMATRIX_UPBUTTON);
     final Button downButton = (Button) rowView.findViewWithTag(Constants.C_EDITABLEMATRIX_RIGHTBUTTONSCONTAINER)
@@ -245,10 +295,9 @@ public abstract class MBEditableMatrixListener
         }
       }
     });
-
     return true;
   }
-
+  
   protected void showUpButton(int itemAtPosition, boolean showUpButton)
   {
     final View rowView = _rowViews.get(itemAtPosition);
@@ -377,7 +426,14 @@ public abstract class MBEditableMatrixListener
     // Add draggable buttons if allowed
     if (_matrixPanel.isChildrenDraggable())
     {
-      onPrepareDraggableControls(itemAtPosition);
+      if(MBDevice.getInstance().isTablet())
+      {
+        onPrepareDraggableControls(itemAtPosition);
+      }
+      else 
+      {
+        onPrepareUpDownControls(itemAtPosition);
+      }
     }
 
     // Add row onclicklistener if allowed

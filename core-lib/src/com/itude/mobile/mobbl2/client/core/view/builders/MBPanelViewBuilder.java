@@ -24,6 +24,7 @@ import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.MBComponent;
@@ -958,17 +959,29 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
     if (((MBPanel) panel.getParent()).isChildrenDraggable())
     {
-      Button upButton = new Button(context);
-      upButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-      upButton.setTag(Constants.C_EDITABLEMATRIX_UPBUTTON);
-      rightButtonContainer.addView(upButton);
-      getStyleHandler().styleButtonWithName(upButton, Constants.C_EDITABLEMATRIX_UPBUTTON);
 
-      Button downButton = new Button(context);
-      downButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-      downButton.setTag(Constants.C_EDITABLEMATRIX_DOWNBUTTON);
-      rightButtonContainer.addView(downButton);
-      getStyleHandler().styleButtonWithName(downButton, Constants.C_EDITABLEMATRIX_DOWNBUTTON);
+      if (MBDevice.getInstance().isPhone())
+      {
+        Button upButton = new Button(context);
+        upButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        upButton.setTag(Constants.C_EDITABLEMATRIX_UPBUTTON);
+        rightButtonContainer.addView(upButton);
+        getStyleHandler().styleButtonWithName(upButton, Constants.C_EDITABLEMATRIX_UPBUTTON);
+
+        Button downButton = new Button(context);
+        downButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        downButton.setTag(Constants.C_EDITABLEMATRIX_DOWNBUTTON);
+        rightButtonContainer.addView(downButton);
+        getStyleHandler().styleButtonWithName(downButton, Constants.C_EDITABLEMATRIX_DOWNBUTTON);
+      }
+      else
+      {
+        Button dragButton = new Button(context);
+        dragButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        dragButton.setTag(Constants.C_EDITABLEMATRIX_DRAGBUTTON);
+        rightButtonContainer.addView(dragButton);
+        getStyleHandler().styleButtonWithName(dragButton, Constants.C_EDITABLEMATRIX_DRAGBUTTON);
+      }
     }
 
     relativeContainer.addView(rightButtonContainer);
