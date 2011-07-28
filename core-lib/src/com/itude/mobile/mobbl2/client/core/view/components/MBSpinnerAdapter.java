@@ -6,16 +6,17 @@ import android.widget.ArrayAdapter;
 
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
-public class MBArrayAdapter extends ArrayAdapter<CharSequence>
+public class MBSpinnerAdapter extends ArrayAdapter<CharSequence>
 {
 
   private int _selectedElement = 0;
-
-  public MBArrayAdapter(Context context, int textViewResourceId)
+  
+  public MBSpinnerAdapter(Context context)
   {
-    super(context, textViewResourceId);
+    super(context, android.R.layout.simple_spinner_item);
+    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
   }
-
+  
   public View getDropDownView(int position, View convertView, android.view.ViewGroup parent)
   {
     View v = super.getDropDownView(position, convertView, parent);
