@@ -14,8 +14,8 @@ public class MBOutcomeDefinition extends MBDefinition
   private boolean _transferDocument;
   private boolean _noBackgroundProcessing;
 
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
- {
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
+  {
     String persistBool;
     if (_persist)
     {
@@ -45,24 +45,11 @@ public class MBOutcomeDefinition extends MBDefinition
       noBackgroundProcessingBool = "FALSE";
     }
 
-    return StringUtilities.appendIndentString(p_appendToMe, level)
-                  .append("<Outcome origin='")
-                  .append(_origin)
-                  .append("' name='")
-                  .append(getName())
-                  .append("' action='")
-                  .append(_action)
-                  .append("' transferDocument='")
-                  .append(transferDocumentBool)
-                  .append("' persist='")
-                  .append(persistBool)
-                  .append("' noBackgroundProcessing='")
-                  .append(noBackgroundProcessingBool)
-                  .append("'")
-                  .append(getAttributeAsXml("dialog", _dialog))
-                  .append(getAttributeAsXml("preCondition", _preCondition))
-                  .append(getAttributeAsXml("displayMode", _displayMode))
-                  .append("/>\n");
+    return StringUtilities.appendIndentString(appendToMe, level).append("<Outcome origin='").append(_origin).append("' name='")
+        .append(getName()).append("' action='").append(_action).append("' transferDocument='").append(transferDocumentBool)
+        .append("' persist='").append(persistBool).append("' noBackgroundProcessing='").append(noBackgroundProcessingBool).append("'")
+        .append(getAttributeAsXml("dialog", _dialog)).append(getAttributeAsXml("preCondition", _preCondition))
+        .append(getAttributeAsXml("displayMode", _displayMode)).append("/>\n");
   }
 
   public String getOrigin()
@@ -144,5 +131,4 @@ public class MBOutcomeDefinition extends MBDefinition
   {
     _noBackgroundProcessing = noBackgroundProcessing;
   }
-
 }

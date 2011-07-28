@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +9,8 @@ import android.os.Message;
 import android.util.Log;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.background.MBPerformActionInBackgroundRunner;
@@ -131,7 +134,6 @@ public class MBOutcomeHandler extends Handler
 
         // Create a working copy of the outcome; we manipulate the outcome below and we want the passed outcome to be left unchanged (good practise)
         final MBOutcome outcomeToProcess = new MBOutcome(outcomeDef);
-
         outcomeToProcess.setPath(outcome.getPath());
         outcomeToProcess.setDocument(outcome.getDocument());
         outcomeToProcess.setDialogName(outcome.getDialogName());
@@ -142,7 +144,7 @@ public class MBOutcomeHandler extends Handler
 
           // Update a possible switch of dialog/display mode set by the outcome definition
           if (outcomeDef.getDialog() != null && MBApplicationController.getInstance().getModalPageID() == null) outcomeToProcess
-              .setDialogName(outcomeDef.getDialog());
+              .setDialogName(resolveDialogName(outcomeDef.getDialog()));
           if (outcomeDef.getDisplayMode() != null) outcomeToProcess.setDisplayMode(outcomeDef.getDisplayMode());
           if (outcomeToProcess.getOriginDialogName() == null) outcomeToProcess.setOriginDialogName(outcomeToProcess.getDialogName());
 
@@ -293,5 +295,43 @@ public class MBOutcomeHandler extends Handler
         }
       }
     }
+  }
+
+  private String resolveDialogName(String dialogName)
+  {
+    if (!"RIGHT".equals(dialogName) && !"LEFT".equals(dialogName))
+    {
+      return dialogName;
+    }
+
+    String newDialogName = null;
+
+    String activeDialogName = MBApplicationController.getInstance().activeDialogName();
+    MBDialogDefinition activeDialogDef = MBMetadataService.getInstance().getDefinitionForDialogName(activeDialogName);
+
+    if (activeDialogDef instanceof MBDialogGroupDefinition)
+    {
+      MBDialogGroupDefinition activeDialogGroupDef = (MBDialogGroupDefinition) activeDialogDef;
+      List<MBDialogDefinition> children = activeDialogGroupDef.getChildren();
+
+      MBDialogDefinition dialogDef = null;
+      if ("RIGHT".equals(dialogName))
+      {
+        dialogDef = children.get(children.size() - 1);
+      }
+      else if ("LEFT".equals(dialogName))
+      {
+        dialogDef = children.get(0);
+      }
+
+      if (dialogDef != null)
+      {
+        newDialogName = dialogDef.getName();
+
+        Log.d(Constants.APPLICATION_NAME, "Dialog name '" + dialogName + "' resolved to '" + newDialogName + "'");
+      }
+    }
+
+    return newDialogName;
   }
 }

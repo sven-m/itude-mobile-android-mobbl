@@ -8,9 +8,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
@@ -125,11 +127,11 @@ public class MBStyleHandler
   public void styleImageButtonWithName(ImageButton view, String style)
   {
   }
-  
+
   public void styleInputfieldBackgroundWithName(View inputField, String style)
   {
   }
-  
+
   public void styleEditableMatrixModeButton(Button view)
   {
   }
@@ -345,4 +347,11 @@ public class MBStyleHandler
   {
   }
 
+  public void styleCheckBox(CheckBox checkBox)
+  {
+  }
+
+  public void styleSpinner(Spinner spinner)
+  {
+  }
 }

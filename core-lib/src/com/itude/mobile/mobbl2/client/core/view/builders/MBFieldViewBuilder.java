@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -297,7 +298,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
     return inputField;
   }
 
-  public View buildDropdownList(MBField field)
+  public View buildDropdownList(final MBField field)
   {
     Context context = MBApplicationController.getInstance().getViewManager();
 
@@ -308,7 +309,22 @@ public class MBFieldViewBuilder extends MBViewBuilder
     dropdownList.setOnItemSelectedListener(field);
     dropdownList.setOnKeyListener(field);
 
-    ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(context, android.R.layout.simple_spinner_item);
+    getStyleHandler().styleSpinner(dropdownList);
+
+    ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(context, android.R.layout.simple_spinner_item)
+    {
+      @Override
+      public View getView(int position, View convertView, ViewGroup parent)
+      {
+        View view = super.getView(position, convertView, parent);
+        if (view instanceof TextView)
+        {
+          TextView textView = (TextView) view;
+          getStyleHandler().styleLabel(textView, null);
+        }
+        return view;
+      }
+    };
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
     String fieldValue = field.getValue();
@@ -372,6 +388,8 @@ public class MBFieldViewBuilder extends MBViewBuilder
     checkBox.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
     checkBox.setOnCheckedChangeListener(field);
     checkBox.setOnKeyListener(field);
+
+    getStyleHandler().styleCheckBox(checkBox);
 
     RelativeLayout container = new RelativeLayout(context);
     RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
