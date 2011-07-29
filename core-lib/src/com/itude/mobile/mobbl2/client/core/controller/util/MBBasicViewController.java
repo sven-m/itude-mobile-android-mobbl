@@ -92,8 +92,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
 
     if (_isDialogClosable && MBDevice.getInstance().isTablet())
     {
-      ViewGroup view = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(_page, MBViewState.MBViewStatePlain);
-      MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(view);
+      ViewGroup view = buildInitialView();
 
       // unable to use the holo light theme as pre honeycomb doesn't know AlertDialog.Builder(context, theme) 
       return new AlertDialog.Builder(getActivity()).setNeutralButton(MBLocalizationService.getInstance().getTextForKey("Close"), this)
@@ -125,8 +124,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
 
     if (_contentView == null)
     {
-      _contentView = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(_page, MBViewState.MBViewStatePlain);
-      MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(_contentView);
+      _contentView = buildInitialView();
     }
     else
     {
@@ -138,6 +136,19 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     }
 
     return _contentView;
+  }
+
+  /**
+   * Override this method to define the views once, but for both a Dialog or a Fragment.
+   * 
+   * @return the ViewGroup to display in either a Dialog or a Fragment.
+   */
+  protected ViewGroup buildInitialView()
+  {
+    ViewGroup view = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(_page, MBViewState.MBViewStatePlain);
+    MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(view);
+
+    return view;
   }
 
   /**

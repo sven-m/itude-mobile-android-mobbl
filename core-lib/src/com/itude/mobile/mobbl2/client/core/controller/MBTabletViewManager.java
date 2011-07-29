@@ -1,19 +1,24 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 
@@ -59,8 +64,10 @@ public class MBTabletViewManager extends MBViewManager
     {
       if (isPreConditionValid(def))
       {
-        MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), Menu.NONE, def.getTitle());
-        menuItem.setIcon(MBResourceService.getInstance().getImageByID(def.getIcon()));
+        int index = tools.indexOf(def);
+        MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), index, def.getTitle());
+        Drawable image = MBResourceService.getInstance().getImageByID(def.getIcon());
+        menuItem.setIcon(image);
 
         // TODO do show as action in config
         int showAsActionFlag = MenuItem.SHOW_AS_ACTION_IF_ROOM;
@@ -72,6 +79,61 @@ public class MBTabletViewManager extends MBViewManager
         else if ("SEARCH".equals(def.getType()))
         {
           final SearchView searchView = new SearchView(MBViewManager.getInstance().getApplicationContext());
+          searchView.setTag(def);
+          searchView.setOnQueryTextFocusChangeListener(new OnFocusChangeListener()
+          {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus)
+            {
+              if (hasFocus)
+              {
+                Object tag = v.getTag();
+                if (tag instanceof MBToolDefinition)
+                {
+                  MBToolDefinition toolDef = (MBToolDefinition) tag;
+                  handleOutcome(toolDef);
+                }
+              }
+              else
+              {
+                searchView.setIconified(true);
+              }
+            }
+          });
+
+          if (def.getIcon() != null)
+          {
+            try
+            {
+              // change the iconified icon
+              Field searchButtonField = searchView.getClass().getDeclaredField("mSearchButton");
+              searchButtonField.setAccessible(true);
+              ImageView searchButton = (ImageView) searchButtonField.get(searchView);
+              searchButton.setImageDrawable(image);
+
+              // change the searchview icon
+              Field searchEditField = searchView.getClass().getDeclaredField("mSearchEditFrame");
+              searchEditField.setAccessible(true);
+              LinearLayout searchLayout = (LinearLayout) searchEditField.get(searchView);
+              LinearLayout linearLayout = (LinearLayout) searchLayout.getChildAt(0);
+
+              // find first image view, assuming this is the icon we need
+              ImageView searchViewIcon = null;
+              for (int i = 0; searchViewIcon == null && i < linearLayout.getChildCount(); i++)
+              {
+                View view = linearLayout.getChildAt(i);
+                if (view instanceof ImageView)
+                {
+                  searchViewIcon = (ImageView) view;
+                }
+              }
+              searchViewIcon.setImageDrawable(image);
+            }
+            catch (Exception e)
+            {
+              Log.e("coen", "error changing searchbutton icon", e);
+            }
+          }
           SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
           searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
@@ -99,11 +161,7 @@ public class MBTabletViewManager extends MBViewManager
       {
         if (def.getAction() != null)
         {
-          MBOutcome outcome = new MBOutcome();
-          outcome.setOriginName(def.getName());
-          outcome.setOutcomeName(def.getAction());
-
-          MBApplicationController.getInstance().handleOutcome(outcome);
+          handleOutcome(def);
           return true;
         }
         return false;
@@ -111,6 +169,15 @@ public class MBTabletViewManager extends MBViewManager
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private void handleOutcome(MBToolDefinition def)
+  {
+    MBOutcome outcome = new MBOutcome();
+    outcome.setOriginName(def.getName());
+    outcome.setOutcomeName(def.getAction());
+
+    MBApplicationController.getInstance().handleOutcome(outcome);
   }
 
   // End of Android hooks

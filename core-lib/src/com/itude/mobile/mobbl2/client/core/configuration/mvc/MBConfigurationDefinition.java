@@ -2,6 +2,7 @@ package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class MBConfigurationDefinition extends MBDefinition
     _outcomeTypes = new ArrayList<MBOutcomeDefinition>();
     _dialogs = new HashMap<String, MBDialogDefinition>();
     _pageTypes = new HashMap<String, MBPageDefinition>();
-    _tools = new HashMap<String, MBToolDefinition>();
+    _tools = new LinkedHashMap<String, MBToolDefinition>();
   }
 
   public void addAll(MBConfigurationDefinition otherConfig)
