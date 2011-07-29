@@ -131,7 +131,7 @@ public class MBTabletViewManager extends MBViewManager
             }
             catch (Exception e)
             {
-              Log.e("coen", "error changing searchbutton icon", e);
+              Log.e(Constants.APPLICATION_NAME, "error changing searchbutton icon", e);
             }
           }
           SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -286,6 +286,11 @@ public class MBTabletViewManager extends MBViewManager
               @Override
               public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
               {
+                if (position == spinnerAdapter.getSelectedElement())
+                {
+                  return;
+                }
+
                 spinnerAdapter.setSelectedElement(position);
                 MBDialogDefinition dialogDef = null;
 
