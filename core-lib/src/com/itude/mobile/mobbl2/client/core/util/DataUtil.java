@@ -292,11 +292,11 @@ class ReadFromAll
 
   public TwinResult<byte[], Reader> read(String filename)
   {
-    Reader theReaderThatRead = _fromAsset;
+    Reader theReaderThatRead = _fromFile;
     byte[] result = theReaderThatRead.read(filename);
     if (result == null)
     {
-      theReaderThatRead = _fromFile;
+      theReaderThatRead = _fromAsset;
       result = theReaderThatRead.read(filename);
       if (result == null)
       {
