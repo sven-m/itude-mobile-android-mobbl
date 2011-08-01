@@ -246,6 +246,10 @@ public abstract class MBEditableMatrixListener
         switch (event.getAction())
         {
           case DragEvent.ACTION_DRAG_STARTED :
+            if (v.equals(draggedView))
+            {
+              draggedView.setVisibility(View.INVISIBLE);
+            }
             break;
           case DragEvent.ACTION_DRAG_ENTERED :
             if (!v.equals(draggedView))
@@ -253,13 +257,13 @@ public abstract class MBEditableMatrixListener
               int indexOfStatic = _rowViews.indexOf(v);
               int indexOfDragged = _rowViews.indexOf(draggedView);
               onChangePosition(indexOfDragged, indexOfStatic);
-              draggedView.setVisibility(View.INVISIBLE);
             }
             break;
-          case DragEvent.ACTION_DROP :
-            draggedView.setVisibility(View.VISIBLE);
-            break;
           case DragEvent.ACTION_DRAG_ENDED :
+            if (v.equals(draggedView))
+            {
+              draggedView.setVisibility(View.VISIBLE);
+            }
             break;
           case DragEvent.ACTION_DRAG_EXITED :
             break;
