@@ -31,19 +31,19 @@ public class MBElementDefinition extends MBDefinition
   }
 
   @Override
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level).append("<Element name='").append(getName()).append("' minOccurs='")
+    StringUtilities.appendIndentString(appendToMe, level).append("<Element name='").append(getName()).append("' minOccurs='")
         .append(_minOccurs).append("' maxOccurs='").append(_maxOccurs).append("'>\n");
     for (MBAttributeDefinition attr : _attributesSorted)
     {
-      attr.asXmlWithLevel(p_appendToMe, level + 2);
+      attr.asXmlWithLevel(appendToMe, level + 2);
     }
     for (MBElementDefinition elemDef : _childrenSorted)
     {
-      elemDef.asXmlWithLevel(p_appendToMe, level + 2);
+      elemDef.asXmlWithLevel(appendToMe, level + 2);
     }
-    return StringUtilities.appendIndentString(p_appendToMe, level).append("</Element>\n");
+    return StringUtilities.appendIndentString(appendToMe, level).append("</Element>\n");
   }
 
   @Override

@@ -51,20 +51,20 @@ public class MBDialogGroupDefinition extends MBDialogDefinition
   }
 
   @Override
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level).append("<DialogGroup name='").append(getName()).append('\'')
+    StringUtilities.appendIndentString(appendToMe, level).append("<DialogGroup name='").append(getName()).append('\'')
         .append(getAttributeAsXml("mode", getMode())).append(getAttributeAsXml("title", getTitle()))
         .append(getAttributeAsXml("icon", getIcon())).append(">\n");
 
     for (MBDialogDefinition dialog : _children)
     {
-      dialog.asXmlWithLevel(p_appendToMe, level + 2);
+      dialog.asXmlWithLevel(appendToMe, level + 2);
     }
 
-    StringUtilities.appendIndentString(p_appendToMe, level).append("<DialogGroup/>");
+    StringUtilities.appendIndentString(appendToMe, level).append("<DialogGroup/>");
 
-    return p_appendToMe;
+    return appendToMe;
   }
 
   public List<MBDialogDefinition> getChildren()

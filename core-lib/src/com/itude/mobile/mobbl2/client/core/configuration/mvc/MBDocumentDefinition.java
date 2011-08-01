@@ -38,14 +38,14 @@ public class MBDocumentDefinition extends MBDefinition
   }
 
   @Override
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level).append("<Document name='").append(getName()).append("' dataManager='")
+    StringUtilities.appendIndentString(appendToMe, level).append("<Document name='").append(getName()).append("' dataManager='")
         .append(_dataManager).append("' autoCreate='" + _autoCreate).append("'>\n");
     for (MBElementDefinition elem : _elements.values())
-      elem.asXmlWithLevel(p_appendToMe, level + 2);
+      elem.asXmlWithLevel(appendToMe, level + 2);
 
-    return StringUtilities.appendIndentString(p_appendToMe, level).append("</Document>\n");
+    return StringUtilities.appendIndentString(appendToMe, level).append("</Document>\n");
   }
 
   @Override

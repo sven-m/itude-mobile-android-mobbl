@@ -189,28 +189,28 @@ public class MBDocument extends MBElementContainer
     clearPathCache();
   }
 
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level).append("<").append(_definition.getName());
+    StringUtilities.appendIndentString(appendToMe, level).append("<").append(_definition.getName());
     if (getElements().size() == 0)
     {
-      p_appendToMe.append("/>\n");
+      appendToMe.append("/>\n");
     }
     else
     {
-      p_appendToMe.append(">\n");
+      appendToMe.append(">\n");
       for (MBElementDefinition elemDef : _definition.getChildren())
       {
         List<MBElement> lst = getElements().get(elemDef.getName());
         for (MBElement elem : lst)
         {
-          elem.asXmlWithLevel(p_appendToMe, level + 2);
+          elem.asXmlWithLevel(appendToMe, level + 2);
         }
       }
-      StringUtilities.appendIndentString(p_appendToMe, level).append("</").append(_definition.getName()).append(">\n");
+      StringUtilities.appendIndentString(appendToMe, level).append("</").append(_definition.getName()).append(">\n");
     }
 
-    return p_appendToMe;
+    return appendToMe;
   }
 
   @Override

@@ -78,14 +78,14 @@ public class MBComponentContainer extends MBComponent
     return super.getDescendantsOfKind(clazz);
   }
 
-  public StringBuffer childrenAsXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer childrenAsXmlWithLevel(StringBuffer appendToMe, int level)
   {
     for (MBComponent child : _children)
     {
-      child.asXmlWithLevel(p_appendToMe, level);
+      child.asXmlWithLevel(appendToMe, level);
     }
 
-    return p_appendToMe;
+    return appendToMe;
   }
 
 }

@@ -21,9 +21,9 @@ public class MBDomainValidatorDefinition extends MBDefinition
 
   }
 
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    return StringUtilities.appendIndentString(p_appendToMe, level).append("<DomainValidator").append(getAttributeAsXml("title", _title))
+    return StringUtilities.appendIndentString(appendToMe, level).append("<DomainValidator").append(getAttributeAsXml("title", _title))
         .append(getAttributeAsXml("value", _value)).append(getAttributeAsXml("lowerBound", _lowerBound))
         .append(getAttributeAsXml("upperBound", _upperBound)).append("/>\n");
   }

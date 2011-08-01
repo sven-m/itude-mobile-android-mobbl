@@ -565,13 +565,13 @@ public class MBField extends MBComponent
   }
 
   @Override
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
     try
     {
       String required = getRequired() ? "TRUE" : "FALSE";
 
-      StringUtilities.appendIndentString(p_appendToMe, level).append("<MBField ").append(attributeAsXml("value", getValue())).append(" ")
+      StringUtilities.appendIndentString(appendToMe, level).append("<MBField ").append(attributeAsXml("value", getValue())).append(" ")
           .append(attributeAsXml("path", getAbsoluteDataPath())).append(" ").append(attributeAsXml("style", getStyle())).append(" ")
           .append(attributeAsXml("label", getLabel())).append(" ").append(attributeAsXml("type", getType())).append(" ")
           .append(attributeAsXml("dataType", getDataType())).append(" ").append(attributeAsXml("outcomeName", getOutcomeName()))
@@ -583,11 +583,11 @@ public class MBField extends MBComponent
     catch (Exception e)
     {
       // dead code?
-      p_appendToMe.append("<MBField errorInDefinition='" + e.getClass().getSimpleName() + ", " + e.getCause() + "'/>\n");
+      appendToMe.append("<MBField errorInDefinition='" + e.getClass().getSimpleName() + ", " + e.getCause() + "'/>\n");
       Log.d(Constants.APPLICATION_NAME, e.getMessage(), e);
     }
 
-    return p_appendToMe;
+    return appendToMe;
   }
 
   @Override

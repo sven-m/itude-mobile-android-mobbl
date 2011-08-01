@@ -16,14 +16,13 @@ import android.util.Log;
 public final class DataUtil
 {
 
-  private static DataUtil _instance;
-  private Context         _context;
+  private static DataUtil           _instance;
+  private Context                   _context;
 
-  private Map<String, Reader> _filenameToReader = new HashMap<String, Reader>();
-  private Reader _readerNone = new ReadFromNone();
-  private ReadFromAll _readerAll = new ReadFromAll();
+  private final Map<String, Reader> _filenameToReader = new HashMap<String, Reader>();
+  private final Reader              _readerNone       = new ReadFromNone();
+  private final ReadFromAll         _readerAll        = new ReadFromAll();
 
-  
   private DataUtil()
   {
   }
@@ -51,41 +50,39 @@ public final class DataUtil
    * Currently called automatically by {@link FileUtil#writeObjectToFile(Object, String)}
    * and {@link FileUtil#writeToFile(byte[], String, String)}.
    */
-  public void clearReaderCachForFile(String p_filename)
+  public void clearReaderCachForFile(String filename)
   {
-    _filenameToReader.remove(p_filename);
+    _filenameToReader.remove(filename);
   }
-  
-  public byte[] readFromAssetOrFile(String p_filename)
+
+  public byte[] readFromAssetOrFile(String filename)
   {
-    if (_filenameToReader.containsKey(p_filename))
+    if (_filenameToReader.containsKey(filename))
     {
       // we have previously read this file, so use the correct reader directly.
-      Reader readerForThisFile = _filenameToReader.get(p_filename);
-      return readerForThisFile.read(p_filename);
+      Reader readerForThisFile = _filenameToReader.get(filename);
+      return readerForThisFile.read(filename);
     }
     else
     {
       // first time we try to read this file, try all readers
-      TwinResult<byte[], Reader> result = _readerAll.read(p_filename);
+      TwinResult<byte[], Reader> result = _readerAll.read(filename);
       if (result._mainResult == null)
       {
         // in future we just dont try for this file anymore
-        _filenameToReader.put(p_filename, _readerNone);
+        _filenameToReader.put(filename, _readerNone);
         // and only the first time we give a message
-        String message = "DataUtil.readFromAssetOrFile: unable to read file or asset data from file with name " + p_filename;
+        String message = "DataUtil.readFromAssetOrFile: unable to read file or asset data from file with name " + filename;
         Log.i(Constants.APPLICATION_NAME, message);
       }
       else
       {
         // in future immediately use the correct reader for this filename
-        _filenameToReader.put(p_filename, result._secondResult);
+        _filenameToReader.put(filename, result._secondResult);
       }
       return result._mainResult;
     }
   }
-
-  
 
   public byte[] compress(byte[] uncompressed)
   {
@@ -130,7 +127,7 @@ public final class DataUtil
   {
     return decompress(compressed, 0);
   }
-  
+
   public byte[] decompress(byte[] compressed, int bytesToSkip)
   {
     Inflater decompressor = new Inflater();
@@ -170,7 +167,7 @@ public final class DataUtil
 }
 interface Reader
 {
-  byte[] read(String p_filename);
+  byte[] read(String filename);
 }
 
 // support for encrypted xml files
@@ -179,39 +176,37 @@ interface Reader
 class ReadFromGLB implements Reader
 {
   // this cache contains xml files which are already unobfuscated
-  private Map<String, byte[]> _cacheOfXml = new HashMap<String, byte[]>();
+  private final Map<String, byte[]> _cacheOfXml = new HashMap<String, byte[]>();
 
-  public byte[] read(String p_filename)
+  public byte[] read(String filename)
   {
-    if (p_filename.endsWith(".xml")==false)
-      return null;
-    
+    if (!filename.endsWith(".xml")) return null;
+
     synchronized (_cacheOfXml)
     {
       // note: the cache has the XML filename as the key
-      byte[] dataFromCache = _cacheOfXml.get(p_filename);
+      byte[] dataFromCache = _cacheOfXml.get(filename);
       if (dataFromCache != null)
       {
         return dataFromCache;
       }
       // is the xml filename in the cache with a null value?
       // in that case, it means we tried to load the .glb before but it failed (not present)
-      if (_cacheOfXml.containsKey(p_filename))
-        return null;
+      if (_cacheOfXml.containsKey(filename)) return null;
     } // end sync block
-    
+
     // first time we try to load the corresponding .glb
-    String glbName = p_filename.substring(0, p_filename.lastIndexOf('.')) + ".glb";
+    String glbName = filename.substring(0, filename.lastIndexOf('.')) + ".glb";
     byte[] glbFileData = DataUtil.getInstance().readFromAssetOrFile(glbName);
     if (glbFileData != null)
     {
       // glb found, but is it valid?
-      if (glbFileData.length>4&&glbFileData[0]=='-'&&glbFileData[1]=='i'&&glbFileData[2]=='t'&&glbFileData[3]=='u')
+      if (glbFileData.length > 4 && glbFileData[0] == '-' && glbFileData[1] == 'i' && glbFileData[2] == 't' && glbFileData[3] == 'u')
       {
         glbFileData = unobfuscate(glbFileData);
         synchronized (_cacheOfXml)
         {
-          _cacheOfXml.put(p_filename, glbFileData);
+          _cacheOfXml.put(filename, glbFileData);
         }
         return glbFileData;
       }
@@ -220,11 +215,11 @@ class ReadFromGLB implements Reader
     // in future do not try to load the GLB as it isnt present
     synchronized (_cacheOfXml)
     {
-      _cacheOfXml.put(p_filename, null);
+      _cacheOfXml.put(filename, null);
     }
     return null;
   }
-  
+
   // xml files can be (slightly) obfuscated at deploy time
   // obfuscation is done by:
   // step 1: convert file using base64
@@ -240,18 +235,18 @@ class ReadFromGLB implements Reader
     data = DataUtil.getInstance().decompress(data, 4);
     // reverse step 1: convert using base64
     Base64 b64 = new Base64();
-    
+
     return b64.decode(data);
   }
 }
 class ReadFromAsset implements Reader
 {
 
-  public byte[] read(String p_filename)
+  public byte[] read(String filename)
   {
     try
     {
-      return AssetUtil.getInstance().getByteArray(p_filename);
+      return AssetUtil.getInstance().getByteArray(filename);
     }
     catch (Exception e)
     {
@@ -259,15 +254,15 @@ class ReadFromAsset implements Reader
     }
     return null;
   }
-  
+
 }
 class ReadFromFile implements Reader
 {
-  public byte[] read(String p_filename)
+  public byte[] read(String filename)
   {
     try
     {
-      return FileUtil.getInstance().getByteArray(p_filename);
+      return FileUtil.getInstance().getByteArray(filename);
     }
     catch (Exception e)
     {
@@ -283,7 +278,7 @@ class ReadFromFile implements Reader
  */
 class ReadFromNone implements Reader
 {
-  public byte[] read(String p_filename)
+  public byte[] read(String filename)
   {
     return null;
   }
@@ -291,24 +286,23 @@ class ReadFromNone implements Reader
 
 class ReadFromAll
 {
-  private ReadFromAsset _fromAsset = new ReadFromAsset();
-  private ReadFromFile _fromFile = new ReadFromFile();
-  private ReadFromGLB _fromGlb = new ReadFromGLB();
-  
-  public TwinResult<byte[], Reader> read(String p_filename)
+  private final ReadFromAsset _fromAsset = new ReadFromAsset();
+  private final ReadFromFile  _fromFile  = new ReadFromFile();
+  private final ReadFromGLB   _fromGlb   = new ReadFromGLB();
+
+  public TwinResult<byte[], Reader> read(String filename)
   {
     Reader theReaderThatRead = _fromAsset;
-    byte[] result = theReaderThatRead.read(p_filename); 
+    byte[] result = theReaderThatRead.read(filename);
     if (result == null)
     {
       theReaderThatRead = _fromFile;
-      result = theReaderThatRead.read(p_filename);
+      result = theReaderThatRead.read(filename);
       if (result == null)
       {
         theReaderThatRead = _fromGlb;
-        result = theReaderThatRead.read(p_filename);
-        if (result == null)
-          theReaderThatRead = null;
+        result = theReaderThatRead.read(filename);
+        if (result == null) theReaderThatRead = null;
       }
     }
     return new TwinResult<byte[], Reader>(result, theReaderThatRead);

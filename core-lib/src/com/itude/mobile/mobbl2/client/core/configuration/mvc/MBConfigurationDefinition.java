@@ -84,58 +84,58 @@ public class MBConfigurationDefinition extends MBDefinition
   }
 
   @Override
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level).append("<Configuration>\n")
+    StringUtilities.appendIndentString(appendToMe, level).append("<Configuration>\n")
         .append(StringUtilities.getIndentStringWithLevel(level + 2)).append("<Model>\n")
         .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Domains>\n");
     for (MBDomainDefinition domain : _domainTypes.values())
     {
-      domain.asXmlWithLevel(p_appendToMe, level + 6);
+      domain.asXmlWithLevel(appendToMe, level + 6);
     }
-    StringUtilities.appendIndentString(p_appendToMe, level + 4).append("</Domains>\n")
+    StringUtilities.appendIndentString(appendToMe, level + 4).append("</Domains>\n")
         .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Documents>\n");
     for (MBDocumentDefinition document : _documentTypes.values())
     {
-      document.asXmlWithLevel(p_appendToMe, level + 6);
+      document.asXmlWithLevel(appendToMe, level + 6);
     }
-    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Documents>\n")
+    appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Documents>\n")
         .append(StringUtilities.getIndentStringWithLevel(level + 2)).append("</Model>\n")
         .append(StringUtilities.getIndentStringWithLevel(level + 2)).append("<Controller>\n")
         .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Actions>\n");
     for (MBActionDefinition acion : _actionTypes.values())
     {
-      acion.asXmlWithLevel(p_appendToMe, level + 6);
+      acion.asXmlWithLevel(appendToMe, level + 6);
     }
-    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Actions>\n")
+    appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Actions>\n")
         .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Wiring>\n");
     for (MBOutcomeDefinition outcome : _outcomeTypes)
     {
-      outcome.asXmlWithLevel(p_appendToMe, level + 6);
+      outcome.asXmlWithLevel(appendToMe, level + 6);
     }
-    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Wiring>\n")
+    appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Wiring>\n")
         .append(StringUtilities.getIndentStringWithLevel(level + 2)).append("</Controller>\n")
         .append(StringUtilities.getIndentStringWithLevel(level + 2)).append("<View>\n")
         .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Dialogs>\n");
     for (MBDialogDefinition dialog : _dialogs.values())
     {
-      dialog.asXmlWithLevel(p_appendToMe, level + 6);
+      dialog.asXmlWithLevel(appendToMe, level + 6);
     }
-    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Dialogs>\n")
+    appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Dialogs>\n")
         .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Toolbar>\n");
     for (MBToolDefinition tool : _tools.values())
     {
-      tool.asXmlWithLevel(p_appendToMe, level + 6);
+      tool.asXmlWithLevel(appendToMe, level + 6);
     }
-    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Toolbar>\n");
+    appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Toolbar>\n");
     for (MBPageDefinition page : _pageTypes.values())
     {
-      page.asXmlWithLevel(p_appendToMe, level + 4);
+      page.asXmlWithLevel(appendToMe, level + 4);
     }
-    p_appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 2)).append("</View>\n")
+    appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 2)).append("</View>\n")
         .append(StringUtilities.getIndentStringWithLevel(level)).append("</Configuration>\n");
 
-    return p_appendToMe;
+    return appendToMe;
   }
 
   /*

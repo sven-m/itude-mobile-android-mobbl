@@ -169,11 +169,11 @@ public class MBFieldViewBuilder extends MBViewBuilder
     return buildTextViewWithValue(value, false);
   }
 
-  private TextView buildTextViewWithValue(String value, boolean p_isHtml)
+  private TextView buildTextViewWithValue(String value, boolean isHtml)
   {
     TextView label = new TextView(MBApplicationController.getInstance().getBaseContext());
     label.setEllipsize(TruncateAt.END);
-    if (p_isHtml) label.setText(Html.fromHtml(value));
+    if (isHtml) label.setText(Html.fromHtml(value));
     else label.setText(value);
 
     getStyleHandler().styleLabel(label, null);

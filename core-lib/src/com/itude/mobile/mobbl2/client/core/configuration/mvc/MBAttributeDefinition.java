@@ -21,9 +21,9 @@ public class MBAttributeDefinition extends MBDefinition
 
   }
 
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    return StringUtilities.appendIndentString(p_appendToMe, level).append("<Attribute name='").append(getName()).append("' type='")
+    return StringUtilities.appendIndentString(appendToMe, level).append("<Attribute name='").append(getName()).append("' type='")
         .append(_type).append("' required='").append(_required ? "TRUE" : "FALSE").append("'")
         .append(getAttributeAsXml("defaultValue", _defaultValue)).append("/>\n");
   }

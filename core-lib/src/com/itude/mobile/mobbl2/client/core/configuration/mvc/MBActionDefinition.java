@@ -7,9 +7,9 @@ public class MBActionDefinition extends MBDefinition
 {
   private String _className;
 
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    return StringUtilities.appendIndentString(p_appendToMe, level)
+    return StringUtilities.appendIndentString(appendToMe, level)
                     .append("<Action name='")
                     .append(getName())
                     .append("' className='")

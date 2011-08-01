@@ -93,36 +93,36 @@ public class MBElement extends MBElementContainer
     return getValueForAttribute(key);
   }
 
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
     String bodyText = getBodyText();
     boolean hasBodyText = (bodyText != null && bodyText.length() > 0);
 
-    StringUtilities.appendIndentString(p_appendToMe, level).append("<").append(_definition.getName());
+    StringUtilities.appendIndentString(appendToMe, level).append("<").append(_definition.getName());
     for (MBAttributeDefinition def : _definition.getAttributes())
     {
       String attrName = def.getName();
       String attrValue = _values.get(attrName);
       if (!attrName.equals(TEXT_ATTRIBUTE))
       {
-        p_appendToMe.append(attributeAsXml(attrName, attrValue));
+        appendToMe.append(attributeAsXml(attrName, attrValue));
       }
     }
 
     if (_definition.getChildren().size() == 0 && !hasBodyText)
     {
-      p_appendToMe.append("/>\n");
+      appendToMe.append("/>\n");
     }
     else
     {
-      p_appendToMe.append(">");
+      appendToMe.append(">");
       if (hasBodyText)
       {
-        p_appendToMe.append(getBodyText());
+        appendToMe.append(getBodyText());
       }
       else
       {
-        p_appendToMe.append("\n");
+        appendToMe.append("\n");
       }
 
       for (MBElementDefinition elemDef : _definition.getChildren())
@@ -132,7 +132,7 @@ public class MBElement extends MBElementContainer
         {
           for (MBElement elem : lst)
           {
-            elem.asXmlWithLevel(p_appendToMe, level + 2);
+            elem.asXmlWithLevel(appendToMe, level + 2);
           }
         }
       }
@@ -142,10 +142,10 @@ public class MBElement extends MBElementContainer
       {
         closingLevel = level;
       }
-      StringUtilities.appendIndentString(p_appendToMe, closingLevel).append("</").append(_definition.getName()).append(">\n");
+      StringUtilities.appendIndentString(appendToMe, closingLevel).append("</").append(_definition.getName()).append(">\n");
     }
 
-    return p_appendToMe;
+    return appendToMe;
   }
 
   @Override

@@ -25,7 +25,7 @@ public class MBFieldDefinition extends MBConditionalDefinition implements MBStyl
   private String _required;
 
   @Override
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
     String bodyText = null;
     if (!_text.equals(""))
@@ -33,7 +33,7 @@ public class MBFieldDefinition extends MBConditionalDefinition implements MBStyl
       bodyText = _text;
     }
 
-    StringUtilities.appendIndentString(p_appendToMe, level)
+    StringUtilities.appendIndentString(appendToMe, level)
                   .append("<Field")
                   .append(getAttributeAsXml("label", _label))
                   .append(getAttributeAsXml("path", _path))
@@ -50,16 +50,16 @@ public class MBFieldDefinition extends MBConditionalDefinition implements MBStyl
 
     if (bodyText != null)
     {
-      p_appendToMe.append(">")
+      appendToMe.append(">")
                   .append(bodyText)
                   .append("</Field>\n");
     }
     else
     {
-      p_appendToMe.append("/>\n");
+      appendToMe.append("/>\n");
     }
 
-    return p_appendToMe;
+    return appendToMe;
   }
 
   public String getOutcomeName()

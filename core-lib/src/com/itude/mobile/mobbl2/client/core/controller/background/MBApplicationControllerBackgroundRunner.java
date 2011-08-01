@@ -7,7 +7,7 @@ import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 public class MBApplicationControllerBackgroundRunner extends AsyncTask<Object[], int[], Object[]>
 {
 
-  MBApplicationController _controller = null;
+  private MBApplicationController _controller = null;
 
   public MBApplicationController getController()
   {

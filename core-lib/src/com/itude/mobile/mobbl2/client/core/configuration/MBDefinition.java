@@ -49,9 +49,9 @@ public class MBDefinition implements Parcelable
     return " " + name + "='" + (String) attrValue + "'";
   }
 
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    return p_appendToMe;
+    return appendToMe;
   }
 
   public void validateDefinition()

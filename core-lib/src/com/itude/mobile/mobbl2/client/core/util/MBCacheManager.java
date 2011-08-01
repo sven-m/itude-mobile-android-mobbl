@@ -33,15 +33,15 @@ public class MBCacheManager
   {
     _registryFileName = CACHE_DIR + File.separator + CACHE_REGISTRY_FILE;
 
-    Hashtable<String, String> _combined = (Hashtable<String, String>) FileUtil.getInstance().readObjectFromFile(_registryFileName);
-    if (_combined == null) _combined = new Hashtable<String, String>();
+    Hashtable<String, String> combined = (Hashtable<String, String>) FileUtil.getInstance().readObjectFromFile(_registryFileName);
+    if (combined == null) combined = new Hashtable<String, String>();
 
     _registry = new HashMap<String, String>();
     _documentTypes = new HashMap<String, String>();
 
-    for (String key : _combined.keySet())
+    for (String key : combined.keySet())
     {
-      String value = _combined.get(key);
+      String value = combined.get(key);
       String[] split = value.split(":");
 
       _registry.put(key, split[0]);
