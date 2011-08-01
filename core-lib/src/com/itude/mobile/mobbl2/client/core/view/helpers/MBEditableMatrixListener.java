@@ -232,7 +232,7 @@ public abstract class MBEditableMatrixListener
       public boolean onTouch(View v, MotionEvent arg1)
       {
         v.startDrag(null, new DragShadowBuilder(rowView), rowView, 0);
-        rowView.setVisibility(View.INVISIBLE);
+        //        rowView.setVisibility(View.INVISIBLE);
         return true;
       }
     });
@@ -245,19 +245,23 @@ public abstract class MBEditableMatrixListener
 
         switch (event.getAction())
         {
+          case DragEvent.ACTION_DRAG_STARTED :
+            break;
           case DragEvent.ACTION_DRAG_ENTERED :
             if (!v.equals(draggedView))
             {
               int indexOfStatic = _rowViews.indexOf(v);
               int indexOfDragged = _rowViews.indexOf(draggedView);
-              if (onBeforeChangePosition(indexOfDragged, indexOfStatic))
-              {
-                onChangePosition(indexOfDragged, indexOfStatic);
-              }
+              onChangePosition(indexOfDragged, indexOfStatic);
+              draggedView.setVisibility(View.INVISIBLE);
             }
             break;
           case DragEvent.ACTION_DROP :
             draggedView.setVisibility(View.VISIBLE);
+            break;
+          case DragEvent.ACTION_DRAG_ENDED :
+            break;
+          case DragEvent.ACTION_DRAG_EXITED :
             break;
           default :
             break;
@@ -284,10 +288,7 @@ public abstract class MBEditableMatrixListener
 
       public void onClick(View v)
       {
-        if (onBeforeChangePosition(itemAtPosition, (itemAtPosition - 1)))
-        {
-          onChangePosition(itemAtPosition, (itemAtPosition - 1));
-        }
+        onChangePosition(itemAtPosition, (itemAtPosition - 1));
       }
     });
 
@@ -296,10 +297,7 @@ public abstract class MBEditableMatrixListener
 
       public void onClick(View v)
       {
-        if (onBeforeChangePosition(itemAtPosition, (itemAtPosition + 1)))
-        {
-          onChangePosition(itemAtPosition, (itemAtPosition + 1));
-        }
+        onChangePosition(itemAtPosition, (itemAtPosition + 1));
       }
     });
     return true;
@@ -339,11 +337,6 @@ public abstract class MBEditableMatrixListener
       //downButton.setVisibility(Button.INVISIBLE);
       downButton.setEnabled(false);
     }
-  }
-
-  public boolean onBeforeChangePosition(int currentPosition, int newPosition)
-  {
-    return true;
   }
 
   public boolean onChangePosition(int currentPosition, int newPosition)
