@@ -3,22 +3,13 @@ package com.itude.mobile.mobbl2.client.core.view.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.graphics.Color;
-import android.util.Log;
-import android.view.DragEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.DragShadowBuilder;
 import android.view.View.OnClickListener;
-import android.view.View.OnDragListener;
 import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.components.MBEditableMatrix;
 
@@ -224,80 +215,7 @@ public abstract class MBEditableMatrixListener
 
   public boolean onPrepareDraggableControls(final int itemAtPosition)
   {
-    final View rowView = _rowViews.get(itemAtPosition);
-
-    final Button dragButton = (Button) rowView.findViewWithTag(Constants.C_EDITABLEMATRIX_RIGHTBUTTONSCONTAINER)
-        .findViewWithTag(Constants.C_EDITABLEMATRIX_DRAGBUTTON);
-
-    dragButton.setOnTouchListener(new OnTouchListener()
-    {
-      @Override
-      public boolean onTouch(View v, MotionEvent arg1)
-      {
-        v.startDrag(null, new DragShadowBuilder(rowView), rowView, 0);
-        //        rowView.setVisibility(View.INVISIBLE);
-        return true;
-      }
-    });
-
-    rowView.setOnDragListener(new OnDragListener()
-    {
-      public boolean onDrag(View v, DragEvent event)
-      {
-        View draggedView = (View) event.getLocalState();
-
-        switch (event.getAction())
-        {
-          case DragEvent.ACTION_DRAG_STARTED :
-            if (v.equals(draggedView))
-            {
-              draggedView.setVisibility(View.INVISIBLE);
-              draggedView.setBackgroundColor(Color.WHITE);
-            }
-            break;
-          case DragEvent.ACTION_DRAG_ENTERED :
-            if (!v.equals(draggedView))
-            {
-              //              int indexOfStatic = _rowViews.indexOf(v);
-              //              int indexOfDragged = _rowViews.indexOf(draggedView);
-              //              onChangePosition(indexOfDragged, indexOfStatic);
-              v.setBackgroundColor(Color.GRAY);
-              //              MBViewBuilderFactory.getInstance().getStyleHandler().styleDropView
-            }
-            break;
-          case DragEvent.ACTION_DRAG_EXITED :
-            if (!v.equals(draggedView))
-            {
-              v.setBackgroundColor(Color.WHITE);
-            }
-            break;
-          case DragEvent.ACTION_DROP :
-            if (!v.equals(draggedView))
-            {
-              int indexOfStatic = _rowViews.indexOf(v);
-              int indexOfDragged = _rowViews.indexOf(draggedView);
-              onChangePosition(indexOfDragged, indexOfStatic);
-            }
-            break;
-          case DragEvent.ACTION_DRAG_ENDED :
-            if (v.equals(draggedView))
-            {
-              draggedView.setVisibility(View.VISIBLE);
-              draggedView.setBackgroundColor(Color.GRAY);
-            }
-            else
-            {
-              v.setBackgroundColor(Color.WHITE);
-            }
-            break;
-          default :
-            break;
-        }
-        return true;
-      }
-    });
-
-    return true;
+    return onPrepareUpDownControls(itemAtPosition);
   }
 
   public boolean onPrepareUpDownControls(final int itemAtPosition)
@@ -366,49 +284,83 @@ public abstract class MBEditableMatrixListener
     }
   }
 
-  public boolean onChangePosition(int fromPosition, int toPosition)
+  public boolean onChangePosition(int currentPosition, int newPosition)
   {
-    View currentRow;
-    View newRow;
-    try
+    View currentRow = _rowViews.get(currentPosition);
+    View newRow = _rowViews.get(newPosition);
+
+    if (currentPosition > newPosition)
     {
-      currentRow = _rowViews.get(fromPosition);
-      newRow = _rowViews.get(toPosition);
+      // Move up
+      if ((currentPosition + 1) < _rowViews.size())
+      {
+        View belowCurrentRow = _rowViews.get(currentPosition + 1);
+        RelativeLayout.LayoutParams belowCurrentRowParams = (RelativeLayout.LayoutParams) belowCurrentRow.getLayoutParams();
+        belowCurrentRowParams.addRule(RelativeLayout.BELOW, newRow.getId());
+        belowCurrentRow.setLayoutParams(belowCurrentRowParams);
+      }
+
+      RelativeLayout.LayoutParams newRowParams = (RelativeLayout.LayoutParams) newRow.getLayoutParams();
+      newRowParams.addRule(RelativeLayout.BELOW, currentRow.getId());
+      newRow.setLayoutParams(newRowParams);
+
+      if ((newPosition - 1) >= 0 || (newPosition - 1) == -1 && _matrixHeaderView != null)
+      {
+        View aboveNewRow;
+        if (newPosition - 1 == -1)
+        {
+          aboveNewRow = _matrixHeaderView;
+        }
+        else
+        {
+          aboveNewRow = _rowViews.get(newPosition - 1);
+        }
+        RelativeLayout.LayoutParams currentRowParams = (RelativeLayout.LayoutParams) currentRow.getLayoutParams();
+        currentRowParams.addRule(RelativeLayout.BELOW, aboveNewRow.getId());
+        currentRow.setLayoutParams(currentRowParams);
+      }
+
     }
-    catch (IndexOutOfBoundsException e)
+    else
     {
-      Log.e(Constants.APPLICATION_NAME, "Error replacing row of position: " + fromPosition + " to: " + toPosition);
-      return false;
+      // Move down
+
+      if ((newPosition + 1) < _rowViews.size())
+      {
+        View belowNewRow = _rowViews.get(newPosition + 1);
+        RelativeLayout.LayoutParams belowNewRowParams = (RelativeLayout.LayoutParams) belowNewRow.getLayoutParams();
+        belowNewRowParams.addRule(RelativeLayout.BELOW, currentRow.getId());
+        belowNewRow.setLayoutParams(belowNewRowParams);
+      }
+
+      if ((currentPosition - 1) >= 0 || currentPosition - 1 == -1 && _matrixHeaderView != null)
+      {
+        View aboveCurrentRow;
+        if (currentPosition - 1 == -1)
+        {
+          aboveCurrentRow = _matrixHeaderView;
+        }
+        else
+        {
+          aboveCurrentRow = _rowViews.get(currentPosition - 1);
+        }
+        RelativeLayout.LayoutParams newRowParams = (RelativeLayout.LayoutParams) newRow.getLayoutParams();
+        newRowParams.addRule(RelativeLayout.BELOW, aboveCurrentRow.getId());
+        newRow.setLayoutParams(newRowParams);
+      }
+
+      RelativeLayout.LayoutParams currentRowParams = (RelativeLayout.LayoutParams) currentRow.getLayoutParams();
+      currentRowParams.addRule(RelativeLayout.BELOW, newRow.getId());
+      currentRow.setLayoutParams(currentRowParams);
+
     }
 
-    // handle views around from position
+    _rowViews.set(newPosition, currentRow);
+    _rowViews.set(currentPosition, newRow);
 
-    RelativeLayout rowBelowCurrent = (RelativeLayout) _rowViews.get(fromPosition + 1);
-    RelativeLayout rowAboveCurrent = (RelativeLayout) _rowViews.get(fromPosition - 1);
-
-    LayoutParams newLayoutParamsForViewBelow = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-    newLayoutParamsForViewBelow.addRule(RelativeLayout.BELOW, rowAboveCurrent.getId());
-    rowBelowCurrent.setLayoutParams(newLayoutParamsForViewBelow);
-
-    // handle views around to position
-
-    RelativeLayout rowBelowToPosition = (RelativeLayout) _rowViews.get(toPosition + 1);
-    RelativeLayout rowAboveToPosition = (RelativeLayout) _rowViews.get(toPosition - 1);
-
-    LayoutParams newLayoutParamsForViewBelowTo = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-    newLayoutParamsForViewBelowTo.addRule(RelativeLayout.BELOW, currentRow.getId());
-    rowBelowToPosition.setLayoutParams(newLayoutParamsForViewBelowTo);
-
-    LayoutParams newLayoutParamsForViewAboveTo = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-    newLayoutParamsForViewAboveTo.addRule(RelativeLayout.BELOW, currentRow.getId());
-
-    //
-    //    _rowViews.set(newPosition, currentRow);
-    //    _rowViews.set(currentPosition, newRow);
-    //
-    //    // Make sure buttons and onclickListeners are being changed 
-    //    prepareRowListeners(newPosition, currentRow);
-    //    prepareRowListeners(currentPosition, newRow);
+    // Make sure buttons and onclickListeners are being changed 
+    prepareRowListeners(newPosition, currentRow);
+    prepareRowListeners(currentPosition, newRow);
     //
 
     return true;
@@ -419,14 +371,7 @@ public abstract class MBEditableMatrixListener
     // Add draggable buttons if allowed
     if (_matrixPanel.isChildrenDraggable())
     {
-      if (MBDevice.getInstance().isTablet())
-      {
-        onPrepareDraggableControls(itemAtPosition);
-      }
-      else
-      {
-        onPrepareUpDownControls(itemAtPosition);
-      }
+      onPrepareUpDownControls(itemAtPosition);
     }
 
     // Add row onclicklistener if allowed
