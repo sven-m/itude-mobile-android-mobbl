@@ -395,7 +395,12 @@ public class MBPanelViewBuilder extends MBViewBuilder
       rowPanel.setClickable(true);
       rowPanel.setFocusable(true);
       rowPanel.setOnClickListener(panel);
-
+      
+      // Make sure we keep a reference to this clickable view. 
+      // This will be useful in the MBPanel.onClick method. 
+      panel.getPage().addClickableView(rowPanel);
+      
+      
       getStyleHandler().styleClickableRow(rowPanel);
     }
 
@@ -767,6 +772,11 @@ public class MBPanelViewBuilder extends MBViewBuilder
       rowPanel.setClickable(true);
       rowPanel.setFocusable(true);
       rowPanel.setOnClickListener(panel);
+      
+      // Make sure we keep a reference to this clickable view. 
+      // This will be useful in the MBPanel.onClick method. 
+      panel.getPage().addClickableView(rowPanel);
+      
       getStyleHandler().styleClickableRow(rowPanel);
     }
 

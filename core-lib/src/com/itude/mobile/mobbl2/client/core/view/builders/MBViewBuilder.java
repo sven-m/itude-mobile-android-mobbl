@@ -25,9 +25,9 @@ public class MBViewBuilder
     }
   }
 
-  public boolean isComponentOfType(MBComponent p_child, String p_type)
+  public boolean isComponentOfType(MBComponent child, String type)
   {
-    return p_child instanceof MBField && ((MBField) p_child).getType() != null && ((MBField) p_child).getType().equals(p_type);
+    return child instanceof MBField && ((MBField) child).getType() != null && ((MBField) child).getType().equals(type);
   }
 
   public MBStyleHandler getStyleHandler()

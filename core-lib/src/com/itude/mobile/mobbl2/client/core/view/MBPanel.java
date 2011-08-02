@@ -4,7 +4,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPanelDefinition;
@@ -420,15 +419,12 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   {
     if (MBDevice.getInstance().isTablet())
     {
-      ViewGroup parent = getParent(v);
-      if (parent != null)
+
+      for (View view : getPage().getClickableViews())
       {
-        ViewGroup parentparent = getParent(parent);
-        if (parentparent != null)
-        {
-          setSelectedFalseOnAllChildren(parentparent);
-        }
+        view.setSelected(false);
       }
+
       v.setSelected(true);
     }
 
@@ -439,47 +435,6 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     else
     {
       handleOutcome(getOutcomeName(), getAbsoluteDataPath());
-    }
-  }
-
-  // FIXME moet eigenlijk meteen weg.
-  public ViewGroup getParent(View v)
-  {
-
-    ViewGroup group = null;
-    if (v.getParent() != null)
-    {
-      ViewParent parent = v.getParent();
-      if (parent instanceof ViewGroup)
-      {
-        group = (ViewGroup) parent;
-      }
-    }
-    return group;
-  }
-
-  // FIXME moet eigenlijk meteen weg.
-  public void setSelectedFalseOnAllChildren(ViewGroup group)
-  {
-    for (int i = 0; i < group.getChildCount(); i++)
-    {
-      View child = group.getChildAt(i);
-      child.setSelected(false);
-      setSelectedFalseOnChild(child);
-    }
-  }
-
-  // FIXME moet eigenlijk meteen weg.
-  public void setSelectedFalseOnChild(View childchild)
-  {
-    if (childchild instanceof ViewGroup)
-    {
-      ViewGroup group = (ViewGroup) childchild;
-      for (int i = 0; i < group.getChildCount(); i++)
-      {
-        View child = group.getChildAt(i);
-        child.setSelected(false);
-      }
     }
   }
 
