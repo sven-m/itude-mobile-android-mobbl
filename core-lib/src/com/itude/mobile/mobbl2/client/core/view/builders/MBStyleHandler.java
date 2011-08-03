@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -54,12 +55,18 @@ public class MBStyleHandler
 
   public void styleTextfield(View view, MBField field)
   {
+    if (view instanceof EditText)
+    {
+      EditText textField = (EditText) view;
+      textField.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+    }
+
   }
 
   public void styleTextView(TextView view, MBField field)
   {
   }
-
+  
   public void styleButton(Button view, MBField field)
   {
     styleButtonWithName(view, field.getStyle());
@@ -123,6 +130,21 @@ public class MBStyleHandler
 
     return buttonStates;
   }
+  
+  
+  protected StateListDrawable getStatedEditTextBackground(String stateNormal, String stateActive, String stateDisabled)
+  {
+    StateListDrawable buttonStates = new StateListDrawable();
+    Drawable imageNormal = MBResourceService.getInstance().getImageByID(stateNormal);
+    Drawable imageActive = MBResourceService.getInstance().getImageByID(stateActive);
+    Drawable imageDisabled = MBResourceService.getInstance().getImageByID(stateDisabled);
+
+    if (stateActive != null) buttonStates.addState(new int[]{R.attr.state_focused}, imageActive);
+    if (stateNormal != null) buttonStates.addState(new int[]{R.attr.state_enabled}, imageNormal);
+    if (stateDisabled != null) buttonStates.addState(new int[]{-R.attr.state_enabled}, imageDisabled);
+
+    return buttonStates;
+  }
 
   public void styleImageButtonWithName(ImageButton view, String style)
   {
@@ -131,7 +153,7 @@ public class MBStyleHandler
   public void styleInputfieldBackgroundWithName(View inputField, String style)
   {
   }
-
+  
   public void styleEditableMatrixModeButton(Button view)
   {
   }

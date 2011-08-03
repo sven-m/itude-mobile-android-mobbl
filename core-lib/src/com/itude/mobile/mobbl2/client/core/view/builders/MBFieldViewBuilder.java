@@ -196,10 +196,11 @@ public class MBFieldViewBuilder extends MBViewBuilder
     Context context = MBApplicationController.getInstance().getBaseContext();
 
     EditText inputField = new EditText(context);
-    //    EditText inputField = new EditText(context);
-    // Add TextWatcher to EditText so changes will be saved to the document
-    inputField.addTextChangedListener(field);
+
+    // Default inputfield should be single lined
+    inputField.setSingleLine();
     inputField.setOnKeyListener(field);
+    getStyleHandler().styleInputfieldBackgroundWithName(inputField, null);
 
     inputField.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1));
     String defaultValue = "";
@@ -236,7 +237,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
              && (field.getDataType().equals(Constants.C_FIELD_DATATYPE_DOUBLE) || field.getDataType()
                  .equals(Constants.C_FIELD_DATATYPE_FLOAT)))
     {
-      inputField.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+      inputField.setKeyListener(StringUtilities.getCurrencyNumberKeyListener());
 
       try
       {
@@ -267,6 +268,9 @@ public class MBFieldViewBuilder extends MBViewBuilder
     {
       inputField.setText(defaultValue);
     }
+
+    // Add TextChangedListener to EditText so changes will be saved to the document
+    inputField.addTextChangedListener(field);
 
     // Set type of field visualization
     if (field.getType() != null && field.getType().equals(Constants.C_FIELD_PASSWORD))
