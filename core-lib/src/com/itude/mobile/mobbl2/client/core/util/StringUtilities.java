@@ -28,6 +28,8 @@ public class StringUtilities
 
   private static NumberKeyListener          _currencyNumberKeyListener;
 
+  public static final String                EMPTY           = "";
+
   private static ThreadLocal<DecimalFormat> TLFormatter3Dec = new ThreadLocal<DecimalFormat>()
                                                             {
                                                               @Override
@@ -39,12 +41,12 @@ public class StringUtilities
                                                               }
                                                             };
 
-  private static void setupFormatter(DecimalFormat formatter, int p_numDec)
+  private static void setupFormatter(DecimalFormat formatter, int numDec)
   {
     formatter.setDecimalFormatSymbols(new DecimalFormatSymbols(getDefaultFormattingLocale()));
     formatter.setMinimumIntegerDigits(1);
-    formatter.setMinimumFractionDigits(p_numDec);
-    formatter.setMaximumFractionDigits(p_numDec);
+    formatter.setMinimumFractionDigits(numDec);
+    formatter.setMaximumFractionDigits(numDec);
     formatter.setGroupingUsed(true);
     formatter.setGroupingSize(3);
   }
@@ -89,7 +91,7 @@ public class StringUtilities
    * @param path
    * @return
    */
-  public static List<String> splitPath(String p_toSplit)
+  public static List<String> splitPath(String toSplit)
   {
     // performance tuned implementation of splitPath
     // measurements show this impl takes just 25% compared to the old
@@ -100,41 +102,41 @@ public class StringUtilities
     List<String> components = new ArrayList<String>();
     int previousPosition = 0;
     int slashPosition;
-    while ((slashPosition = p_toSplit.indexOf('/', previousPosition)) >= 0)
+    while ((slashPosition = toSplit.indexOf('/', previousPosition)) >= 0)
     {
-      String component = p_toSplit.substring(previousPosition, slashPosition);
+      String component = toSplit.substring(previousPosition, slashPosition);
       previousPosition = slashPosition + 1;
 
-      processPathComponent(component, components, p_toSplit);
+      processPathComponent(component, components, toSplit);
     }
-    if (previousPosition < p_toSplit.length())
+    if (previousPosition < toSplit.length())
     {
       // this happens when the path is something like /a/b/c
       // (no trailing forward slash).
-      String component = p_toSplit.substring(previousPosition);
-      processPathComponent(component, components, p_toSplit);
+      String component = toSplit.substring(previousPosition);
+      processPathComponent(component, components, toSplit);
     }
     return components;
   }
 
-  private static void processPathComponent(String p_component, List<String> p_componentsInPath, String p_completePath)
+  private static void processPathComponent(String component, List<String> componentsInPath, String completePath)
   {
-    if (p_component.length() == 0 || (p_component.length() == 1 && p_component.equals(".")))
+    if (component.length() == 0 || (component.length() == 1 && component.equals(".")))
     {
       // nothing, ignore this component
     }
-    else if (p_component.length() == 2 && p_component.equals(".."))
+    else if (component.length() == 2 && component.equals(".."))
     {
       // pop the previous path component
-      if (p_componentsInPath.size() == 0)
+      if (componentsInPath.size() == 0)
       {
-        throw new MBInvalidRelativePathException(p_completePath);
+        throw new MBInvalidRelativePathException(completePath);
       }
-      p_componentsInPath.remove(p_componentsInPath.size() - 1);
+      componentsInPath.remove(componentsInPath.size() - 1);
     }
     else
     {
-      p_componentsInPath.add(p_component);
+      componentsInPath.add(component);
     }
   }
 
@@ -181,16 +183,16 @@ public class StringUtilities
   /**
    * Appends spaces to the supplied StringBuffer, returns the same StringBuffer.
    * 
-   * @param p_appendToMe
+   * @param appendToMe
    * @param level
    * @return the same StringBuffer given as a param, useful for chaining calls
    */
-  public static StringBuffer appendIndentString(StringBuffer p_appendToMe, int level)
+  public static StringBuffer appendIndentString(StringBuffer appendToMe, int level)
   {
     while (level-- > 0)
-      p_appendToMe.append(' ');
+      appendToMe.append(' ');
 
-    return p_appendToMe;
+    return appendToMe;
   }
 
   //returns a string formatted as a number with the original amount of decimals assuming the receiver is a float 
@@ -537,29 +539,92 @@ public class StringUtilities
   }
 
   /**
-   * @param value value
-   * @return true if {@link String} value is not null and lenght > 0
+   * <p>Checks if a String is not empty ("") and not null.</p>
+   *
+   * <pre>
+   * StringUtils.isNotEmpty(null)      = false
+   * StringUtils.isNotEmpty("")        = false
+   * StringUtils.isNotEmpty(" ")       = true
+   * StringUtils.isNotEmpty("wiebe")     = true
+   * StringUtils.isNotEmpty("  wiebe  ") = true
+   * </pre>
+   *
+   * @param str  the String to check, may be null
+   * @return <code>true</code> if the String is not empty and not null
    */
-  public static boolean isNotEmpty(String value)
+  public static boolean isNotEmpty(String str)
   {
-    return !isEmpty(value);
+    return !isEmpty(str);
   }
 
   /**
-   * @param value value
-   * @return true if {@link String} value is null or lenght > 0
+   * <p>Checks if a String is empty ("") or null.</p>
+   *
+   * <pre>
+   * StringUtils.isEmpty(null)      = true
+   * StringUtils.isEmpty("")        = true
+   * StringUtils.isEmpty(" ")       = false
+   * StringUtils.isEmpty("wiebe")     = false
+   * StringUtils.isEmpty("  wiebe  ") = false
+   * </pre>
+   *
+   * @param str  the String to check, may be null
+   * @return <code>true</code> if the String is empty or null
    */
-
-  public static boolean isEmpty(String value)
+  public static boolean isEmpty(String str)
   {
-    if (value == null || value.length() == 0)
+    return str == null || str.length() == 0;
+  }
+
+  /**
+   * <p>Checks if a String is whitespace, empty ("") or null.</p>
+   *
+   * <pre>
+   * StringUtils.isBlank(null)      = true
+   * StringUtils.isBlank("")        = true
+   * StringUtils.isBlank(" ")       = true
+   * StringUtils.isBlank("wiebe")     = false
+   * StringUtils.isBlank("  wiebe  ") = false
+   * </pre>
+   *
+   * @param str  the String to check, may be null
+   * @return <code>true</code> if the String is null, empty or whitespace
+   */
+  public static boolean isBlank(String str)
+  {
+    int strLen;
+    if (str == null || (strLen = str.length()) == 0)
     {
       return true;
     }
-    else
+    for (int i = 0; i < strLen; i++)
     {
-      return false;
+      if ((Character.isWhitespace(str.charAt(i)) == false))
+      {
+        return false;
+      }
     }
+    return true;
+  }
+
+  /**
+   * <p>Checks if a String is not empty (""), not null and not whitespace only.</p>
+   *
+   * <pre>
+   * StringUtils.isNotBlank(null)      = false
+   * StringUtils.isNotBlank("")        = false
+   * StringUtils.isNotBlank(" ")       = false
+   * StringUtils.isNotBlank("bob")     = true
+   * StringUtils.isNotBlank("  bob  ") = true
+   * </pre>
+   *
+   * @param str  the String to check, may be null
+   * @return <code>true</code> if the String is
+   *  not empty and not null and not whitespace
+   */
+  public static boolean isNotBlank(String str)
+  {
+    return !isBlank(str);
   }
 
   public static NumberKeyListener getCurrencyNumberKeyListener()
@@ -583,6 +648,50 @@ public class StringUtilities
     }
 
     return _currencyNumberKeyListener;
+  }
+
+  /**
+   * <p>Gets the substring after the first occurrence of a separator.
+   * The separator is not returned.</p>
+   *
+   * <p>A <code>null</code> string input will return <code>null</code>.
+   * An empty ("") string input will return the empty string.
+   * A <code>null</code> separator will return the empty string if the
+   * input string is not <code>null</code>.</p>
+   *
+   * <pre>
+   * StringUtils.substringAfter(null, *)      = null
+   * StringUtils.substringAfter("", *)        = ""
+   * StringUtils.substringAfter(*, null)      = ""
+   * StringUtils.substringAfter("abc", "a")   = "bc"
+   * StringUtils.substringAfter("abcba", "b") = "cba"
+   * StringUtils.substringAfter("abc", "c")   = ""
+   * StringUtils.substringAfter("abc", "d")   = ""
+   * StringUtils.substringAfter("abc", "")    = "abc"
+   * </pre>
+   *
+   * @param str  the String to get a substring from, may be null
+   * @param separator  the String to search for, may be null
+   * @return the substring after the first occurrence of the separator,
+   *  <code>null</code> if null String input
+   * @since 2.0
+   */
+  public static String substringAfter(String str, String separator)
+  {
+    if (isEmpty(str))
+    {
+      return str;
+    }
+    if (separator == null)
+    {
+      return EMPTY;
+    }
+    int pos = str.indexOf(separator);
+    if (pos == -1)
+    {
+      return EMPTY;
+    }
+    return str.substring(pos + separator.length());
   }
 
 }
