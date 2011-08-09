@@ -167,25 +167,14 @@ public class MBOutcomeHandler extends Handler
             if (applicationController.getModalPageID() != null)
             {
               viewManager.endModalDialog(applicationController.getModalPageID());
-              //              viewManager.hideActivityIndicator();
             }
             ((MBDialogController) viewManager.getCurrentActivity()).handleAllOnWindowActivated();
-
-            //            else
-            //            {
-            //              // On the iPhone the current screen is being refreshed after dismissing an progress indicator
-            //              // On Android this doesn't happen. To recreate this behaviour this code was introduced
-            //              //TODO implement refresh mechanism. On dialog base or page? 
-            //              //              (((MBDialogController) _viewManager.getCurrentActivity()).getCurrentActivity()).handleOnWindowActivated();
-            //            }
 
           }
           else if ("ENDMODAL_CONTINUE".equals(outcomeToProcess.getDisplayMode()))
           {
             viewManager.endModalDialog();
-            applicationController.handleOutcome(applicationController.getOutcomeWhichCausedModal());
-            //
-            applicationController.setOutcomeWhichCausedModal(null);
+            applicationController.setOutcomeWhichCausedModal(outcomeToProcess);
           }
           else if ("POP".equals(outcomeToProcess.getDisplayMode()))
           {

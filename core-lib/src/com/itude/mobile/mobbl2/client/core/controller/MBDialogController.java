@@ -191,7 +191,7 @@ public class MBDialogController extends FragmentActivity
       getSupportFragmentManager().popBackStack(pageName, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
       // Make sure no unnecessary views are being popped
-      MBApplicationController.getInstance().clearModalPageID();
+      MBApplicationController.getInstance().removeLastModalPageID();
     }
   }
 
@@ -273,7 +273,8 @@ public class MBDialogController extends FragmentActivity
     if (MBDevice.getInstance().isTablet()
         && (page.getCurrentViewState() == MBViewState.MBViewStateModal || MBApplicationController.getInstance().getModalPageID() != null))
     {
-      if (MBApplicationController.getInstance().getModalPageID() != null)
+      if (MBApplicationController.getInstance().getModalPageID() != null
+          && MBApplicationController.getInstance().getOutcomeWhichCausedModal() != null)
       {
         displayMode = MBApplicationController.getInstance().getOutcomeWhichCausedModal().getDisplayMode();
       }

@@ -5,6 +5,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Stack;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import android.app.Application;
 import android.content.Context;
@@ -44,7 +47,7 @@ public class MBApplicationController extends Application
   private MBOutcome                            _outcomeWhichCausedModal;
   private Map<String, MBPage>                  _pages;
   private Map<String, HashMap<String, MBPage>> _pagesForName;
-  private String                               _modalPageID;
+  private Stack<String>                        _modalPageStack;
   private MBOutcomeHandler                     _outcomeHandler;
 
   private static MBApplicationController       _instance = null;
@@ -61,6 +64,7 @@ public class MBApplicationController extends Application
     _instance = this;
     _pages = new HashMap<String, MBPage>();
     _pagesForName = new HashMap<String, HashMap<String, MBPage>>();
+    _modalPageStack = new Stack<String>();
   }
 
   ////////////////////////////////////////////////
@@ -253,7 +257,8 @@ public class MBApplicationController extends Application
       if ("MODAL".equals(displayMode) || "MODALFORMSHEET".equals(displayMode) || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode)
           || "MODALPAGESHEET".equals(displayMode) || "MODALPAGESHEETWITHCLOSEBUTTON".equals(displayMode)
           || "MODALFULLSCREEN".equals(displayMode) || "MODALFULLSCREENWITHCLOSEBUTTON".equals(displayMode)
-          || "MODALCURRENTCONTEXT".equals(displayMode) || "MODALCURRENTCONTEXTWITHCLOSEBUTTON".equals(displayMode))
+          || "MODALCURRENTCONTEXT".equals(displayMode) || "MODALCURRENTCONTEXTWITHCLOSEBUTTON".equals(displayMode)
+          || "ENDMODAL_CONTINUE".equals(displayMode)  )
       {
         viewState = MBViewState.MBViewStateModal;
       }
@@ -588,7 +593,7 @@ public class MBApplicationController extends Application
   {
     if (page.getCurrentViewState().equals(MBViewState.MBViewStateModal))
     {
-      _modalPageID = id;
+      _modalPageStack.add(id);
     }
     _pages.put(id, page);
 
@@ -602,12 +607,12 @@ public class MBApplicationController extends Application
 
   public String getModalPageID()
   {
-    return _modalPageID;
+    return CollectionUtils.isNotEmpty(_modalPageStack) ? _modalPageStack.peek() : null;
   }
 
-  public void clearModalPageID()
+  public void removeLastModalPageID()
   {
-    _modalPageID = null;
+    _modalPageStack.pop();
   }
 
   public boolean getBackStackEnabled()
