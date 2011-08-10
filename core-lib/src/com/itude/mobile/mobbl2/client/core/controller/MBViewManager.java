@@ -54,7 +54,6 @@ public class MBViewManager extends ActivityGroup
   private ArrayList<String>      _sortedDialogNames;
   private String                 _activeDialogName;
   private Dialog                 _currentAlert;
-  //  private Object               _modalController;
   private boolean                _singlePageMode;
 
   ///////////////////// Android lifecycle methods
@@ -565,33 +564,6 @@ public class MBViewManager extends ActivityGroup
     InputMethodManager imm = (InputMethodManager) triggeringView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
     imm.hideSoftInputFromWindow(triggeringView.getWindowToken(), 0);
   }
-
-  // FIXME
-  /* public List<? extends MBBasicViewController> getAllViewControllers()
-   {
-     ArrayList<MBBasicViewController> result = new ArrayList<MBBasicViewController>();
-
-     for (int i = 0; i < getSortedDialogNames().size(); i++)
-     {
-       MBDialogController dc = getDialogWithName(getSortedDialogNames().get(i));
-
-       if (dc != null)
-       {
-         for (int j = 0; j < dc.getSortedPageNames().size(); j++)
-         {
-           MBBasicViewController bvc = (MBBasicViewController) dc.getLocalActivityManager().getActivity(dc.getSortedPageNames().get(j));
-
-           if (bvc != null)
-           {
-             result.add(bvc);
-           }
-         }
-       }
-
-     }
-
-     return result;
-   }*/
 
   public List<MBBasicViewController> getViewControllers(String dialogName)
   {
