@@ -126,14 +126,12 @@ public class MBApplicationController extends Application
     _outcomeHandler.sendEmptyMessage(Constants.C_MESSAGE_INITIAL_OUTCOMES_FINISHED);
   }
 
-  /* (non-Javadoc)
+  /**
    * Visibility should be as strict as possible (as always). Because this method is called
    * from the MBOutcomeHandler the visibility is set to package (controller).
    */
   void finishedInitialOutcomes()
   {
-    //    if (MBDevice.getInstance().isTablet()) _viewManager.supportInvalidateOptionsMenu();
-    //
     _suppressPageSelection = false;
     _backStackEnabled = true;
     if (MBDevice.getInstance().isPhone())
@@ -254,11 +252,16 @@ public class MBApplicationController extends Application
       final String displayMode = causingOutcome.getDisplayMode();
       MBViewState viewState = _viewManager.getCurrentViewState();
 
-      if ("MODAL".equals(displayMode) || "MODALFORMSHEET".equals(displayMode) || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode)
-          || "MODALPAGESHEET".equals(displayMode) || "MODALPAGESHEETWITHCLOSEBUTTON".equals(displayMode)
-          || "MODALFULLSCREEN".equals(displayMode) || "MODALFULLSCREENWITHCLOSEBUTTON".equals(displayMode)
-          || "MODALCURRENTCONTEXT".equals(displayMode) || "MODALCURRENTCONTEXTWITHCLOSEBUTTON".equals(displayMode)
-          || "ENDMODAL_CONTINUE".equals(displayMode)  )
+      if ("MODAL".equals(displayMode) //
+          || "MODALFORMSHEET".equals(displayMode) //
+          || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode) //
+          || "MODALPAGESHEET".equals(displayMode) //
+          || "MODALPAGESHEETWITHCLOSEBUTTON".equals(displayMode) //
+          || "MODALFULLSCREEN".equals(displayMode) //
+          || "MODALFULLSCREENWITHCLOSEBUTTON".equals(displayMode) //
+          || "MODALCURRENTCONTEXT".equals(displayMode) //
+          || "MODALCURRENTCONTEXTWITHCLOSEBUTTON".equals(displayMode) //
+          || "ENDMODAL_CONTINUE".equals(displayMode))
       {
         viewState = MBViewState.MBViewStateModal;
       }

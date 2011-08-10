@@ -273,8 +273,9 @@ public class MBDialogController extends FragmentActivity
     if (MBDevice.getInstance().isTablet()
         && (page.getCurrentViewState() == MBViewState.MBViewStateModal || MBApplicationController.getInstance().getModalPageID() != null))
     {
-      if (MBApplicationController.getInstance().getModalPageID() != null
-          && MBApplicationController.getInstance().getOutcomeWhichCausedModal() != null)
+      String modalPageID = MBApplicationController.getInstance().getModalPageID();
+
+      if (modalPageID != null && MBApplicationController.getInstance().getOutcomeWhichCausedModal() != null)
       {
         displayMode = MBApplicationController.getInstance().getOutcomeWhichCausedModal().getDisplayMode();
       }
@@ -312,10 +313,10 @@ public class MBDialogController extends FragmentActivity
         fragment.setArguments(args);
       }
 
-      Fragment dialogFragment = getSupportFragmentManager().findFragmentByTag(MBApplicationController.getInstance().getModalPageID());
-      if (dialogFragment != null)
+      Fragment dialogFragment = getSupportFragmentManager().findFragmentByTag(modalPageID);
+      if (dialogFragment != null && !isBackStackEmpty())
       {
-        transaction.remove(dialogFragment);
+        getSupportFragmentManager().popBackStack();
       }
       transaction.add(fragment, id);
     }
