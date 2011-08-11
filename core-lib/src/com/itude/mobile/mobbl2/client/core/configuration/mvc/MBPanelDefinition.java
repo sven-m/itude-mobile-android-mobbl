@@ -34,17 +34,17 @@ public class MBPanelDefinition extends MBConditionalDefinition implements MBStyl
   }
 
   @Override
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level).append("<Panel width='").append(_width).append("' height='").append(_height)
+    StringUtilities.appendIndentString(appendToMe, level).append("<Panel width='").append(_width).append("' height='").append(_height)
         .append("' type='").append(_type).append("'").append(getAttributeAsXml("title", _title)).append(getAttributeAsXml("mode", _mode))
         .append(getAttributeAsXml("titlePath", _titlePath)).append(getAttributeAsXml("style", _style))
         .append(getAttributeAsXml("outcome", _outcomeName)).append(getAttributeAsXml("path", _path)).append(">\n");
     for (MBDefinition child : _children)
     {
-      child.asXmlWithLevel(p_appendToMe, level + 2);
+      child.asXmlWithLevel(appendToMe, level + 2);
     }
-    return StringUtilities.appendIndentString(p_appendToMe, level).append("</Panel>\n");
+    return StringUtilities.appendIndentString(appendToMe, level).append("</Panel>\n");
 
   }
 

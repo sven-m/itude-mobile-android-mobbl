@@ -352,7 +352,7 @@ public class MBComponent
 
     for (MBComponent component : result)
     {
-      if (component.getName().equals(name))
+      if (name.equals(component.getName()))
       {
         return (T) component;
       }
