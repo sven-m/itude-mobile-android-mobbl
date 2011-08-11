@@ -29,6 +29,7 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.DateUtilities;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
@@ -481,11 +482,11 @@ public class MBField extends MBComponent
       // Formats the date depending on the current date. 
       if (getFormatMask().equals("dateOrTimeDependingOnCurrentDate"))
       {
-        fieldValue = StringUtilities.formatDateDependingOnCurrentDate(xmlDate);
+        fieldValue = DateUtilities.formatDateDependingOnCurrentDate(xmlDate);
       }
       else
       {
-        Date date = StringUtilities.dateFromXML(xmlDate);
+        Date date = DateUtilities.dateFromXML(xmlDate);
 
         SimpleDateFormat df = new SimpleDateFormat(getFormatMask());
         fieldValue = df.format(date);

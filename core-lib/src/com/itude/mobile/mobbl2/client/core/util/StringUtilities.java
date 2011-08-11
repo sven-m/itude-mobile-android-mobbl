@@ -4,11 +4,8 @@ import java.security.MessageDigest;
 import java.text.CharacterIterator;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -18,28 +15,31 @@ import android.text.method.NumberKeyListener;
 import android.util.Log;
 
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
-import com.itude.mobile.mobbl2.client.core.util.exceptions.MBDateParsingException;
 import com.itude.mobile.mobbl2.client.core.util.exceptions.MBInvalidRelativePathException;
 
-public class StringUtilities
+public final class StringUtilities
 {
 
-  private static Locale                     defaultFormattingLocale;
+  private static Locale                           defaultFormattingLocale;
 
-  private static NumberKeyListener          _currencyNumberKeyListener;
+  private static NumberKeyListener                _currencyNumberKeyListener;
 
-  public static final String                EMPTY           = "";
+  public static final String                      EMPTY           = "";
 
-  private static ThreadLocal<DecimalFormat> TLFormatter3Dec = new ThreadLocal<DecimalFormat>()
-                                                            {
-                                                              @Override
-                                                              protected DecimalFormat initialValue()
-                                                              {
-                                                                DecimalFormat formatter = new DecimalFormat();
-                                                                setupFormatter(formatter, 3);
-                                                                return formatter;
-                                                              }
-                                                            };
+  private static final ThreadLocal<DecimalFormat> TLFORMATTER3DEC = new ThreadLocal<DecimalFormat>()
+                                                                  {
+                                                                    @Override
+                                                                    protected DecimalFormat initialValue()
+                                                                    {
+                                                                      DecimalFormat formatter = new DecimalFormat();
+                                                                      setupFormatter(formatter, 3);
+                                                                      return formatter;
+                                                                    }
+                                                                  };
+
+  private StringUtilities()
+  {
+  }
 
   private static void setupFormatter(DecimalFormat formatter, int numDec)
   {
@@ -50,16 +50,6 @@ public class StringUtilities
     formatter.setGroupingUsed(true);
     formatter.setGroupingSize(3);
   }
-
-  private static final String                  DEFAULT_DATE_FORMAT    = "yyyy-MM-dd'T'HH:mm:ss";
-  private static ThreadLocal<SimpleDateFormat> TLDefaultDateFormatter = new ThreadLocal<SimpleDateFormat>()
-                                                                      {
-                                                                        @Override
-                                                                        protected SimpleDateFormat initialValue()
-                                                                        {
-                                                                          return new SimpleDateFormat(DEFAULT_DATE_FORMAT);
-                                                                        }
-                                                                      };
 
   public static String stripCharacters(String inputString, String stripCharacters)
   {
@@ -225,90 +215,6 @@ public class StringUtilities
     return result;
   }
 
-  // Formats the date depending on the current date assuming the receiver is a date string 
-  // If the date is equal to the current date, the time is given back as a string
-  // If the date is NOT equal to the current date, then a a date is presented back as a string
-  public static String formatDateDependingOnCurrentDate(String dateString)
-  {
-    String result = dateString;
-    Date date = dateFromXML(dateString);
-
-    String dateFormatMask = "";
-
-    // We can't just compare two dates, because the time is also compared.
-    // Therefore the time is removed and the two dates without time are compared
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(date);
-
-    Calendar today = Calendar.getInstance();
-    today.setTime(new Date());
-
-    if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) && calendar.get(Calendar.MONTH) == today.get(Calendar.MONTH)
-        && calendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR))
-    {
-      dateFormatMask = "HH:mm:ss";
-    }
-    else
-    {
-      dateFormatMask = "dd-MM-yy";
-    }
-
-    // Format the date
-    try
-    {
-      SimpleDateFormat df = new SimpleDateFormat(dateFormatMask);
-      result = df.format(date);
-
-      return result;
-    }
-    catch (Exception e)
-    {
-      throw new MBDateParsingException("Could not get format date depending on current date with input string: " + dateString, e);
-    }
-
-  }
-
-  public synchronized static Date dateFromXML(String stringToFormat)
-  {
-    try
-    {
-      String dateString = stringToFormat.substring(0, 19);
-      if (dateString != null) return TLDefaultDateFormatter.get().parse(dateString);
-      else return null;
-    }
-    catch (Exception e)
-    {
-      throw new MBDateParsingException("Could not parse date from xml value: " + stringToFormat, e);
-    }
-
-  }
-
-  public static String dateToString(Date date)
-  {
-    return dateToStringDefaultFormat(date);
-  }
-
-  public static String dateToString(Date date, String format)
-  {
-    if (isEmpty(format)) return dateToStringDefaultFormat(date);
-    SimpleDateFormat df = new SimpleDateFormat(format);
-
-    try
-    {
-      return df.format(date);
-    }
-    catch (Exception e)
-    {
-      throw new MBDateParsingException("Could not convert date to string with input date: " + date, e);
-    }
-
-  }
-
-  private static String dateToStringDefaultFormat(Date dateToFormat)
-  {
-    return TLDefaultDateFormatter.get().format(dateToFormat);
-  }
-
   // returns a string formatted as a number with two decimals assuming the receiver is a float string read from XML
   // WARNING: Only use this method to present data to the screen (BINCKAPPS-32, BINCKMOBILE-35, BINCKMOBILE-113)
   public static String formatNumberWithTwoDecimals(String stringToFormat)
@@ -415,7 +321,7 @@ public class StringUtilities
     {
       return null;
     }
-    return TLFormatter3Dec.get().format(Double.parseDouble(stringToFormat));
+    return TLFORMATTER3DEC.get().format(Double.parseDouble(stringToFormat));
   }
 
   // returns a string formatted as a volume with group separators (eg, 131.224.000) assuming the receiver is an int string read from XML
@@ -474,7 +380,7 @@ public class StringUtilities
   public static void setDefaultFormattingLocale(Locale defaultFormattingLocale)
   {
     StringUtilities.defaultFormattingLocale = defaultFormattingLocale;
-    setupFormatter(TLFormatter3Dec.get(), 3);
+    setupFormatter(TLFORMATTER3DEC.get(), 3);
   }
 
   public static Locale getDefaultFormattingLocale()
