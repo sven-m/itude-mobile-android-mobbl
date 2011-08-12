@@ -102,6 +102,7 @@ public interface Constants
 
   // Properties
   public static final String C_PROPERTY_HTTPS_ALLOW_ALL_CERTIFICATES       = "allowAllHttpsCertificates";
+  public static final String C_PROPERTY_INDEVELOPMENT                      = "inDevelopment";
 
   // Parcelable types
   public static final int    C_PARCELABLE_TYPE_OUTCOME                     = 0;
