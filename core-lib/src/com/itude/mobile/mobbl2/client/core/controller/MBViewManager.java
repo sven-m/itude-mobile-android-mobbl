@@ -39,7 +39,6 @@ import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowChangeType;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.helper.MBSecurityHelper;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 
@@ -512,10 +511,7 @@ public class MBViewManager extends ActivityGroup
   public void endModalDialog(String modalPageID)
   {
     MBDialogController dc = (MBDialogController) getLocalActivityManager().getCurrentActivity();
-    if (StringUtilities.isNotBlank(modalPageID))
-    {
-      dc.endModalPage(modalPageID);
-    }
+    dc.endModalPage(modalPageID);
   }
 
   public void endModalDialog()

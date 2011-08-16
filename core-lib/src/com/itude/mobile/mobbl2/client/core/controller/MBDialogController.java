@@ -271,7 +271,7 @@ public class MBDialogController extends FragmentActivity
     }
 
     
-    if ((displayMode == null || displayMode.startsWith("MODAL")) && MBDevice.getInstance().isTablet()
+    if ( MBDevice.getInstance().isTablet()
         && (page.getCurrentViewState() == MBViewState.MBViewStateModal || MBApplicationController.getInstance().getModalPageID() != null))
     {
       String modalPageID = MBApplicationController.getInstance().getModalPageID();
