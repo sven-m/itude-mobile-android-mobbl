@@ -270,6 +270,11 @@ public class MBDialogController extends FragmentActivity
       transaction.addToBackStack(id);
     }
 
+    // FIXME showing the "Open een rekening" page results in the page nog being shown as a modal page
+    // It should happen. Some construction like ENDMODAL_MODAL might be a solution. 
+    //    if (MBDevice.getInstance().isTablet()
+    //        && (page.getCurrentViewState() == MBViewState.MBViewStateModal || MBApplicationController.getInstance().getModalPageID() != null))
+    //    {
     if ((displayMode == null || displayMode.startsWith("MODAL")) && MBDevice.getInstance().isTablet()
         && (page.getCurrentViewState() == MBViewState.MBViewStateModal || MBApplicationController.getInstance().getModalPageID() != null))
     {
