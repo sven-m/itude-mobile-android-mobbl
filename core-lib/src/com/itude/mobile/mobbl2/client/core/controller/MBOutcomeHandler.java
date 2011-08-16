@@ -20,6 +20,7 @@ import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBNoOutcomesDef
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.exceptions.MBRunnable;
 
 /**
@@ -171,9 +172,11 @@ public class MBOutcomeHandler extends Handler
             ((MBDialogController) viewManager.getCurrentActivity()).handleAllOnWindowActivated();
 
           }
-          else if ("ENDMODAL_CONTINUE".equals(outcomeToProcess.getDisplayMode()))
+          else if (StringUtilities.substringAfter(outcomeToProcess.getDisplayMode(), "ENDMODAL_") != null)
           {
             viewManager.endModalDialog();
+            
+            outcomeToProcess.setDisplayMode(StringUtilities.substringAfter(outcomeToProcess.getDisplayMode(), "ENDMODAL_"));
             applicationController.setOutcomeWhichCausedModal(outcomeToProcess);
           }
           else if ("POP".equals(outcomeToProcess.getDisplayMode()))
