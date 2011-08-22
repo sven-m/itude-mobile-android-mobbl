@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.itude.poms</groupId>
-		<artifactId>itude-hudson</artifactId>
-		<version>1.1</version>
+		<artifactId>itude-jenkins</artifactId>
+		<version>1.0</version>
 	</parent>
 	<groupId>com.itude.mobile.android.mobbl</groupId>
 	<artifactId>mobbl-core</artifactId>
