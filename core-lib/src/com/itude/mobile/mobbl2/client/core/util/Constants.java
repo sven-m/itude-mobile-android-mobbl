@@ -4,7 +4,7 @@ public interface Constants
 {
 
   public static String       APPLICATION_NAME                              = "MOBBL";
-  public static String       C_STYLESCHEME                                 = "binckStyleScheme";
+  public static String       C_STYLESCHEME                                 = "styleScheme";
 
   public static String       C_SPLASHSCREEN                                = "whitelabel-splashscreen";
   public static String       C_ENCODING                                    = "UTF-8";
