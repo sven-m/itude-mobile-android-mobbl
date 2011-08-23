@@ -13,13 +13,13 @@ public class MBDocumentDiff
   private final Map<String, String> _aValues;
   private final Map<String, String> _bValues;
 
-  public MBDocumentDiff(MBDocument a, MBDocument b)
+  public MBDocumentDiff(MBDocument newDoc, MBDocument currentDoc)
   {
     _modified = new HashSet<String>();
     _aValues = new HashMap<String, String>();
     _bValues = new HashMap<String, String>();
 
-    diffA(a, b);
+    diffA(newDoc, currentDoc);
   }
 
   private String normalize(String path)
