@@ -36,6 +36,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBRunnable;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
+import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSpinner;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSpinnerAdapter;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
@@ -148,7 +149,7 @@ public class MBTabletViewManager extends MBViewManager
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item)
-  {
+  { 
     if (item.getItemId() == android.R.id.home)
     {
       onHomeSelected();
@@ -251,6 +252,8 @@ public class MBTabletViewManager extends MBViewManager
       public void run()
       {
         final ActionBar actionBar = getActionBar();
+
+        MBViewBuilderFactory.getInstance().getStyleHandler().styleActionBar(actionBar);
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);

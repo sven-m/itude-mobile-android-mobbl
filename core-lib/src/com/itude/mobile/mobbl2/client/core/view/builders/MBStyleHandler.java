@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.view.builders;
 
 import android.R;
+import android.app.ActionBar;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
@@ -374,6 +375,10 @@ public class MBStyleHandler
   }
 
   public void styleSpinner(Spinner spinner)
+  {
+  }
+
+  public void styleActionBar(ActionBar actionBar)
   {
   }
 }
