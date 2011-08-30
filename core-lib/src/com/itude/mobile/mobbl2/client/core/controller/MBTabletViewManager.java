@@ -316,7 +316,6 @@ public class MBTabletViewManager extends MBViewManager
                   {
                     MBOutcome outcome = new MBOutcome(value, null);
                     outcome.setOriginName(dialogDef.getName());
-                    //                    outcome.setDialogName("DIALOG-split_shares_left");
                     MBApplicationController.getInstance().handleOutcome(outcome);
                   }
 

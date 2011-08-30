@@ -381,4 +381,12 @@ public class MBStyleHandler
   public void styleActionBar(ActionBar actionBar)
   {
   }
+
+  public void styleTabItem(View view)
+  {
+  }
+
+  public void styleDropdownItem(View view)
+  {
+  }
 }

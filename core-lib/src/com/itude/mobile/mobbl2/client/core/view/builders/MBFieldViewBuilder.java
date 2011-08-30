@@ -315,8 +315,27 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
     getStyleHandler().styleSpinner(dropdownList);
 
+    //    ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(context, android.R.layout.simple_spinner_item)
+    //    {
+    //      @Override
+    //      public View getView(int position, View convertView, ViewGroup parent)
+    //      {
+    //        View view = super.getView(position, convertView, parent);
+    //        if (view instanceof TextView)
+    //        {
+    //          TextView textView = (TextView) view;
+    //          getStyleHandler().styleLabel(textView, null);
+    //        }
+    //        getStyleHandler().styleSpinnerItem(view);
+    //        return view;
+    //      }
+    //    };
+
+    getStyleHandler().styleSpinner(dropdownList);
+
     ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(context, android.R.layout.simple_spinner_item)
     {
+
       @Override
       public View getView(int position, View convertView, ViewGroup parent)
       {
@@ -328,7 +347,15 @@ public class MBFieldViewBuilder extends MBViewBuilder
         }
         return view;
       }
+
+      public View getDropDownView(int position, View convertView, ViewGroup parent)
+      {
+        View view = super.getDropDownView(position, convertView, parent);
+        getStyleHandler().styleDropdownItem(view);
+        return view;
+      }
     };
+
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
     String fieldValue = field.getValue();

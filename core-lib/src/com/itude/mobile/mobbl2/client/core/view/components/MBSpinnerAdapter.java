@@ -20,6 +20,9 @@ public class MBSpinnerAdapter extends ArrayAdapter<CharSequence>
   public View getDropDownView(int position, View convertView, android.view.ViewGroup parent)
   {
     View v = super.getDropDownView(position, convertView, parent);
+    
+    MBViewBuilderFactory.getInstance().getStyleHandler().styleTabItem(v);
+    
     if (getSelectedElement() == position) 
     {
       MBViewBuilderFactory.getInstance().getStyleHandler().styleSelectedItem(v);
