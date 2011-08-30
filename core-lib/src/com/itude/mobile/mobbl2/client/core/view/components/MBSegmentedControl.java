@@ -25,6 +25,7 @@ public class MBSegmentedControl extends RadioGroup
     LinearLayout.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
         RadioGroup.LayoutParams.WRAP_CONTENT, 1);
     MBSegmentedItem item = new MBSegmentedItem(getContext());
+    
     item.setPadding(0, MBScreenUtilities.FIVE, 0, MBScreenUtilities.FIVE);
     item.setId(id);
     item.setText(text);
@@ -33,10 +34,4 @@ public class MBSegmentedControl extends RadioGroup
 
     addView(item, index, layoutParams);
   }
-
-  public void addItem(MBSegmentedItem item, LinearLayout.LayoutParams layoutParams)
-  {
-    addView(item, getChildCount(), layoutParams);
-  }
-
 }

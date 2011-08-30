@@ -8,8 +8,8 @@ import android.graphics.Paint.Style;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
+import android.graphics.drawable.LayerDrawable;
 import android.widget.RadioButton;
 
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
@@ -17,13 +17,13 @@ import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 public class MBSegmentedItem extends RadioButton
 {
 
-  private Paint         _textPaint;
-  private String        _text;
-  private final int     _currentTextColor        = Color.WHITE;
-  private float         _textSize                = MBScreenUtilities.ELEVEN;
-  private int           _ascent;
-  private ColorDrawable _backgroundColor         = new ColorDrawable(Color.parseColor("#515050"));
-  private ColorDrawable _selectedBackgroundColor = new ColorDrawable(0xff111111);
+  private Paint     _textPaint;
+  private String    _text;
+  private final int _currentTextColor        = Color.WHITE;
+  private float     _textSize                = MBScreenUtilities.ELEVEN;
+  private int       _ascent;
+  private int       _backgroundColor         = Color.parseColor("#515050");
+  private int       _selectedBackgroundColor = 0xff111111;
 
   public MBSegmentedItem(Context context)
   {
@@ -47,16 +47,16 @@ public class MBSegmentedItem extends RadioButton
 
     if (isChecked())
     {
-      GradientDrawable grad = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{0xffa5a5a5, Color.TRANSPARENT});
+      GradientDrawable grad = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{0xffa5a5a5, _selectedBackgroundColor});
       grad.setBounds(0, 0, this.getWidth(), this.getHeight());
-      Drawable drawable = new LayerDrawable(new Drawable[]{_selectedBackgroundColor, grad});
+      Drawable drawable = new LayerDrawable(new Drawable[]{new ColorDrawable(_selectedBackgroundColor), grad});
       drawable.draw(canvas);
     }
     else
     {
-      GradientDrawable grad = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{0xffa5a5a5, Color.TRANSPARENT});
+      GradientDrawable grad = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{0xffa5a5a5, _backgroundColor});
       grad.setBounds(0, 0, this.getWidth(), this.getHeight());
-      Drawable drawable = new LayerDrawable(new Drawable[]{_backgroundColor, grad});
+      Drawable drawable = new LayerDrawable(new Drawable[]{new ColorDrawable(_backgroundColor), grad});
       drawable.draw(canvas);
     }
 
@@ -163,39 +163,18 @@ public class MBSegmentedItem extends RadioButton
     return _textSize;
   }
 
-  public void setSelectedBackgroundColor(ColorDrawable selectedBackgroundColor)
+  public void setSelectedBackgroundColor(int selectedBackgroundColor)
   {
     _selectedBackgroundColor = selectedBackgroundColor;
     requestLayout();
     invalidate();
   }
 
-  public void setSelectedBackgroundColor(int color)
-  {
-    setSelectedBackgroundColor(new ColorDrawable(color));
-  }
-
-  public ColorDrawable getSelectedBackgroundColor()
-  {
-    return _selectedBackgroundColor;
-  }
-
   @Override
   public void setBackgroundColor(int backgroundColor)
-  {
-    setBackgroundColor(new ColorDrawable(backgroundColor));
-  }
-
-  public void setBackgroundColor(ColorDrawable backgroundColor)
   {
     _backgroundColor = backgroundColor;
     requestLayout();
     invalidate();
   }
-
-  public ColorDrawable getBackgroundColor()
-  {
-    return _backgroundColor;
-  }
-
 }
