@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +16,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
@@ -24,6 +26,7 @@ import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
+import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBDialogViewBuilder.MBDialogType;
@@ -270,8 +273,7 @@ public class MBDialogController extends FragmentActivity
       transaction.addToBackStack(id);
     }
 
-    
-    if ( MBDevice.getInstance().isTablet()
+    if (MBDevice.getInstance().isTablet()
         && (page.getCurrentViewState() == MBViewState.MBViewStateModal || MBApplicationController.getInstance().getModalPageID() != null))
     {
       String modalPageID = MBApplicationController.getInstance().getModalPageID();
@@ -421,5 +423,18 @@ public class MBDialogController extends FragmentActivity
 
   public void popPageAnimated(boolean animated)
   {
+  }
+
+  public void handleOrientationChange(Configuration newConfig)
+  {
+    if ("SPLIT".equals(_dialogMode))
+    {
+      for (int i = 0; i < _sortedDialogIds.size() - 1; i++)
+      {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(_sortedDialogIds.get(i));
+        FrameLayout fragmentContainer = (FrameLayout) fragment.getView().getParent();
+        fragmentContainer.getLayoutParams().width = MBScreenUtilities.getWidthPixelsForPercentage(33);
+      }
+    }
   }
 }

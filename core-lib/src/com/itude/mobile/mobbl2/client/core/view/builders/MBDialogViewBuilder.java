@@ -21,7 +21,8 @@ public class MBDialogViewBuilder
     Single, Split
   }
 
-  private static final int SPLIT_MARGIN = 2;
+  private static final int SPLIT_MARGIN                   = 0;
+  private static final int LEFT_FRAGMENT_WIDTH_PERCENTAGE = 33;
 
   /**
    * A list of integers which are ids for the views to be built. In case of a single Dialog,
@@ -78,8 +79,8 @@ public class MBDialogViewBuilder
       FrameLayout fragmentContainer = new FrameLayout(MBApplicationController.getInstance().getBaseContext());
       fragmentContainer.setId(_sortedDialogIds.get(i));
 
-      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(MBScreenUtilities.getWidthPixelsForPercentage(20),
-          RelativeLayout.LayoutParams.MATCH_PARENT);
+      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+          MBScreenUtilities.getWidthPixelsForPercentage(LEFT_FRAGMENT_WIDTH_PERCENTAGE), RelativeLayout.LayoutParams.MATCH_PARENT);
 
       // position fragment containers next to each other
       if (i == 0)
