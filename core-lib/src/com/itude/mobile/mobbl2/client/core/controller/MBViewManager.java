@@ -371,12 +371,6 @@ public class MBViewManager extends ActivityGroup
     }
   }
 
-  private void updateDisplay()
-  {
-    // TODO Auto-generated method stub
-
-  }
-
   private MBDialogController getDialogWithName(String dialogName)
   {
     return (MBDialogController) getLocalActivityManager().getActivity(dialogName);
