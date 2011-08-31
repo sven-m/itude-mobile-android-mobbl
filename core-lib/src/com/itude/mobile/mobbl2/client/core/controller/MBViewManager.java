@@ -631,10 +631,24 @@ public class MBViewManager extends ActivityGroup
   {
     Log.d(Constants.APPLICATION_NAME, "MBViewManager.onConfigurationChanged");
 
-    // Tell all ViewControllers about the configuration change
-    for (MBBasicViewController controller : getAllFragments())
+    // Only handle orientationchanges when orientation changed, obviously
+    //    if (getResources().getConfiguration().orientation != newConfig.orientation)
     {
-      controller.handleOrientationChange(newConfig);
+      // Tell all ViewControllers about the configuration change
+      for (MBBasicViewController controller : getAllFragments())
+      {
+        controller.handleOrientationChange(newConfig);
+      }
+
+      if (MBDevice.getInstance().isTablet())
+      {
+        // Also, tell all Dialogs
+        for (String dialog : _dialogControllers)
+        {
+          MBDialogController dc = (MBDialogController) getLocalActivityManager().getActivity(dialog);
+          dc.handleOrientationChange(newConfig);
+        }
+      }
     }
 
     super.onConfigurationChanged(newConfig);
