@@ -13,8 +13,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NoSaveStateFrameLayout;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewParent;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -432,8 +434,17 @@ public class MBDialogController extends FragmentActivity
       for (int i = 0; i < _sortedDialogIds.size() - 1; i++)
       {
         Fragment fragment = getSupportFragmentManager().findFragmentById(_sortedDialogIds.get(i));
-        FrameLayout fragmentContainer = (FrameLayout) fragment.getView().getParent();
-        fragmentContainer.getLayoutParams().width = MBScreenUtilities.getWidthPixelsForPercentage(33);
+
+        View fragmentContainer = fragment.getView();
+        if (fragmentContainer instanceof NoSaveStateFrameLayout)
+        {
+          ViewParent parent = fragmentContainer.getParent();
+          if (parent instanceof FrameLayout)
+          {
+            FrameLayout frameLayout = (FrameLayout) parent;
+            frameLayout.getLayoutParams().width = MBScreenUtilities.getWidthPixelsForPercentage(33);
+          }
+        }
       }
     }
   }
