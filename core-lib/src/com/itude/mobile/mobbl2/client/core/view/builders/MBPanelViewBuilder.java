@@ -1111,7 +1111,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     //
   }
 
-  public ViewGroup buildClickabletMatrixPanel(ViewGroup parent)
+  public ViewGroup buildClickableMatrixPanel(ViewGroup parent)
   {
     int matrixId = UniqueIntegerGenerator.getId();
     parent.setId(matrixId);
