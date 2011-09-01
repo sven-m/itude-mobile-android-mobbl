@@ -103,7 +103,7 @@ public class MBStyleHandler
     else if (Constants.C_EDITABLEMATRIX_DRAGBUTTON.equals(style))
     {
       view.setBackgroundDrawable(MBResourceService.getInstance().getImageByID("button-drag"));
-    }
+    } 
   }
   
   protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed)
@@ -387,6 +387,10 @@ public class MBStyleHandler
   }
 
   public void styleDropdownItem(View view)
+  {
+  }
+
+  public void styleCloseButtonDialog(Button button)
   {
   }
 }

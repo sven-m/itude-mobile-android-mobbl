@@ -14,9 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
@@ -169,12 +169,28 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
       FrameLayout layout = (FrameLayout) getDialog().findViewById(android.R.id.custom);
       layout.setPadding(0, 0, 0, 0);
 
+      if (MBDevice.getInstance().isTablet())
+      {
+       styleCloseButton();
+      }
+
       if (_isDialogFullscreen)
       {
         Window window = getDialog().getWindow();
-        window.setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+        window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
       }
+    }
+  }
+
+  private void styleCloseButton()
+  {
+    final AlertDialog alertDialog = (AlertDialog) getDialog();
+
+    Button button = alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+    if (button != null)
+    {
+      MBViewBuilderFactory.getInstance().getStyleHandler().styleCloseButtonDialog(button);
     }
   }
 

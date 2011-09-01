@@ -52,7 +52,6 @@ public class MBViewManager extends ActivityGroup
 
   private ArrayList<String>      _dialogControllers;
   private ArrayList<String>      _sortedDialogNames;
-  private String                 _activeDialogName;
   private Dialog                 _currentAlert;
   private boolean                _singlePageMode;
 
@@ -215,11 +214,6 @@ public class MBViewManager extends ActivityGroup
         }
       }
     }
-  }
-
-  public void setActiveDialogName(String activeDialogName)
-  {
-    _activeDialogName = activeDialogName;
   }
 
   public Dialog getCurrentAlert()
