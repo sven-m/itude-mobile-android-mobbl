@@ -51,18 +51,12 @@ public class MBForEach extends MBComponentContainer
           MBRow row = new MBRow(getDefinition(), getDocument(), this);
           addRow(row);
 
-          String childPath = fullPath + "[" + i + "]";
           for (MBDefinition childDef : (ArrayList<MBDefinition>) def.getChildren())
           {
-            if (childDef.isPreConditionValid(document, childPath))
+            if (childDef.isPreConditionValid(document, row.getAbsoluteDataPath()))
             {
               row.addChild(MBComponentFactory.getComponentFromDefinition(childDef, document, row));
             }
-            // parent.getAbsoluteDataPath() didn't return anything.
-            /*if (childDef.isPreConditionValid(document, parent.getAbsoluteDataPath()))
-            {
-              row.addChild(MBComponentFactory.getComponentFromDefinition(childDef, document, row));
-            }*/
           }
         }
         if (definition.getSuppressRowComponent())
@@ -126,7 +120,6 @@ public class MBForEach extends MBComponentContainer
     ArrayList<Object> result = super.getDescendantsOfKind(clazz);
     for (MBRow child : _rows)
     {
-
       if (clazz.isInstance(child)) result.add(child);
       result.addAll(child.getDescendantsOfKind(clazz));
     }
@@ -146,27 +139,25 @@ public class MBForEach extends MBComponentContainer
   }
 
   @Override
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level).append("<MBForEach ").append(this.attributeAsXml("value", _value))
+    StringUtilities.appendIndentString(appendToMe, level).append("<MBForEach ").append(this.attributeAsXml("value", _value))
         .append(">\n");
 
     MBForEachDefinition def = (MBForEachDefinition) getDefinition();
     for (MBVariableDefinition var : def.getVariables().values())
-      var.asXmlWithLevel(p_appendToMe, level + 2);
+      var.asXmlWithLevel(appendToMe, level + 2);
     for (MBRow child : _rows)
-      child.asXmlWithLevel(p_appendToMe, level + 2);
+      child.asXmlWithLevel(appendToMe, level + 2);
 
-    childrenAsXmlWithLevel(p_appendToMe, level + 2);
-    return StringUtilities.appendIndentString(p_appendToMe, level).append("</MBForEach>\n");
-
+    childrenAsXmlWithLevel(appendToMe, level + 2);
+    return StringUtilities.appendIndentString(appendToMe, level).append("</MBForEach>\n");
   }
 
   @Override
   public String toString()
   {
-    StringBuffer rt = new StringBuffer();
-    return asXmlWithLevel(rt, 0).toString();
+    return asXmlWithLevel(new StringBuffer(), 0).toString();
   }
 
 }

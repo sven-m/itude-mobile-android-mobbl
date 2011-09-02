@@ -61,6 +61,10 @@ public class MBRow extends MBComponentContainer
     else
     {
       String componentPath = substituteExpressions(getComponentDataPath());
+      if (!componentPath.startsWith("/") && componentPath.indexOf(":") == -1)
+      {
+        componentPath = getPage().getAbsoluteDataPath() + "/" + componentPath;
+      }
       value = componentPath + "/" + varDef.getExpression();
     }
 
@@ -73,11 +77,11 @@ public class MBRow extends MBComponentContainer
   }
 
   @Override
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level).append("<MBRow index=").append(_index).append(">\n");
-    childrenAsXmlWithLevel(p_appendToMe, level + 2);
-    return StringUtilities.appendIndentString(p_appendToMe, level).append("</MBRow>\n");
+    StringUtilities.appendIndentString(appendToMe, level).append("<MBRow index=").append(_index).append(">\n");
+    childrenAsXmlWithLevel(appendToMe, level + 2);
+    return StringUtilities.appendIndentString(appendToMe, level).append("</MBRow>\n");
   }
 
   @Override

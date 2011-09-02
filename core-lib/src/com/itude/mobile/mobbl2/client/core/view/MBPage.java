@@ -196,8 +196,10 @@ public class MBPage extends MBPanel
     {
       MBPageDefinition pd = (MBPageDefinition) getDefinition();
       String stripped = StringUtilities.normalizedPath(StringUtilities.stripCharacters(path, "[]0123456789"));
-      stripped = stripped + "/";
-
+      if (!stripped.endsWith("/"))
+      {
+        stripped = stripped + "/";
+      }
       String mustBe = pd.getRootPath();
       if (mustBe == null || mustBe.equals(""))
       {
@@ -434,15 +436,15 @@ public class MBPage extends MBPanel
   }
 
   @Override
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level).append("<MBPage ").append(attributeAsXml("pageName", _pageName)).append(" ")
+    StringUtilities.appendIndentString(appendToMe, level).append("<MBPage ").append(attributeAsXml("pageName", _pageName)).append(" ")
         .append(attributeAsXml("rootPath", _rootPath)).append(" ").append(attributeAsXml("dialogName", _dialogName)).append(" ")
         .append(attributeAsXml("document", _document.getDocumentName())).append(">\n");
 
-    childrenAsXmlWithLevel(p_appendToMe, level + 2);
+    childrenAsXmlWithLevel(appendToMe, level + 2);
 
-    return StringUtilities.appendIndentString(p_appendToMe, level).append("</MBPage>\n");
+    return StringUtilities.appendIndentString(appendToMe, level).append("</MBPage>\n");
 
   }
 
