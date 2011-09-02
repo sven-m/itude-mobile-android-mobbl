@@ -282,16 +282,15 @@ public class MBElementContainer implements Parcelable
     }
     else
     {
+      // not found, check if the name is a valid child at all
+      if (!getDefinition().isValidChild(name))
+      {
+        String message = "Child element with name " + name + " not present";
+        throw new MBInvalidPathException(message);
+      }
       List<MBElement> result = _elements.get(name);
       if (result == null)
       {
-        // not found, check if the name is a valid child at all
-        if (!getDefinition().isValidChild(name))
-        {
-          String message = "Child element with name " + name + " not present";
-          throw new MBInvalidPathException(message);
-        }
-        // ok, it is valid. return an empty list.
         result = new ArrayList<MBElement>();
         _elements.put(name, result);
       }
