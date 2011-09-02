@@ -8,9 +8,24 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBVariableDefinitio
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.view.exceptions.MBInvalidComponentTypeException;
 
-public class MBComponentFactory
+public final class MBComponentFactory
 {
-  // This is an internal utility class; not meant to be extended or modified by applications
+
+  /**
+   * Default constructor
+   */
+  private MBComponentFactory()
+  {
+  }
+
+  /**
+   * This is an internal utility class; not meant to be extended or modified by applications
+   * 
+   * @param definition {@link MBDefinition}
+   * @param document {@link MBDocument}
+   * @param parent {@link MBComponentContainer}
+   * @return {@link MBComponent}
+   */
   public static MBComponent getComponentFromDefinition(MBDefinition definition, MBDocument document, MBComponentContainer parent)
   {
 
@@ -27,8 +42,8 @@ public class MBComponentFactory
     else if (definition instanceof MBFieldDefinition)
     {
       result = new MBField(definition, document, parent);
-    } 
-    else if(definition instanceof MBVariableDefinition)
+    }
+    else if (definition instanceof MBVariableDefinition)
     {
       result = new MBVariable(definition, document, parent);
     }

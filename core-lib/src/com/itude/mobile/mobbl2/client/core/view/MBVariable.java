@@ -25,9 +25,9 @@ public class MBVariable extends MBComponentContainer
 
   }
 
-  public void setName(String _name)
+  public void setName(String name)
   {
-    this._name = _name;
+    this._name = name;
   }
 
   public String getName()
@@ -35,9 +35,9 @@ public class MBVariable extends MBComponentContainer
     return _name;
   }
 
-  public void setExpression(String _expression)
+  public void setExpression(String expression)
   {
-    this._expression = _expression;
+    this._expression = expression;
   }
 
   public String getExpression()
@@ -46,18 +46,18 @@ public class MBVariable extends MBComponentContainer
   }
 
   @Override
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level)
+    StringUtilities.appendIndentString(appendToMe, level)
                   .append("<MBVariable ")
                   .append(attributeAsXml("name", _name))
                   .append(" ")
                   .append(attributeAsXml("expression", _expression))
                   .append(">\n");
 
-    childrenAsXmlWithLevel(p_appendToMe, level + 2);
+    childrenAsXmlWithLevel(appendToMe, level + 2);
     
-    return StringUtilities.appendIndentString(p_appendToMe, level)
+    return StringUtilities.appendIndentString(appendToMe, level)
                         .append("</MBVariable>\n");
   }
 
