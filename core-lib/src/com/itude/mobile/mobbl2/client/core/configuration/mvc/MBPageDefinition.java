@@ -74,9 +74,9 @@ public class MBPageDefinition extends MBPanelDefinition
   }
 
   @Override
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(p_appendToMe, level).append("<Page name='").append(getName()).append("' document='")
+    StringUtilities.appendIndentString(appendToMe, level).append("<Page name='").append(getName()).append("' document='")
         .append(_documentName).append("'").append(getAttributeAsXml("title", getTitle())).append(">\n");
 
     List<MBDefinition> children = getChildren();
@@ -84,9 +84,15 @@ public class MBPageDefinition extends MBPanelDefinition
     for (int i = 0; i < children.size(); i++)
     {
       MBPanelDefinition panelDef = (MBPanelDefinition) children.get(i);
-      panelDef.asXmlWithLevel(p_appendToMe, level + 2);
+      panelDef.asXmlWithLevel(appendToMe, level + 2);
     }
-    return StringUtilities.appendIndentString(p_appendToMe, level).append("</Page>\n");
+    return StringUtilities.appendIndentString(appendToMe, level).append("</Page>\n");
+  }
+  
+  @Override
+  public String toString()
+  {
+    return asXmlWithLevel(new StringBuffer(), 0).toString();
   }
 
 }

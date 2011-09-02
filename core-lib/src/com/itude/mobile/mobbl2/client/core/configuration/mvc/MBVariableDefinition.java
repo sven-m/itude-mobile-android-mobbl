@@ -7,9 +7,10 @@ public class MBVariableDefinition extends MBDefinition
 {
   private String _expression;
 
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  @Override
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    return StringUtilities.appendIndentString(p_appendToMe, level).append("<Variable name='").append(getName()).append("' expression='")
+    return StringUtilities.appendIndentString(appendToMe, level).append("<Variable name='").append(getName()).append("' expression='")
         .append(_expression).append("'/>\n");
   }
 
@@ -21,6 +22,12 @@ public class MBVariableDefinition extends MBDefinition
   public void setExpression(String expression)
   {
     _expression = expression;
+  }
+  
+  @Override
+  public String toString()
+  {
+    return asXmlWithLevel(new StringBuffer(), 0).toString();
   }
 
 }

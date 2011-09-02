@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
+import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.MBConditionalDefinition;
 
 public class MBForEachDefinition extends MBConditionalDefinition
@@ -19,6 +20,29 @@ public class MBForEachDefinition extends MBConditionalDefinition
   {
     _children = new ArrayList<MBDefinition>();
     _variables = new HashMap<String, MBVariableDefinition>();
+  }
+
+  @Override
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
+  {
+    StringUtilities.appendIndentString(appendToMe, level).//
+    append("<MBForEach ").//
+    append(getAttributeAsXml("value", _value)).//
+    append(getAttributeAsXml("suppressRowComponent", _suppressRowComponent ? "TRUE" : "FALSE")).//
+    append(">\n");
+
+    for (MBVariableDefinition var : _variables.values())
+      var.asXmlWithLevel(appendToMe, level + 2);
+
+    List<MBDefinition> children = getChildren();
+
+    for (int i = 0; i < children.size(); i++)
+    {
+      MBDefinition def = (MBDefinition) children.get(i);
+      def.asXmlWithLevel(appendToMe, level + 2);
+    }
+
+    return StringUtilities.appendIndentString(appendToMe, level).append("</MBForEach>\n");
   }
 
   @Override
