@@ -61,6 +61,8 @@ public class MBRow extends MBComponentContainer
     else
     {
       String componentPath = substituteExpressions(getComponentDataPath());
+      
+      //in config file, when the expression of a variable does not contain ":" or a prefix "/", componentPath needs to be reset. 
       if (!componentPath.startsWith("/") && componentPath.indexOf(":") == -1)
       {
         componentPath = getPage().getAbsoluteDataPath() + "/" + componentPath;
