@@ -179,6 +179,7 @@ public class MBOutcomeHandler extends Handler
           else if ("POP".equals(outcomeToProcess.getDisplayMode()))
           {
             viewManager.popPage(outcomeToProcess.getDialogName());
+            outcomeToProcess.setDialogName(null);
           }
           else if ("POPALL".equals(outcomeToProcess.getDisplayMode()))
           {

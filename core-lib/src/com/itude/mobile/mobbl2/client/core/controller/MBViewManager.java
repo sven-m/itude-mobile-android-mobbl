@@ -141,7 +141,7 @@ public class MBViewManager extends ActivityGroup
     {
       final MBDialogController childController = (MBDialogController) child;
       MBDialogDefinition firstDialogDefinition = MBMetadataService.getInstance().getFirstDialogDefinition();
-      String firstDialog = firstDialogDefinition.getName();
+      final String firstDialog = firstDialogDefinition.getName();
       if (!childController.getName().equals(firstDialog))
       {
         if (MBDevice.getInstance().isPhone())
@@ -150,7 +150,13 @@ public class MBViewManager extends ActivityGroup
         }
         else if (MBDevice.getInstance().isTablet())
         {
-          selectTab(firstDialog.hashCode());
+          runOnUiThread(new Runnable()
+          {
+            public void run()
+            {
+              selectTab(firstDialog.hashCode());
+            }
+          });
         }
         setTitle(firstDialogDefinition.getTitle());
       }
