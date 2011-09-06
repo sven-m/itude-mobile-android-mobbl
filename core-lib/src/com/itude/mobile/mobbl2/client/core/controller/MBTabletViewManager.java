@@ -149,7 +149,7 @@ public class MBTabletViewManager extends MBViewManager
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item)
-  { 
+  {
     if (item.getItemId() == android.R.id.home)
     {
       onHomeSelected();
@@ -257,7 +257,7 @@ public class MBTabletViewManager extends MBViewManager
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO);
 
         MBTabBar tabBar = new MBTabBar(MBTabletViewManager.this);
         tabBar.setTabPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
