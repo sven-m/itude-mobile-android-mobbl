@@ -137,7 +137,8 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
         networkException.setName("Network error");
         throw networkException;
       }
-      else if (e instanceof UnknownHostException || (e instanceof IOException && e.getMessage().contains("SSL handshake")))
+      else if (e instanceof UnknownHostException
+               || (e instanceof IOException && e.getMessage() != null && e.getMessage().contains("SSL handshake")))
       {
         MBServerErrorException serverException = new MBServerErrorException("Server unreachable");
         serverException.setName("Server message");
@@ -182,7 +183,8 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     String responseMessage = httpResponse.getStatusLine().getReasonPhrase();
     if (responseCode != HttpStatus.SC_OK)
     {
-      Log.e(Constants.APPLICATION_NAME, "MBRESTServiceDataHandler.loadDocument: Received HTTP responseCode=" + responseCode + ": " + responseMessage);
+      Log.e(Constants.APPLICATION_NAME, "MBRESTServiceDataHandler.loadDocument: Received HTTP responseCode=" + responseCode + ": "
+                                        + responseMessage);
     }
 
     HttpEntity entity = httpResponse.getEntity();
