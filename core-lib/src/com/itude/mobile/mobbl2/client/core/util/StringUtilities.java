@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import org.apache.commons.codec.binary.Hex;
+
 import android.text.InputType;
 import android.text.method.NumberKeyListener;
 import android.util.Log;
@@ -359,15 +361,10 @@ public final class StringUtilities
     MessageDigest digest = null;
     try
     {
-      digest = MessageDigest.getInstance("MD5");
+      digest = java.security.MessageDigest.getInstance("MD5");
       digest.update(stringToHash.getBytes());
-
-      byte[] messageDigest = digest.digest();
-
-      StringBuffer hexString = new StringBuffer();
-      for (int i = 0; i < messageDigest.length; i++)
-        hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
-      return hexString.toString();
+      byte[] hash = digest.digest();
+      return new String(Hex.encodeHex(hash));
     }
     catch (Exception e)
     {
