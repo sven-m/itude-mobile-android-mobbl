@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -395,12 +396,11 @@ public class MBPanelViewBuilder extends MBViewBuilder
       rowPanel.setClickable(true);
       rowPanel.setFocusable(true);
       rowPanel.setOnClickListener(panel);
-      
+
       // Make sure we keep a reference to this clickable view. 
       // This will be useful in the MBPanel.onClick method. 
       panel.getPage().addClickableView(rowPanel);
-      
-      
+
       getStyleHandler().styleClickableRow(rowPanel);
     }
 
@@ -772,11 +772,11 @@ public class MBPanelViewBuilder extends MBViewBuilder
       rowPanel.setClickable(true);
       rowPanel.setFocusable(true);
       rowPanel.setOnClickListener(panel);
-      
+
       // Make sure we keep a reference to this clickable view. 
       // This will be useful in the MBPanel.onClick method. 
       panel.getPage().addClickableView(rowPanel);
-      
+
       getStyleHandler().styleClickableRow(rowPanel);
     }
 
@@ -969,28 +969,28 @@ public class MBPanelViewBuilder extends MBViewBuilder
     if (((MBPanel) panel.getParent()).isChildrenDraggable())
     {
 
-//      if (MBDevice.getInstance().isPhone())
-//      {
-        Button upButton = new Button(context);
-        upButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-        upButton.setTag(Constants.C_EDITABLEMATRIX_UPBUTTON);
-        rightButtonContainer.addView(upButton);
-        getStyleHandler().styleButtonWithName(upButton, Constants.C_EDITABLEMATRIX_UPBUTTON);
+      //      if (MBDevice.getInstance().isPhone())
+      //      {
+      Button upButton = new Button(context);
+      upButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+      upButton.setTag(Constants.C_EDITABLEMATRIX_UPBUTTON);
+      rightButtonContainer.addView(upButton);
+      getStyleHandler().styleButtonWithName(upButton, Constants.C_EDITABLEMATRIX_UPBUTTON);
 
-        Button downButton = new Button(context);
-        downButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-        downButton.setTag(Constants.C_EDITABLEMATRIX_DOWNBUTTON);
-        rightButtonContainer.addView(downButton);
-        getStyleHandler().styleButtonWithName(downButton, Constants.C_EDITABLEMATRIX_DOWNBUTTON);
-//      }
-//      else
-//      {
-//        Button dragButton = new Button(context);
-//        dragButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-//        dragButton.setTag(Constants.C_EDITABLEMATRIX_DRAGBUTTON);
-//        rightButtonContainer.addView(dragButton);
-//        getStyleHandler().styleButtonWithName(dragButton, Constants.C_EDITABLEMATRIX_DRAGBUTTON);
-//      }
+      Button downButton = new Button(context);
+      downButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+      downButton.setTag(Constants.C_EDITABLEMATRIX_DOWNBUTTON);
+      rightButtonContainer.addView(downButton);
+      getStyleHandler().styleButtonWithName(downButton, Constants.C_EDITABLEMATRIX_DOWNBUTTON);
+      //      }
+      //      else
+      //      {
+      //        Button dragButton = new Button(context);
+      //        dragButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+      //        dragButton.setTag(Constants.C_EDITABLEMATRIX_DRAGBUTTON);
+      //        rightButtonContainer.addView(dragButton);
+      //        getStyleHandler().styleButtonWithName(dragButton, Constants.C_EDITABLEMATRIX_DRAGBUTTON);
+      //      }
     }
 
     relativeContainer.addView(rightButtonContainer);
@@ -1117,20 +1117,18 @@ public class MBPanelViewBuilder extends MBViewBuilder
     parent.setId(matrixId);
 
     // We create a container so we can add an leaf to show this section is clickable
-    RelativeLayout container = new RelativeLayout(parent.getContext());
-    container.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+    Context context = parent.getContext();
+    FrameLayout container = new FrameLayout(context);
+    container.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+        android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
     container.addView(parent);
 
     // Add the leaf to the container
-    ImageView leaf = new ImageView(parent.getContext());
-
-    RelativeLayout.LayoutParams indicatorParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-        RelativeLayout.LayoutParams.WRAP_CONTENT);
-    indicatorParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-    indicatorParams.addRule(RelativeLayout.ALIGN_BOTTOM, matrixId);
+    ImageView leaf = new ImageView(context);
 
     // Indicator will be positioned on the bottom right of the parent
-    leaf.setLayoutParams(indicatorParams);
+    leaf.setLayoutParams(new FrameLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+        android.view.ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM | Gravity.RIGHT));
     leaf.setImageDrawable(MBResourceService.getInstance().getImageByID(Constants.C_LEAF));
 
     container.addView(leaf);
