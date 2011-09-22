@@ -67,7 +67,7 @@ public class MBStyleHandler
   public void styleTextView(TextView view, MBField field)
   {
   }
-  
+
   public void styleButton(Button view, MBField field)
   {
     styleButtonWithName(view, field.getStyle());
@@ -98,14 +98,15 @@ public class MBStyleHandler
     }
     else if (Constants.C_EDITABLEMATRIX_DOWNBUTTON.equals(style))
     {
-      view.setBackgroundDrawable(getStatedButtonBackground("button-arrow-down-normal", "button-arrow-down-pressed", "button-arrow-down-disabled"));
+      view.setBackgroundDrawable(getStatedButtonBackground("button-arrow-down-normal", "button-arrow-down-pressed",
+                                                           "button-arrow-down-disabled"));
     }
     else if (Constants.C_EDITABLEMATRIX_DRAGBUTTON.equals(style))
     {
       view.setBackgroundDrawable(MBResourceService.getInstance().getImageByID("button-drag"));
-    } 
+    }
   }
-  
+
   protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed)
   {
     StateListDrawable buttonStates = new StateListDrawable();
@@ -131,8 +132,7 @@ public class MBStyleHandler
 
     return buttonStates;
   }
-  
-  
+
   protected StateListDrawable getStatedEditTextBackground(String stateNormal, String stateActive, String stateDisabled)
   {
     StateListDrawable buttonStates = new StateListDrawable();
@@ -154,7 +154,7 @@ public class MBStyleHandler
   public void styleInputfieldBackgroundWithName(View inputField, String style)
   {
   }
-  
+
   public void styleEditableMatrixModeButton(Button view)
   {
   }
@@ -393,4 +393,10 @@ public class MBStyleHandler
   public void styleCloseButtonDialog(Button button)
   {
   }
+
+  public void styleViewWithName(View view, String name)
+  {
+
+  }
+
 }
