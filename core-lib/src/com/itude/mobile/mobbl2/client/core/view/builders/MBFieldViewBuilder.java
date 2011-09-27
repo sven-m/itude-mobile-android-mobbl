@@ -315,24 +315,6 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
     getStyleHandler().styleSpinner(dropdownList);
 
-    //    ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(context, android.R.layout.simple_spinner_item)
-    //    {
-    //      @Override
-    //      public View getView(int position, View convertView, ViewGroup parent)
-    //      {
-    //        View view = super.getView(position, convertView, parent);
-    //        if (view instanceof TextView)
-    //        {
-    //          TextView textView = (TextView) view;
-    //          getStyleHandler().styleLabel(textView, null);
-    //        }
-    //        getStyleHandler().styleSpinnerItem(view);
-    //        return view;
-    //      }
-    //    };
-
-    getStyleHandler().styleSpinner(dropdownList);
-
     ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(context, android.R.layout.simple_spinner_item)
     {
 
@@ -362,7 +344,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
     for (int i = 0; i < field.getDomain().getDomainValidators().size(); i++)
     {
       MBDomainValidatorDefinition domDef = field.getDomain().getDomainValidators().get(i);
-      adapter.add(domDef.getTitle());
+      adapter.add(MBLocalizationService.getInstance().getTextForKey(domDef.getTitle()));
 
       if ((fieldValue != null && domDef.getValue() != null && fieldValue.equals(domDef.getValue()))
           || (field.getValueIfNil() != null && domDef.getValue() != null && field.getValueIfNil().equals(domDef.getValue())))
