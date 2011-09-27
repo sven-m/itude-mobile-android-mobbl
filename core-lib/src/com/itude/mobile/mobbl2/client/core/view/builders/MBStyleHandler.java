@@ -25,7 +25,8 @@ import com.itude.mobile.mobbl2.client.core.view.MBComponent;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
-import com.itude.mobile.mobbl2.client.core.view.components.MBPageIndicatorBar;
+import com.itude.mobile.mobbl2.client.core.view.components.MBCirclePageIndicatorBar;
+import com.itude.mobile.mobbl2.client.core.view.components.MBDrawablePageIndicatorBar;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedItem;
 
 public class MBStyleHandler
@@ -284,12 +285,16 @@ public class MBStyleHandler
   {
   }
 
-  public void styleDivider(LinearLayout view)
+  public void styleDivider(View view)
   {
     view.setBackgroundColor(Color.DKGRAY);
   }
 
   public void styleMatrixRow(MBPanel panel, LinearLayout row)
+  {
+  }
+
+  public void styleMatrixRowPanel(MBPanel panel, View row, boolean isClickable, boolean doubleLined, int rowNumber)
   {
   }
 
@@ -310,6 +315,14 @@ public class MBStyleHandler
   }
 
   public void styleMatrixHeaderRow(ViewGroup headerRow)
+  {
+  }
+
+  public void styleMatrixHeaderTitleRow(ViewGroup headerRow)
+  {
+  }
+
+  public void styleMatrixHeaderLabelRow(ViewGroup headerRow)
   {
   }
 
@@ -358,7 +371,19 @@ public class MBStyleHandler
   {
   }
 
-  public void stylePageIndicatorBar(MBPageIndicatorBar indicatorBar)
+  public void styleDrawablePageIndicatorBar(MBDrawablePageIndicatorBar indicatorBar)
+  {
+  }
+
+  public void styleDrawablePageIndicatorBarActiveIndicatorView(View view)
+  {
+  }
+
+  public void styleDrawablePageIndicatorBarInactiveIndicatorView(View view)
+  {
+  }
+
+  public void styleCirclePageIndicatorBar(MBCirclePageIndicatorBar indicatorBar)
   {
   }
 

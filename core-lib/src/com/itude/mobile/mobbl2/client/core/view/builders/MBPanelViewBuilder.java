@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +35,8 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBEditableMatrix;
 public class MBPanelViewBuilder extends MBViewBuilder
 {
 
-  private boolean _isFirstRow = true;
+  private boolean _isFirstRow      = true;
+  private int     _matrixRowNumber = 0;
 
   public ViewGroup buildPanelView(MBPanel panel, MBViewManager.MBViewState viewState)
   {
@@ -87,6 +87,8 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
   public ViewGroup buildMatrix(MBPanel panel, MBViewState viewState)
   {
+    _matrixRowNumber = 0;
+
     LinearLayout result = new LinearLayout(MBApplicationController.getInstance().getBaseContext());
     result.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
     result.setOrientation(LinearLayout.VERTICAL);
@@ -104,6 +106,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
   public ViewGroup buildEditableMatrix(MBPanel panel, MBViewState viewState)
   {
+    _matrixRowNumber = 0;
 
     Context context = MBApplicationController.getInstance().getBaseContext();
 
@@ -586,15 +589,16 @@ public class MBPanelViewBuilder extends MBViewBuilder
       }
     }
 
+    MBStyleHandler styleHandler = getStyleHandler();
     if (matrixTitle.isEmpty() && matrixLabels.isEmpty())
     {
       // use the stylehandler for the divider to let the header
       // act as a top divider
       headerPanel.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, 1));
-      getStyleHandler().styleDivider(headerPanel);
+      styleHandler.styleDivider(headerPanel);
       return headerPanel;
     }
-    else getStyleHandler().styleMatrixHeader(headerPanel);
+    else styleHandler.styleMatrixHeader(headerPanel);
 
     //Header
     if (!matrixTitle.isEmpty())
@@ -603,7 +607,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
       headerLabel.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
           RelativeLayout.LayoutParams.WRAP_CONTENT));
       headerLabel.setTag(Constants.C_MATRIXTITLEROW);
-      getStyleHandler().styleMatrixHeaderRow(headerLabel);
+      styleHandler.styleMatrixHeaderTitleRow(headerLabel);
 
       buildChildren(matrixTitle, headerLabel, null);
 
@@ -651,7 +655,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
       headerRow.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
       headerRow.setOrientation(LinearLayout.HORIZONTAL);
 
-      getStyleHandler().styleMatrixHeaderRow(headerRow);
+      styleHandler.styleMatrixHeaderLabelRow(headerRow);
 
       buildMatrixRowPanelChildren(matrixLabels, headerRow, true);
 
@@ -663,6 +667,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
   private ViewGroup buildMatrixRowPanel(MBPanel panel)
   {
+    _matrixRowNumber++;
 
     if (panel.getParent() != null && panel.getParent() instanceof MBPanel)
     {
@@ -683,6 +688,10 @@ public class MBPanelViewBuilder extends MBViewBuilder
   private ViewGroup buildReadOnlyMatrixRowPanel(MBPanel panel)
   {
     final Context context = MBApplicationController.getInstance().getBaseContext();
+
+    boolean isClickable = false;
+
+    MBStyleHandler styleHandler = getStyleHandler();
 
     // the parent of all widgets in this row
     RelativeLayout rowPanel = new RelativeLayout(context);
@@ -723,7 +732,8 @@ public class MBPanelViewBuilder extends MBViewBuilder
     View leftBorder = new View(context);
     leftBorder.setLayoutParams(leftBorderParams);
     leftBorder.setId(UniqueIntegerGenerator.getId());
-    leftBorder.setBackgroundColor(Color.DKGRAY);
+    styleHandler.styleDivider(leftBorder);
+
     rowPanel.addView(leftBorder);
     //
 
@@ -733,7 +743,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     View rightBorder = new View(context);
     rightBorder.setLayoutParams(rightBorderParams);
     rightBorder.setId(UniqueIntegerGenerator.getId());
-    rightBorder.setBackgroundColor(Color.DKGRAY);
+    styleHandler.styleDivider(rightBorder);
     rowPanel.addView(rightBorder);
     //
 
@@ -747,7 +757,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     View bottomBorder = new View(context);
     bottomBorder.setId(UniqueIntegerGenerator.getId());
     bottomBorder.setLayoutParams(bottomBorderParams);
-    bottomBorder.setBackgroundColor(Color.DKGRAY);
+    styleHandler.styleDivider(bottomBorder);
     rowPanel.addView(bottomBorder);
     //
 
@@ -756,6 +766,8 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
     if (panel.getOutcomeName() != null)
     {
+      isClickable = true;
+
       // Arrow
       ImageView arrow = new ImageView(rowPanel.getContext());
       arrow.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
@@ -777,8 +789,10 @@ public class MBPanelViewBuilder extends MBViewBuilder
       // This will be useful in the MBPanel.onClick method. 
       panel.getPage().addClickableView(rowPanel);
 
-      getStyleHandler().styleClickableRow(rowPanel);
     }
+
+    styleHandler.styleMatrixRowPanel(panel, rowPanel, isClickable, (matrixRowTitles.size() > 0 && matrixRowLabels.size() > 0),
+                                     _matrixRowNumber);
 
     return rowPanel;
   }
@@ -906,6 +920,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
       currentId = UniqueIntegerGenerator.getId();
       current.setId(currentId);
+
     }
 
     return currentId;

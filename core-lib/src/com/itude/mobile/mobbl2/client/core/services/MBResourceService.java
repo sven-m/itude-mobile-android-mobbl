@@ -30,11 +30,11 @@ import com.itude.mobile.mobbl2.client.core.util.MBCacheManager;
 public class MBResourceService
 {
 
-  public static final String       RESOURCE_CONFIG_FILE_NAME = "resources.xml";
+  public static final String        RESOURCE_CONFIG_FILE_NAME = "resources.xml";
 
-  private MBResourceConfiguration  _config;
-  private static MBResourceService _instance;
-  private Map<String, byte[]>  _pngCache = new HashMap<String, byte[]>();
+  private MBResourceConfiguration   _config;
+  private static MBResourceService  _instance;
+  private final Map<String, byte[]> _pngCache                 = new HashMap<String, byte[]>();
 
   private MBResourceService()
   {
@@ -52,7 +52,7 @@ public class MBResourceService
         {
           _instance = new MBResourceService();
           MBResourceConfigurationParser parser = new MBResourceConfigurationParser();
-    
+
           byte[] data = DataUtil.getInstance().readFromAssetOrFile(RESOURCE_CONFIG_FILE_NAME);
           _instance.setConfig((MBResourceConfiguration) parser.parseData(data, RESOURCE_CONFIG_FILE_NAME));
         }
@@ -79,6 +79,13 @@ public class MBResourceService
     if (def == null) throw new MBResourceNotDefinedException("Resource for ID=" + resourceId + " could not be found");
 
     return getResourceByURL(def.getUrl(), def.getCacheable(), def.getTtl());
+  }
+
+  public int getDrawableIdentifier(String drawableName)
+  {
+    Resources resources = MBApplicationController.getInstance().getBaseContext().getResources();
+
+    return resources.getIdentifier(drawableName, "drawable", MBApplicationController.getInstance().getBaseContext().getPackageName());
   }
 
   public Drawable getImageByID(String resourceId)
@@ -140,12 +147,10 @@ public class MBResourceService
     return getResourceByURL(urlString, false, 0);
   }
 
-  
   public byte[] getResourceByURL(String urlString, boolean cacheable, int ttl)
   {
     boolean isPng = urlString.endsWith(".png");
-    if (isPng && _pngCache.containsKey(urlString))
-      return _pngCache.get(urlString);
+    if (isPng && _pngCache.containsKey(urlString)) return _pngCache.get(urlString);
 
     if (urlString.startsWith("file://"))
     {
