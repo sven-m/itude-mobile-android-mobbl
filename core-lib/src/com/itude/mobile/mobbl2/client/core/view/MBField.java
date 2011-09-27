@@ -336,7 +336,7 @@ public class MBField extends MBComponent
    */
   public String getValue()
   {
-    if (_cachedValueSet == true)
+    if (_cachedValueSet)
     {
       //      Log.e(Constants.APPLICATION_NAME, "returning cached value for field " + getName());
       return _cachedValue;
@@ -348,6 +348,12 @@ public class MBField extends MBComponent
       Object value = getDocument().getValueForPath(getAbsoluteDataPath());
       if (value instanceof String) result = (String) value;
       else if (value != null) result = value.toString();
+
+      // don't use the getter here!
+      if (_dataType == null)
+      {
+        result = MBLocalizationService.getInstance().getTextForKey(result);
+      }
     }
     _cachedValue = result;
     _cachedValueSet = true;
@@ -434,7 +440,7 @@ public class MBField extends MBComponent
       {
         // Button outcomes do not map to an attribute
         Log.d(Constants.APPLICATION_NAME, "MBField.getAttributeDefinition() with path=" + path
-                       + " does not map to an attribute. Probably an outcomePath for a Button.");
+                                          + " does not map to an attribute. Probably an outcomePath for a Button.");
       }
     }
 

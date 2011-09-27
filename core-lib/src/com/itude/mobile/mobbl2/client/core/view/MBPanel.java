@@ -143,8 +143,8 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
           path = getAbsoluteDataPath() + "/" + path;
         }
 
-        // Do not localize data coming from documents; which would become very confusing
-        return (String) getDocument().getValueForPath(path);
+        result = (String) getDocument().getValueForPath(path);
+        //        return result;
       }
     }
 

@@ -316,7 +316,7 @@ public final class StringUtilities
 
   // returns a string formatted as a price with three decimals assuming the receiver is a float string read from XML
   // WARNING: Only use this method to present data to the screen (BINCKAPPS-32, BINCKMOBILE-35, BINCKMOBILE-113)
-  //
+  // TODO why is this method not doing anything with the currency sign?
   public static String formatPriceWithThreeDecimals(String stringToFormat)
   {
     if (stringToFormat == null || stringToFormat.length() == 0)
