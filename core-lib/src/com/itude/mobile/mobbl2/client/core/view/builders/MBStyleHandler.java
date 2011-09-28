@@ -375,6 +375,11 @@ public class MBStyleHandler
   {
   }
 
+  public Drawable getDrawablePageIndicatorDrawable()
+  {
+    return null;
+  }
+
   public void styleDrawablePageIndicatorBarActiveIndicatorView(View view)
   {
   }

@@ -1,8 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.view.components;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,9 +11,6 @@ import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 public class MBDrawablePageIndicatorBar extends MBAbstractPageIndicator
 {
-
-  private Drawable _inactiveDrawable;
-  private Drawable _activeDrawable;
 
   public MBDrawablePageIndicatorBar(Context context)
   {
@@ -36,11 +31,14 @@ public class MBDrawablePageIndicatorBar extends MBAbstractPageIndicator
   @Override
   protected View setupActiveIndicatorView()
   {
-    ImageView activeIndicatorView = new ImageView(getContext());
-    activeIndicatorView.setBackgroundDrawable(_activeDrawable);
-
     MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
+
+    ImageView activeIndicatorView = new ImageView(getContext());
+    activeIndicatorView.setBackgroundDrawable(styleHandler.getDrawablePageIndicatorDrawable());
+
     styleHandler.styleDrawablePageIndicatorBarActiveIndicatorView(activeIndicatorView);
+
+    activeIndicatorView.setSelected(true);
 
     return activeIndicatorView;
   }
@@ -48,11 +46,14 @@ public class MBDrawablePageIndicatorBar extends MBAbstractPageIndicator
   @Override
   protected View setupInactiveIndicatorView()
   {
-    ImageView inactiveIndicatorView = new ImageView(getContext());
-    inactiveIndicatorView.setBackgroundDrawable(_inactiveDrawable);
-
     MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
+
+    ImageView inactiveIndicatorView = new ImageView(getContext());
+    inactiveIndicatorView.setBackgroundDrawable(styleHandler.getDrawablePageIndicatorDrawable());
+
     styleHandler.styleDrawablePageIndicatorBarActiveIndicatorView(inactiveIndicatorView);
+
+    inactiveIndicatorView.setSelected(false);
 
     return inactiveIndicatorView;
   }
@@ -60,32 +61,17 @@ public class MBDrawablePageIndicatorBar extends MBAbstractPageIndicator
   @Override
   public void setActiveIndicator(int activatingIndicator)
   {
-    Log.d("ali", "Before activatingIndicator");
 
     ImageView currentIndicator = (ImageView) getIndicatorList().get(getActiveIndicatorIndex());
-    currentIndicator.setBackgroundDrawable(_inactiveDrawable);
+    currentIndicator.setSelected(false);
 
     setActiveIndicatorIndex(activatingIndicator);
 
     currentIndicator = (ImageView) getIndicatorList().get(activatingIndicator);
-    currentIndicator.setBackgroundDrawable(_activeDrawable);
-    Log.d("ali", "After activatingIndicator before invalidating");
+    currentIndicator.setSelected(true);
 
     getIndicatorContainer().invalidate();
 
-    Log.d("ali", "After activatingIndicator after invalidating");
-  }
-
-  public void setActiveIndicatorDrawable(Drawable activeDrawable)
-  {
-    _activeDrawable = activeDrawable;
-    resetPageIndicator();
-  }
-
-  public void setInactiveIndicatorDrawable(Drawable inactiveDrawable)
-  {
-    _inactiveDrawable = inactiveDrawable;
-    resetPageIndicator();
   }
 
 }
