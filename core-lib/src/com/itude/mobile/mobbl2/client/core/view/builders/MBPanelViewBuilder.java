@@ -727,42 +727,9 @@ public class MBPanelViewBuilder extends MBViewBuilder
     // -1: nothing added yet (so use rowPanel as parent)
     int currentId = -1;
 
-    // Left border
-    RelativeLayout.LayoutParams leftBorderParams = new RelativeLayout.LayoutParams(1, RelativeLayout.LayoutParams.WRAP_CONTENT);
-    View leftBorder = new View(context);
-    leftBorder.setLayoutParams(leftBorderParams);
-    leftBorder.setId(UniqueIntegerGenerator.getId());
-    styleHandler.styleDivider(leftBorder);
+    currentId = buildMatrixRowPanelHeader(panel, rowPanel, matrixRowTitles, currentId);
 
-    rowPanel.addView(leftBorder);
-    //
-
-    // Right border
-    RelativeLayout.LayoutParams rightBorderParams = new RelativeLayout.LayoutParams(1, RelativeLayout.LayoutParams.WRAP_CONTENT);
-    rightBorderParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-    View rightBorder = new View(context);
-    rightBorder.setLayoutParams(rightBorderParams);
-    rightBorder.setId(UniqueIntegerGenerator.getId());
-    styleHandler.styleDivider(rightBorder);
-    rowPanel.addView(rightBorder);
-    //
-
-    currentId = buildMatrixRowPanelHeader(panel, rowPanel, matrixRowTitles, currentId, leftBorder.getId(), rightBorder.getId());
-
-    currentId = buildMatrixRowPanelLabels(panel, rowPanel, matrixRowLabels, currentId, leftBorder.getId(), rightBorder.getId());
-
-    // Bottom border
-    RelativeLayout.LayoutParams bottomBorderParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, 1);
-    bottomBorderParams.addRule(RelativeLayout.BELOW, currentId);
-    View bottomBorder = new View(context);
-    bottomBorder.setId(UniqueIntegerGenerator.getId());
-    bottomBorder.setLayoutParams(bottomBorderParams);
-    styleHandler.styleDivider(bottomBorder);
-    rowPanel.addView(bottomBorder);
-    //
-
-    rightBorderParams.addRule(RelativeLayout.ABOVE, bottomBorder.getId());
-    leftBorderParams.addRule(RelativeLayout.ABOVE, bottomBorder.getId());
+    currentId = buildMatrixRowPanelLabels(panel, rowPanel, matrixRowLabels, currentId);
 
     if (panel.getOutcomeName() != null)
     {
@@ -797,23 +764,13 @@ public class MBPanelViewBuilder extends MBViewBuilder
     return rowPanel;
   }
 
-  private int buildMatrixRowPanelLabels(MBPanel panel, RelativeLayout rowPanel, ArrayList<MBComponent> matrixRowLabels, int currentId,
-                                        int leftBorderId, int rightBorderId)
+  private int buildMatrixRowPanelLabels(MBPanel panel, RelativeLayout rowPanel, ArrayList<MBComponent> matrixRowLabels, int currentId)
   {
     // Row with labels
     if (matrixRowLabels.isEmpty()) return currentId;
     RelativeLayout.LayoutParams rowParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
         RelativeLayout.LayoutParams.WRAP_CONTENT);
     if (currentId != -1) rowParams.addRule(RelativeLayout.BELOW, currentId);
-
-    if (leftBorderId != -1)
-    {
-      rowParams.addRule(RelativeLayout.RIGHT_OF, leftBorderId);
-    }
-    if (rightBorderId != -1)
-    {
-      rowParams.addRule(RelativeLayout.LEFT_OF, rightBorderId);
-    }
 
     LinearLayout row = new LinearLayout(rowPanel.getContext());
     row.setLayoutParams(rowParams);
@@ -822,7 +779,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
     getStyleHandler().styleMatrixRow(panel, row);
 
     // Add children to panel
-    //    buildChildren(p_matrixRowLabels, row, false, p_bounds, null);
     buildMatrixRowPanelChildren(matrixRowLabels, row, false);
 
     rowPanel.addView(row);
@@ -876,8 +832,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
   }
 
-  private int buildMatrixRowPanelHeader(MBPanel panel, RelativeLayout rowPanel, ArrayList<MBComponent> matrixRowTitles, int currentId,
-                                        int leftBorderId, int rightBorderId)
+  private int buildMatrixRowPanelHeader(MBPanel panel, RelativeLayout rowPanel, ArrayList<MBComponent> matrixRowTitles, int currentId)
   {
 
     if (matrixRowTitles.isEmpty()) return currentId;
@@ -898,26 +853,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
       // get the last child added to the rowpanel (this is our one and only label)
       View current = rowPanel.getChildAt(rowPanel.getChildCount() - 1);
       current.setPadding(MBScreenUtilities.FOUR, MBScreenUtilities.TWO, MBScreenUtilities.FOUR, MBScreenUtilities.TWO);
-      // Position the view between the borders (if necessary)
-      if (leftBorderId != -1 || rightBorderId != -1)
-      {
-
-        if (current.getLayoutParams() instanceof RelativeLayout.LayoutParams)
-        {
-          final RelativeLayout.LayoutParams rowParams = (RelativeLayout.LayoutParams) current.getLayoutParams();
-
-          if (leftBorderId != -1)
-          {
-            rowParams.addRule(RelativeLayout.RIGHT_OF, leftBorderId);
-          }
-          if (rightBorderId != -1)
-          {
-            rowParams.addRule(RelativeLayout.LEFT_OF, rightBorderId);
-          }
-        }
-
-      }
-
       currentId = UniqueIntegerGenerator.getId();
       current.setId(currentId);
 
