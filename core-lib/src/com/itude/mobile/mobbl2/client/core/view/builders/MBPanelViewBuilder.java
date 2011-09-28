@@ -727,9 +727,24 @@ public class MBPanelViewBuilder extends MBViewBuilder
     // -1: nothing added yet (so use rowPanel as parent)
     int currentId = -1;
 
-    currentId = buildMatrixRowPanelHeader(panel, rowPanel, matrixRowTitles, currentId);
+    RelativeLayout.LayoutParams linearContainerParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+    linearContainerParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
-    currentId = buildMatrixRowPanelLabels(panel, rowPanel, matrixRowLabels, currentId);
+    LinearLayout linearContainer = new LinearLayout(context);
+    linearContainer.setOrientation(LinearLayout.VERTICAL);
+    linearContainer.setLayoutParams(linearContainerParams);
+
+    rowPanel.addView(linearContainer);
+
+    if (matrixRowTitles.size() > 0)
+    {
+      currentId = buildMatrixRowPanelHeader(panel, linearContainer, matrixRowTitles, currentId);
+    }
+
+    if (matrixRowLabels.size() > 0)
+    {
+      currentId = buildMatrixRowPanelLabels(panel, linearContainer, matrixRowLabels, currentId);
+    }
 
     if (panel.getOutcomeName() != null)
     {
@@ -764,7 +779,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     return rowPanel;
   }
 
-  private int buildMatrixRowPanelLabels(MBPanel panel, RelativeLayout rowPanel, ArrayList<MBComponent> matrixRowLabels, int currentId)
+  private int buildMatrixRowPanelLabels(MBPanel panel, ViewGroup rowPanel, ArrayList<MBComponent> matrixRowLabels, int currentId)
   {
     // Row with labels
     if (matrixRowLabels.isEmpty()) return currentId;
@@ -832,7 +847,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
   }
 
-  private int buildMatrixRowPanelHeader(MBPanel panel, RelativeLayout rowPanel, ArrayList<MBComponent> matrixRowTitles, int currentId)
+  private int buildMatrixRowPanelHeader(MBPanel panel, ViewGroup rowPanel, ArrayList<MBComponent> matrixRowTitles, int currentId)
   {
 
     if (matrixRowTitles.isEmpty()) return currentId;

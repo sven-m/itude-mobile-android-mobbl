@@ -1,8 +1,11 @@
 package com.itude.mobile.mobbl2.client.core.view;
 
+import android.util.Log;
+
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNotBooleanException;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBConditionalDefinition extends MBDefinition
 {
@@ -23,7 +26,17 @@ public class MBConditionalDefinition extends MBDefinition
   {
     if (_preCondition == null) return true;
 
-    String result = document.evaluateExpression(_preCondition, currentPath);
+    String result = null;
+    try
+    {
+      result = document.evaluateExpression(_preCondition, currentPath);
+    }
+    catch (NullPointerException npe)
+    {
+      Log.e(Constants.APPLICATION_NAME, "Error validating precondition: " + _preCondition + " for type " + getClass().getSimpleName()
+                                        + " with name " + getName(), npe);
+      return false;
+    }
 
     result = result.toUpperCase();
     if ("1".equals(result) || "YES".equals(result) || "TRUE".equals(result)) return true;

@@ -294,8 +294,12 @@ public class MBStyleHandler
   {
   }
 
-  public void styleMatrixRowPanel(MBPanel panel, View row, boolean isClickable, boolean doubleLined, int rowNumber)
+  public void styleMatrixRowPanel(MBPanel panel, ViewGroup row, boolean isClickable, boolean doubleLined, int rowNumber)
   {
+    if (isClickable)
+    {
+      styleClickableRow(row);
+    }
   }
 
   public void styleMatrixCell(MBField field, TextView label)
@@ -344,6 +348,7 @@ public class MBStyleHandler
 
   public void styleClickableRow(ViewGroup view)
   {
+    view.setMinimumHeight(MBScreenUtilities.FIFTY);
   }
 
   public void styleMatrixContainer(LinearLayout view)
