@@ -28,9 +28,8 @@ import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.components.MBCirclePageIndicatorBar;
 import com.itude.mobile.mobbl2.client.core.view.components.MBDrawablePageIndicatorBar;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedItem;
-import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
 
-public class MBStyleHandler
+public class MBTabletStyleHandler
 {
 
   public void applyStyle(MBComponent component, View view, MBViewManager.MBViewState viewState)
@@ -112,27 +111,24 @@ public class MBStyleHandler
   protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed)
   {
     StateListDrawable buttonStates = new StateListDrawable();
+    Drawable imageEnabled = MBResourceService.getInstance().getImageByID(stateNormal);
+    Drawable imageFocused = MBResourceService.getInstance().getImageByID(statePressed);
 
-    if (statePressed != null)
-    {
-      Drawable imageFocused = MBResourceService.getInstance().getImageByID(statePressed);
-      buttonStates.addState(new int[]{R.attr.state_pressed}, imageFocused);
-    }
-
-    if (stateNormal != null)
-    {
-      Drawable imageEnabled = MBResourceService.getInstance().getImageByID(stateNormal);
-      buttonStates.addState(new int[]{R.attr.state_enabled}, imageEnabled);
-    }
+    if (statePressed != null) buttonStates.addState(new int[]{R.attr.state_pressed}, imageFocused);
+    if (stateNormal != null) buttonStates.addState(new int[]{R.attr.state_enabled}, imageEnabled);
 
     return buttonStates;
   }
 
   protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed, String stateDisabled)
   {
-    StateListDrawable buttonStates = getStatedButtonBackground(stateNormal, statePressed);
+    StateListDrawable buttonStates = new StateListDrawable();
+    Drawable imageEnabled = MBResourceService.getInstance().getImageByID(stateNormal);
+    Drawable imageFocused = MBResourceService.getInstance().getImageByID(statePressed);
     Drawable imageDisabled = MBResourceService.getInstance().getImageByID(stateDisabled);
 
+    if (statePressed != null) buttonStates.addState(new int[]{R.attr.state_pressed}, imageFocused);
+    if (stateNormal != null) buttonStates.addState(new int[]{R.attr.state_enabled}, imageEnabled);
     if (stateDisabled != null) buttonStates.addState(new int[]{-R.attr.state_enabled}, imageDisabled);
 
     return buttonStates;
@@ -169,6 +165,10 @@ public class MBStyleHandler
   }
 
   public void styleMatrixRowTitle(TextView view, MBField field)
+  {
+  }
+
+  public void styleNavigationBar(View bar)
   {
   }
 
@@ -413,7 +413,11 @@ public class MBStyleHandler
   {
   }
 
-  public void styleTabDropdownItem(View view)
+  public void styleActionBar(ActionBar actionBar)
+  {
+  }
+
+  public void styleTabItem(View view)
   {
   }
 
@@ -426,25 +430,6 @@ public class MBStyleHandler
   }
 
   public void styleViewWithName(View view, String name)
-  {
-
-  }
-
-  // Style methods for tablet
-  public void styleHomeIcon(View homeIcon)
-  {
-  }
-
-  public void styleActionBar(ActionBar actionBar)
-  {
-  }
-
-  public void styleTab(MBTab mbTab)
-  {
-
-  }
-
-  public void styleTabText(TextView view)
   {
 
   }

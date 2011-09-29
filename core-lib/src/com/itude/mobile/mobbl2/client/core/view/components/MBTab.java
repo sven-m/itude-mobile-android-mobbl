@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
+import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
+import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl2.client.core.view.listeners.MBTabListenerI;
 
 public class MBTab extends RelativeLayout implements OnClickListener
@@ -39,8 +41,8 @@ public class MBTab extends RelativeLayout implements OnClickListener
     setClickable(true);
     setOnClickListener(this);
 
-    int tabDrawableId = getResources().getIdentifier("tab_indicator_holo", "drawable", "android");
-    setBackgroundResource(tabDrawableId);
+    MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
+    styleHandler.styleTab(this);
 
     setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, MBScreenUtilities.convertDimensionPixelsToPixels(56)));
 
@@ -68,6 +70,8 @@ public class MBTab extends RelativeLayout implements OnClickListener
     _textView.setId(UniqueIntegerGenerator.getId());
     _textView.setSingleLine();
     _textView.setTextSize(18);
+
+    styleHandler.styleTabText(_textView);
 
     _content.addView(_icon);
     _content.addView(_textView);

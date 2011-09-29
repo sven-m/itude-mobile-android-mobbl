@@ -21,7 +21,7 @@ public class MBSpinnerAdapter extends ArrayAdapter<CharSequence>
   {
     View v = super.getDropDownView(position, convertView, parent);
     
-    MBViewBuilderFactory.getInstance().getStyleHandler().styleTabItem(v);
+    MBViewBuilderFactory.getInstance().getStyleHandler().styleTabDropdownItem(v);
     
     if (getSelectedElement() == position) 
     {

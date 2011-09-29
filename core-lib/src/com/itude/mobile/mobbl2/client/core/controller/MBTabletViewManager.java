@@ -3,6 +3,7 @@ package com.itude.mobile.mobbl2.client.core.controller;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import android.R;
 import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Context;
@@ -252,6 +253,13 @@ public class MBTabletViewManager extends MBViewManager
       public void run()
       {
         final ActionBar actionBar = getActionBar();
+
+        //fix the Home icon padding
+        View homeIcon = findViewById(R.id.home);
+        if (homeIcon != null)
+        {
+          MBViewBuilderFactory.getInstance().getStyleHandler().styleHomeIcon(homeIcon);
+        }
 
         MBViewBuilderFactory.getInstance().getStyleHandler().styleActionBar(actionBar);
 
