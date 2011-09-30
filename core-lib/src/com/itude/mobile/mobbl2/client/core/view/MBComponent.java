@@ -397,6 +397,22 @@ public class MBComponent
     return null;
   }
 
+  @SuppressWarnings("unchecked")
+  public <T extends MBRow> T getRow(int index)
+  {
+    ArrayList<Object> result = getDescendantsOfKind(MBRow.class);
+
+    for (Object row : result)
+    {
+
+      if (((MBRow) row).getIndex() == index)
+      {
+        return (T) row;
+      }
+    }
+    return null;
+  }
+
   public MBComponentContainer getFirstParentOfKind(Class<?> clazz)
   {
     MBComponentContainer parent = getParent();

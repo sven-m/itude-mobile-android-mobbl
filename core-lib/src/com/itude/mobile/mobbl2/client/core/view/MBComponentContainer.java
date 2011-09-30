@@ -1,7 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.view;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
@@ -63,7 +62,7 @@ public class MBComponentContainer extends MBComponent
   @Override
   public ArrayList<Object> getDescendantsOfKind(Class<?> clazz)
   {
-    List<Object> result = new ArrayList<Object>();
+    ArrayList<Object> result = new ArrayList<Object>();
     for (MBComponent child : _children)
     {
 
@@ -75,7 +74,7 @@ public class MBComponentContainer extends MBComponent
       result.addAll(child.getDescendantsOfKind(clazz));
     }
 
-    return super.getDescendantsOfKind(clazz);
+    return result;
   }
 
   public StringBuffer childrenAsXmlWithLevel(StringBuffer appendToMe, int level)
