@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -349,6 +350,18 @@ public class MBTabletStyleHandler
   public void styleClickableRow(ViewGroup view)
   {
     view.setMinimumHeight(MBScreenUtilities.FIFTY);
+
+    RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+        RelativeLayout.LayoutParams.WRAP_CONTENT);
+    arrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+    arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
+
+    ImageView arrow = new ImageView(view.getContext());
+    arrow.setLayoutParams(arrowParams);
+    arrow.setMinimumWidth(MBScreenUtilities.FORTY);
+    arrow.setImageDrawable(MBResourceService.getInstance().getImageByID(Constants.C_ARROW));
+
+    view.addView(arrow);
   }
 
   public void styleMatrixContainer(LinearLayout view)

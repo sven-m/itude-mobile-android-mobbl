@@ -384,18 +384,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
     // Arrow and clickable style of row
     if (panel.getOutcomeName() != null)
     {
-      RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-          RelativeLayout.LayoutParams.WRAP_CONTENT);
-      arrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-      arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
-
-      ImageView arrow = new ImageView(rowPanel.getContext());
-      arrow.setLayoutParams(arrowParams);
-      arrow.setMinimumWidth(MBScreenUtilities.FORTY);
-      arrow.setImageDrawable(MBResourceService.getInstance().getImageByID(Constants.C_ARROW));
-
-      rowPanel.addView(arrow);
-
       rowPanel.setClickable(true);
       rowPanel.setFocusable(true);
       rowPanel.setOnClickListener(panel);
