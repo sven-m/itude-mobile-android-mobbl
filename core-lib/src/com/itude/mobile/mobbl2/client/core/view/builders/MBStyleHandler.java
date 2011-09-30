@@ -327,6 +327,10 @@ public class MBStyleHandler
   {
   }
 
+  public void styleMatrixHeaderTitleRow(MBPanel panel, ViewGroup headerRow)
+  {
+  }
+
   public void styleMatrixHeaderLabelRow(ViewGroup headerRow)
   {
   }

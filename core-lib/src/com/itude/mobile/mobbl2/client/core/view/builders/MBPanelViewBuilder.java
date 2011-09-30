@@ -595,7 +595,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
       headerLabel.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
           RelativeLayout.LayoutParams.WRAP_CONTENT));
       headerLabel.setTag(Constants.C_MATRIXTITLEROW);
-      styleHandler.styleMatrixHeaderTitleRow(headerLabel);
+      styleHandler.styleMatrixHeaderTitleRow(panel, headerLabel);
 
       buildChildren(matrixTitle, headerLabel, null);
 
