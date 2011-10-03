@@ -10,12 +10,13 @@ public class MBToolDefinition extends MBDefinition
   private String _icon;
   private String _title;
   private String _preCondition;
+  private String _visibility;
 
-  public StringBuffer asXmlWithLevel(StringBuffer p_appendToMe, int level)
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    return StringUtilities.appendIndentString(p_appendToMe, level).append("<Tool name='").append(getName()).append('\'')
+    return StringUtilities.appendIndentString(appendToMe, level).append("<Tool name='").append(getName()).append('\'')
         .append(getAttributeAsXml("type", _type)).append(getAttributeAsXml("title", _title)).append(getAttributeAsXml("icon", _icon))
-        .append("/>\n");
+        .append(getAttributeAsXml("preCondition", _preCondition)).append(getAttributeAsXml("visibility", _visibility)).append("/>\n");
   }
 
   public void setType(String type)
@@ -66,5 +67,15 @@ public class MBToolDefinition extends MBDefinition
   public String getPreCondition()
   {
     return _preCondition;
+  }
+
+  public void setVisibility(String visibility)
+  {
+    _visibility = visibility;
+  }
+
+  public String getVisibility()
+  {
+    return _visibility;
   }
 }

@@ -1,6 +1,5 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import android.R;
@@ -23,7 +22,6 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SearchView;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
@@ -78,15 +76,17 @@ public class MBTabletViewManager extends MBViewManager
       {
         int index = tools.indexOf(def);
         MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), index, def.getTitle());
-        Drawable image = MBResourceService.getInstance().getImageByID(def.getIcon());
-        menuItem.setIcon(image);
+        if (def.getIcon() != null)
+        {
+          Drawable image = MBResourceService.getInstance().getImageByID(def.getIcon());
+          menuItem.setIcon(image);
+        }
 
-        // TODO do show as action in config
-        int showAsActionFlag = MenuItem.SHOW_AS_ACTION_IF_ROOM;
+        setShowAsActionFlag(def, menuItem);
+
         if ("REFRESH".equals(def.getType()))
         {
           _refreshId = def.getName().hashCode();
-          showAsActionFlag = MenuItem.SHOW_AS_ACTION_ALWAYS;
         }
         else if ("SEARCH".equals(def.getType()))
         {
@@ -113,49 +113,45 @@ public class MBTabletViewManager extends MBViewManager
             }
           });
 
-          if (def.getIcon() != null)
-          {
-            try
-            {
-              // change the iconified icon
-              Field searchButtonField = searchView.getClass().getDeclaredField("mSearchButton");
-              searchButtonField.setAccessible(true);
-              ImageView searchButton = (ImageView) searchButtonField.get(searchView);
-              searchButton.setImageDrawable(image);
-
-              // change the searchview icon
-              Field searchEditField = searchView.getClass().getDeclaredField("mSearchEditFrame");
-              searchEditField.setAccessible(true);
-              LinearLayout searchLayout = (LinearLayout) searchEditField.get(searchView);
-              LinearLayout linearLayout = (LinearLayout) searchLayout.getChildAt(0);
-
-              // find first image view, assuming this is the icon we need
-              ImageView searchViewIcon = null;
-              for (int i = 0; searchViewIcon == null && i < linearLayout.getChildCount(); i++)
-              {
-                View view = linearLayout.getChildAt(i);
-                if (view instanceof ImageView)
-                {
-                  searchViewIcon = (ImageView) view;
-                }
-              }
-              searchViewIcon.setImageDrawable(image);
-            }
-            catch (Exception e)
-            {
-              Log.e(Constants.APPLICATION_NAME, "error changing searchbutton icon", e);
-            }
-          }
           SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
           searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
           menuItem.setActionView(searchView);
         }
-        menuItem.setShowAsAction(showAsActionFlag);
       }
     }
 
     return true;
+  }
+
+  private void setShowAsActionFlag(MBToolDefinition def, MenuItem menuItem)
+  {
+    // default show as action flag if no visibility is set
+    int showAsActionFlag = MenuItem.SHOW_AS_ACTION_IF_ROOM;
+
+    String visibility = def.getVisibility();
+    if ("ALWAYS".equals(visibility))
+    {
+      showAsActionFlag = MenuItem.SHOW_AS_ACTION_ALWAYS;
+    }
+    else if ("IFROOM".equals(visibility))
+    {
+      showAsActionFlag = MenuItem.SHOW_AS_ACTION_IF_ROOM;
+    }
+    else if ("OVERFLOW".equals(visibility))
+    {
+      showAsActionFlag = MenuItem.SHOW_AS_ACTION_NEVER;
+    }
+    else if ("SHOWTEXT".equals(visibility))
+    {
+      showAsActionFlag = MenuItem.SHOW_AS_ACTION_WITH_TEXT;
+    }
+    else
+    {
+      Log.w(Constants.APPLICATION_NAME, "No visibility specified for tool " + def.getName() + ": using default show as action if room");
+    }
+
+    menuItem.setShowAsAction(showAsActionFlag);
   }
 
   @Override
