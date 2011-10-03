@@ -29,6 +29,7 @@ import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.components.MBCirclePageIndicatorBar;
 import com.itude.mobile.mobbl2.client.core.view.components.MBDrawablePageIndicatorBar;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedItem;
+import com.itude.mobile.mobbl2.client.core.view.components.MBSpinner;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
 
 public class MBStyleHandler
@@ -124,6 +125,7 @@ public class MBStyleHandler
     {
       Drawable imageEnabled = MBResourceService.getInstance().getImageByID(stateNormal);
       buttonStates.addState(new int[]{R.attr.state_enabled}, imageEnabled);
+      buttonStates.addState(new int[]{-R.attr.state_selected}, imageEnabled);
     }
 
     return buttonStates;
@@ -132,9 +134,25 @@ public class MBStyleHandler
   protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed, String stateDisabled)
   {
     StateListDrawable buttonStates = getStatedButtonBackground(stateNormal, statePressed);
-    Drawable imageDisabled = MBResourceService.getInstance().getImageByID(stateDisabled);
 
-    if (stateDisabled != null) buttonStates.addState(new int[]{-R.attr.state_enabled}, imageDisabled);
+    if (stateDisabled != null)
+    {
+      Drawable imageDisabled = MBResourceService.getInstance().getImageByID(stateDisabled);
+      buttonStates.addState(new int[]{-R.attr.state_enabled}, imageDisabled);
+    }
+
+    return buttonStates;
+  }
+
+  protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed, String stateDisabled, String stateSelected)
+  {
+    StateListDrawable buttonStates = getStatedButtonBackground(stateNormal, statePressed, stateDisabled);
+
+    if (stateSelected != null)
+    {
+      Drawable imageSelected = MBResourceService.getInstance().getImageByID(stateSelected);
+      buttonStates.addState(new int[]{R.attr.state_selected}, imageSelected);
+    }
 
     return buttonStates;
   }
@@ -462,6 +480,15 @@ public class MBStyleHandler
   }
 
   public void styleTabText(TextView view)
+  {
+
+  }
+
+  public void styleTabSpinner(MBSpinner spinner)
+  {
+  }
+
+  public void styleTabSpinnerText(TextView view)
   {
 
   }

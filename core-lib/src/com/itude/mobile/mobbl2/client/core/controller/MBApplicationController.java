@@ -96,7 +96,7 @@ public class MBApplicationController extends Application
   public void startApplication(MBApplicationFactory applicationFactory)
   {
     Log.d(Constants.APPLICATION_NAME, "MBApplicationController.startApplication");
-    Log.d(Constants.APPLICATION_NAME, "Device info:");
+    Log.d(Constants.APPLICATION_NAME, "Device info:\n");
     Log.d(Constants.APPLICATION_NAME, MBDevice.getInstance().toString());
 
     startOutcomeHandler();

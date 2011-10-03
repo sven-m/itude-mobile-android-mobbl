@@ -14,13 +14,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
@@ -51,8 +54,15 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
  */
 public class MBTabletViewManager extends MBViewManager
 {
-  private Menu _menu      = null;
-  private int  _refreshId = -1;
+  private Menu      _menu        = null;
+  private int       _refreshId   = -1;
+  private ViewGroup _frameLayout = null;
+
+  @Override
+  protected void onPreCreate()
+  {
+    // empty to override request window feature to hide Android's standard indeterminate progress indicator
+  }
 
   // Android hooks
   @Override
@@ -404,22 +414,43 @@ public class MBTabletViewManager extends MBViewManager
     {
       final MenuItem item = _menu.findItem(_refreshId);
 
-      //FIXME move view building to somewhere in the view package
-      final FrameLayout frameLayout = new FrameLayout(this);
-      frameLayout.setLayoutParams(new FrameLayout.LayoutParams(MBScreenUtilities.convertDimensionPixelsToPixels(80),
-          LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-      frameLayout.setPadding(0, 0, MBScreenUtilities.convertDimensionPixelsToPixels(20), 0);
+      if (_frameLayout == null)
+      {
+        //        ProgressBar progressBar = new ProgressBar(this);
+        //        int dp = MBScreenUtilities.convertDimensionPixelsToPixels(40);
+        //        progressBar.setLayoutParams(new FrameLayout.LayoutParams(dp, dp, Gravity.CENTER));
 
-      ProgressBar progressBar = new ProgressBar(this);
-      int dp = MBScreenUtilities.convertDimensionPixelsToPixels(40);
-      progressBar.setLayoutParams(new FrameLayout.LayoutParams(dp, dp, Gravity.CENTER));
-      frameLayout.addView(progressBar);
+        final RotateAnimation ra = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        ra.setDuration(1000L);
+        ra.setRepeatMode(Animation.INFINITE);
+        ra.setRepeatCount(Animation.INFINITE);
+        ra.setFillEnabled(false);
+        ra.setInterpolator(new LinearInterpolator());
+
+        Drawable drawable = MBResourceService.getInstance().getImageByID("ICON-tab-refresh");
+        ImageView imageView = new ImageView(this);
+        imageView.setImageDrawable(drawable);
+
+        float imageWidth = drawable.getIntrinsicWidth();
+        int framePadding = (int) ((MBScreenUtilities.convertDimensionPixelsToPixels(80) - imageWidth) / 2);
+
+        _frameLayout = new FrameLayout(this);
+        _frameLayout.setLayoutParams(new FrameLayout.LayoutParams(MBScreenUtilities.convertDimensionPixelsToPixels(80),
+            LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+        _frameLayout.setPadding(framePadding, 0, framePadding, 0);
+
+        _frameLayout.addView(imageView);
+        _frameLayout.setAnimation(ra);
+      }
+
       runOnUiThread(new MBRunnable()
       {
         @Override
         public void runMethod()
         {
-          item.setActionView(frameLayout);
+          item.setActionView(_frameLayout);
+          _frameLayout.getAnimation().startNow();
+          _frameLayout.setVisibility(View.VISIBLE);
         }
       });
     }
@@ -438,6 +469,10 @@ public class MBTabletViewManager extends MBViewManager
         public void runMethod()
         {
           item.setActionView(null);
+          _frameLayout = null;
+          _frameLayout.getAnimation().cancel();
+          _frameLayout.setVisibility(View.GONE);
+          //          ((View) _frameLayout.getParent()).requestLayout();
         }
       });
     }

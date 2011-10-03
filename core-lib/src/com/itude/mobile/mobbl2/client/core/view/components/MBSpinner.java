@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
+import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 /**
  * @author Coen Houtman
@@ -42,8 +43,10 @@ public class MBSpinner extends Spinner
     }
     _mode = mode;
 
-    int spinnerDrawableId = getResources().getIdentifier("spinner_cab_background_holo_dark", "drawable", "android");
-    setBackgroundResource(spinnerDrawableId);
+    //    int spinnerDrawableId = getResources().getIdentifier("spinner_cab_background_holo_dark", "drawable", "android");
+    //    setBackgroundResource(spinnerDrawableId);
+
+    MBViewBuilderFactory.getInstance().getStyleHandler().styleTabSpinner(this);
   }
 
   @Override
@@ -171,6 +174,8 @@ public class MBSpinner extends Spinner
     _textView.setSingleLine();
     _textView.setText(text);
     _textView.setTextSize(18);
+
+    MBViewBuilderFactory.getInstance().getStyleHandler().styleTabSpinnerText(_textView);
   }
 
   public void setIcon(Drawable drawable)

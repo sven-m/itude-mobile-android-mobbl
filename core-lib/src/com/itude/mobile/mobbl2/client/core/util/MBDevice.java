@@ -1,20 +1,30 @@
 package com.itude.mobile.mobbl2.client.core.util;
 
+import android.content.Context;
 import android.os.Build;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
+
+import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 
 /**
  * @author Coen Houtman
  * 
  * The class provides methods for other classes to check what kind of device the application is running on.
  */
-public class MBDevice
+public final class MBDevice
 {
-  private static final int DEVICE_TYPE_TABLET = 0;
-  private static final int DEVICE_TYPE_PHONE  = 1;
+  private static final int             DEVICE_TYPE_TABLET           = 0;
+  private static final int             DEVICE_TYPE_PHONE            = 1;
 
-  private static MBDevice  _instance;
+  private static MBDevice              _instance;
 
-  private int              _deviceType        = -1;
+  private int                          _deviceType                  = -1;
+  private String                       _osVersion                   = null;
+  private TwinResult<Integer, Integer> _screenSize                  = null;
+  private String                       _screenDensityClassification = null;
+  private TwinResult<Float, Float>     _screenDensity               = null;
 
   private MBDevice()
   {
@@ -44,30 +54,104 @@ public class MBDevice
 
   public String getOSVersion()
   {
-    switch (Build.VERSION.SDK_INT)
+    if (_osVersion == null)
     {
-      case (Build.VERSION_CODES.BASE) : //$FALL-THROUGH$
-      case (Build.VERSION_CODES.BASE_1_1) :
-        return "Android 1";
-      case (Build.VERSION_CODES.CUPCAKE) :
-        return "Android 1.5 Cupcake";
-      case (Build.VERSION_CODES.DONUT) :
-        return "Android 1.6 Donut";
-      case (Build.VERSION_CODES.ECLAIR) : //$FALL-THROUGH$
-      case (Build.VERSION_CODES.ECLAIR_MR1) : //$FALL-THROUGH$
-      case (Build.VERSION_CODES.ECLAIR_0_1) :
-        return "Android 2.0/2.1 Eclair";
-      case (Build.VERSION_CODES.FROYO) :
-        return "Android 2.2 Froyo";
-      case (Build.VERSION_CODES.GINGERBREAD) :
-        return "Android 2.3 Gingerbread";
-      case (Build.VERSION_CODES.GINGERBREAD_MR1) :
-        return "Android 2.3.3 Gingerbread";
-      case (Build.VERSION_CODES.HONEYCOMB) :
-        return "Android 3.0 Honeycomb";
-      default :
-        return "Unknown";
+      switch (Build.VERSION.SDK_INT)
+      {
+        case (Build.VERSION_CODES.BASE) : //$FALL-THROUGH$
+        case (Build.VERSION_CODES.BASE_1_1) :
+          _osVersion = "Android 1";
+          break;
+        case (Build.VERSION_CODES.CUPCAKE) :
+          _osVersion = "Android 1.5 Cupcake";
+          break;
+        case (Build.VERSION_CODES.DONUT) :
+          _osVersion = "Android 1.6 Donut";
+          break;
+        case (Build.VERSION_CODES.ECLAIR) : //$FALL-THROUGH$
+        case (Build.VERSION_CODES.ECLAIR_MR1) : //$FALL-THROUGH$
+        case (Build.VERSION_CODES.ECLAIR_0_1) :
+          _osVersion = "Android 2.0/2.1 Eclair";
+          break;
+        case (Build.VERSION_CODES.FROYO) :
+          _osVersion = "Android 2.2 Froyo";
+          break;
+        case (Build.VERSION_CODES.GINGERBREAD) :
+          _osVersion = "Android 2.3 Gingerbread";
+          break;
+        case (Build.VERSION_CODES.GINGERBREAD_MR1) :
+          _osVersion = "Android 2.3.3 Gingerbread";
+          break;
+        case (Build.VERSION_CODES.HONEYCOMB) :
+          _osVersion = "Android 3.0 Honeycomb";
+          break;
+        default :
+          _osVersion = "Unknown";
+      }
+
+      _osVersion += " (" + Build.VERSION.RELEASE + ")";
     }
+
+    return _osVersion;
+  }
+
+  public TwinResult<Integer, Integer> getScreenSize()
+  {
+    if (_screenSize == null)
+    {
+      Display display = ((WindowManager) MBApplicationController.getInstance().getBaseContext().getSystemService(Context.WINDOW_SERVICE))
+          .getDefaultDisplay();
+      int width = display.getWidth();
+      int height = display.getHeight();
+
+      _screenSize = new TwinResult<Integer, Integer>(width, height);
+    }
+
+    return _screenSize;
+  }
+
+  public String getScreenDensityClassification()
+  {
+    if (_screenDensityClassification == null)
+    {
+      DisplayMetrics metrics = new DisplayMetrics();
+      ((WindowManager) MBApplicationController.getInstance().getBaseContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
+          .getMetrics(metrics);
+
+      switch (metrics.densityDpi)
+      {
+        case (DisplayMetrics.DENSITY_LOW) :
+          _screenDensityClassification = "low";
+          break;
+        case (DisplayMetrics.DENSITY_MEDIUM) :
+          _screenDensityClassification = "medium";
+          break;
+        case (DisplayMetrics.DENSITY_HIGH) :
+          _screenDensityClassification = "high";
+          break;
+        case (DisplayMetrics.DENSITY_XHIGH) :
+          _screenDensityClassification = "xhigh";
+          break;
+        default :
+          _screenDensityClassification = "unknown";
+      }
+    }
+
+    return _screenDensityClassification;
+  }
+
+  public TwinResult<Float, Float> getScreenDensity()
+  {
+    if (_screenDensity == null)
+    {
+      DisplayMetrics metrics = new DisplayMetrics();
+      ((WindowManager) MBApplicationController.getInstance().getBaseContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
+          .getMetrics(metrics);
+
+      _screenDensity = new TwinResult<Float, Float>(metrics.xdpi, metrics.ydpi);
+    }
+
+    return _screenDensity;
   }
 
   public boolean isPhone()
@@ -83,8 +167,13 @@ public class MBDevice
   @Override
   public String toString()
   {
-    String result = "Device Info:\n" + " - Type: " + getDeviceType() + "\n" + " - OS version: " + getOSVersion();
+    StringBuilder result = new StringBuilder();
+    result.append(" - Type: " + getDeviceType() + "\n");
+    result.append(" - OS version: " + getOSVersion() + "\n");
+    result.append(" - Screen size: " + getScreenSize()._mainResult + " x " + getScreenSize()._secondResult + "\n");
+    result.append(" - Screen density: " + getScreenDensity()._mainResult + " x " + getScreenDensity()._secondResult + "\n");
+    result.append(" - Screen classification: " + getScreenDensityClassification());
 
-    return result;
+    return result.toString();
   }
 }
