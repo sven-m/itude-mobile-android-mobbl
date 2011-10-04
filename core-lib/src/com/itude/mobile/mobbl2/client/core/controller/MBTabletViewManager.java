@@ -1,5 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import android.R;
@@ -22,6 +23,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
@@ -76,9 +78,11 @@ public class MBTabletViewManager extends MBViewManager
       {
         int index = tools.indexOf(def);
         MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), index, def.getTitle());
+
+        Drawable image = null;
         if (def.getIcon() != null)
         {
-          Drawable image = MBResourceService.getInstance().getImageByID(def.getIcon());
+          image = MBResourceService.getInstance().getImageByID(def.getIcon());
           menuItem.setIcon(image);
         }
 
@@ -112,6 +116,40 @@ public class MBTabletViewManager extends MBViewManager
               }
             }
           });
+
+          if (image != null)
+          {
+            try
+            {
+              // change the iconified icon
+              Field searchButtonField = searchView.getClass().getDeclaredField("mSearchButton");
+              searchButtonField.setAccessible(true);
+              ImageView searchButton = (ImageView) searchButtonField.get(searchView);
+              searchButton.setImageDrawable(image);
+
+              // change the searchview icon
+              Field searchEditField = searchView.getClass().getDeclaredField("mSearchEditFrame");
+              searchEditField.setAccessible(true);
+              LinearLayout searchLayout = (LinearLayout) searchEditField.get(searchView);
+              LinearLayout linearLayout = (LinearLayout) searchLayout.getChildAt(0);
+
+              // find first image view, assuming this is the icon we need
+              ImageView searchViewIcon = null;
+              for (int i = 0; searchViewIcon == null && i < linearLayout.getChildCount(); i++)
+              {
+                View view = linearLayout.getChildAt(i);
+                if (view instanceof ImageView)
+                {
+                  searchViewIcon = (ImageView) view;
+                }
+              }
+              searchViewIcon.setImageDrawable(image);
+            }
+            catch (Exception e)
+            {
+              Log.e(Constants.APPLICATION_NAME, "error changing searchbutton icon", e);
+            }
+          }
 
           SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
           searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -464,9 +502,9 @@ public class MBTabletViewManager extends MBViewManager
         @Override
         public void runMethod()
         {
+          _frameLayout.getAnimation().cancel();
           item.setActionView(null);
           _frameLayout = null;
-          _frameLayout.getAnimation().cancel();
           _frameLayout.setVisibility(View.GONE);
           //          ((View) _frameLayout.getParent()).requestLayout();
         }
