@@ -546,7 +546,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
     ArrayList<MBComponent> children = panel.getChildren();
     ArrayList<MBComponent> matrixLabels = new ArrayList<MBComponent>();
-    ArrayList<MBComponent> matrixTitle = new ArrayList<MBComponent>();
+    ArrayList<MBComponent> matrixTitles = new ArrayList<MBComponent>();
 
     for (Iterator<MBComponent> iterator = children.iterator(); iterator.hasNext();)
     {
@@ -558,7 +558,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
         {
           if (Constants.C_FIELD_MATRIXTITLE.equals(field.getType()))
           {
-            matrixTitle.add(mbComponent);
+            matrixTitles.add(mbComponent);
           }
           else
           {
@@ -578,7 +578,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     }
 
     MBStyleHandler styleHandler = getStyleHandler();
-    if (matrixTitle.isEmpty() && matrixLabels.isEmpty())
+    if (matrixTitles.isEmpty() && matrixLabels.isEmpty())
     {
       // use the stylehandler for the divider to let the header
       // act as a top divider
@@ -589,7 +589,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     else styleHandler.styleMatrixHeader(headerPanel);
 
     //Header
-    if (!matrixTitle.isEmpty())
+    if (!matrixTitles.isEmpty())
     {
       RelativeLayout headerLabel = new RelativeLayout(context);
       headerLabel.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
@@ -597,7 +597,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
       headerLabel.setTag(Constants.C_MATRIXTITLEROW);
       styleHandler.styleMatrixHeaderTitleRow(panel, headerLabel);
 
-      buildChildren(matrixTitle, headerLabel, null);
+      buildChildren(matrixTitles, headerLabel, null);
 
       if (panel.getParent() instanceof MBPanel && ((MBPanel) panel.getParent()).getType().equals(Constants.C_EDITABLEMATRIX))
       {
@@ -642,6 +642,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
       LinearLayout headerRow = new LinearLayout(headerPanel.getContext());
       headerRow.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
       headerRow.setOrientation(LinearLayout.HORIZONTAL);
+      headerRow.setGravity(Gravity.CENTER_VERTICAL);
 
       styleHandler.styleMatrixHeaderLabelRow(headerRow);
 
@@ -778,6 +779,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     LinearLayout row = new LinearLayout(rowPanel.getContext());
     row.setLayoutParams(rowParams);
     row.setOrientation(LinearLayout.HORIZONTAL);
+    row.setGravity(Gravity.CENTER_VERTICAL);
 
     getStyleHandler().styleMatrixRow(panel, row);
 
@@ -795,6 +797,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
   {
 
     boolean needsToProcessFirstLabel = true;
+    MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
 
     for (MBComponent child : matrixRowLabels)
     {
@@ -812,6 +815,12 @@ public class MBPanelViewBuilder extends MBViewBuilder
       {
         LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);
         childView.setLayoutParams(params);
+
+        if (needsToProcessFirstLabel)
+        {
+          styleHandler.styleFirstMatrixHeaderRowChild(childView);
+        }
+        styleHandler.styleMatrixHeaderRowChild(childView);
       }
 
       // Add cell to matrix row
@@ -829,6 +838,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
         {
           ((TextView) childView).setGravity(Gravity.CENTER_HORIZONTAL);
         }
+
       }
 
     }

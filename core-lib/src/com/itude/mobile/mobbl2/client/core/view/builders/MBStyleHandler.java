@@ -483,13 +483,24 @@ public class MBStyleHandler
   {
 
   }
-
+  
   public void styleTabSpinner(MBSpinner spinner)
   {
   }
 
   public void styleTabSpinnerText(TextView view)
   {
+
+  }
+
+  public void styleFirstMatrixHeaderRowChild(View childView)
+  {
+
+  }
+
+  public void styleMatrixHeaderRowChild(View childView)
+  {
+    // TODO Auto-generated method stub
 
   }
 }
