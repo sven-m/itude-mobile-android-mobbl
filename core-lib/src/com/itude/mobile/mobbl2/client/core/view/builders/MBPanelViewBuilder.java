@@ -240,7 +240,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     boolean hasTitle = false;
     Context context = MBApplicationController.getInstance().getBaseContext();
 
-    LinearLayout panelView = new LinearLayout(MBApplicationController.getInstance().getBaseContext());
+    LinearLayout panelView = new LinearLayout(context);
     panelView.setOrientation(LinearLayout.VERTICAL);
 
     if (panel.getTitle() != null)
@@ -248,7 +248,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
       // Show header at top of the section
       hasTitle = true;
 
-      LinearLayout header = new LinearLayout(panelView.getContext());
+      LinearLayout header = new LinearLayout(context);
       header.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
       header.setOrientation(LinearLayout.VERTICAL);
 
@@ -265,16 +265,8 @@ public class MBPanelViewBuilder extends MBViewBuilder
     }
     else
     {
-      // Make sure that at least a top border is visible
-      LinearLayout topBorder = new LinearLayout(context);
-      topBorder.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, 1));
-      getStyleHandler().styleDivider(topBorder);
-
-      panelView.addView(topBorder);
+      // TODO border styling
     }
-
-    // Section takes care of top border. First row doesn't need to.
-    _isFirstRow = false;
 
     buildChildren(panel.getChildren(), panelView, null);
 
@@ -294,90 +286,17 @@ public class MBPanelViewBuilder extends MBViewBuilder
     rowPanel.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
     rowPanel.setTag(childIds);
 
-    int topBorderID = -1;
     if (_isFirstRow)
     {
-      // Add top border if this is the first row
-
-      // Left Border
-      RelativeLayout.LayoutParams topBorderParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, 1);
-
-      LinearLayout topBorder = new LinearLayout(context);
-      topBorderID = UniqueIntegerGenerator.getId();
-      topBorder.setId(topBorderID);
-      childIds.put("BorderTopID", topBorderID);
-      topBorder.setLayoutParams(topBorderParams);
-      topBorder.setTag("topBorder");
-      styleHandler.styleDivider(topBorder);
-      rowPanel.addView(topBorder);
+      // TODO Make sure this row is styled as a first row (so background image should possibly have a top border)
     }
-
-    // Left Border
-    RelativeLayout.LayoutParams leftBorderParams = new RelativeLayout.LayoutParams(1, RelativeLayout.LayoutParams.FILL_PARENT);
-    leftBorderParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-    if (topBorderID != -1)
+    else
     {
-      leftBorderParams.addRule(RelativeLayout.BELOW, topBorderID);
+      // TODO Make sure this row is styled as a row possibly with borders
     }
-
-    LinearLayout leftBorder = new LinearLayout(context);
-    int leftBorderId = UniqueIntegerGenerator.getId();
-    leftBorder.setId(leftBorderId);
-    childIds.put("BorderLeftID", leftBorderId);
-    leftBorder.setLayoutParams(leftBorderParams);
-    leftBorder.setTag("leftBorder");
-    styleHandler.styleDivider(leftBorder);
-    rowPanel.addView(leftBorder);
-    //
-
-    // Right Border
-    RelativeLayout.LayoutParams rightBorderParams = new RelativeLayout.LayoutParams(1, RelativeLayout.LayoutParams.FILL_PARENT);
-    rightBorderParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-    if (topBorderID != -1)
-    {
-      leftBorderParams.addRule(RelativeLayout.BELOW, topBorderID);
-    }
-
-    LinearLayout rightBorder = new LinearLayout(context);
-    int rightBorderId = UniqueIntegerGenerator.getId();
-    rightBorder.setId(rightBorderId);
-    childIds.put("BorderRightID", rightBorderId);
-    rightBorder.setLayoutParams(rightBorderParams);
-    rightBorder.setTag("rightBorder");
-    styleHandler.styleDivider(rightBorder);
-    rowPanel.addView(rightBorder);
-    //
 
     // Content view
     buildChildrenForRowPanel(panel.getChildren(), rowPanel, null);
-
-    // Bottom and (possible) top border params
-    RelativeLayout.LayoutParams bottomBorderParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, 1);
-    for (Integer id : (List<Integer>) childIds.get("RowChildIDs"))
-    {
-      if (topBorderID != -1)
-      {
-        ((RelativeLayout.LayoutParams) rowPanel.findViewById(id).getLayoutParams()).addRule(RelativeLayout.BELOW, id);
-      }
-
-      bottomBorderParams.addRule(RelativeLayout.BELOW, id);
-    }
-    //
-
-    LinearLayout bottomBorder = new LinearLayout(context);
-    int bottomBorderId = UniqueIntegerGenerator.getId();
-    bottomBorder.setId(bottomBorderId);
-    childIds.put("BorderBottomID", bottomBorderId);
-    bottomBorder.setLayoutParams(bottomBorderParams);
-    styleHandler.styleDivider(bottomBorder);
-
-    rowPanel.addView(bottomBorder);
-    //
-
-    // Make sure left and right borders are above bottom border
-    leftBorderParams.addRule(RelativeLayout.ABOVE, bottomBorderId);
-    rightBorderParams.addRule(RelativeLayout.ABOVE, bottomBorderId);
-    //
 
     //    styleHandler.styleRow(rowView);
 
@@ -407,21 +326,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
     final Context context = parent.getContext();
     final MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
 
-    Integer leftBorderID = -1;
-    Integer rightBorderID = -1;
-    HashMap<String, Object> childIds = (HashMap<String, Object>) parent.getTag();
-
-    if (childIds.containsKey("BorderLeftID"))
-    {
-      leftBorderID = (Integer) childIds.get("BorderLeftID");
-    }
-    if (childIds.containsKey("BorderRightID"))
-    {
-      rightBorderID = (Integer) childIds.get("BorderRightID");
-    }
-
-    List<Integer> rowChildIDs = new ArrayList<Integer>();
-    childIds.put("RowChildIDs", rowChildIDs);
     int previousButton = -1;
 
     LinearLayout nonButtonLayout = null;
@@ -443,22 +347,13 @@ public class MBPanelViewBuilder extends MBViewBuilder
       {
         if (nonButtonLayout == null)
         {
-          RelativeLayout.LayoutParams nonButtonLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+          RelativeLayout.LayoutParams nonButtonLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
               RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-          if (leftBorderID != -1)
-          {
-            nonButtonLayoutParams.addRule(RelativeLayout.RIGHT_OF, leftBorderID);
-          }
-          if (rightBorderID != -1)
-          {
-            nonButtonLayoutParams.addRule(RelativeLayout.LEFT_OF, rightBorderID);
-          }
 
           nonButtonLayout = new LinearLayout(context);
           nonButtonLayout.setLayoutParams(nonButtonLayoutParams);
+          nonButtonLayout.setGravity(Gravity.CENTER_VERTICAL);
 
-          rowChildIDs.add(childID);
           nonButtonLayout.setId(childID);
           styleHandler.styleRow(nonButtonLayout);
         }
@@ -491,9 +386,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
       }
       else
       {
-        // Right alignment positioned left of possible previously added buttons or the rightborder
-
-        rowChildIDs.add(childID);
         childView.setId(childID);
 
         styleHandler.styleRowButton(childParams);
@@ -502,14 +394,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
         if (previousButton == -1)
         {
-          if (rightBorderID != -1)
-          {
-            childParams.addRule(RelativeLayout.LEFT_OF, rightBorderID);
-          }
-          else
-          {
-            childParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-          }
+          childParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         }
         else
         {
@@ -1030,48 +915,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     }
 
     borderWrapper.addView(relativeContainer);
-
-    addBorders(borderWrapper, relativeContainer);
-
     return borderWrapper;
-  }
-
-  private void addBorders(ViewGroup parent, ViewGroup aroundView)
-  {
-
-    // Left divider
-    RelativeLayout.LayoutParams leftDividerParams = new RelativeLayout.LayoutParams(1, RelativeLayout.LayoutParams.FILL_PARENT);
-    leftDividerParams.addRule(RelativeLayout.ALIGN_TOP, aroundView.getId());
-    leftDividerParams.addRule(RelativeLayout.ALIGN_BOTTOM, aroundView.getId());
-    LinearLayout leftDivider = new LinearLayout(parent.getContext());
-    leftDivider.setId(UniqueIntegerGenerator.getId());
-    leftDivider.setLayoutParams(leftDividerParams);
-    getStyleHandler().styleDivider(leftDivider);
-    parent.addView(leftDivider);
-    ((RelativeLayout.LayoutParams) aroundView.getLayoutParams()).addRule(RelativeLayout.RIGHT_OF, leftDivider.getId());
-    //
-
-    // Right divider
-    RelativeLayout.LayoutParams rightDividerParams = new RelativeLayout.LayoutParams(1, RelativeLayout.LayoutParams.FILL_PARENT);
-    rightDividerParams.addRule(RelativeLayout.ALIGN_TOP, aroundView.getId());
-    rightDividerParams.addRule(RelativeLayout.ALIGN_BOTTOM, aroundView.getId());
-    rightDividerParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-    LinearLayout rightDivider = new LinearLayout(parent.getContext());
-    rightDivider.setId(UniqueIntegerGenerator.getId());
-    rightDivider.setLayoutParams(rightDividerParams);
-    getStyleHandler().styleDivider(rightDivider);
-    parent.addView(rightDivider);
-    ((RelativeLayout.LayoutParams) aroundView.getLayoutParams()).addRule(RelativeLayout.LEFT_OF, rightDivider.getId());
-    //
-
-    // Bottom divider
-    RelativeLayout.LayoutParams bottomDividerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, 1);
-    bottomDividerParams.addRule(RelativeLayout.BELOW, aroundView.getId());
-    LinearLayout divider = new LinearLayout(parent.getContext());
-    divider.setLayoutParams(bottomDividerParams);
-    getStyleHandler().styleDivider(divider);
-    parent.addView(divider);
-    //
   }
 
   public ViewGroup buildClickableMatrixPanel(ViewGroup parent)
