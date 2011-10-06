@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -302,6 +303,14 @@ public class MBTabletViewManager extends MBViewManager
         View homeIcon = findViewById(R.id.home);
         if (homeIcon != null)
         {
+          // https://dev.itude.com/jira/browse/BINCKAPPS-964
+          ViewParent parent = homeIcon.getParent();
+          if (parent instanceof FrameLayout)
+          {
+            FrameLayout fl = (FrameLayout) parent;
+            fl.setPadding(0, 0, 0, 0);
+          }
+
           MBViewBuilderFactory.getInstance().getStyleHandler().styleHomeIcon(homeIcon);
         }
 
