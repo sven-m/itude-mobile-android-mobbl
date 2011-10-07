@@ -74,4 +74,14 @@ public class MBDrawablePageIndicatorBar extends MBAbstractPageIndicator
 
   }
 
+  @Override
+  public void onIndicatorClick(int indicatorIndex)
+  {
+    MBSlidableViewFlipper attachedViewFlipper = getAttachedViewFlipper();
+    if (attachedViewFlipper != null)
+    {
+      attachedViewFlipper.snapToScreen(indicatorIndex);
+    }
+  }
+
 }

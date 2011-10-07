@@ -93,4 +93,9 @@ public class MBCirclePageIndicatorBar extends MBAbstractPageIndicator
     resetPageIndicator();
   }
 
+  @Override
+  public void onIndicatorClick(int indicatorIndex)
+  {
+  }
+
 }
