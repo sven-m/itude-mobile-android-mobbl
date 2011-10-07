@@ -274,12 +274,10 @@ public class MBPanelViewBuilder extends MBViewBuilder
     return panelView;
   }
 
-  @SuppressWarnings("unchecked")
   private ViewGroup buildRowPanel(MBPanel panel)
   {
 
     final Context context = MBApplicationController.getInstance().getBaseContext();
-    final MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
     HashMap<String, Object> childIds = new HashMap<String, Object>();
 
     RelativeLayout rowPanel = new RelativeLayout(context);
@@ -320,7 +318,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
     return rowPanel;
   }
 
-  @SuppressWarnings("unchecked")
   private void buildChildrenForRowPanel(List<? extends MBComponent> children, ViewGroup parent, MBViewManager.MBViewState viewState)
   {
     final Context context = parent.getContext();
