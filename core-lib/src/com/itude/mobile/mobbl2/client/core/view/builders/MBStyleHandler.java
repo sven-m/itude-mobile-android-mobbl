@@ -111,6 +111,10 @@ public class MBStyleHandler
     }
   }
 
+  public void styleButtonHeight(Button view, String style)
+  {
+  }
+
   protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed)
   {
     StateListDrawable buttonStates = new StateListDrawable();
@@ -460,11 +464,6 @@ public class MBStyleHandler
   {
   }
 
-  public void styleViewWithName(View view, String name)
-  {
-
-  }
-
   // Style methods for tablet
   public void styleHomeIcon(View homeIcon)
   {
@@ -483,7 +482,7 @@ public class MBStyleHandler
   {
 
   }
-  
+
   public void styleTabSpinner(MBSpinner spinner)
   {
   }
