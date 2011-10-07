@@ -480,48 +480,56 @@ public class MBField extends MBComponent
   {
     boolean fieldValueSameAsNilValue = fieldValue.equals(getValueIfNil());
 
-    if (getFormatMask() != null && getDataType().equals("dateTime"))
+    try
     {
-      // Get a NSDate from a xml-dateFormat
-      String xmlDate = fieldValue;
 
-      // Formats the date depending on the current date. 
-      if (getFormatMask().equals("dateOrTimeDependingOnCurrentDate"))
+      if (getFormatMask() != null && getDataType().equals("dateTime"))
       {
-        fieldValue = DateUtilities.formatDateDependingOnCurrentDate(xmlDate);
+        // Get a NSDate from a xml-dateFormat
+        String xmlDate = fieldValue;
+
+        // Formats the date depending on the current date. 
+        if (getFormatMask().equals("dateOrTimeDependingOnCurrentDate"))
+        {
+          fieldValue = DateUtilities.formatDateDependingOnCurrentDate(xmlDate);
+        }
+        else
+        {
+          Date date = DateUtilities.dateFromXML(xmlDate);
+
+          SimpleDateFormat df = new SimpleDateFormat(getFormatMask());
+          fieldValue = df.format(date);
+        }
+
       }
-      else
+      else if (!fieldValueSameAsNilValue && getDataType().equals("numberWithTwoDecimals"))
       {
-        Date date = DateUtilities.dateFromXML(xmlDate);
-
-        SimpleDateFormat df = new SimpleDateFormat(getFormatMask());
-        fieldValue = df.format(date);
+        fieldValue = StringUtilities.formatNumberWithTwoDecimals(fieldValue);
       }
-
+      else if (!fieldValueSameAsNilValue && getDataType().equals("numberWithThreeDecimals"))
+      {
+        fieldValue = StringUtilities.formatNumberWithThreeDecimals(fieldValue);
+      }
+      else if (!fieldValueSameAsNilValue && getDataType().equals("priceWithTwoDecimals"))
+      {
+        fieldValue = StringUtilities.formatPriceWithTwoDecimals(fieldValue);
+      }
+      else if (!fieldValueSameAsNilValue && getDataType().equals("priceWithThreeDecimals"))
+      {
+        fieldValue = StringUtilities.formatPriceWithThreeDecimals(fieldValue);
+      }
+      else if (getDataType().equals("volume"))
+      {
+        fieldValue = StringUtilities.formatVolume(fieldValue);
+      }
+      else if (getDataType().equals("percentageWithTwoDecimals"))
+      {
+        fieldValue = StringUtilities.formatPercentageWithTwoDecimals(fieldValue);
+      }
     }
-    else if (!fieldValueSameAsNilValue && getDataType().equals("numberWithTwoDecimals"))
+    catch (NumberFormatException nfe)
     {
-      fieldValue = StringUtilities.formatNumberWithTwoDecimals(fieldValue);
-    }
-    else if (!fieldValueSameAsNilValue && getDataType().equals("numberWithThreeDecimals"))
-    {
-      fieldValue = StringUtilities.formatNumberWithThreeDecimals(fieldValue);
-    }
-    else if (!fieldValueSameAsNilValue && getDataType().equals("priceWithTwoDecimals"))
-    {
-      fieldValue = StringUtilities.formatPriceWithTwoDecimals(fieldValue);
-    }
-    else if (!fieldValueSameAsNilValue && getDataType().equals("priceWithThreeDecimals"))
-    {
-      fieldValue = StringUtilities.formatPriceWithThreeDecimals(fieldValue);
-    }
-    else if (getDataType().equals("volume"))
-    {
-      fieldValue = StringUtilities.formatVolume(fieldValue);
-    }
-    else if (getDataType().equals("percentageWithTwoDecimals"))
-    {
-      fieldValue = StringUtilities.formatPercentageWithTwoDecimals(fieldValue);
+      throw new NumberFormatException("Unable to format value for field: " + getName());
     }
 
     // CURRENCY Symbols

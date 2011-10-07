@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.util;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -25,6 +26,7 @@ public final class MBDevice
   private TwinResult<Integer, Integer> _screenSize                  = null;
   private String                       _screenDensityClassification = null;
   private TwinResult<Float, Float>     _screenDensity               = null;
+  private String                       _screenType                  = null;
 
   private MBDevice()
   {
@@ -154,6 +156,38 @@ public final class MBDevice
     return _screenDensity;
   }
 
+  public String getScreenType()
+  {
+    if (_screenType == null)
+    {
+      int screenType = MBApplicationController.getInstance().getResources().getConfiguration().screenLayout
+                       & Configuration.SCREENLAYOUT_SIZE_MASK;
+
+      switch (screenType)
+      {
+        case (Configuration.SCREENLAYOUT_SIZE_SMALL) :
+          _screenType = "small";
+          break;
+        case (Configuration.SCREENLAYOUT_SIZE_NORMAL) :
+          _screenType = "normal";
+          break;
+        case (Configuration.SCREENLAYOUT_SIZE_LARGE) :
+          _screenType = "large";
+          break;
+        case (Configuration.SCREENLAYOUT_SIZE_XLARGE) :
+          _screenType = "xlarge";
+          break;
+        case (Configuration.SCREENLAYOUT_SIZE_UNDEFINED) :
+          _screenType = "unknown";
+          break;
+        default :
+          _screenType = "unknown";
+      }
+    }
+
+    return _screenType;
+  }
+
   public boolean isPhone()
   {
     return _deviceType == DEVICE_TYPE_PHONE;
@@ -170,6 +204,7 @@ public final class MBDevice
     StringBuilder result = new StringBuilder();
     result.append(" - Type: " + getDeviceType() + "\n");
     result.append(" - OS version: " + getOSVersion() + "\n");
+    result.append(" - Screen type: " + getScreenType() + "\n");
     result.append(" - Screen size: " + getScreenSize()._mainResult + " x " + getScreenSize()._secondResult + "\n");
     result.append(" - Screen density: " + getScreenDensity()._mainResult + " x " + getScreenDensity()._secondResult + "\n");
     result.append(" - Screen classification: " + getScreenDensityClassification());
