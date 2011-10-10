@@ -12,6 +12,8 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
 {
   private List<String> _resourceAttributes;
   private List<String> _bundleAttributes;
+  private List<String> _statedResourceAttributes;
+  private List<String> _itemAttributes;
 
   @Override
   public MBDefinition parseData(byte[] data, String documentName)
@@ -31,6 +33,18 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       _bundleAttributes.add("xmlns");
       _bundleAttributes.add("languageCode");
       _bundleAttributes.add("url");
+    }
+    if (_statedResourceAttributes == null)
+    {
+      _statedResourceAttributes = new ArrayList<String>();
+      _statedResourceAttributes.add("xmlns");
+      _statedResourceAttributes.add("name");
+    }
+    if (_itemAttributes == null)
+    {
+      _itemAttributes = new ArrayList<String>();
+      _itemAttributes.add("xmlns");
+      _itemAttributes.add("resource");
     }
 
     return super.parseData(data, documentName);
@@ -59,10 +73,16 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
   @Override
   public boolean processElement(String elementName, Map<String, String> attributeDict)
   {
+    if (super.processElement(elementName, attributeDict))
+    {
+      return true;
+    }
+
     if (elementName.equals("Resources"))
     {
       MBResourceConfiguration confDef = new MBResourceConfiguration();
       getStack().push(confDef);
+      setRootConfig(confDef);
     }
     else if (elementName.equals("Resource"))
     {
@@ -77,8 +97,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
         resourceDef.setTtl(Integer.parseInt((String) attributeDict.get("ttl")));
       }
 
-      ((MBResourceConfiguration) getStack().peek()).addResource(resourceDef);
-      getStack().add(resourceDef);
+      notifyProcessed(resourceDef);
     }
     else if (elementName.equals("Bundle"))
     {
@@ -88,8 +107,26 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       bundleDef.setUrl((String) attributeDict.get("url"));
       bundleDef.setLanguageCode((String) attributeDict.get("languageCode"));
 
-      ((MBResourceConfiguration) getStack().peek()).addBundle(bundleDef);
-      getStack().push(bundleDef);
+      notifyProcessed(bundleDef);
+    }
+    else if (elementName.equals("StatedResource"))
+    {
+      checkAttributesForElement(elementName, attributeDict, _statedResourceAttributes);
+
+      MBStatedResourceDefinition statedResourceDef = new MBStatedResourceDefinition();
+      statedResourceDef.setName((String) attributeDict.get("name"));
+
+      notifyProcessed(statedResourceDef);
+    }
+    else if (elementName.equals("Item"))
+    {
+      checkAttributesForElement(elementName, attributeDict, _itemAttributes);
+
+      MBItemDefinition itemDefinition = new MBItemDefinition();
+      itemDefinition.setResource((String) attributeDict.get("resource"));
+      itemDefinition.setState((String) attributeDict.get("state"));
+
+      notifyProcessed(itemDefinition);
     }
     else
     {
@@ -102,7 +139,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
   @Override
   public void didProcessElement(String elementName)
   {
-    if (!elementName.equals("Resources"))
+    if (!elementName.equals("Resources") && !elementName.equals("Include"))
     {
       getStack().pop();
     }
@@ -111,13 +148,34 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
   @Override
   public boolean isConcreteElement(String element)
   {
-    return element.equals("Resource") || element.equals("Bundle") || element.equals("Resources");
+    return super.isConcreteElement(element) || element.equals("Resource") || element.equals("Bundle") || element.equals("Resources")
+           || element.equals("StatedResource") || element.equals("Item");
   }
 
   @Override
   public boolean isIgnoredElement(String element)
   {
     return false;
+  }
+
+  public void setStatedResourcesAttributes(List<String> statedResourcesAttributes)
+  {
+    _statedResourceAttributes = statedResourcesAttributes;
+  }
+
+  public List<String> getStatedResourcesAttributes()
+  {
+    return _statedResourceAttributes;
+  }
+
+  public void setItemAttributes(List<String> itemAttributes)
+  {
+    _itemAttributes = itemAttributes;
+  }
+
+  public List<String> getItemAttributes()
+  {
+    return _itemAttributes;
   }
 
 }

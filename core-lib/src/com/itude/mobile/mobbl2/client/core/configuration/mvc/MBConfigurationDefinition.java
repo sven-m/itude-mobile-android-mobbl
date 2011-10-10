@@ -9,10 +9,11 @@ import java.util.Map;
 import android.util.Log;
 
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.MBIncludableDefinition;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
-public class MBConfigurationDefinition extends MBDefinition
+public class MBConfigurationDefinition extends MBDefinition implements MBIncludableDefinition
 {
 
   public static final String                      DOC_SYSTEM_EMPTY                  = "MBEmpty";
@@ -46,8 +47,19 @@ public class MBConfigurationDefinition extends MBDefinition
     _tools = new LinkedHashMap<String, MBToolDefinition>();
   }
 
-  public void addAll(MBConfigurationDefinition otherConfig)
+  public void addAll(MBIncludableDefinition otherDefinition)
   {
+    MBConfigurationDefinition otherConfig = null;
+
+    if (otherDefinition instanceof MBConfigurationDefinition)
+    {
+      otherConfig = (MBConfigurationDefinition) otherDefinition;
+    }
+    else
+    {
+      //TODO throw exception
+    }
+
     if (_firstDialog == null)
     {
       _firstDialog = otherConfig.getFirstDialogDefinition();

@@ -27,13 +27,19 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBToolDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBFileNotFoundException;
+import com.itude.mobile.mobbl2.client.core.configuration.resources.MBItemDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceDefinition;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.DataUtil;
+import com.itude.mobile.mobbl2.client.core.util.MBBundleDefinition;
 
-public class MBConfigurationParser extends DefaultHandler
+public abstract class MBConfigurationParser extends DefaultHandler
 {
-  private Stack<MBDefinition> _stack;
-  private StringBuffer        _characters;
-  private String              _documentName;
+  private Stack<MBDefinition>    _stack;
+  private StringBuffer           _characters;
+  private String                 _documentName;
+  private MBIncludableDefinition _rootConfig;
 
   public String getDocumentName()
   {
@@ -74,8 +80,47 @@ public class MBConfigurationParser extends DefaultHandler
 
   public boolean processElement(String elementName, Map<String, String> attributeDict)
   {
-    return false;
+    if (elementName.equals("Include"))
+    {
+      String name = attributeDict.get("name");
+
+      MBConfigurationParser parser = null;
+      try
+      {
+        // creates a new parser of the same type, e.g: an MBMvcConfigurationParser for the config
+        parser = getClass().newInstance();
+      }
+      catch (InstantiationException e)
+      {
+        Log.e(Constants.APPLICATION_NAME, "Unable to create new parser for element Include", e);
+      }
+      catch (IllegalAccessException e)
+      {
+        Log.e(Constants.APPLICATION_NAME, "Unable to create new parser for element Include", e);
+      }
+
+      byte[] data = DataUtil.getInstance().readFromAssetOrFile(name);
+      if (data == null)
+      {
+        throw new MBFileNotFoundException(name);
+      }
+
+      //      MBConfigurationDefinition include = (MBConfigurationDefinition) parser.parseData(data, name);
+      MBIncludableDefinition definition = (MBIncludableDefinition) parser.parseData(data, name);
+
+      // dynamically cast the definition
+      _rootConfig.getClass().cast(definition);
+      _rootConfig.addAll(definition);
+    }
+    else
+    {
+      return false;
+    }
+
+    return true;
   }
+
+  //  public abstract MBConfigurationParser getNewInstance();
 
   public void didProcessElement(String elementName)
   {
@@ -83,7 +128,7 @@ public class MBConfigurationParser extends DefaultHandler
 
   public boolean isConcreteElement(String element)
   {
-    return false;
+    return element.equals("Include");
   }
 
   public boolean isIgnoredElement(String element)
@@ -177,6 +222,24 @@ public class MBConfigurationParser extends DefaultHandler
     getStack().push(definition);
   }
 
+  public void notifyProcessed(MBResourceDefinition definition)
+  {
+    getStack().peek().addChildElement(definition);
+    getStack().push(definition);
+  }
+
+  public void notifyProcessed(MBBundleDefinition definition)
+  {
+    getStack().peek().addChildElement(definition);
+    getStack().push(definition);
+  }
+
+  public void notifyProcessed(MBItemDefinition definition)
+  {
+    getStack().peek().addChildElement(definition);
+    getStack().push(definition);
+  }
+
   public Stack<MBDefinition> getStack()
   {
     if (_stack == null)
@@ -236,6 +299,16 @@ public class MBConfigurationParser extends DefaultHandler
       didProcessElement(localName);
     }
 
+  }
+
+  protected MBIncludableDefinition getRootConfig()
+  {
+    return _rootConfig;
+  }
+
+  protected void setRootConfig(MBIncludableDefinition rootConfig)
+  {
+    _rootConfig = rootConfig;
   }
 
 }

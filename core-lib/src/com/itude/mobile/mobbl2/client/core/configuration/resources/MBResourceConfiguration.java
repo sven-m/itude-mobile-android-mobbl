@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.MBIncludableDefinition;
 import com.itude.mobile.mobbl2.client.core.util.MBBundleDefinition;
+import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
-public class MBResourceConfiguration extends MBDefinition
+public class MBResourceConfiguration extends MBDefinition implements MBIncludableDefinition
 {
   private final Map<String, MBResourceDefinition> _resources;
   private final List<MBBundleDefinition>          _bundles;
@@ -17,6 +19,18 @@ public class MBResourceConfiguration extends MBDefinition
   {
     _resources = new HashMap<String, MBResourceDefinition>();
     _bundles = new ArrayList<MBBundleDefinition>();
+  }
+
+  @Override
+  public void addChildElement(MBResourceDefinition child)
+  {
+    addResource(child);
+  }
+
+  @Override
+  public void addChildElement(MBBundleDefinition child)
+  {
+    addBundle(child);
   }
 
   public void addResource(MBResourceDefinition definition)
@@ -48,4 +62,61 @@ public class MBResourceConfiguration extends MBDefinition
     return returnList;
   }
 
+  @Override
+  public void addAll(MBIncludableDefinition otherDefinition)
+  {
+    MBResourceConfiguration otherConfig = null;
+
+    if (otherDefinition instanceof MBResourceConfiguration)
+    {
+      otherConfig = (MBResourceConfiguration) otherDefinition;
+    }
+    else
+    {
+      //TODO throw exception
+    }
+
+    //    for (MBDocumentDefinition documentDef : otherConfig.getDocuments().values())
+    //    {
+    //      addDocument(documentDef);
+    //    }
+
+    for (MBResourceDefinition resourceDef : otherConfig.getResources().values())
+    {
+      addResource(resourceDef);
+    }
+
+    for (MBBundleDefinition bundleDef : otherConfig.getBundles())
+    {
+      addBundle(bundleDef);
+    }
+  }
+
+  @Override
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
+  {
+    StringUtilities.appendIndentString(appendToMe, level).append("<Resources>\n");
+    for (MBBundleDefinition bundle : _bundles)
+    {
+      bundle.asXmlWithLevel(appendToMe, level + 2);
+    }
+    for (MBResourceDefinition resource : _resources.values())
+    {
+      resource.asXmlWithLevel(appendToMe, level + 2);
+    }
+
+    StringUtilities.appendIndentString(appendToMe, level).append("</Resources>");
+
+    return appendToMe;
+  }
+
+  public Map<String, MBResourceDefinition> getResources()
+  {
+    return _resources;
+  }
+
+  public List<MBBundleDefinition> getBundles()
+  {
+    return _bundles;
+  }
 }

@@ -7,6 +7,7 @@ import com.itude.mobile.mobbl2.client.core.view.MBStylableDefinition;
 public class MBFieldDefinition extends MBConditionalDefinition implements MBStylableDefinition
 {
   private String _label;
+  private String _source;
   private String _path;
   private String _style;
   private String _displayType;
@@ -33,26 +34,17 @@ public class MBFieldDefinition extends MBConditionalDefinition implements MBStyl
       bodyText = _text;
     }
 
-    StringUtilities.appendIndentString(appendToMe, level)
-                  .append("<Field")
-                  .append(getAttributeAsXml("label", _label))
-                  .append(getAttributeAsXml("path", _path))
-                  .append(getAttributeAsXml("type", _displayType))
-                  .append(getAttributeAsXml("dataType", _dataType))
-                  .append(getAttributeAsXml("outcome", _outcomeName))
-                  .append(getAttributeAsXml("formatMask", _formatMask))
-                  .append(getAttributeAsXml("alignment", _alignment))
-                  .append(getAttributeAsXml("valueIfNil", _valueIfNil))
-                  .append(getAttributeAsXml("width", _width))
-                  .append(getAttributeAsXml("height", _height))
-                  .append(getAttributeAsXml("hidden", _hidden))
-                  .append(getAttributeAsXml("required", _required));
+    StringUtilities.appendIndentString(appendToMe, level).append("<Field").append(getAttributeAsXml("label", _label))
+        .append(getAttributeAsXml("source", _source)).append(getAttributeAsXml("path", _path))
+        .append(getAttributeAsXml("type", _displayType)).append(getAttributeAsXml("dataType", _dataType))
+        .append(getAttributeAsXml("outcome", _outcomeName)).append(getAttributeAsXml("formatMask", _formatMask))
+        .append(getAttributeAsXml("alignment", _alignment)).append(getAttributeAsXml("valueIfNil", _valueIfNil))
+        .append(getAttributeAsXml("width", _width)).append(getAttributeAsXml("height", _height))
+        .append(getAttributeAsXml("hidden", _hidden)).append(getAttributeAsXml("required", _required));
 
     if (bodyText != null)
     {
-      appendToMe.append(">")
-                  .append(bodyText)
-                  .append("</Field>\n");
+      appendToMe.append(">").append(bodyText).append("</Field>\n");
     }
     else
     {
@@ -80,6 +72,16 @@ public class MBFieldDefinition extends MBConditionalDefinition implements MBStyl
   public void setLabel(String label)
   {
     _label = label;
+  }
+
+  public String getSource()
+  {
+    return _source;
+  }
+
+  public void setSource(String source)
+  {
+    _source = source;
   }
 
   public String getPath()

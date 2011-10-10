@@ -7,6 +7,13 @@ public class MBBundleDefinition extends MBDefinition
   private String _languageCode;
   private String _url;
 
+  @Override
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
+  {
+    return StringUtilities.appendIndentString(appendToMe, level).append("<Bundle languageCode='").append(getLanguageCode())
+        .append("' url='").append(getUrl()).append("' />");
+  }
+
   public String getLanguageCode()
   {
     return _languageCode;

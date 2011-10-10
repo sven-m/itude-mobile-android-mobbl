@@ -15,10 +15,13 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBToolDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.resources.MBItemDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.webservices.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBResultListenerDefinition;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBBundleDefinition;
 
 public class MBDefinition implements Parcelable
 {
@@ -106,6 +109,20 @@ public class MBDefinition implements Parcelable
 
   public void addChildElement(MBToolDefinition child)
   {
+  }
+
+  public void addChildElement(MBResourceDefinition child)
+  {
+  }
+
+  public void addChildElement(MBBundleDefinition child)
+  {
+
+  }
+
+  public void addChildElement(MBItemDefinition child)
+  {
+
   }
 
   public void addEndPoint(MBEndPointDefinition definition)

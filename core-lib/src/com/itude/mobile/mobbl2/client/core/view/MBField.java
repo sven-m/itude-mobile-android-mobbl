@@ -48,6 +48,7 @@ public class MBField extends MBComponent
   private MBDomainDefinition    _domainDefinition;
   private String                _translatedPath;
   private String                _label;
+  private String                _source;
   private String                _type;
   private String                _dataType;
   private String                _formatMask;
@@ -111,6 +112,7 @@ public class MBField extends MBComponent
     setStyle(substituteExpressions(fieldDef.getStyle()));
     setDataType(substituteExpressions(fieldDef.getDataType()));
     setLabel(substituteExpressions(fieldDef.getLabel()));
+    setSource(substituteExpressions(fieldDef.getSource()));
     setFormatMask(substituteExpressions(fieldDef.getFormatMask()));
     setAlignment(substituteExpressions(fieldDef.getAlignment()));
     setValueIfNil(substituteExpressions(fieldDef.getValueIfNil()));
@@ -199,6 +201,16 @@ public class MBField extends MBComponent
   public void setLabel(String label)
   {
     _label = label;
+  }
+
+  public String getSource()
+  {
+    return _source;
+  }
+
+  public void setSource(String source)
+  {
+    _source = source;
   }
 
   public void setType(String type)

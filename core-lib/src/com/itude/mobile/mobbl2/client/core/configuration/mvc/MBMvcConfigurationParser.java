@@ -8,30 +8,27 @@ import java.util.Map;
 import com.itude.mobile.mobbl2.client.core.configuration.MBConfigurationParser;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition.MBPageType;
-import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBFileNotFoundException;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPageTypeException;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
-import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 
 public class MBMvcConfigurationParser extends MBConfigurationParser
 {
-  private List<String>              _configAttributes;
-  private List<String>              _documentAttributes;
-  private List<String>              _elementAttributes;
-  private List<String>              _attributeAttributes;
-  private List<String>              _actionAttributes;
-  private List<String>              _outcomeAttributes;
-  private List<String>              _dialogAttributes;
-  private List<String>              _dialogGroupAttributes;
-  private List<String>              _pageAttributes;
-  private List<String>              _panelAttributes;
-  private List<String>              _forEachAttributes;
-  private List<String>              _fieldAttributes;
-  private List<String>              _domainAttributes;
-  private List<String>              _domainValidatorAttributes;
-  private List<String>              _variableAttributes;
-  private List<String>              _toolAttributes;
-  private MBConfigurationDefinition _rootConfig;
+  private List<String> _configAttributes;
+  private List<String> _documentAttributes;
+  private List<String> _elementAttributes;
+  private List<String> _attributeAttributes;
+  private List<String> _actionAttributes;
+  private List<String> _outcomeAttributes;
+  private List<String> _dialogAttributes;
+  private List<String> _dialogGroupAttributes;
+  private List<String> _pageAttributes;
+  private List<String> _panelAttributes;
+  private List<String> _forEachAttributes;
+  private List<String> _fieldAttributes;
+  private List<String> _domainAttributes;
+  private List<String> _domainValidatorAttributes;
+  private List<String> _variableAttributes;
+  private List<String> _toolAttributes;
 
   @Override
   public MBDefinition parseData(byte[] data, String documentName)
@@ -163,6 +160,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _fieldAttributes.add("xmlns");
       _fieldAttributes.add("name");
       _fieldAttributes.add("label");
+      _fieldAttributes.add("source");
       _fieldAttributes.add("path");
       _fieldAttributes.add("type");
       _fieldAttributes.add("dataType");
@@ -232,25 +230,18 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
   @Override
   public boolean processElement(String elementName, Map<String, String> attributeDict)
   {
+    if (super.processElement(elementName, attributeDict))
+    {
+      return true;
+    }
+
     if (elementName.equals("Configuration"))
     {
       checkAttributesForElement(elementName, attributeDict, _configAttributes);
 
       MBConfigurationDefinition confDef = new MBConfigurationDefinition();
       getStack().add(confDef);
-      _rootConfig = confDef;
-    }
-    else if (elementName.equals("Include"))
-    {
-      String name = attributeDict.get("name");
-      MBMvcConfigurationParser parser = new MBMvcConfigurationParser();
-      byte[] data = DataUtil.getInstance().readFromAssetOrFile(name);
-      if (data == null)
-      {
-        throw new MBFileNotFoundException(name);
-      }
-      MBConfigurationDefinition include = (MBConfigurationDefinition) parser.parseData(data, name);
-      _rootConfig.addAll(include);
+      setRootConfig(confDef);
     }
     else if (elementName.equals("Document"))
     {
@@ -449,6 +440,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       MBFieldDefinition fieldDef = new MBFieldDefinition();
       fieldDef.setName(attributeDict.get("name"));
       fieldDef.setLabel(attributeDict.get("label"));
+      fieldDef.setSource(attributeDict.get("source"));
       fieldDef.setPath(attributeDict.get("path"));
       fieldDef.setDisplayType(attributeDict.get("type"));
       fieldDef.setDataType(attributeDict.get("dataType"));
@@ -554,7 +546,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
   @Override
   public boolean isConcreteElement(String element)
   {
-    return element.equals("Configuration") || element.equals("Include") || element.equals("Document") || element.equals("Element")
+    return super.isConcreteElement(element) || element.equals("Configuration") || element.equals("Document") || element.equals("Element")
            || element.equals("Attribute") || element.equals("Action") || element.equals("Outcome") || element.equals("Page")
            || element.equals("Dialog") || element.equals("DialogGroup") || element.equals("ForEach") || element.equals("Variable")
            || element.equals("Panel") || element.equals("Field") || element.equals("Domain") || element.equals("DomainValidator")
