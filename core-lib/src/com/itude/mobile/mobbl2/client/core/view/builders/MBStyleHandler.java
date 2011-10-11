@@ -153,13 +153,20 @@ public class MBStyleHandler
   @Deprecated
   protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed, String stateDisabled, String stateSelected)
   {
-    StateListDrawable buttonStates = getStatedButtonBackground(stateNormal, statePressed, stateDisabled);
+    // Fix for issue: http://dev.itude.com/jira/browse/BINCKAPPS-995
+    // The order in which the states are being added is very important! 
+    // See http://developer.android.com/guide/topics/resources/drawable-resource.html#StateList for more info
 
-    if (stateSelected != null)
-    {
-      Drawable imageSelected = MBResourceService.getInstance().getImageByID(stateSelected);
-      buttonStates.addState(new int[]{R.attr.state_selected}, imageSelected);
-    }
+    StateListDrawable buttonStates = new StateListDrawable();
+    Drawable imageDisabled = MBResourceService.getInstance().getImageByID(stateDisabled);
+    Drawable imageSelected = MBResourceService.getInstance().getImageByID(stateSelected);
+    Drawable imageNormal = MBResourceService.getInstance().getImageByID(stateNormal);
+    Drawable imagePressed = MBResourceService.getInstance().getImageByID(statePressed);
+
+    if (stateSelected != null) buttonStates.addState(new int[]{R.attr.state_selected}, imageSelected);
+    if (statePressed != null) buttonStates.addState(new int[]{R.attr.state_pressed}, imagePressed);
+    if (stateDisabled != null) buttonStates.addState(new int[]{-R.attr.state_enabled}, imageDisabled);
+    if (stateNormal != null) buttonStates.addState(new int[]{R.attr.state_enabled}, imageNormal);
 
     return buttonStates;
   }
