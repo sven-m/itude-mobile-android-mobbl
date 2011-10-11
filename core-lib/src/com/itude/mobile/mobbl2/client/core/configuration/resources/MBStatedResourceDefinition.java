@@ -33,6 +33,16 @@ public class MBStatedResourceDefinition extends MBResourceDefinition
     _items.put(child.getState(), child);
   }
 
+  public void setItems(Map<String, MBItemDefinition> items)
+  {
+    _items = items;
+  }
+
+  public Map<String, MBItemDefinition> getItems()
+  {
+    return _items;
+  }
+
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {

@@ -5,17 +5,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.R;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.util.Log;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.resources.MBItemDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceConfiguration;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceConfigurationParser;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.resources.MBStatedResourceDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
@@ -90,8 +94,6 @@ public class MBResourceService
 
   public Drawable getImageByID(String resourceId)
   {
-    // Only return an error if ways of getting the image fail
-    Exception error = null;
 
     // First attempt to get the image from local resource
     MBResourceDefinition def = getConfig().getResourceWithID(resourceId);
@@ -99,6 +101,22 @@ public class MBResourceService
     {
       throw new MBResourceNotDefinedException("Resource for ID=" + resourceId + " could not be found");
     }
+
+    if (def instanceof MBStatedResourceDefinition)
+    {
+      return buildStatedImage((MBStatedResourceDefinition) def);
+    }
+    else
+    {
+      return getImage(resourceId, def);
+    }
+  }
+
+  private Drawable getImage(String resourceId, MBResourceDefinition def)
+  {
+    // Only return an error if ways of getting the image fail
+    Exception error = null;
+
     if (def.getUrl() != null && def.getUrl().startsWith("file://"))
     {
       String imageName = def.getUrl().substring(7);
@@ -135,11 +153,61 @@ public class MBResourceService
     }
 
     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-    if (bitmap == null) Log.w(Constants.APPLICATION_NAME, "Could not create image for resource=" + resourceId);
+    if (bitmap == null)
+    {
+      Log.w(Constants.APPLICATION_NAME, "Could not create image for resource=" + resourceId);
+    }
 
     Resources res = MBApplicationController.getInstance().getBaseContext().getResources();
 
     return new BitmapDrawable(res, bitmap);
+  }
+
+  private Drawable buildStatedImage(MBStatedResourceDefinition def)
+  {
+    Map<String, MBItemDefinition> items = def.getItems();
+
+    if (items.size() == 0)
+    {
+      return null;
+    }
+
+    MBItemDefinition enabled = items.get("enabled");
+    MBItemDefinition selected = items.get("selected");
+    MBItemDefinition pressed = items.get("pressed");
+    MBItemDefinition disabled = items.get("disabled");
+
+    StateListDrawable stateDrawable = new StateListDrawable();
+
+    if (pressed != null)
+    {
+      String resource = pressed.getResource();
+      Drawable drawable = getImage(resource, getConfig().getResourceWithID(resource));
+      stateDrawable.addState(new int[]{R.attr.state_pressed}, drawable);
+    }
+
+    if (enabled != null)
+    {
+      String resource = enabled.getResource();
+      Drawable drawable = getImage(resource, getConfig().getResourceWithID(resource));
+      stateDrawable.addState(new int[]{R.attr.state_enabled, -R.attr.state_selected}, drawable);
+    }
+
+    if (disabled != null)
+    {
+      String resource = disabled.getResource();
+      Drawable drawable = getImage(resource, getConfig().getResourceWithID(resource));
+      stateDrawable.addState(new int[]{-R.attr.state_enabled}, drawable);
+    }
+
+    if (selected != null)
+    {
+      String resource = selected.getResource();
+      Drawable drawable = getImage(resource, getConfig().getResourceWithID(resource));
+      stateDrawable.addState(new int[]{R.attr.state_selected}, drawable);
+    }
+
+    return stateDrawable;
   }
 
   public byte[] getResourceByURL(String urlString)

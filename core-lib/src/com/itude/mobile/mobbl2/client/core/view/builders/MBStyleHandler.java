@@ -115,6 +115,7 @@ public class MBStyleHandler
   {
   }
 
+  @Deprecated
   protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed)
   {
     StateListDrawable buttonStates = new StateListDrawable();
@@ -135,6 +136,7 @@ public class MBStyleHandler
     return buttonStates;
   }
 
+  @Deprecated
   protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed, String stateDisabled)
   {
     StateListDrawable buttonStates = getStatedButtonBackground(stateNormal, statePressed);
@@ -148,6 +150,7 @@ public class MBStyleHandler
     return buttonStates;
   }
 
+  @Deprecated
   protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed, String stateDisabled, String stateSelected)
   {
     StateListDrawable buttonStates = getStatedButtonBackground(stateNormal, statePressed, stateDisabled);

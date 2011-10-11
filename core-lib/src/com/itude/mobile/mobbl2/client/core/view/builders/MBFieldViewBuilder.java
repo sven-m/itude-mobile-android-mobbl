@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.view.builders;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextUtils.TruncateAt;
@@ -25,6 +26,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainValidatorDe
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentDiff;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
+import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
@@ -69,7 +71,17 @@ public class MBFieldViewBuilder extends MBViewBuilder
     button.setText(field.getLabel());
     button.setOnClickListener(field);
     button.setOnKeyListener(field);
-    getStyleHandler().styleButton(button, field);
+
+    String source = field.getSource();
+    if (source != null)
+    {
+      Drawable drawable = MBResourceService.getInstance().getImageByID(source);
+      button.setBackgroundDrawable(drawable);
+    }
+    else
+    {
+      getStyleHandler().styleButton(button, field);
+    }
     return button;
   }
 

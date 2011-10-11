@@ -38,7 +38,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
     {
       _statedResourceAttributes = new ArrayList<String>();
       _statedResourceAttributes.add("xmlns");
-      _statedResourceAttributes.add("name");
+      _statedResourceAttributes.add("id");
     }
     if (_itemAttributes == null)
     {
@@ -114,7 +114,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       checkAttributesForElement(elementName, attributeDict, _statedResourceAttributes);
 
       MBStatedResourceDefinition statedResourceDef = new MBStatedResourceDefinition();
-      statedResourceDef.setName((String) attributeDict.get("name"));
+      statedResourceDef.setResourceId((String) attributeDict.get("id"));
 
       notifyProcessed(statedResourceDef);
     }
