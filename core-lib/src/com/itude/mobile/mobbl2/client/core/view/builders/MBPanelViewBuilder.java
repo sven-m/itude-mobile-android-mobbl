@@ -318,6 +318,9 @@ public class MBPanelViewBuilder extends MBViewBuilder
     return rowPanel;
   }
 
+  /*
+   * FIXME needs refactoring. Implementation too specific
+   */
   private void buildChildrenForRowPanel(List<? extends MBComponent> children, ViewGroup parent, MBViewManager.MBViewState viewState)
   {
     final Context context = parent.getContext();
@@ -346,6 +349,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
         {
           RelativeLayout.LayoutParams nonButtonLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
               RelativeLayout.LayoutParams.WRAP_CONTENT);
+          nonButtonLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
           nonButtonLayout = new LinearLayout(context);
           nonButtonLayout.setLayoutParams(nonButtonLayoutParams);
@@ -396,6 +400,12 @@ public class MBPanelViewBuilder extends MBViewBuilder
         else
         {
           childParams.addRule(RelativeLayout.LEFT_OF, previousButton);
+
+          if (nonButtonLayout != null && children.lastIndexOf(child) == children.size() - 1)
+          {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) nonButtonLayout.getLayoutParams();
+            layoutParams.addRule(RelativeLayout.LEFT_OF, childID);
+          }
         }
 
         previousButton = childID;
