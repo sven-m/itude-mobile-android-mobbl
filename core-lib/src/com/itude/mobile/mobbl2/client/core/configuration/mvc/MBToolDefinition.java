@@ -6,7 +6,7 @@ import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 public class MBToolDefinition extends MBDefinition
 {
   private String _type;
-  private String _action;
+  private String _outcomeName;
   private String _icon;
   private String _title;
   private String _preCondition;
@@ -16,7 +16,8 @@ public class MBToolDefinition extends MBDefinition
   {
     return StringUtilities.appendIndentString(appendToMe, level).append("<Tool name='").append(getName()).append('\'')
         .append(getAttributeAsXml("type", _type)).append(getAttributeAsXml("title", _title)).append(getAttributeAsXml("icon", _icon))
-        .append(getAttributeAsXml("preCondition", _preCondition)).append(getAttributeAsXml("visibility", _visibility)).append("/>\n");
+        .append(getAttributeAsXml("outcome", _outcomeName)).append(getAttributeAsXml("preCondition", _preCondition))
+        .append(getAttributeAsXml("visibility", _visibility)).append("/>\n");
   }
 
   public void setType(String type)
@@ -29,14 +30,14 @@ public class MBToolDefinition extends MBDefinition
     return _type;
   }
 
-  public void setAction(String action)
+  public void setOutcomeName(String outcomeName)
   {
-    _action = action;
+    _outcomeName = outcomeName;
   }
 
-  public String getAction()
+  public String getOutcomeName()
   {
-    return _action;
+    return _outcomeName;
   }
 
   public void setIcon(String icon)

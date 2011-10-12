@@ -201,7 +201,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _toolAttributes = new ArrayList<String>();
       _toolAttributes.add("xmlns");
       _toolAttributes.add("name");
-      _toolAttributes.add("action");
+      _toolAttributes.add("outcome");
       _toolAttributes.add("type");
       _toolAttributes.add("icon");
       _toolAttributes.add("title");
@@ -500,7 +500,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       MBToolDefinition toolDef = new MBToolDefinition();
       toolDef.setName(attributeDict.get("name"));
       toolDef.setType(attributeDict.get("type"));
-      toolDef.setAction(attributeDict.get("action"));
+      toolDef.setOutcomeName(attributeDict.get("outcome"));
       toolDef.setIcon(attributeDict.get("icon"));
       toolDef.setTitle(attributeDict.get("title"));
       toolDef.setPreCondition(attributeDict.get("preCondition"));

@@ -108,7 +108,10 @@ public class MBTabletViewManager extends MBViewManager
                 if (tag instanceof MBToolDefinition)
                 {
                   MBToolDefinition toolDef = (MBToolDefinition) tag;
-                  handleOutcome(toolDef);
+                  if (toolDef.getOutcomeName() != null)
+                  {
+                    handleOutcome(toolDef);
+                  }
                 }
               }
               else
@@ -206,7 +209,7 @@ public class MBTabletViewManager extends MBViewManager
     {
       if (item.getItemId() == def.getName().hashCode())
       {
-        if (def.getAction() != null)
+        if (def.getOutcomeName() != null)
         {
           handleOutcome(def);
           return true;
@@ -222,7 +225,7 @@ public class MBTabletViewManager extends MBViewManager
   {
     MBOutcome outcome = new MBOutcome();
     outcome.setOriginName(def.getName());
-    outcome.setOutcomeName(def.getAction());
+    outcome.setOutcomeName(def.getOutcomeName());
 
     MBApplicationController.getInstance().handleOutcome(outcome);
   }
