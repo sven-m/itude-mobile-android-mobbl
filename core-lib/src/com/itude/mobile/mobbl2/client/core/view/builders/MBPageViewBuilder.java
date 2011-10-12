@@ -1,7 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.view.builders;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -19,6 +18,7 @@ public class MBPageViewBuilder extends MBViewBuilder
   public ViewGroup buildPageView(MBPage page, MBViewManager.MBViewState viewState)
   {
     Context context = MBApplicationController.getInstance().getBaseContext();
+    MBStyleHandler styleHandler = getStyleHandler();
 
     LinearLayout main = new LinearLayout(context);
     main.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
@@ -39,30 +39,25 @@ public class MBPageViewBuilder extends MBViewBuilder
       MBHeader header = new MBHeader(headerContainer.getContext());
       header.setTag(Constants.C_PAGE_CONTENT_HEADER_VIEW);
       header.getTitleView().setText(page.getTitle());
-      getStyleHandler().stylePageHeader(header);
-      getStyleHandler().stylePageHeaderTitle(header.getTitleView());
+      styleHandler.stylePageHeader(header);
+      styleHandler.stylePageHeaderTitle(header.getTitleView());
       headerContainer.addView(header);
 
       main.addView(headerContainer);
 
-      LinearLayout divider = new LinearLayout(view.getContext());
-      divider.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, 1));
-      divider.setBackgroundColor(Color.DKGRAY);
-
-      main.addView(divider);
-
+      styleHandler.styleMainBlockPadding(main);
     }
 
     buildChildren(page.getChildren(), view, viewState);
 
-    getStyleHandler().applyStyle(page, view, viewState);
+    styleHandler.applyStyle(page, view, viewState);
 
     // Add linearlayout to scrollview
     ScrollView scrollView = new ScrollView(context);
     scrollView.setTag(Constants.C_PAGE_CONTENT_VIEW);
     scrollView.setFadingEdgeLength(0);
     scrollView.setVerticalFadingEdgeEnabled(false);
-    getStyleHandler().styleMainScrollbarView(scrollView);
+    styleHandler.styleMainScrollbarView(page, scrollView);
     scrollView.addView(view);
 
     main.addView(scrollView);
@@ -77,6 +72,7 @@ public class MBPageViewBuilder extends MBViewBuilder
   public ViewGroup buildPageViewWithoutContent(MBPage page, MBViewManager.MBViewState viewState)
   {
     Context context = MBApplicationController.getInstance().getBaseContext();
+    MBStyleHandler styleHandler = getStyleHandler();
 
     LinearLayout main = new LinearLayout(context);
     main.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
@@ -91,18 +87,13 @@ public class MBPageViewBuilder extends MBViewBuilder
       MBHeader header = new MBHeader(headerContainer.getContext());
       header.setTag(Constants.C_PAGE_CONTENT_HEADER_VIEW);
       header.getTitleView().setText(page.getTitle());
-      getStyleHandler().stylePageHeader(header);
-      getStyleHandler().stylePageHeaderTitle(header.getTitleView());
+      styleHandler.stylePageHeader(header);
+      styleHandler.stylePageHeaderTitle(header.getTitleView());
       headerContainer.addView(header);
 
       main.addView(headerContainer);
 
-      LinearLayout divider = new LinearLayout(context);
-      divider.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, 1));
-      divider.setBackgroundColor(Color.DKGRAY);
-
-      main.addView(divider);
-
+      styleHandler.styleMainBlockPadding(main);
     }
 
     // Add linearlayout to scrollview
@@ -110,7 +101,7 @@ public class MBPageViewBuilder extends MBViewBuilder
     scrollView.setTag(Constants.C_PAGE_CONTENT_VIEW);
     scrollView.setFadingEdgeLength(0);
     scrollView.setVerticalFadingEdgeEnabled(false);
-    getStyleHandler().styleMainScrollbarView(scrollView);
+    styleHandler.styleMainScrollbarView(page, scrollView);
 
     main.addView(scrollView);
 

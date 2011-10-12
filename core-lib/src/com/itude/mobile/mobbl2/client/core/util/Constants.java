@@ -16,6 +16,7 @@ public interface Constants
   public static final String C_ROW                                         = "ROW";
   public static final String C_LIST                                        = "LIST";
   public static final String C_PLAIN                                       = "PLAIN";
+  public static final String C_MATRIXHEADER_CONTAINER                       = "MATRIX-HEADER-CONTAINER";
   public static final String C_MATRIXHEADER                                = "MATRIX-HEADER";
   public static final String C_MATRIXROW                                   = "MATRIX-ROW";
   public static final String C_MATRIXTITLEROW                              = "MATRIX-ROW-TITLE";

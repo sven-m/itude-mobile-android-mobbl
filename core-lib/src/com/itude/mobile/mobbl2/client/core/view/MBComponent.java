@@ -24,6 +24,7 @@ public class MBComponent
   private int                  _topInset;
   private int                  _bottomInset;
   private MBDocument           _document;
+  private View                 _view;
 
   public MBComponent(MBDefinition definition, MBDocument document, MBComponentContainer parent)
   {
@@ -456,6 +457,16 @@ public class MBComponent
   public String getName()
   {
     return getDefinition().getName();
+  }
+
+  public void attachView(View view)
+  {
+    _view = view;
+  }
+
+  public View getAttachedView()
+  {
+    return _view;
   }
 
 }

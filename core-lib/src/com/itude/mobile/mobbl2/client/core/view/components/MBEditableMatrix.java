@@ -151,9 +151,9 @@ public class MBEditableMatrix extends LinearLayout
 
         View child = editView.getChildAt(i);
 
-        if (child.getTag().equals(Constants.C_MATRIXHEADER))
+        if (child.getTag().equals(Constants.C_MATRIXHEADER_CONTAINER))
         {
-          matrixListener.setMatrixHeaderView(child);
+          matrixListener.setMatrixHeaderView(child.findViewWithTag(Constants.C_MATRIXHEADER));
         }
         else if (child.getTag().equals(Constants.C_MATRIXROW))
         {

@@ -432,8 +432,13 @@ public class MBPanelViewBuilder extends MBViewBuilder
   {
     Context context = MBApplicationController.getInstance().getBaseContext();
 
+    RelativeLayout headerPanelContainer = new RelativeLayout(context);
+    headerPanelContainer.setTag(Constants.C_MATRIXHEADER_CONTAINER);
+    headerPanelContainer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+
     LinearLayout headerPanel = new LinearLayout(context);
     headerPanel.setTag(Constants.C_MATRIXHEADER);
+    headerPanel.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
     headerPanel.setOrientation(LinearLayout.VERTICAL);
 
     ArrayList<MBComponent> children = panel.getChildren();
@@ -531,7 +536,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     // Row with labels
     if (!matrixLabels.isEmpty())
     {
-      LinearLayout headerRow = new LinearLayout(headerPanel.getContext());
+      LinearLayout headerRow = new LinearLayout(context);
       headerRow.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
       headerRow.setOrientation(LinearLayout.HORIZONTAL);
       headerRow.setGravity(Gravity.CENTER_VERTICAL);
@@ -543,7 +548,10 @@ public class MBPanelViewBuilder extends MBViewBuilder
       headerPanel.addView(headerRow);
     }
 
-    return headerPanel;
+    headerPanelContainer.addView(headerPanel);
+
+    panel.attachView(headerPanelContainer);
+    return headerPanelContainer;
   }
 
   private ViewGroup buildMatrixRowPanel(MBPanel panel)
@@ -769,6 +777,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
   private ViewGroup buildEditableMatrixRowPanel(MBPanel panel)
   {
     Context context = MBApplicationController.getInstance().getBaseContext();
+    MBStyleHandler styleHandler = getStyleHandler();
 
     RelativeLayout borderWrapper = new RelativeLayout(context);
     borderWrapper.setTag(Constants.C_MATRIXROW);
@@ -802,7 +811,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
       deleteButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
       deleteButton.setTag(Constants.C_EDITABLEMATRIX_DELETEBUTTON);
       leftButtonContainer.addView(deleteButton);
-      getStyleHandler().styleButtonWithName(deleteButton, Constants.C_EDITABLEMATRIX_DELETEBUTTON);
+      styleHandler.styleButtonWithName(deleteButton, Constants.C_EDITABLEMATRIX_DELETEBUTTON);
     }
 
     relativeContainer.addView(leftButtonContainer);
@@ -830,13 +839,13 @@ public class MBPanelViewBuilder extends MBViewBuilder
       upButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
       upButton.setTag(Constants.C_EDITABLEMATRIX_UPBUTTON);
       rightButtonContainer.addView(upButton);
-      getStyleHandler().styleButtonWithName(upButton, Constants.C_EDITABLEMATRIX_UPBUTTON);
+      styleHandler.styleButtonWithName(upButton, Constants.C_EDITABLEMATRIX_UPBUTTON);
 
       Button downButton = new Button(context);
       downButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
       downButton.setTag(Constants.C_EDITABLEMATRIX_DOWNBUTTON);
       rightButtonContainer.addView(downButton);
-      getStyleHandler().styleButtonWithName(downButton, Constants.C_EDITABLEMATRIX_DOWNBUTTON);
+      styleHandler.styleButtonWithName(downButton, Constants.C_EDITABLEMATRIX_DOWNBUTTON);
       //      }
       //      else
       //      {
@@ -864,7 +873,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
     ArrayList<MBComponent> children = panel.getChildren();
     ArrayList<MBComponent> matrixRowLabels = new ArrayList<MBComponent>();
-    ArrayList<MBComponent> matrixRowTitle = new ArrayList<MBComponent>();
+    ArrayList<MBComponent> matrixRowTitles = new ArrayList<MBComponent>();
 
     for (Iterator<MBComponent> iterator = children.iterator(); iterator.hasNext();)
     {
@@ -874,7 +883,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
         MBField field = (MBField) mbComponent;
         if (Constants.C_FIELD_MATRIXTITLE.equals(field.getType()))
         {
-          matrixRowTitle.add(mbComponent);
+          matrixRowTitles.add(mbComponent);
         }
         else
         {
@@ -888,13 +897,13 @@ public class MBPanelViewBuilder extends MBViewBuilder
     }
 
     //Header
-    if (!matrixRowTitle.isEmpty())
+    if (!matrixRowTitles.isEmpty())
     {
       LinearLayout rowHeaderLabel = new LinearLayout(context);
       rowHeaderLabel.setOrientation(LinearLayout.HORIZONTAL);
       rowHeaderLabel.setPadding(MBScreenUtilities.TWO, MBScreenUtilities.TWO, MBScreenUtilities.FOUR, MBScreenUtilities.TWO);
 
-      buildChildren(matrixRowTitle, rowHeaderLabel, null);
+      buildChildren(matrixRowTitles, rowHeaderLabel, null);
       rowPanel.addView(rowHeaderLabel);
     }
 
@@ -904,7 +913,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
       LinearLayout row = new LinearLayout(context);
       row.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
       row.setOrientation(LinearLayout.HORIZONTAL);
-      getStyleHandler().styleMatrixRow(panel, row);
+      styleHandler.styleMatrixRow(panel, row);
 
       buildChildren(matrixRowLabels, row, null);
 
@@ -914,14 +923,20 @@ public class MBPanelViewBuilder extends MBViewBuilder
     relativeContainer.addView(rowPanel);
     //
 
+    boolean isClickable = false;
     if (((MBPanel) panel.getParent()).isChildrenClickable() || ((MBPanel) panel.getParent()).isChildrenSelectable())
     {
+      isClickable = true;
+
       borderWrapper.setClickable(true);
       borderWrapper.setFocusable(true);
-      getStyleHandler().styleClickableRow(borderWrapper);
     }
 
     borderWrapper.addView(relativeContainer);
+
+    styleHandler.styleMatrixRowPanel(panel, borderWrapper, isClickable, (matrixRowTitles.size() > 0 && matrixRowLabels.size() > 0),
+                                     _matrixRowNumber);
+
     return borderWrapper;
   }
 

@@ -400,6 +400,11 @@ public class MBStyleHandler
     view.addView(arrow);
   }
 
+  public void styleMainBlockPadding(View mainBlock)
+  {
+
+  }
+
   public void styleMatrixContainer(LinearLayout view)
   {
     view.setPadding(0, MBScreenUtilities.SEVEN, 0, 0);
@@ -410,7 +415,7 @@ public class MBStyleHandler
     view.setPadding(0, MBScreenUtilities.SEVEN, 0, 0);
   }
 
-  public void styleMainScrollbarView(View scrollableView)
+  public void styleMainScrollbarView(MBPage page, View scrollableView)
   {
     scrollableView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
     scrollableView.setPadding(MBScreenUtilities.SEVEN, 0, MBScreenUtilities.SEVEN, MBScreenUtilities.SEVEN);
