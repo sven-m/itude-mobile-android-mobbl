@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
-import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -55,9 +54,8 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
  */
 public class MBTabletViewManager extends MBViewManager
 {
-  private Menu      _menu        = null;
-  private int       _refreshId   = -1;
-  private ViewGroup _frameLayout = null;
+  private Menu             _menu           = null;
+  private MBToolDefinition _refreshToolDef = null;
 
   @Override
   protected void onPreCreate()
@@ -91,7 +89,7 @@ public class MBTabletViewManager extends MBViewManager
 
         if ("REFRESH".equals(def.getType()))
         {
-          _refreshId = def.getName().hashCode();
+          _refreshToolDef = def;
         }
         else if ("SEARCH".equals(def.getType()))
         {
@@ -456,69 +454,64 @@ public class MBTabletViewManager extends MBViewManager
   @Override
   public void showProgressIndicatorInTool()
   {
-    if (_refreshId != -1 && _menu != null)
+    if (_refreshToolDef != null && _menu != null)
     {
-      final MenuItem item = _menu.findItem(_refreshId);
+      final MenuItem item = _menu.findItem(_refreshToolDef.getName().hashCode());
 
-      if (_frameLayout == null)
-      {
-        //        ProgressBar progressBar = new ProgressBar(this);
-        //        int dp = MBScreenUtilities.convertDimensionPixelsToPixels(40);
-        //        progressBar.setLayoutParams(new FrameLayout.LayoutParams(dp, dp, Gravity.CENTER));
+      ImageView rotationImage = getRotationImage();
 
-        final RotateAnimation ra = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        ra.setDuration(1000L);
-        ra.setRepeatMode(Animation.INFINITE);
-        ra.setRepeatCount(Animation.INFINITE);
-        ra.setFillEnabled(false);
-        ra.setInterpolator(new LinearInterpolator());
+      float imageWidth = rotationImage.getDrawable().getIntrinsicWidth();
+      int framePadding = (int) ((MBScreenUtilities.convertDimensionPixelsToPixels(80) - imageWidth) / 2);
 
-        Drawable drawable = MBResourceService.getInstance().getImageByID("ICON-tab-refresh");
-        ImageView imageView = new ImageView(this);
-        imageView.setImageDrawable(drawable);
+      final FrameLayout frameLayout = new FrameLayout(this);
+      frameLayout.setLayoutParams(new FrameLayout.LayoutParams(MBScreenUtilities.convertDimensionPixelsToPixels(80),
+          LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+      frameLayout.setPadding(framePadding, 0, framePadding, 0);
 
-        float imageWidth = drawable.getIntrinsicWidth();
-        int framePadding = (int) ((MBScreenUtilities.convertDimensionPixelsToPixels(80) - imageWidth) / 2);
-
-        _frameLayout = new FrameLayout(this);
-        _frameLayout.setLayoutParams(new FrameLayout.LayoutParams(MBScreenUtilities.convertDimensionPixelsToPixels(80),
-            LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-        _frameLayout.setPadding(framePadding, 0, framePadding, 0);
-
-        _frameLayout.addView(imageView);
-        _frameLayout.setAnimation(ra);
-      }
+      frameLayout.addView(rotationImage);
 
       runOnUiThread(new MBRunnable()
       {
         @Override
         public void runMethod()
         {
-          item.setActionView(_frameLayout);
-          _frameLayout.getAnimation().startNow();
-          _frameLayout.setVisibility(View.VISIBLE);
+          item.setActionView(frameLayout);
+          getRotationImage().getAnimation().startNow();
         }
       });
     }
   }
 
+  private ImageView getRotationImage()
+  {
+    RotateAnimation rotateAnimation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+    rotateAnimation.setDuration(1000L);
+    rotateAnimation.setRepeatMode(Animation.INFINITE);
+    rotateAnimation.setRepeatCount(Animation.INFINITE);
+    rotateAnimation.setFillEnabled(false);
+    rotateAnimation.setInterpolator(new LinearInterpolator());
+
+    Drawable drawable = MBResourceService.getInstance().getImageByID(_refreshToolDef.getIcon());
+    ImageView rotationImage = new ImageView(this);
+    rotationImage.setImageDrawable(drawable);
+    rotationImage.setAnimation(rotateAnimation);
+
+    return rotationImage;
+  }
+
   @Override
   public void hideProgressIndicatorInTool()
   {
-    if (_refreshId != -1 && _menu != null)
+    if (_refreshToolDef != null && _menu != null)
     {
-      final MenuItem item = _menu.findItem(_refreshId);
+      final MenuItem item = _menu.findItem(_refreshToolDef.getName().hashCode());
 
       runOnUiThread(new MBRunnable()
       {
         @Override
         public void runMethod()
         {
-          _frameLayout.getAnimation().cancel();
           item.setActionView(null);
-          _frameLayout = null;
-          _frameLayout.setVisibility(View.GONE);
-          //          ((View) _frameLayout.getParent()).requestLayout();
         }
       });
     }
