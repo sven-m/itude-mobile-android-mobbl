@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -662,8 +663,21 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
     }
 
-    styleHandler.styleMatrixRowPanel(panel, rowPanel, isClickable, (matrixRowTitles.size() > 0 && matrixRowLabels.size() > 0),
-                                     _matrixRowNumber);
+    String rowStyle;
+    if (panel.getStyle() != null)
+    {
+      rowStyle = panel.getStyle();
+    }
+    else if (matrixRowTitles.size() > 0 && matrixRowLabels.size() > 0)
+    {
+      rowStyle = Constants.C_STYLE_DOUBLE_LINED_MATRIX_ROW;
+    }
+    else
+    {
+      rowStyle = Constants.C_STYLE_SINGLE_LINED_MATRIX_ROW;
+    }
+
+    styleHandler.styleMatrixRowPanel(panel, rowPanel, isClickable, rowStyle, _matrixRowNumber);
 
     return rowPanel;
   }
@@ -934,8 +948,21 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
     borderWrapper.addView(relativeContainer);
 
-    styleHandler.styleMatrixRowPanel(panel, borderWrapper, isClickable, (matrixRowTitles.size() > 0 && matrixRowLabels.size() > 0),
-                                     _matrixRowNumber);
+    String rowStyle;
+    if (panel.getStyle() != null)
+    {
+      rowStyle = panel.getStyle();
+    }
+    else if (matrixRowTitles.size() > 0 && matrixRowLabels.size() > 0)
+    {
+      rowStyle = Constants.C_STYLE_DOUBLE_LINED_MATRIX_ROW;
+    }
+    else
+    {
+      rowStyle = Constants.C_STYLE_SINGLE_LINED_MATRIX_ROW;
+    }
+
+    styleHandler.styleMatrixRowPanel(panel, borderWrapper, isClickable, rowStyle, _matrixRowNumber);
 
     return borderWrapper;
   }

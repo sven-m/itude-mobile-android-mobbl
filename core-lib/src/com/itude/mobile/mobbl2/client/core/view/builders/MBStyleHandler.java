@@ -327,7 +327,7 @@ public class MBStyleHandler
   {
   }
 
-  public void styleMatrixRowPanel(MBPanel panel, ViewGroup row, boolean isClickable, boolean doubleLined, int rowNumber)
+  public void styleMatrixRowPanel(MBPanel panel, ViewGroup row, boolean isClickable, String style, int rowNumber)
   {
     if (isClickable)
     {
@@ -423,7 +423,7 @@ public class MBStyleHandler
 
   public void styleSegmentedControl(View segmentedControl)
   {
-    segmentedControl.setPadding(MBScreenUtilities.SEVEN, MBScreenUtilities.FIVE, MBScreenUtilities.SEVEN, MBScreenUtilities.NINE);
+    segmentedControl.setPadding(0, MBScreenUtilities.SEVEN, 0, 0);
   }
 
   public void styleSegmentedItem(MBSegmentedItem item)

@@ -16,7 +16,7 @@ public interface Constants
   public static final String C_ROW                                         = "ROW";
   public static final String C_LIST                                        = "LIST";
   public static final String C_PLAIN                                       = "PLAIN";
-  public static final String C_MATRIXHEADER_CONTAINER                       = "MATRIX-HEADER-CONTAINER";
+  public static final String C_MATRIXHEADER_CONTAINER                      = "MATRIX-HEADER-CONTAINER";
   public static final String C_MATRIXHEADER                                = "MATRIX-HEADER";
   public static final String C_MATRIXROW                                   = "MATRIX-ROW";
   public static final String C_MATRIXTITLEROW                              = "MATRIX-ROW-TITLE";
@@ -49,6 +49,10 @@ public interface Constants
   public static String       C_FIELD_STYLE_DIFFABLE_MARKER                 = "DIFFABLE_MARKER";
   public static String       C_FIELD_STYLE_DIFFABLE_PRIMARY                = "DIFFABLE_PRIMARY";
   public static String       C_FIELD_STYLE_DIFFABLE_SECONDARY              = "DIFFABLE_SECONDARY";
+
+  // Matrix row styles
+  public static String       C_STYLE_DOUBLE_LINED_MATRIX_ROW               = "DOUBLE-LINED";
+  public static String       C_STYLE_SINGLE_LINED_MATRIX_ROW               = "SINGLE-LINED";
 
   // field datatypes
   public static final String C_FIELD_DATATYPE_INT                          = "int";
