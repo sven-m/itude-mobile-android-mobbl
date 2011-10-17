@@ -341,13 +341,6 @@ public class MBFieldViewBuilder extends MBViewBuilder
         }
         return view;
       }
-
-      public View getDropDownView(int position, View convertView, ViewGroup parent)
-      {
-        View view = super.getDropDownView(position, convertView, parent);
-        getStyleHandler().styleDropdownItem(view);
-        return view;
-      }
     };
 
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
