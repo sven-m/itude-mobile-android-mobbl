@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -319,6 +318,21 @@ public class MBPanelViewBuilder extends MBViewBuilder
     return rowPanel;
   }
 
+  private void buildChildrenForMatrixHeader(List<? extends MBComponent> children, ViewGroup parent)
+  {
+    for (MBComponent child : children)
+    {
+      View childView = child.buildViewWithMaxBounds(null);
+      if (childView == null) continue;
+
+      RelativeLayout.LayoutParams childViewParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+      childViewParams.addRule(RelativeLayout.CENTER_VERTICAL);
+      childView.setLayoutParams(childViewParams);
+
+      parent.addView(childView);
+    }
+  }
+
   /*
    * FIXME needs refactoring. Implementation too specific
    */
@@ -437,9 +451,11 @@ public class MBPanelViewBuilder extends MBViewBuilder
     headerPanelContainer.setTag(Constants.C_MATRIXHEADER_CONTAINER);
     headerPanelContainer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 
+    RelativeLayout.LayoutParams headerPanelParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+    headerPanelParams.addRule(RelativeLayout.CENTER_VERTICAL);
     LinearLayout headerPanel = new LinearLayout(context);
     headerPanel.setTag(Constants.C_MATRIXHEADER);
-    headerPanel.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+    headerPanel.setLayoutParams(headerPanelParams);
     headerPanel.setOrientation(LinearLayout.VERTICAL);
 
     ArrayList<MBComponent> children = panel.getChildren();
@@ -495,7 +511,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
       headerLabel.setTag(Constants.C_MATRIXTITLEROW);
       styleHandler.styleMatrixHeaderTitleRow(panel, headerLabel);
 
-      buildChildren(matrixTitles, headerLabel, null);
+      buildChildrenForMatrixHeader(matrixTitles, headerLabel);
 
       if (panel.getParent() instanceof MBPanel && ((MBPanel) panel.getParent()).getType().equals(Constants.C_EDITABLEMATRIX))
       {
