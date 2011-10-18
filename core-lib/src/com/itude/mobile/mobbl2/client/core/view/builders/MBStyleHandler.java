@@ -416,6 +416,7 @@ public class MBStyleHandler
 
   public void styleMainScrollbarView(MBPage page, View scrollableView)
   {
+    scrollableView.setPadding(MBScreenUtilities.THREE, 0, MBScreenUtilities.THREE, MBScreenUtilities.THREE);
     scrollableView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
   }
 
