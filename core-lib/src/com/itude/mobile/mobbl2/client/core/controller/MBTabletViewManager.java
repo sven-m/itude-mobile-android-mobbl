@@ -308,7 +308,7 @@ public class MBTabletViewManager extends MBViewManager
           //          if (parent instanceof FrameLayout)
           //          {
           //            FrameLayout fl = (FrameLayout) parent;
-          //            //            fl.setPadding(0, 0, 0, 0);
+          //            fl.setPadding(0, 0, 0, 0);
           //          }
 
           MBViewBuilderFactory.getInstance().getStyleHandler().styleHomeIcon(homeIcon);
