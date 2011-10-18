@@ -42,6 +42,7 @@ public interface Constants
   public static final String C_FIELD_RADIOGROUPFIELD                       = "RADIOGROUP";
   public static final String C_FIELD_MATRIXTITLE                           = "MATRIX-TITLE";
   public static final String C_FIELD_MATRIXCELL                            = "MATRIX-CELL";
+  public static final String C_FIELD_WEB                                   = "WEB";
 
   // field styles
   public static String       C_FIELD_STYLE_MATRIXCOLUMN                    = "MATRIX-COLUMN";

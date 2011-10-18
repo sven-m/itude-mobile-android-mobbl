@@ -294,4 +294,17 @@ public class MBResourceService
 
     return result;
   }
+
+  public String getUrlById(String resourceId)
+  {
+    MBResourceDefinition resDef = getConfig().getResourceWithID(resourceId);
+    if (resDef != null)
+    {
+      return resDef.getUrl();
+    }
+
+    Log.w(Constants.APPLICATION_NAME, "No resource found for id " + resourceId);
+
+    return null;
+  }
 }

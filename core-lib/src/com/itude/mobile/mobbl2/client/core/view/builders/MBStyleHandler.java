@@ -8,6 +8,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -514,6 +515,11 @@ public class MBStyleHandler
   public void styleMatrixHeaderRowChild(View childView)
   {
     // TODO Auto-generated method stub
+
+  }
+
+  public void styleWebView(WebView webView, MBField field)
+  {
 
   }
 }

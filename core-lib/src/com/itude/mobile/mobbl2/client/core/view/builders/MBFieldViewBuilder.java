@@ -8,10 +8,13 @@ import android.text.TextUtils.TruncateAt;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -53,6 +56,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
     else if (Constants.C_FIELD_MATRIXTITLE.equals(field.getType())) view = buildMatrixTitle(field);
     else if (Constants.C_FIELD_MATRIXCELL.equals(field.getType())) view = buildMatrixCell(field);
     else if (Constants.C_FIELD_TEXT.equals(field.getType())) view = buildTextView(field);
+    else if (Constants.C_FIELD_WEB.equals(field.getType())) view = buildWebView(field);
     else
     {
       Log.w(Constants.APPLICATION_NAME, "MBFieldViewBuilder.buildFieldView(): Failed to build unsupported view type " + field.getType());
@@ -479,4 +483,28 @@ public class MBFieldViewBuilder extends MBViewBuilder
     return returnView;
   }
 
+  private View buildWebView(MBField field)
+  {
+    Context context = MBApplicationController.getInstance().getBaseContext();
+
+    String url = MBResourceService.getInstance().getUrlById(field.getSource());
+
+    WebView webView = new WebView(context);
+    webView.setScrollContainer(false);
+    webView.setClickable(false);
+    webView.setOnTouchListener(new OnTouchListener()
+    {
+      @Override
+      public boolean onTouch(View v, MotionEvent event)
+      {
+        return true;
+      }
+    });
+
+    webView.loadUrl(url);
+
+    getStyleHandler().styleWebView(webView, field);
+
+    return webView;
+  }
 }
