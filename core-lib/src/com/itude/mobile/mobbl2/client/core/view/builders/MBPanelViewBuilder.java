@@ -994,7 +994,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     container.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
         android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
     container.addView(parent);
-
+    
     // Add the leaf to the container
     ImageView leaf = new ImageView(context);
 
