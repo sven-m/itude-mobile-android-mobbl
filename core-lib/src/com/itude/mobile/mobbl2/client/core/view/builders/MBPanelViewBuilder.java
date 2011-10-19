@@ -954,7 +954,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     //
 
     boolean isClickable = false;
-    if (((MBPanel) panel.getParent()).isChildrenClickable() || ((MBPanel) panel.getParent()).isChildrenSelectable())
+    if (((MBPanel) panel.getParent()).isChildrenClickable())
     {
       isClickable = true;
 
