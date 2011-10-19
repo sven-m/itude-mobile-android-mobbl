@@ -514,8 +514,6 @@ public class MBStyleHandler
 
   public void styleMatrixHeaderRowChild(View childView)
   {
-    // TODO Auto-generated method stub
-
   }
 
   public void styleWebView(WebView webView, MBField field)
