@@ -66,6 +66,10 @@ public class MBDialogViewBuilder
       fragmentContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
       fragmentContainer.setId(_sortedDialogIds.get(0));
 
+      MBStyleHandler styleHandler = getStyleHandler();
+      styleHandler.styleFragmentPadding(fragmentContainer, 0);
+      styleHandler.styleBackground(fragmentContainer);
+
       container.addView(fragmentContainer);
     }
 
@@ -74,6 +78,8 @@ public class MBDialogViewBuilder
 
   protected ViewGroup buildSplitDialog(RelativeLayout container)
   {
+    MBStyleHandler styleHandler = getStyleHandler();
+
     for (int i = 0; i < _sortedDialogIds.size(); i++)
     {
       FrameLayout fragmentContainer = new FrameLayout(MBApplicationController.getInstance().getBaseContext());
@@ -96,7 +102,8 @@ public class MBDialogViewBuilder
       if (i == _sortedDialogIds.size() - 1) layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
       fragmentContainer.setLayoutParams(layoutParams);
-      getStyleHandler().styleBackground(fragmentContainer);
+      styleHandler.styleBackground(fragmentContainer);
+      styleHandler.styleFragmentPadding(fragmentContainer, i);
       container.addView(fragmentContainer);
     }
 

@@ -401,11 +401,11 @@ public class MBStyleHandler
     view.addView(arrow);
   }
 
-  public void styleMainBlockPadding(View mainBlock)
+  public void styleFragmentPadding(View fragment, int whichFragment)
   {
   }
 
-  public void styleMatrixContainer(LinearLayout view)
+  public void styleMatrixContainer(MBPanel matrixPanel, LinearLayout view)
   {
     view.setPadding(0, MBScreenUtilities.SEVEN, 0, 0);
   }
@@ -418,7 +418,6 @@ public class MBStyleHandler
   public void styleMainScrollbarView(MBPage page, View scrollableView)
   {
     scrollableView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-    scrollableView.setPadding(MBScreenUtilities.THREE, 0, MBScreenUtilities.THREE, MBScreenUtilities.THREE);
   }
 
   public void styleSegmentedControl(View segmentedControl)

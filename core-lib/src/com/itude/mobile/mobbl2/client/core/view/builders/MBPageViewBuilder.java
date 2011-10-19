@@ -44,8 +44,6 @@ public class MBPageViewBuilder extends MBViewBuilder
       headerContainer.addView(header);
 
       main.addView(headerContainer);
-
-      styleHandler.styleMainBlockPadding(main);
     }
 
     buildChildren(page.getChildren(), view, viewState);
@@ -92,8 +90,6 @@ public class MBPageViewBuilder extends MBViewBuilder
       headerContainer.addView(header);
 
       main.addView(headerContainer);
-
-      styleHandler.styleMainBlockPadding(main);
     }
 
     // Add linearlayout to scrollview

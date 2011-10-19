@@ -94,7 +94,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     result.setOrientation(LinearLayout.VERTICAL);
     buildChildren(panel.getChildren(), result, viewState);
 
-    getStyleHandler().styleMatrixContainer(result);
+    getStyleHandler().styleMatrixContainer(panel, result);
 
     if (panel.getOutcomeName() != null && panel.getOutcomeName().length() > 0)
     {
@@ -138,7 +138,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
       result.setOnClickListener(panel);
     }
 
-    getStyleHandler().styleMatrixContainer(result);
+    getStyleHandler().styleMatrixContainer(panel, result);
 
     result.connectMatrixListener();
 
@@ -994,7 +994,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     container.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
         android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
     container.addView(parent);
-    
+
     // Add the leaf to the container
     ImageView leaf = new ImageView(context);
 
