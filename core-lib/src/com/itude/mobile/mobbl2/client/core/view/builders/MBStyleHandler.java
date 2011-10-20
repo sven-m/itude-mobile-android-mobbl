@@ -73,6 +73,10 @@ public class MBStyleHandler
   {
   }
 
+  public void styleTextView(TextView textView, String name)
+  {
+  }
+
   public void styleButton(Button view, MBField field)
   {
     styleButtonWithName(view, field.getStyle());
@@ -371,7 +375,7 @@ public class MBStyleHandler
   {
   }
 
-  public void styleRowButton(RelativeLayout.LayoutParams params)
+  public void styleRowButton(View button, RelativeLayout.LayoutParams params)
   {
   }
 

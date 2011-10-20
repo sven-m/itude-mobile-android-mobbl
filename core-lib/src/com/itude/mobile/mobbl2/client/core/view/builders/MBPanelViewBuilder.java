@@ -397,7 +397,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
       {
         childView.setId(childID);
 
-        styleHandler.styleRowButton(childParams);
+        styleHandler.styleRowButton(childView, childParams);
 
         childParams.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
 
@@ -704,10 +704,10 @@ public class MBPanelViewBuilder extends MBViewBuilder
     row.setOrientation(LinearLayout.HORIZONTAL);
     row.setGravity(Gravity.CENTER_VERTICAL);
 
-    getStyleHandler().styleMatrixRow(panel, row);
-
     // Add children to panel
     buildMatrixRowPanelChildren(matrixRowLabels, row, false);
+
+    getStyleHandler().styleMatrixRow(panel, row);
 
     rowPanel.addView(row);
     currentId = UniqueIntegerGenerator.getId();
