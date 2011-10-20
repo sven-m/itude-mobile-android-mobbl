@@ -1,5 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.view.components;
 
+import java.util.List;
+
 import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -7,31 +9,44 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListPopupWindow;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
+import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
+import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
+import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl2.client.core.view.listeners.MBTabListenerI;
 
-public class MBTab extends RelativeLayout implements OnClickListener
+public class MBTab extends RelativeLayout implements OnClickListener, OnItemClickListener, OnItemSelectedListener
 {
-  private int            _tabId;
-  private MBTabBar       _tabBar     = null;
-  private ImageView      _icon       = null;
-  private TextView       _textView   = null;
-  private View           _activeView = null;
-  private MBTabListenerI _listener   = null;
+  private int                    _tabId;
+  private MBTabBar               _tabBar                 = null;
+  private ImageView              _icon                   = null;
+  private TextView               _textView               = null;
+  private MBTabListenerI         _listener               = null;
 
-  private View           _leftSpacer;
-  private View           _rightSpacer;
-  private LinearLayout   _content;
+  private View                   _leftSpacer;
+  private View                   _rightSpacer;
+  private LinearLayout           _content;
 
-  private int[]          _oldPadding = null;
+  private boolean                _isDropDown             = false;
+  private MBSpinnerAdapter       _adapter                = null;
+  private Drawable               _selectedBackground     = null;
+  private ListPopupWindow        _dropDownWindow         = null;
+  private OnItemSelectedListener _onItemSelectedListener = null;
 
   public MBTab(Context context)
   {
@@ -85,6 +100,8 @@ public class MBTab extends RelativeLayout implements OnClickListener
     addView(_leftSpacer);
     addView(_content);
     addView(_rightSpacer);
+
+    _onItemSelectedListener = this;
   }
 
   public void select()
@@ -105,16 +122,16 @@ public class MBTab extends RelativeLayout implements OnClickListener
       return;
     }
 
+    if (_isDropDown)
+    {
+      _content.setBackgroundDrawable(_selectedBackground);
+    }
+
     setSelected(true);
 
     if (_listener != null)
     {
       _listener.onTabSelected(this);
-    }
-
-    if (_activeView != null)
-    {
-      changeActiveView();
     }
   }
 
@@ -127,37 +144,32 @@ public class MBTab extends RelativeLayout implements OnClickListener
       _listener.onTabUnselected(this);
     }
 
-    if (_activeView != null)
+    if (_isDropDown)
     {
-      changeActiveView();
+      _content.setBackgroundDrawable(null);
     }
   }
 
   void reselect()
   {
-    if (_listener != null)
+    if (_isDropDown)
+    {
+      if (_dropDownWindow == null)
+      {
+        _dropDownWindow = new ListPopupWindow(getContext());
+        _dropDownWindow.setAdapter(_adapter);
+        _dropDownWindow.setAnchorView(this);
+        _dropDownWindow.setOnItemClickListener(this);
+      }
+      _dropDownWindow.show();
+      ListView listView = _dropDownWindow.getListView();
+
+      listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+      _dropDownWindow.setSelection(_adapter.getSelectedElement());
+    }
+    else if (_listener != null)
     {
       _listener.onTabReselected(this);
-    }
-  }
-
-  private void changeActiveView()
-  {
-    _content.removeAllViews();
-    if (isSelected())
-    {
-      _oldPadding = new int[]{getPaddingLeft(), getPaddingTop(), getPaddingRight(), getPaddingBottom()};
-      setPadding(0, 0, 0, 0);
-      _content.addView(_activeView);
-    }
-    else
-    {
-      if (_oldPadding != null)
-      {
-        setPadding(_oldPadding[0], _oldPadding[1], _oldPadding[2], _oldPadding[3]);
-      }
-      _content.addView(_icon);
-      _content.addView(_textView);
     }
   }
 
@@ -171,13 +183,6 @@ public class MBTab extends RelativeLayout implements OnClickListener
   public MBTab setText(CharSequence text)
   {
     _textView.setText(text);
-
-    return this;
-  }
-
-  public MBTab setActiveView(View view)
-  {
-    _activeView = view;
 
     return this;
   }
@@ -217,9 +222,95 @@ public class MBTab extends RelativeLayout implements OnClickListener
     return this;
   }
 
+  public MBTab setAdapter(MBSpinnerAdapter adapter)
+  {
+    if (adapter == null)
+    {
+      _isDropDown = false;
+    }
+    else
+    {
+      _isDropDown = true;
+    }
+
+    _adapter = adapter;
+    return this;
+  }
+
+  public MBSpinnerAdapter getAdapter()
+  {
+    return _adapter;
+  }
+
+  public MBTab setSelectedBackground(Drawable selectedBackground)
+  {
+    _selectedBackground = selectedBackground;
+    return this;
+  }
+
+  public MBTab setDropDownOnItemSelectedListener(OnItemSelectedListener listener)
+  {
+    _onItemSelectedListener = listener;
+    return this;
+  }
+
   @Override
   public void onClick(View view)
   {
     select();
+  }
+
+  @Override
+  public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+  {
+    if (_onItemSelectedListener != null)
+    {
+      _onItemSelectedListener.onItemSelected(parent, view, position, id);
+    }
+
+    _adapter.setSelectedElement(position);
+    _dropDownWindow.dismiss();
+    view.setSelected(true);
+
+  }
+
+  @Override
+  public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+  {
+    if (position == _adapter.getSelectedElement())
+    {
+      return;
+    }
+
+    MBDialogDefinition dialogDef = null;
+
+    List<MBDialogDefinition> dialogs = MBMetadataService.getInstance().getDialogs();
+    for (int i = 0; i < dialogs.size() && dialogDef == null; i++)
+    {
+      MBDialogDefinition dialog = dialogs.get(i);
+      if (dialog.getName().hashCode() == _tabId)
+      {
+        dialogDef = dialog;
+      }
+    }
+
+    if (dialogDef != null)
+    {
+      MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDef.getDomain());
+      String value = domainDef.getDomainValidators().get(position).getValue();
+
+      if (value != null)
+      {
+        MBOutcome outcome = new MBOutcome(value, null);
+        outcome.setOriginName(dialogDef.getName());
+        MBApplicationController.getInstance().handleOutcome(outcome);
+      }
+    }
+  }
+
+  @Override
+  public void onNothingSelected(AdapterView<?> parent)
+  {
+
   }
 }

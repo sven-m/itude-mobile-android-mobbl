@@ -17,8 +17,6 @@ import android.view.View.OnFocusChangeListener;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
@@ -34,13 +32,14 @@ import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNot
 import com.itude.mobile.mobbl2.client.core.controller.util.MBTabListener;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
+import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBRunnable;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
+import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
-import com.itude.mobile.mobbl2.client.core.view.components.MBSpinner;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSpinnerAdapter;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
@@ -75,7 +74,9 @@ public class MBTabletViewManager extends MBViewManager
       if (isPreConditionValid(def))
       {
         int index = tools.indexOf(def);
-        MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), index, def.getTitle());
+
+        String localizedTitle = MBLocalizationService.getInstance().getTextForKey(def.getTitle());
+        MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), index, localizedTitle);
 
         Drawable image = null;
         if (def.getIcon() != null)
@@ -84,7 +85,8 @@ public class MBTabletViewManager extends MBViewManager
           menuItem.setIcon(image);
         }
 
-        setShowAsActionFlag(def, menuItem);
+        int menuItemActionFlags = getMenuItemActionFlags(def);
+        menuItem.setShowAsAction(menuItemActionFlags);
 
         if ("REFRESH".equals(def.getType()))
         {
@@ -163,34 +165,51 @@ public class MBTabletViewManager extends MBViewManager
     return true;
   }
 
-  private void setShowAsActionFlag(MBToolDefinition def, MenuItem menuItem)
+  private int getMenuItemActionFlags(MBToolDefinition def)
   {
-    // default show as action flag if no visibility is set
-    int showAsActionFlag = MenuItem.SHOW_AS_ACTION_IF_ROOM;
-
     String visibility = def.getVisibility();
-    if ("ALWAYS".equals(visibility))
+    if (StringUtilities.isBlank(visibility))
     {
-      showAsActionFlag = MenuItem.SHOW_AS_ACTION_ALWAYS;
+      Log.w(Constants.APPLICATION_NAME, "No visibility specified for tool " + def.getName() + ": using default show as action if room");
+      return MenuItem.SHOW_AS_ACTION_IF_ROOM;
     }
-    else if ("IFROOM".equals(visibility))
+
+    int flags = 0;
+    String[] split = visibility.split("\\|");
+    for (String flagString : split)
     {
-      showAsActionFlag = MenuItem.SHOW_AS_ACTION_IF_ROOM;
+      int flag = getFlagForString(flagString);
+      flags = flags | flag;
     }
-    else if ("OVERFLOW".equals(visibility))
+
+    return flags;
+  }
+
+  private int getFlagForString(String flag)
+  {
+    int resultFlag = -1;
+    if ("ALWAYS".equals(flag))
     {
-      showAsActionFlag = MenuItem.SHOW_AS_ACTION_NEVER;
+      resultFlag = MenuItem.SHOW_AS_ACTION_ALWAYS;
     }
-    else if ("SHOWTEXT".equals(visibility))
+    else if ("IFROOM".equals(flag))
     {
-      showAsActionFlag = MenuItem.SHOW_AS_ACTION_WITH_TEXT;
+      resultFlag = MenuItem.SHOW_AS_ACTION_IF_ROOM;
+    }
+    else if ("OVERFLOW".equals(flag))
+    {
+      resultFlag = MenuItem.SHOW_AS_ACTION_NEVER;
+    }
+    else if ("SHOWTEXT".equals(flag))
+    {
+      resultFlag = MenuItem.SHOW_AS_ACTION_WITH_TEXT;
     }
     else
     {
-      Log.w(Constants.APPLICATION_NAME, "No visibility specified for tool " + def.getName() + ": using default show as action if room");
+      throw new IllegalArgumentException("Invalid flag: " + flag);
     }
 
-    menuItem.setShowAsAction(showAsActionFlag);
+    return resultFlag;
   }
 
   @Override
@@ -331,66 +350,15 @@ public class MBTabletViewManager extends MBViewManager
           {
             MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDefinition.getDomain());
 
-            final MBSpinnerAdapter spinnerAdapter = new MBSpinnerAdapter(MBTabletViewManager.this);
+            final MBSpinnerAdapter spinnerAdapter = new MBSpinnerAdapter(MBTabletViewManager.this, R.layout.simple_spinner_dropdown_item);
 
             for (MBDomainValidatorDefinition domDef : domainDef.getDomainValidators())
             {
               spinnerAdapter.add(domDef.getTitle());
             }
 
-            final MBSpinner spinner = new MBSpinner(MBTabletViewManager.this);
-            spinner.setId(dialogDefinition.getName().hashCode());
-            spinner.setAdapter(spinnerAdapter);
-            spinner.setPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
-            spinner.setText(dialogDefinition.getTitle());
-            spinner.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
-            spinner.setOnItemSelectedListener(new OnItemSelectedListener()
-            {
-
-              @Override
-              public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-              {
-                if (position == spinnerAdapter.getSelectedElement())
-                {
-                  return;
-                }
-
-                spinnerAdapter.setSelectedElement(position);
-                MBDialogDefinition dialogDef = null;
-
-                List<MBDialogDefinition> dialogs = MBMetadataService.getInstance().getDialogs();
-                for (int i = 0; i < dialogs.size() && dialogDef == null; i++)
-                {
-                  MBDialogDefinition dialog = dialogs.get(i);
-                  if (dialog.getName().hashCode() == parent.getId())
-                  {
-                    dialogDef = dialog;
-                  }
-                }
-
-                if (dialogDef != null)
-                {
-                  MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDef.getDomain());
-                  String value = domainDef.getDomainValidators().get(position).getValue();
-
-                  if (value != null)
-                  {
-                    MBOutcome outcome = new MBOutcome(value, null);
-                    outcome.setOriginName(dialogDef.getName());
-                    MBApplicationController.getInstance().handleOutcome(outcome);
-                  }
-
-                }
-              }
-
-              @Override
-              public void onNothingSelected(AdapterView<?> parent)
-              {
-              }
-
-            });
-
-            tabBar.addTab(new MBTab(MBTabletViewManager.this).setActiveView(spinner)
+            Drawable drawable = MBResourceService.getInstance().getImageByID("tab-spinner-leaf");
+            tabBar.addTab(new MBTab(MBTabletViewManager.this).setAdapter(spinnerAdapter).setSelectedBackground(drawable)
                 .setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon())).setText(dialogDefinition.getTitle())
                 .setTabId(dialogName.hashCode()).setListener(new MBTabListener(dialogName.hashCode())));
           }

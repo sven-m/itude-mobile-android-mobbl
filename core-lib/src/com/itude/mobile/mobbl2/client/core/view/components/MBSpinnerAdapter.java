@@ -1,32 +1,46 @@
 package com.itude.mobile.mobbl2.client.core.view.components;
 
 import android.content.Context;
-import android.view.View;
 import android.widget.ArrayAdapter;
 
 public class MBSpinnerAdapter extends ArrayAdapter<CharSequence>
 {
-
   private int _selectedElement = 0;
 
-  public MBSpinnerAdapter(Context context)
+  public MBSpinnerAdapter(Context context, int textViewResourceId)
   {
-    super(context, android.R.layout.simple_spinner_item);
-    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    super(context, textViewResourceId);
   }
 
-  public View getDropDownView(int position, View convertView, android.view.ViewGroup parent)
-  {
-    View v = super.getDropDownView(position, convertView, parent);
+  //
+  //  @Override
+  //  public View getView(int position, View convertView, ViewGroup parent)
+  //  {
+  //    if (position == _selectedElement)
+  //    {
+  //      view.setSelected(true);
+  //    }
+  //    View view = super.getView(position, convertView, parent);
+  //
+  //
+  //    return view;
+  //  }
 
-    if (getSelectedElement() == position)
-    {
-      //      MBViewBuilderFactory.getInstance().getStyleHandler().styleSelectedItem(v);
-      // probably useful for setting the state and give a statelistdrawable in the styles.xml
-      v.setSelected(true);
-    }
-    return v;
-  }
+  //
+  //  @Override
+  //  public View getDropDownView(int position, View convertView, ViewGroup parent)
+  //  {
+  //    // TODO Auto-generated method stub
+  //    View view = super.getDropDownView(position, convertView, parent);
+  //
+  //    if (position == _selectedElement)
+  //    {
+  //      view.setSelected(true);
+  //    }
+  //
+  //    return view;
+  //
+  //  }
 
   public void setSelectedElement(int selectedElement)
   {
