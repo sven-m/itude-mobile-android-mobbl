@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.itude.mobile.mobbl2.client.core.util.Constants;
@@ -71,6 +72,7 @@ public abstract class MBEditableMatrixListener
     {
       editButton.setOnClickListener(new OnClickListener()
       {
+        @Override
         public void onClick(View v)
         {
           if (_editableMatrix.isInEditMode())
@@ -95,6 +97,7 @@ public abstract class MBEditableMatrixListener
   {
     rowView.setOnClickListener(new OnClickListener()
     {
+      @Override
       public void onClick(View v)
       {
         if (onBeforeRowClick(itemAtPosition))
@@ -113,6 +116,7 @@ public abstract class MBEditableMatrixListener
     rowView.setOnLongClickListener(new OnLongClickListener()
     {
 
+      @Override
       public boolean onLongClick(View v)
       {
         if (onBeforeLongRowClick(itemAtPosition))
@@ -137,6 +141,7 @@ public abstract class MBEditableMatrixListener
       deleteButton.setOnClickListener(new OnClickListener()
       {
 
+        @Override
         public void onClick(View v)
         {
           if (onBeforeDelete(itemAtPosition) && onDelete(itemAtPosition))
@@ -223,14 +228,15 @@ public abstract class MBEditableMatrixListener
 
     final View rowView = _rowViews.get(itemAtPosition);
 
-    final Button upButton = (Button) rowView.findViewWithTag(Constants.C_EDITABLEMATRIX_RIGHTBUTTONSCONTAINER)
+    final ImageButton upButton = (ImageButton) rowView.findViewWithTag(Constants.C_EDITABLEMATRIX_RIGHTBUTTONSCONTAINER)
         .findViewWithTag(Constants.C_EDITABLEMATRIX_UPBUTTON);
-    final Button downButton = (Button) rowView.findViewWithTag(Constants.C_EDITABLEMATRIX_RIGHTBUTTONSCONTAINER)
+    final ImageButton downButton = (ImageButton) rowView.findViewWithTag(Constants.C_EDITABLEMATRIX_RIGHTBUTTONSCONTAINER)
         .findViewWithTag(Constants.C_EDITABLEMATRIX_DOWNBUTTON);
 
     upButton.setOnClickListener(new OnClickListener()
     {
 
+      @Override
       public void onClick(View v)
       {
         onChangePosition(itemAtPosition, (itemAtPosition - 1));
@@ -240,6 +246,7 @@ public abstract class MBEditableMatrixListener
     downButton.setOnClickListener(new OnClickListener()
     {
 
+      @Override
       public void onClick(View v)
       {
         onChangePosition(itemAtPosition, (itemAtPosition + 1));
@@ -251,7 +258,7 @@ public abstract class MBEditableMatrixListener
   protected void showUpButton(int itemAtPosition, boolean showUpButton)
   {
     final View rowView = _rowViews.get(itemAtPosition);
-    final Button upButton = (Button) rowView.findViewWithTag(Constants.C_EDITABLEMATRIX_RIGHTBUTTONSCONTAINER)
+    final ImageButton upButton = (ImageButton) rowView.findViewWithTag(Constants.C_EDITABLEMATRIX_RIGHTBUTTONSCONTAINER)
         .findViewWithTag(Constants.C_EDITABLEMATRIX_UPBUTTON);
 
     if (showUpButton)
@@ -269,7 +276,7 @@ public abstract class MBEditableMatrixListener
   protected void showDownButton(int itemAtPosition, boolean showDownButton)
   {
     final View rowView = _rowViews.get(itemAtPosition);
-    final Button downButton = (Button) rowView.findViewWithTag(Constants.C_EDITABLEMATRIX_RIGHTBUTTONSCONTAINER)
+    final ImageButton downButton = (ImageButton) rowView.findViewWithTag(Constants.C_EDITABLEMATRIX_RIGHTBUTTONSCONTAINER)
         .findViewWithTag(Constants.C_EDITABLEMATRIX_DOWNBUTTON);
 
     if (showDownButton)

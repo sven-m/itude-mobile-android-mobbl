@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -813,8 +814,11 @@ public class MBPanelViewBuilder extends MBViewBuilder
     borderWrapper.setTag(Constants.C_MATRIXROW);
     borderWrapper.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 
+    RelativeLayout.LayoutParams relativeContainerParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+        LayoutParams.WRAP_CONTENT);
+    relativeContainerParams.addRule(RelativeLayout.CENTER_VERTICAL);
     RelativeLayout relativeContainer = new RelativeLayout(context);
-    relativeContainer.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+    relativeContainer.setLayoutParams(relativeContainerParams);
     relativeContainer.setId(UniqueIntegerGenerator.getId());
 
     // Add deletebutton or checkbutton to container in relativelayout
@@ -865,17 +869,17 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
       //      if (MBDevice.getInstance().isPhone())
       //      {
-      Button upButton = new Button(context);
+      ImageButton upButton = new ImageButton(context);
       upButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
       upButton.setTag(Constants.C_EDITABLEMATRIX_UPBUTTON);
       rightButtonContainer.addView(upButton);
-      styleHandler.styleButtonWithName(upButton, Constants.C_EDITABLEMATRIX_UPBUTTON);
+      styleHandler.styleImageButtonWithName(upButton, Constants.C_EDITABLEMATRIX_UPBUTTON);
 
-      Button downButton = new Button(context);
+      ImageButton downButton = new ImageButton(context);
       downButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
       downButton.setTag(Constants.C_EDITABLEMATRIX_DOWNBUTTON);
       rightButtonContainer.addView(downButton);
-      styleHandler.styleButtonWithName(downButton, Constants.C_EDITABLEMATRIX_DOWNBUTTON);
+      styleHandler.styleImageButtonWithName(downButton, Constants.C_EDITABLEMATRIX_DOWNBUTTON);
       //      }
       //      else
       //      {

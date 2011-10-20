@@ -97,15 +97,6 @@ public class MBStyleHandler
     {
       view.setBackgroundDrawable(getStatedButtonBackground("button-delete-normal", "button-delete-pressed", "button-delete-disabled"));
     }
-    else if (Constants.C_EDITABLEMATRIX_UPBUTTON.equals(style))
-    {
-      view.setBackgroundDrawable(getStatedButtonBackground("button-arrow-up-normal", "button-arrow-up-pressed", "button-arrow-up-disabled"));
-    }
-    else if (Constants.C_EDITABLEMATRIX_DOWNBUTTON.equals(style))
-    {
-      view.setBackgroundDrawable(getStatedButtonBackground("button-arrow-down-normal", "button-arrow-down-pressed",
-                                                           "button-arrow-down-disabled"));
-    }
     else if (Constants.C_EDITABLEMATRIX_DRAGBUTTON.equals(style))
     {
       view.setBackgroundDrawable(MBResourceService.getInstance().getImageByID("button-drag"));
