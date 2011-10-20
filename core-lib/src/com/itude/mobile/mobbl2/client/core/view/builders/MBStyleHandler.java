@@ -411,6 +411,11 @@ public class MBStyleHandler
     scrollableView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
   }
 
+  public void styleMainScrollbarView(MBPage page, View scrollableView, String name)
+  {
+
+  }
+
   public void styleSegmentedControl(View segmentedControl)
   {
     segmentedControl.setPadding(0, MBScreenUtilities.SEVEN, 0, 0);

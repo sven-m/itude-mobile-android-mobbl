@@ -285,15 +285,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
     rowPanel.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
     rowPanel.setTag(childIds);
 
-    if (_isFirstRow)
-    {
-      // TODO Make sure this row is styled as a first row (so background image should possibly have a top border)
-    }
-    else
-    {
-      // TODO Make sure this row is styled as a row possibly with borders
-    }
-
     // Content view
     buildChildrenForRowPanel(panel.getChildren(), rowPanel, null);
 
@@ -366,6 +357,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
           RelativeLayout.LayoutParams nonButtonLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
               RelativeLayout.LayoutParams.WRAP_CONTENT);
           nonButtonLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+          nonButtonLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
           nonButtonLayout = new LinearLayout(context);
           nonButtonLayout.setLayoutParams(nonButtonLayoutParams);
@@ -1010,6 +1002,11 @@ public class MBPanelViewBuilder extends MBViewBuilder
     container.addView(leaf);
 
     return container;
+  }
+
+  public ViewGroup buildClickableMatrixPanel(ViewGroup parent, String style)
+  {
+    return buildClickableMatrixPanel(parent);
   }
 
 }
