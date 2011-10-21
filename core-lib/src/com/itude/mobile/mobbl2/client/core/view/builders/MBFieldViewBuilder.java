@@ -50,6 +50,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
     if (Constants.C_FIELD_INPUT.equals(field.getType())) view = buildTextField(field);
     else if (Constants.C_FIELD_PASSWORD.equals(field.getType())) view = buildTextField(field);
     else if (Constants.C_FIELD_BUTTON.equals(field.getType())) view = buildButton(field);
+    else if (Constants.C_FIELD_IMAGEBUTTON.equals(field.getType())) view = buildImageButton(field);
     else if (Constants.C_FIELD_LABEL.equals(field.getType())) view = buildLabel(field);
     else if (Constants.C_FIELD_SUBLABEL.equals(field.getType())) view = buildSubLabel(field);
     else if (Constants.C_FIELD_DROPDOWNLIST.equals(field.getType())) view = buildDropdownList(field);
@@ -80,15 +81,27 @@ public class MBFieldViewBuilder extends MBViewBuilder
     String source = field.getSource();
     if (source != null)
     {
-      ImageButton imageButton = new ImageButton(MBApplicationController.getInstance().getBaseContext());
       Drawable drawable = MBResourceService.getInstance().getImageByID(source);
-      imageButton.setBackgroundDrawable(drawable);
-      return imageButton;
-
+      button.setBackgroundDrawable(drawable);
     }
     else
     {
       getStyleHandler().styleButton(button, field);
+    }
+    return button;
+  }
+
+  public View buildImageButton(MBField field)
+  {
+    ImageButton button = new ImageButton(MBApplicationController.getInstance().getBaseContext());
+    button.setOnClickListener(field);
+    button.setOnKeyListener(field);
+
+    String source = field.getSource();
+    if (source != null)
+    {
+      Drawable drawable = MBResourceService.getInstance().getImageByID(source);
+      button.setBackgroundDrawable(drawable);
     }
     return button;
   }

@@ -350,7 +350,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
           RelativeLayout.LayoutParams.WRAP_CONTENT);
       childParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
-      if (!isFieldWithType(child, Constants.C_FIELD_BUTTON))
+      if (!isFieldWithType(child, Constants.C_FIELD_BUTTON) && !isFieldWithType(child, Constants.C_FIELD_IMAGEBUTTON))
       {
         if (nonButtonLayout == null)
         {

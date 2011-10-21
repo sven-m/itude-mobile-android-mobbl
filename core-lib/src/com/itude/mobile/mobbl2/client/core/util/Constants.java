@@ -32,6 +32,7 @@ public interface Constants
   public static final String C_FIELD_LABEL                                 = "LABEL";
   public static final String C_FIELD_SUBLABEL                              = "SUBLABEL";
   public static final String C_FIELD_BUTTON                                = "BUTTON";
+  public static final String C_FIELD_IMAGEBUTTON                           = "IMAGEBUTTON";
   public static final String C_FIELD_TEXT                                  = "TEXT";
   public static final String C_FIELD_IMAGE                                 = "IMAGE";
   public static final String C_FIELD_ICON                                  = "ICON";
