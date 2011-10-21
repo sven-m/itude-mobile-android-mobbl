@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
+import com.itude.mobile.mobbl2.client.core.util.MBRunnable;
 
 public final class MBActivityIndicator
 {
@@ -23,9 +24,10 @@ public final class MBActivityIndicator
       return;
     }
 
-    activity.runOnUiThread(new Runnable()
+    activity.runOnUiThread(new MBRunnable()
     {
-      public void run()
+      @Override
+      public void runMethod()
       {
         _dialog = ProgressDialog.show(activity, MBLocalizationService.getInstance().getTextForKey("title_loading"), MBLocalizationService
             .getInstance().getTextForKey("msg_loading"), true, false);
@@ -37,9 +39,10 @@ public final class MBActivityIndicator
   {
     if (_queue.decrementAndGet() > 0) return;
 
-    activity.runOnUiThread(new Runnable()
+    activity.runOnUiThread(new MBRunnable()
     {
-      public void run()
+      @Override
+      public void runMethod()
       {
         _dialog.dismiss();
         _dialog = null;

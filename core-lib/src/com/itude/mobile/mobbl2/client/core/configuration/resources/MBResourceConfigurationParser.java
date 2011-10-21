@@ -13,6 +13,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
   private List<String> _resourceAttributes;
   private List<String> _bundleAttributes;
   private List<String> _statedResourceAttributes;
+  private List<String> _layeredResourceAttributes;
   private List<String> _itemAttributes;
 
   @Override
@@ -39,6 +40,12 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       _statedResourceAttributes = new ArrayList<String>();
       _statedResourceAttributes.add("xmlns");
       _statedResourceAttributes.add("id");
+    }
+    if (_layeredResourceAttributes == null)
+    {
+      _layeredResourceAttributes = new ArrayList<String>();
+      _layeredResourceAttributes.add("xmlns");
+      _layeredResourceAttributes.add("id");
     }
     if (_itemAttributes == null)
     {
@@ -118,6 +125,15 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
 
       notifyProcessed(statedResourceDef);
     }
+    else if (elementName.equals("LayeredResource"))
+    {
+      checkAttributesForElement(elementName, attributeDict, _layeredResourceAttributes);
+
+      MBLayeredResourceDefinition layeredResourceDef = new MBLayeredResourceDefinition();
+      layeredResourceDef.setResourceId((String) attributeDict.get("id"));
+
+      notifyProcessed(layeredResourceDef);
+    }
     else if (elementName.equals("Item"))
     {
       checkAttributesForElement(elementName, attributeDict, _itemAttributes);
@@ -149,7 +165,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
   public boolean isConcreteElement(String element)
   {
     return super.isConcreteElement(element) || element.equals("Resource") || element.equals("Bundle") || element.equals("Resources")
-           || element.equals("StatedResource") || element.equals("Item");
+           || element.equals("StatedResource") || element.equals("LayeredResource") || element.equals("Item");
   }
 
   @Override
@@ -176,6 +192,16 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
   public List<String> getItemAttributes()
   {
     return _itemAttributes;
+  }
+
+  public void setLayeredResourceAttributes(List<String> layeredResourceAttributes)
+  {
+    _layeredResourceAttributes = layeredResourceAttributes;
+  }
+
+  public List<String> getLayeredResourceAttributes()
+  {
+    return _layeredResourceAttributes;
   }
 
 }

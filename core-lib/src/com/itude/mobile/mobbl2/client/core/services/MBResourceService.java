@@ -11,15 +11,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.util.Log;
+import android.view.Gravity;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBItemDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.resources.MBLayeredResourceDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceConfiguration;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceConfigurationParser;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBStatedResourceDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.resources.exceptions.MBInvalidItemException;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
@@ -31,7 +35,7 @@ import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBBundleDefinition;
 import com.itude.mobile.mobbl2.client.core.util.MBCacheManager;
 
-public class MBResourceService
+public final class MBResourceService
 {
 
   public static final String        RESOURCE_CONFIG_FILE_NAME = "resources.xml";
@@ -105,6 +109,10 @@ public class MBResourceService
     if (def instanceof MBStatedResourceDefinition)
     {
       return buildStatedImage((MBStatedResourceDefinition) def);
+    }
+    else if (def instanceof MBLayeredResourceDefinition)
+    {
+      return buildLayeredImage((MBLayeredResourceDefinition) def);
     }
     else
     {
@@ -182,32 +190,86 @@ public class MBResourceService
     if (pressed != null)
     {
       String resource = pressed.getResource();
-      Drawable drawable = getImage(resource, getConfig().getResourceWithID(resource));
+      validateItemInStatedResource(resource);
+      Drawable drawable = getImageByID(resource);
       stateDrawable.addState(new int[]{R.attr.state_pressed}, drawable);
     }
 
     if (enabled != null)
     {
       String resource = enabled.getResource();
-      Drawable drawable = getImage(resource, getConfig().getResourceWithID(resource));
+      validateItemInStatedResource(resource);
+      Drawable drawable = getImageByID(resource);
       stateDrawable.addState(new int[]{R.attr.state_enabled, -R.attr.state_selected}, drawable);
     }
 
     if (disabled != null)
     {
       String resource = disabled.getResource();
-      Drawable drawable = getImage(resource, getConfig().getResourceWithID(resource));
+      validateItemInStatedResource(resource);
+      Drawable drawable = getImageByID(resource);
       stateDrawable.addState(new int[]{-R.attr.state_enabled}, drawable);
     }
 
     if (selected != null)
     {
       String resource = selected.getResource();
-      Drawable drawable = getImage(resource, getConfig().getResourceWithID(resource));
+      validateItemInStatedResource(resource);
+      Drawable drawable = getImageByID(resource);
       stateDrawable.addState(new int[]{R.attr.state_selected}, drawable);
     }
 
     return stateDrawable;
+  }
+
+  private Drawable buildLayeredImage(MBLayeredResourceDefinition def)
+  {
+    List<MBItemDefinition> items = def.getSortedItems();
+
+    if (items.size() == 0)
+    {
+      return null;
+    }
+
+    Drawable[] layers = new Drawable[items.size()];
+
+    for (MBItemDefinition item : items)
+    {
+      String resource = item.getResource();
+      validateItemInLayeredResource(resource);
+
+      Drawable drawable = getImageByID(resource);
+      if (drawable instanceof BitmapDrawable)
+      {
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+        bitmapDrawable.setGravity(Gravity.CENTER);
+        drawable = bitmapDrawable;
+      }
+      layers[items.indexOf(item)] = drawable;
+    }
+
+    LayerDrawable layerDrawable = new LayerDrawable(layers);
+    return layerDrawable;
+  }
+
+  private void validateItemInStatedResource(String itemResource) throws MBInvalidItemException
+  {
+    MBResourceDefinition targetResourceDef = getConfig().getResourceWithID(itemResource);
+
+    if (targetResourceDef instanceof MBStatedResourceDefinition)
+    {
+      throw new MBInvalidItemException("A stated resource can not have a stated item");
+    }
+  }
+
+  private void validateItemInLayeredResource(String itemResource) throws MBInvalidItemException
+  {
+    MBResourceDefinition resourceDef = getConfig().getResourceWithID(itemResource);
+
+    if (resourceDef instanceof MBStatedResourceDefinition)
+    {
+      throw new MBInvalidItemException("Layered resources can not contain stated resources");
+    }
   }
 
   public byte[] getResourceByURL(String urlString)

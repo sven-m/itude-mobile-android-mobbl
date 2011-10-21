@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
@@ -79,8 +80,11 @@ public class MBFieldViewBuilder extends MBViewBuilder
     String source = field.getSource();
     if (source != null)
     {
+      ImageButton imageButton = new ImageButton(MBApplicationController.getInstance().getBaseContext());
       Drawable drawable = MBResourceService.getInstance().getImageByID(source);
-      button.setBackgroundDrawable(drawable);
+      imageButton.setBackgroundDrawable(drawable);
+      return imageButton;
+
     }
     else
     {
