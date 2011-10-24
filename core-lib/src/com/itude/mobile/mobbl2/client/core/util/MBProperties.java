@@ -7,7 +7,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefi
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 
-public class MBProperties
+public final class MBProperties
 {
   private final MBDocument          _propertiesDoc;
   private final Map<String, String> _propertiesCache;

@@ -654,12 +654,33 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
     conf.addDocument(docDef);
   }
 
+  private void addDeviceDocument(MBConfigurationDefinition conf)
+  {
+    MBDocumentDefinition docDef = new MBDocumentDefinition();
+    docDef.setName(MBConfigurationDefinition.DOC_SYSTEM_DEVICE);
+    docDef.setDataManager(MBDataManagerService.DATA_HANDLER_MEMORY);
+    docDef.setAutoCreate(true);
+
+    MBElementDefinition elementDef = new MBElementDefinition();
+    elementDef.setMinOccurs(1);
+    elementDef.setName("Device");
+
+    MBElementDefinition propDef = new MBElementDefinition();
+    propDef.setMinOccurs(0);
+    propDef.setName("Property");
+    addAttribute(propDef, "name", "string");
+    addAttribute(propDef, "value", "string");
+    elementDef.addElement(propDef);
+    docDef.addElement(elementDef);
+  }
+
   private void addSystemDocuments(MBConfigurationDefinition conf)
   {
     addExceptionDocument(conf);
     addEmptyDocument(conf);
     addPropertiesDocument(conf);
     addLanguageDocument(conf);
+    addDeviceDocument(conf);
   }
 
   public List<String> getConfigAttributes()

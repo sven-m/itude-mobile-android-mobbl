@@ -26,6 +26,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   public static final String                      PATH_SYSTEM_EXCEPTION_PATH        = "/Exception[0]/@path";
 
   public static final String                      DOC_SYSTEM_PROPERTIES             = "MBApplicationProperties";
+  public static final String                      DOC_SYSTEM_DEVICE                 = "MBDevice";
 
   private final Map<String, MBDomainDefinition>   _domainTypes;
   private final Map<String, MBDocumentDefinition> _documentTypes;
