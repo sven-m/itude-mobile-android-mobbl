@@ -35,7 +35,7 @@ public abstract class MBEditableMatrixListener
     _matrixPanel = matrixPanel;
   }
 
-  public MBPanel matrixPanel()
+  public MBPanel getMatrixPanel()
   {
     return _matrixPanel;
   }
