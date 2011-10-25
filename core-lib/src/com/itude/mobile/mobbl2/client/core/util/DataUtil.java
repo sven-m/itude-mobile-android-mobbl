@@ -147,9 +147,11 @@ public final class DataUtil
       }
       catch (DataFormatException e)
       {
+        decompressor.end();
         return null;
       }
     }
+    decompressor.end();
     try
     {
       if (bos != null) bos.close();

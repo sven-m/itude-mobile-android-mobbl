@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangedEventListener;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
+import com.itude.mobile.mobbl2.client.core.util.MBProperties;
 import com.itude.mobile.mobbl2.client.core.util.MBRunnable;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
@@ -61,6 +63,13 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   @Override
   public void onCreate(Bundle savedInstanceState)
   {
+    String inDevelopment = MBProperties.getInstance().getValueForProperty(Constants.C_PROPERTY_INDEVELOPMENT);
+    if ("true".equals(inDevelopment))
+    {
+      StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
+      StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
+    } 
+
     // setStyle has no effect when used as a normal Fragment, only when used as a dialog
     setStyle(STYLE_NO_TITLE, getTheme());
 
@@ -171,7 +180,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
 
       if (MBDevice.getInstance().isTablet())
       {
-       styleCloseButton();
+        styleCloseButton();
       }
 
       if (_isDialogFullscreen)
