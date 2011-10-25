@@ -106,6 +106,7 @@ public final class DataUtil
       int count = deflater.deflate(buf);
       bos.write(buf, 0, count);
     }
+    deflater.end();
 
     try
     {
