@@ -131,9 +131,15 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
       {
         throw (RuntimeException) e;
       }
-      else if (e instanceof SocketException || e instanceof SocketTimeoutException)
+      else if (e instanceof SocketException)
       {
         MBNetworkErrorException networkException = new MBNetworkErrorException("No internet connection");
+        networkException.setName("Network error");
+        throw networkException;
+      }
+      else if (e instanceof SocketTimeoutException)
+      {
+        MBNetworkErrorException networkException = new MBNetworkErrorException("Internet timeout");
         networkException.setName("Network error");
         throw networkException;
       }

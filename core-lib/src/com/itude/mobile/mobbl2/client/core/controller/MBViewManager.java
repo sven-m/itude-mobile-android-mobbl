@@ -41,6 +41,7 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.helper.MBSecurityHelper;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
+import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
 
 public class MBViewManager extends ActivityGroup
 {
@@ -429,6 +430,15 @@ public class MBViewManager extends ActivityGroup
         {
           dialogController.handleAllOnWindowActivated();
         }
+
+        if (MBDevice.getInstance().isTablet())
+        {
+          MBTabBar tabBar = getTabBar();
+          if (tabBar != null)
+          {
+            tabBar.selectTab(dialogName.hashCode(), false);
+          }
+        }
       }
     }
   }
@@ -702,6 +712,11 @@ public class MBViewManager extends ActivityGroup
   }
 
   public void hideProgressIndicatorInTool()
+  {
+    throw new UnsupportedOperationException("This method is not support on smartphone");
+  }
+
+  public MBTabBar getTabBar()
   {
     throw new UnsupportedOperationException("This method is not support on smartphone");
   }

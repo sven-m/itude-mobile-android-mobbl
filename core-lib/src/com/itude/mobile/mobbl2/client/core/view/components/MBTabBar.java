@@ -6,6 +6,8 @@ import java.util.List;
 import android.content.Context;
 import android.widget.LinearLayout;
 
+import com.itude.mobile.mobbl2.client.core.view.listeners.MBTabListenerI;
+
 /**
  * @author Coen Houtman
  *
@@ -92,11 +94,30 @@ public class MBTabBar extends LinearLayout
     return _tabs.indexOf(tab);
   }
 
-  public void selectTab(MBTab tab)
+  public void selectTab(int id, boolean notifyListener)
+  {
+    MBTab tab = findTabById(id);
+    if (tab != null)
+    {
+      selectTab(tab, notifyListener);
+    }
+  }
+
+  public void selectTab(MBTab tab, boolean notifyListener)
   {
     if (tab != null && tab.equals(_selectedTab))
     {
-      _selectedTab.reselect();
+      if (notifyListener)
+      {
+        _selectedTab.reselect();
+      }
+      else
+      {
+        MBTabListenerI listener = _selectedTab.getListener();
+        _selectedTab.setListener(null);
+        _selectedTab.reselect();
+        _selectedTab.setListener(listener);
+      }
     }
     else
     {
@@ -107,7 +128,17 @@ public class MBTabBar extends LinearLayout
 
       if (tab != null)
       {
-        tab.doSelect();
+        if (notifyListener)
+        {
+          tab.select();
+        }
+        else
+        {
+          MBTabListenerI listener = tab.getListener();
+          tab.setListener(null);
+          tab.select();
+          tab.setListener(listener);
+        }
       }
       _selectedTab = tab;
     }

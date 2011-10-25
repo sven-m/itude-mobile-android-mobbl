@@ -104,24 +104,8 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
     _onItemSelectedListener = this;
   }
 
-  public void select()
+  void select()
   {
-    if (_tabBar == null)
-    {
-      throw new IllegalStateException("There must be a relation with the tab bar this tab is placed in");
-    }
-
-    _tabBar.selectTab(this);
-  }
-
-  void doSelect()
-  {
-    if (isSelected())
-    {
-      reselect();
-      return;
-    }
-
     if (_isDropDown)
     {
       _content.setBackgroundDrawable(_selectedBackground);
@@ -185,6 +169,11 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
     _textView.setText(text);
 
     return this;
+  }
+
+  MBTabListenerI getListener()
+  {
+    return _listener;
   }
 
   public MBTab setListener(MBTabListenerI listener)
@@ -257,7 +246,7 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
   @Override
   public void onClick(View view)
   {
-    select();
+    _tabBar.selectTab(this, true);
   }
 
   @Override

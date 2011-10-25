@@ -255,8 +255,11 @@ public class MBTabletViewManager extends MBViewManager
     {
       resetViewPreservingCurrentDialog();
       int firstDialog = MBMetadataService.getInstance().getFirstDialogDefinition().getName().hashCode();
-      MBTab tab = tabBar.findTabById(firstDialog);
-      tab.select();
+      MBTab selectedTab = tabBar.getSelectedTab();
+      if (selectedTab == null || firstDialog != selectedTab.getTabId())
+      {
+        tabBar.selectTab(firstDialog, true);
+      }
     }
   }
 
@@ -279,7 +282,7 @@ public class MBTabletViewManager extends MBViewManager
         MBTabBar tabBar = getTabBar();
         if (tabBar != null)
         {
-          tabBar.selectTab(null);
+          tabBar.selectTab(null, true);
         }
       }
     }
@@ -291,12 +294,12 @@ public class MBTabletViewManager extends MBViewManager
     MBTabBar tabBar = getTabBar();
     if (tabBar != null)
     {
-      MBTab tab = tabBar.findTabById(id);
-      tab.select();
+      tabBar.selectTab(id, true);
     }
   }
 
-  private MBTabBar getTabBar()
+  @Override
+  public MBTabBar getTabBar()
   {
     try
     {
@@ -407,11 +410,11 @@ public class MBTabletViewManager extends MBViewManager
           if (selectFirstTab)
           {
             MBTab tab = tabBar.getTab(0);
-            tabBar.selectTab(tab);
+            tabBar.selectTab(tab, true);
           }
           else if (selectedTab >= 0)
           {
-            tabBar.selectTab(tabBar.getTab(selectedTab));
+            tabBar.selectTab(tabBar.getTab(selectedTab), true);
           }
         }
       }
