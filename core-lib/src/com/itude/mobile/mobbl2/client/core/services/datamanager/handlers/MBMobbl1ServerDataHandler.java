@@ -31,7 +31,7 @@ public class MBMobbl1ServerDataHandler extends MBRESTServiceDataHandler
 
     if (cacheable)
     {
-      MBDocument result = MBCacheManager.documentForKey(documentName + doc.getUniqueId());
+      MBDocument result = MBCacheManager.documentForKey(doc.getUniqueId());
       if (result != null) return result;
     }
 
@@ -92,7 +92,7 @@ public class MBMobbl1ServerDataHandler extends MBRESTServiceDataHandler
 
     if (cacheable)
     {
-      MBCacheManager.setDocument(result, documentName + doc.getUniqueId(), endPoint.getTtl());
+      MBCacheManager.setDocument(result, doc.getUniqueId(), endPoint.getTtl());
     }
     return result;
   }
