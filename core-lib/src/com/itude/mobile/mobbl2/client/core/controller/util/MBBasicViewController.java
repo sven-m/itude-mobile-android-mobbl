@@ -32,6 +32,7 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.MBProperties;
 import com.itude.mobile.mobbl2.client.core.util.MBRunnable;
+import com.itude.mobile.mobbl2.client.core.util.ViewUtilities;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBPanelViewBuilder;
@@ -137,11 +138,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     }
     else
     {
-      ViewGroup parent = (ViewGroup) _contentView.getParent();
-      if (parent != null)
-      {
-        parent.removeView(_contentView);
-      }
+      ViewUtilities.detachView(_contentView);
     }
 
     return _contentView;
