@@ -115,6 +115,11 @@ public class MBDocument extends MBElementContainer
     MBDataManagerService.getInstance().loadDocument(_definition.getName(), _argumentsUsed, delegate);
   }
 
+  public MBDocument loadFreshCopy()
+  {
+    return MBDataManagerService.getInstance().loadDocument(_definition.getName(), _argumentsUsed);
+  }
+
   // Be careful with reload since it might change the number of elements; making any existing path (indexes) invalid
   // It is safer to use loadFreshCopyForDelegate:resultSelector:errorSelector: and process the result in the callbacks
   public void reload()
