@@ -15,7 +15,7 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBXmlDocumentParser;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 
-public class MBCacheManager
+public final class MBCacheManager
 {
   private static MBCacheManager           _instance;
   private final Map<String, String>       _registry;
@@ -33,6 +33,7 @@ public class MBCacheManager
   {
     _registryFileName = CACHE_DIR + File.separator + CACHE_REGISTRY_FILE;
 
+    @SuppressWarnings("unchecked")
     Hashtable<String, String> combined = (Hashtable<String, String>) FileUtil.getInstance().readObjectFromFile(_registryFileName);
     if (combined == null) combined = new Hashtable<String, String>();
 
@@ -74,17 +75,22 @@ public class MBCacheManager
       // check ttl
       if (fileName != null)
       {
-        long maxAge = Long.parseLong(_ttls.get(key));
-        long now = System.currentTimeMillis();
-        if (maxAge != 0 && maxAge < now)
+        String ttl = _ttls.get(key);
+        if (StringUtilities.isNotBlank(ttl))
         {
-          fileName = null;
-          _ttls.remove(key);
+          long maxAge = Long.parseLong(ttl);
+          if (maxAge != 0 && maxAge < System.currentTimeMillis())
+          {
+            fileName = null;
+            _ttls.remove(key);
+          }
         }
       }
     }
-    if (fileName == null) return null;
-
+    if (fileName == null)
+    {
+      return null;
+    }
     // First try to get it from the temporary memory cache; a writer could be busy writing the file right now:
 
     byte[] data = null;
@@ -93,7 +99,10 @@ public class MBCacheManager
       data = _temporaryMemoryCache.get(key);
     }
 
-    if (data == null) data = FileUtil.getInstance().getByteArray(CACHE_DIR + File.separator + fileName);
+    if (data == null)
+    {
+      data = FileUtil.getInstance().getByteArray(CACHE_DIR + File.separator + fileName);
+    }
 
     return data;
   }
@@ -114,7 +123,9 @@ public class MBCacheManager
       {
         int maxKey = 0;
         for (String value : _registry.values())
+        {
           maxKey = Math.max(maxKey, Integer.parseInt(value));
+        }
         maxKey++;
         fileName = "" + maxKey;
         _registry.put(key, fileName);
@@ -122,15 +133,16 @@ public class MBCacheManager
 
       // Set maximum age based on ttl and the time of 'now':
       long maxAge = 0;
-      if (ttl > 0) maxAge = System.currentTimeMillis() + ttl;
-      String maxAgeString = "" + maxAge;
-      _ttls.put(key, maxAgeString);
+      if (ttl > 0)
+      {
+        maxAge = System.currentTimeMillis() + ttl;
+      }
+      _ttls.put(key, "" + maxAge);
 
       MBCacheWriter writer = new MBCacheWriter(_registry, _registryFileName, _documentTypes, _ttls, _ttlsFileName, CACHE_DIR
                                                                                                                    + File.separator
                                                                                                                    + fileName, data,
           _temporaryMemoryCache, key);
-      //      writer.start();
       writer.run();
     }
   }
@@ -162,21 +174,6 @@ public class MBCacheManager
 
   private void doExpireAllDocuments()
   {
-    /*
-     * BOOL doneOne = FALSE;
-    for(NSString *key in [_registry allKeys]) {
-        NSRange range = [key rangeOfString:@":"];
-        if(range.length >0) {
-            NSString *documentName = [key substringToIndex:range.location];
-            // Is it a valid document? If so delete the entry
-            if([[MBMetadataService sharedInstance] definitionForDocumentName:documentName throwIfInvalid:FALSE] != nil) {
-                [self deleteCachedFile: key];
-                doneOne = TRUE;
-            }
-        }
-    }
-    if(doneOne) [self flushRegistry];
-     */
 
     Set<String> keySet = new HashSet<String>(_registry.keySet());
 

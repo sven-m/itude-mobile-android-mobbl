@@ -31,11 +31,13 @@ public class MBMobbl1ServerDataHandler extends MBRESTServiceDataHandler
 
     if (cacheable)
     {
-      MBDocument result = MBCacheManager.documentForKey(doc.getUniqueId());
-      if (result != null) return result;
+      MBDocument result = MBCacheManager.documentForKey(documentName + doc.getUniqueId());
+      if (result != null)
+      {
+        return result;
+      }
     }
 
-    // TODO: Retrieve these settings from a property file somewhere
     String universeID = MBProperties.getInstance().getValueForProperty("mobblUniverseID");
     String uidPrefix = MBProperties.getInstance().getValueForProperty("UIDPrefix");
     String uid = uidPrefix + DeviceUtil.getInstance().getUniqueID();
@@ -92,7 +94,7 @@ public class MBMobbl1ServerDataHandler extends MBRESTServiceDataHandler
 
     if (cacheable)
     {
-      MBCacheManager.setDocument(result, doc.getUniqueId(), endPoint.getTtl());
+      MBCacheManager.setDocument(result, documentName + doc.getUniqueId(), endPoint.getTtl());
     }
     return result;
   }
