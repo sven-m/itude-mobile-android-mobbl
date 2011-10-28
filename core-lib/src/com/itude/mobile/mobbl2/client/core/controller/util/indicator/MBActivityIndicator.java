@@ -1,4 +1,4 @@
-package com.itude.mobile.mobbl2.client.core.controller.util;
+package com.itude.mobile.mobbl2.client.core.controller.util.indicator;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -8,16 +8,28 @@ import android.app.ProgressDialog;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.util.MBRunnable;
 
-public final class MBActivityIndicator
+public final class MBActivityIndicator implements MBIndicatorI
 {
-  private static ProgressDialog _dialog = null;
-  private static AtomicInteger  _queue  = new AtomicInteger(0);
+  private static MBActivityIndicator _instance;
+
+  private ProgressDialog             _dialog = null;
+  private AtomicInteger              _queue  = new AtomicInteger(0);
 
   private MBActivityIndicator()
   {
   }
 
-  public static void show(final Activity activity)
+  public static MBActivityIndicator getInstance()
+  {
+    if (_instance == null)
+    {
+      _instance = new MBActivityIndicator();
+    }
+    return _instance;
+  }
+
+  @Override
+  public void show(final Activity activity)
   {
     if (_queue.getAndIncrement() > 0)
     {
@@ -35,7 +47,8 @@ public final class MBActivityIndicator
     });
   }
 
-  public static void dismiss(final Activity activity)
+  @Override
+  public void dismiss(final Activity activity)
   {
     if (_queue.decrementAndGet() > 0) return;
 
@@ -50,7 +63,8 @@ public final class MBActivityIndicator
     });
   }
 
-  public static boolean isActive()
+  @Override
+  public boolean isActive()
   {
     return _queue.get() > 0;
   }

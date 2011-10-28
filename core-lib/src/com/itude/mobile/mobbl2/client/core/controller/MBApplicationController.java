@@ -23,6 +23,8 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBInvalidOutcomeException;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
+import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBActivityIndicator;
+import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndeterminateProgressIndicator;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
@@ -107,6 +109,8 @@ public class MBApplicationController extends Application
     _viewManager = MBViewManager.getInstance();
 
     _viewManager.setSinglePageMode((MBMetadataService.getInstance().getDialogs().size() <= 1));
+    _viewManager.setActivityIndicator(MBActivityIndicator.getInstance());
+    _viewManager.setIndeterminateIndicator(MBIndeterminateProgressIndicator.getInstance());
 
     fireInitialOutcomes();
   }

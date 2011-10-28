@@ -32,9 +32,8 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefi
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.helpers.MBActivityHelper;
-import com.itude.mobile.mobbl2.client.core.controller.util.MBActivityIndicator;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
-import com.itude.mobile.mobbl2.client.core.controller.util.MBIndeterminateProgressIndicator;
+import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicatorI;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
@@ -57,6 +56,8 @@ public class MBViewManager extends ActivityGroup
   private ArrayList<String>      _sortedDialogNames;
   private Dialog                 _currentAlert;
   private boolean                _singlePageMode;
+  private MBIndicatorI           _indeterminateIndicator;
+  private MBIndicatorI           _activityIndicator;
 
   ///////////////////// Android lifecycle methods
 
@@ -250,6 +251,16 @@ public class MBViewManager extends ActivityGroup
     _singlePageMode = singlePageMode;
   }
 
+  public void setActivityIndicator(MBIndicatorI activityIndicator)
+  {
+    _activityIndicator = activityIndicator;
+  }
+
+  public void setIndeterminateIndicator(MBIndicatorI indeterminateIndicator)
+  {
+    _indeterminateIndicator = indeterminateIndicator;
+  }
+
   public void showPage(MBPage page, String mode)
   {
     showPage(page, mode, true, true);
@@ -300,7 +311,6 @@ public class MBViewManager extends ActivityGroup
       public void onClick(DialogInterface dialog, int id)
       {
         dialog.cancel();
-        ((MBDialogController) getLocalActivityManager().getCurrentActivity()).handleAllOnWindowActivated();
       }
     });
 
@@ -458,24 +468,33 @@ public class MBViewManager extends ActivityGroup
 
   public void showIndeterminateProgressIndicator()
   {
-    MBIndeterminateProgressIndicator.show(this);
+    if (_indeterminateIndicator != null)
+    {
+      _indeterminateIndicator.show(this);
+    }
   }
 
   public void hideIndeterminateProgressIndicator()
   {
-    MBIndeterminateProgressIndicator.dismiss(this);
+    if (_indeterminateIndicator != null)
+    {
+      _indeterminateIndicator.dismiss(this);
+    }
   }
 
   public void showActivityIndicator()
   {
-    MBActivityIndicator.show(this);
+    if (_activityIndicator != null)
+    {
+      _activityIndicator.show(this);
+    }
   }
 
   public synchronized void hideActivityIndicator()
   {
-    if (MBActivityIndicator.isActive())
+    if (_activityIndicator != null && _activityIndicator.isActive())
     {
-      MBActivityIndicator.dismiss(this);
+      _activityIndicator.dismiss(this);
     }
   }
 
@@ -579,8 +598,15 @@ public class MBViewManager extends ActivityGroup
           ViewParent parent = root.getParent();
           if (parent instanceof FrameLayout)
           {
-            FrameLayout fragmentContainer = (FrameLayout) parent;
-            fragmentContainer.removeAllViews();
+            final FrameLayout fragmentContainer = (FrameLayout) parent;
+            runOnUiThread(new Runnable()
+            {
+              @Override
+              public void run()
+              {
+                fragmentContainer.removeAllViews();
+              }
+            });
           }
         }
       }

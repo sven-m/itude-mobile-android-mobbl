@@ -54,7 +54,6 @@ public class MBTabletViewManager extends MBViewManager
 {
   private Menu             _menu           = null;
   private MBToolDefinition _refreshToolDef = null;
-  private int              _bla            = 0;
 
   @Override
   protected void onPreCreate()
@@ -425,9 +424,8 @@ public class MBTabletViewManager extends MBViewManager
   @Override
   public synchronized void showProgressIndicatorInTool()
   {
-    if (_refreshToolDef != null && _menu != null && _bla == 0)
+    if (_refreshToolDef != null && _menu != null)
     {
-      _bla++;
       final MenuItem item = _menu.findItem(_refreshToolDef.getName().hashCode());
 
       ImageView rotationImage = getRotationImage();
@@ -474,7 +472,7 @@ public class MBTabletViewManager extends MBViewManager
   @Override
   public synchronized void hideProgressIndicatorInTool()
   {
-    if (_refreshToolDef != null && _menu != null && --_bla == 0)
+    if (_refreshToolDef != null && _menu != null)
     {
       final MenuItem item = _menu.findItem(_refreshToolDef.getName().hashCode());
 
