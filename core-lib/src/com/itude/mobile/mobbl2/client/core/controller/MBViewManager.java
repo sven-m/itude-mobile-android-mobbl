@@ -22,8 +22,10 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewParent;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 
 import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
@@ -369,9 +371,11 @@ public class MBViewManager extends ActivityGroup
       setTitle(dialogDefinition.getTitle());
       setContentView(view);
 
-      if (findViewController(dialogName, id) != null)
+      MBBasicViewController vc = findViewController(dialogName, id);
+
+      if (vc != null)
       {
-        MBApplicationController.getInstance().changedWindow(findViewController(dialogName, id), WindowChangeType.ACTIVATE);
+        MBApplicationController.getInstance().changedWindow(vc, WindowChangeType.ACTIVATE);
       }
 
     }
@@ -557,7 +561,36 @@ public class MBViewManager extends ActivityGroup
     return getLocalActivityManager().getCurrentActivity().onSearchRequested();
   }
 
-  public void clearDialog(String dialogName)
+  /**
+   * @param dialogName dialogName
+   */
+  public void removeDialog(String dialogName)
+  {
+    clearDialogFromStack(dialogName);
+    MBDialogController activeDialog = getActiveDialog();
+    if (activeDialog != null)
+    {
+      MBBasicViewController fragment = activeDialog.findFragment(dialogName);
+      if (fragment != null)
+      {
+        View root = fragment.getView();
+        if (root != null)
+        {
+          ViewParent parent = root.getParent();
+          if (parent instanceof FrameLayout)
+          {
+            FrameLayout fragmentContainer = (FrameLayout) parent;
+            fragmentContainer.removeAllViews();
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * @param dialogName dialogName
+   */
+  public void clearDialogFromStack(String dialogName)
   {
     MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
     if (dialogDefinition.getParent() != null)

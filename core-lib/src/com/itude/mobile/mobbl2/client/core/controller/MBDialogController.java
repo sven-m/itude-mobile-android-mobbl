@@ -172,8 +172,10 @@ public class MBDialogController extends FragmentActivity
     _clearDialog = false;
     FragmentManager fragmentManager = getSupportFragmentManager();
 
-    if (fragmentManager.getBackStackEntryCount() > 0) fragmentManager.popBackStack(fragmentManager.getBackStackEntryAt(0).getId(),
-                                                                                   FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      fragmentManager.popBackStack(fragmentManager.getBackStackEntryAt(0).getId(),FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    } 
+                                                                                   
   }
 
   public void popView()
