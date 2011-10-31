@@ -41,7 +41,7 @@ public class MBPage extends MBPanel
   private final boolean                                          _allowedAnyOrientation = true;
   private boolean                                                _allowedPortraitOrientation;
   private boolean                                                _allowedLandscapeOrientation;
-  private final ArrayList<View>                                  _clickableViews;
+  private View                                                   _selectedView;
 
   public MBPage(MBPageDefinition definition, MBDocument document, String rootPath, MBViewState viewState)
   {
@@ -61,7 +61,6 @@ public class MBPage extends MBPanel
     _viewState = viewState;
     _outcomeListeners = new ArrayList<MBOutcomeListenerProtocol>();
     _valueChangedListeners = new Hashtable<String, List<MBValueChangeListenerProtocol>>();
-    _clickableViews = new ArrayList<View>();
 
     // Ok, now we can build the children
     buildChildren(definition, document, getParent());
@@ -455,14 +454,16 @@ public class MBPage extends MBPanel
     return asXmlWithLevel(rt, 0).toString();
   }
 
-  public void addClickableView(View clickableView)
+  public View getSelectedView()
   {
-    _clickableViews.add(clickableView);
+    return _selectedView;
   }
 
-  public List<View> getClickableViews()
+  public void setSelectedView(View selectedView)
   {
-    return _clickableViews;
+    _selectedView = selectedView;
   }
 
+  
+  
 }

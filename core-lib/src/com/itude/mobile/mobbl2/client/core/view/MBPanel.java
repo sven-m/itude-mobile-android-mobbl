@@ -419,12 +419,13 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   {
     if (MBDevice.getInstance().isTablet())
     {
+      View selectedView = getPage().getSelectedView();
 
-      for (View view : getPage().getClickableViews())
+      if (selectedView != null)
       {
-        view.setSelected(false);
+        selectedView.setSelected(false);
       }
-
+      getPage().setSelectedView(v);
       v.setSelected(true);
     }
 
