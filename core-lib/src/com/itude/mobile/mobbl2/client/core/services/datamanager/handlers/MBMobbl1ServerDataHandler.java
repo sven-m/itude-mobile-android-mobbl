@@ -4,13 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.itude.mobile.mobbl2.client.core.configuration.webservices.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.util.DeviceUtil;
-import com.itude.mobile.mobbl2.client.core.util.MBCacheManager;
 import com.itude.mobile.mobbl2.client.core.util.MBProperties;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
@@ -20,24 +18,8 @@ public class MBMobbl1ServerDataHandler extends MBRESTServiceDataHandler
   //
   //expects an argument Document of type MBMobbl1Request
   @Override
-  public MBDocument loadDocument(String documentName, MBDocument doc)
+  public MBDocument doLoadDocument(String documentName, MBDocument doc)
   {
-
-    boolean cacheable = false;
-
-    // Look for any cached result. If there; return it
-    MBEndPointDefinition endPoint = getEndPointForDocument(documentName);
-    cacheable = endPoint.getCacheable();
-
-    if (cacheable)
-    {
-      MBDocument result = MBCacheManager.documentForKey(documentName + doc.getUniqueId());
-      if (result != null)
-      {
-        return result;
-      }
-    }
-
     String universeID = MBProperties.getInstance().getValueForProperty("mobblUniverseID");
     String uidPrefix = MBProperties.getInstance().getValueForProperty("UIDPrefix");
     String uid = uidPrefix + DeviceUtil.getInstance().getUniqueID();
@@ -90,13 +72,7 @@ public class MBMobbl1ServerDataHandler extends MBRESTServiceDataHandler
     //    sendData.setAttributeValue(UID, "uniqueDeviceID");
     sendData.setAttributeValue(messageID, "messageID");
     setDocumentFactoryType(MBDocumentFactory.PARSER_MOBBL1);
-    MBDocument result = super.loadDocument(documentName, mobblDoc);
-
-    if (cacheable)
-    {
-      MBCacheManager.setDocument(result, documentName + doc.getUniqueId(), endPoint.getTtl());
-    }
-    return result;
+    return super.doLoadDocument(documentName, mobblDoc);
   }
 
   public MBDocument getRequestDocumentForApplicationID(String applicationID)

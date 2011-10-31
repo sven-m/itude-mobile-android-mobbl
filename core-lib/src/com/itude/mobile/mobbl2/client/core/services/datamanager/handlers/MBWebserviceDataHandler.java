@@ -7,8 +7,9 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.MBDataHandlerBase;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
+import com.itude.mobile.mobbl2.client.core.util.MBCacheManager;
 
-public class MBWebserviceDataHandler extends MBDataHandlerBase
+public abstract class MBWebserviceDataHandler extends MBDataHandlerBase
 {
   private final MBWebservicesConfiguration _webServiceConfiguration;
 
@@ -19,22 +20,56 @@ public class MBWebserviceDataHandler extends MBDataHandlerBase
     byte[] data = DataUtil.getInstance().readFromAssetOrFile(documentName);
     _webServiceConfiguration = (MBWebservicesConfiguration) parser.parseData(data, documentName);
   }
-
+  
   @Override
   public MBDocument loadDocument(String documentName)
   {
-    MBDocument result = loadDocument(documentName, null);
-    // TODO: check if networkactivity indicator needs to be explicitly managed
-    // iPhone code: [[NSNotificationCenter defaultCenter] postNotificationName:@"NetworkActivity" object: nil];
-    return result;
+    return loadDocument(documentName, null);
   }
 
   @Override
-  public MBDocument loadDocument(String documentName, MBDocument args)
+  public MBDocument loadDocument(String documentName, MBDocument doc)
   {
-    return null;
-  }
+    MBEndPointDefinition endPoint = getEndPointForDocument(documentName);
+    boolean cacheable =  endPoint.getCacheable();
 
+    if (cacheable)
+    {
+      MBDocument result;
+      if (doc == null)
+      {
+        result = MBCacheManager.documentForKey(documentName);
+      }
+      else
+      {
+        result = MBCacheManager.documentForKey(documentName + doc.getUniqueId());
+      }
+
+      if (result != null)
+      {
+        return result;
+      }
+    }
+    
+    MBDocument result = doLoadDocument(documentName, doc);
+    
+    if (cacheable)
+    {
+      if (doc == null)
+      {
+        MBCacheManager.setDocument(result, documentName, endPoint.getTtl());
+      }
+      else
+      {
+        MBCacheManager.setDocument(result, documentName + doc.getUniqueId(), endPoint.getTtl());
+      }
+    }
+    
+    return result;
+  }
+  
+  protected abstract MBDocument doLoadDocument(String documentName, MBDocument doc);
+  
   @Override
   public void storeDocument(MBDocument document)
   {

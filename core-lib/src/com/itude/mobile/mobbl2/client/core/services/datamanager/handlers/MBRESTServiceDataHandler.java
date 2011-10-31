@@ -61,7 +61,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
   }
 
   @Override
-  public MBDocument loadDocument(String documentName, MBDocument args)
+  public MBDocument doLoadDocument(String documentName, MBDocument args)
   {
     MBEndPointDefinition endPoint = getEndPointForDocument(documentName);
     if (endPoint == null)
@@ -74,7 +74,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     // the android market.
     //    boolean debugLoggingEnabled = Log.isLoggable(Constants.APPLICATION_NAME, Log.DEBUG);
     boolean debugLoggingEnabled = true;
-    Log.d(Constants.APPLICATION_NAME, "MBRESTServiceDataHandler:loadDocument " + documentName + " from " + endPoint.getEndPointUri());
+    Log.d(Constants.APPLICATION_NAME, "MBRESTServiceDataHandler:doLoadDocument " + documentName + " from " + endPoint.getEndPointUri());
 
     String dataString = null;
     MBDocument responseDoc = null;

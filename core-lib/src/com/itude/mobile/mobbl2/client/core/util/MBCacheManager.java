@@ -17,28 +17,36 @@ import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 
 public final class MBCacheManager
 {
-  private static MBCacheManager           _instance;
-  private final Map<String, String>       _registry;
-  private final Map<String, String>       _documentTypes;
-  private final Hashtable<String, String> _ttls;
-  private final Map<String, byte[]>       _temporaryMemoryCache;
-  private final String                    _registryFileName;
-  private final String                    _ttlsFileName;
+  public static final String        CACHE_DIR           = "cache";
+  public static final String        CACHE_REGISTRY_FILE = "cache_registry.plist";
+  public static final String        CACHE_TTL_FILE      = "cache_ttl.plist";
 
-  public static final String              CACHE_DIR           = "cache";
-  public static final String              CACHE_REGISTRY_FILE = "cache_registry.plist";
-  public static final String              CACHE_TTL_FILE      = "cache_ttl.plist";
+  private static MBCacheManager     _instance;
+  private Map<String, String>       _registry;
+  private Map<String, String>       _documentTypes;
+  private Hashtable<String, String> _ttls;
+  private Map<String, byte[]>       _temporaryMemoryCache;
+  private final String              _registryFileName   = CACHE_DIR + File.separator + CACHE_REGISTRY_FILE;
+  private final String              _ttlsFileName       = CACHE_DIR + File.separator + CACHE_TTL_FILE;
+
+  protected void init()
+  { Log.d(Constants.APPLICATION_NAME, "init CacheManager");
+    _ttls = new Hashtable<String, String>();
+    _documentTypes = new Hashtable<String, String>();
+    _registry = new HashMap<String, String>();
+    _temporaryMemoryCache = new HashMap<String, byte[]>();
+  }
 
   private MBCacheManager()
   {
-    _registryFileName = CACHE_DIR + File.separator + CACHE_REGISTRY_FILE;
+    init();
 
     @SuppressWarnings("unchecked")
     Hashtable<String, String> combined = (Hashtable<String, String>) FileUtil.getInstance().readObjectFromFile(_registryFileName);
-    if (combined == null) combined = new Hashtable<String, String>();
-
-    _registry = new HashMap<String, String>();
-    _documentTypes = new HashMap<String, String>();
+    if (combined == null)
+    {
+      combined = new Hashtable<String, String>();
+    }
 
     for (String key : combined.keySet())
     {
@@ -46,13 +54,11 @@ public final class MBCacheManager
       String[] split = value.split(":");
 
       _registry.put(key, split[0]);
-      if (split.length > 1) _documentTypes.put(key, split[1]);
+      if (split.length > 1)
+      {
+        _documentTypes.put(key, split[1]);
+      }
     }
-
-    _temporaryMemoryCache = new HashMap<String, byte[]>();
-    _ttls = new Hashtable<String, String>();
-    _ttlsFileName = CACHE_DIR + File.separator + CACHE_TTL_FILE;
-
   }
 
   public static MBCacheManager getInstance()
@@ -67,6 +73,7 @@ public final class MBCacheManager
 
   private byte[] doGetValueForKey(String key)
   {
+
     String fileName = null;
     synchronized (_registry)
     {
@@ -82,7 +89,7 @@ public final class MBCacheManager
           if (maxAge != 0 && maxAge < System.currentTimeMillis())
           {
             fileName = null;
-            _ttls.remove(key);
+            doExpireDataForKey(key);
           }
         }
       }
@@ -161,6 +168,8 @@ public final class MBCacheManager
       String fileName = _registry.get(key);
       _registry.remove(key);
       _ttls.remove(key);
+      _temporaryMemoryCache.remove(key);
+      _documentTypes.remove(key);
 
       FileUtil.getInstance().remove(CACHE_DIR + File.separator + fileName);
     }
@@ -168,6 +177,7 @@ public final class MBCacheManager
 
   private void doExpireDataForKey(String key)
   {
+    Log.d(Constants.APPLICATION_NAME, "removing " + key + "from cache");
     deleteCachedFile(key);
     flushRegistry();
   }
