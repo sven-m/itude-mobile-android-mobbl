@@ -138,7 +138,7 @@ public class MBCacheWriter extends Thread
 
   public void setData(byte[] data)
   {
-    _data = data;
+    _data = data.clone();
   }
 
   public Map<String, byte[]> getTemporaryMemoryCache()
