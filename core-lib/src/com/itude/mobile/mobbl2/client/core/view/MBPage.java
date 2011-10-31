@@ -409,16 +409,6 @@ public class MBPage extends MBPanel
     setChildViewControllers(null);
   }
 
-  public Object getViewControllerOfType(Class clazz)
-  {
-    if (getChildViewControllers() != null)
-    {
-
-    }
-
-    return null;
-  }
-
   public boolean isAllowedPortraitOrientation()
   {
     return _allowedPortraitOrientation;

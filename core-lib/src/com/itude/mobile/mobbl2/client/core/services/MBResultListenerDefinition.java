@@ -24,7 +24,7 @@ public class MBResultListenerDefinition extends MBDefinition
 
   public void setMatchParts(String[] matchParts)
   {
-    _matchParts = matchParts;
+    _matchParts = matchParts.clone();
   }
 
   public boolean matches(String result)

@@ -264,10 +264,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
       panelView.addView(header);
     }
-    else
-    {
-      // TODO border styling
-    }
 
     buildChildren(panel.getChildren(), panelView, null);
 

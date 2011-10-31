@@ -71,15 +71,6 @@ public class MBResourceConfiguration extends MBDefinition implements MBIncludabl
     {
       otherConfig = (MBResourceConfiguration) otherDefinition;
     }
-    else
-    {
-      //TODO throw exception
-    }
-
-    //    for (MBDocumentDefinition documentDef : otherConfig.getDocuments().values())
-    //    {
-    //      addDocument(documentDef);
-    //    }
 
     for (MBResourceDefinition resourceDef : otherConfig.getResources().values())
     {

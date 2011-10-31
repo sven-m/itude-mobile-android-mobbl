@@ -61,11 +61,6 @@ public class MBEditableMatrix extends LinearLayout
 
   public void setMatrixListener(MBEditableMatrixListener matrixListener)
   {
-    if (this.matrixListener == null)
-    {
-
-    }
-
     this.matrixListener = matrixListener;
   }
 

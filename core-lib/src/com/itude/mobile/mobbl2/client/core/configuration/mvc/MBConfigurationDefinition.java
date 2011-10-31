@@ -56,10 +56,6 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     {
       otherConfig = (MBConfigurationDefinition) otherDefinition;
     }
-    else
-    {
-      //TODO throw exception
-    }
 
     if (_firstDialog == null)
     {
