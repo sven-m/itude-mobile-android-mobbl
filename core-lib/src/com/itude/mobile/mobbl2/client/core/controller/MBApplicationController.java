@@ -188,6 +188,32 @@ public class MBApplicationController extends Application
     _outcomeHandler.sendMessage(msg);
   }
 
+  public void showIndicatorForOutcome(MBOutcome outcome)
+  {
+    String indicator = outcome.getIndicator();
+    if (indicator == null || "ACTIVITY".equals(indicator))
+    {
+      _viewManager.showActivityIndicator();
+    }
+    else if ("PROGRESS".equals(indicator))
+    {
+      _viewManager.showIndeterminateProgressIndicator();
+    }
+  }
+
+  public void hideIndicatorForOutcome(MBOutcome outcome)
+  {
+    String indicator = outcome.getIndicator();
+    if (indicator == null || "ACTIVITY".equals(indicator))
+    {
+      _viewManager.hideActivityIndicator();
+    }
+    else if ("PROGRESS".equals(indicator))
+    {
+      _viewManager.hideIndeterminateProgressIndicator();
+    }
+  }
+
   ////////////// PAGE HANDLING
 
   public Object[] preparePageInBackground(MBOutcome causingOutcome, String pageName, String selectPageInDialog, Boolean backStackEnabled)
@@ -288,7 +314,8 @@ public class MBApplicationController extends Application
           _viewManager.showPage(page, displayMode, doSelect, backStackEnabled);
         }
       });
-      _viewManager.hideActivityIndicator();
+
+      hideIndicatorForOutcome(causingOutcome);
     }
     catch (Exception e)
     {
@@ -314,7 +341,7 @@ public class MBApplicationController extends Application
 
       MBOutcome actionOutcome = action.execute(causingOutcome.getDocument(), causingOutcome.getPath());
 
-      _viewManager.hideActivityIndicator();
+      hideIndicatorForOutcome(causingOutcome);
       if (actionOutcome == null)
       {
         Log.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action "

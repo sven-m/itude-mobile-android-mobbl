@@ -83,6 +83,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _outcomeAttributes.add("transferDocument");
       _outcomeAttributes.add("preCondition");
       _outcomeAttributes.add("noBackgroundProcessing");
+      _outcomeAttributes.add("indicator");
     }
     if (_dialogAttributes == null)
     {
@@ -307,6 +308,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       outcomeDef.setPersist(Boolean.parseBoolean(attributeDict.get("persist")));
       outcomeDef.setTransferDocument(Boolean.parseBoolean(attributeDict.get("transferDocument")));
       outcomeDef.setNoBackgroundProcessing(Boolean.parseBoolean(attributeDict.get("noBackgroundProcessing")));
+      outcomeDef.setIndicator(attributeDict.get("indicator"));
 
       notifyProcessed(outcomeDef);
     }

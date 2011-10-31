@@ -139,6 +139,13 @@ public class MBOutcomeHandler extends Handler
         outcomeToProcess.setDialogName(outcome.getDialogName());
         outcomeToProcess.setNoBackgroundProcessing(outcome.getNoBackgroundProcessing() || outcomeDef.getNoBackgroundProcessing());
 
+        String copyIndicator = outcome.getIndicator();
+        if (copyIndicator == null)
+        {
+          copyIndicator = outcomeDef.getIndicator();
+        }
+        outcomeToProcess.setIndicator(copyIndicator);
+
         if (outcomeToProcess.isPreConditionValid())
         {
 
@@ -210,7 +217,8 @@ public class MBOutcomeHandler extends Handler
 
           if (actionDef != null)
           {
-            viewManager.showActivityIndicator();
+            applicationController.showIndicatorForOutcome(outcomeToProcess);
+
             if (outcomeToProcess.getNoBackgroundProcessing())
             {
               applicationController.performActionInBackground(new MBOutcome(outcomeToProcess), actionDef);
@@ -242,7 +250,7 @@ public class MBOutcomeHandler extends Handler
             a normal page*/
             if (!"exception".equals(outcome.getOutcomeName()))
             {
-              viewManager.showActivityIndicator();
+              applicationController.showIndicatorForOutcome(outcomeToProcess);
             }
             if (outcomeToProcess.getNoBackgroundProcessing())
             {

@@ -13,6 +13,7 @@ public class MBOutcomeDefinition extends MBDefinition
   private boolean _persist;
   private boolean _transferDocument;
   private boolean _noBackgroundProcessing;
+  private String  _indicator;
 
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
@@ -49,7 +50,7 @@ public class MBOutcomeDefinition extends MBDefinition
         .append(getName()).append("' action='").append(_action).append("' transferDocument='").append(transferDocumentBool)
         .append("' persist='").append(persistBool).append("' noBackgroundProcessing='").append(noBackgroundProcessingBool).append("'")
         .append(getAttributeAsXml("dialog", _dialog)).append(getAttributeAsXml("preCondition", _preCondition))
-        .append(getAttributeAsXml("displayMode", _displayMode)).append("/>\n");
+        .append(getAttributeAsXml("displayMode", _displayMode)).append(getAttributeAsXml("indicator", _indicator)).append("/>\n");
   }
 
   public String getOrigin()
@@ -130,5 +131,15 @@ public class MBOutcomeDefinition extends MBDefinition
   public void setNoBackgroundProcessing(boolean noBackgroundProcessing)
   {
     _noBackgroundProcessing = noBackgroundProcessing;
+  }
+
+  public String getIndicator()
+  {
+    return _indicator;
+  }
+
+  public void setIndicator(String indicator)
+  {
+    _indicator = indicator;
   }
 }

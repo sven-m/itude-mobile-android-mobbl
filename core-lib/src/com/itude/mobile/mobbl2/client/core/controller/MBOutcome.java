@@ -24,6 +24,7 @@ public class MBOutcome implements Parcelable
   private boolean    _noBackgroundProcessing;
   private MBDocument _document;
   private String     _preCondition;
+  private String     _indicator;
 
   public String getOriginName()
   {
@@ -135,6 +136,16 @@ public class MBOutcome implements Parcelable
     _noBackgroundProcessing = noBackgroundProcessing;
   }
 
+  public void setIndicator(String indicator)
+  {
+    _indicator = indicator;
+  }
+
+  public String getIndicator()
+  {
+    return _indicator;
+  }
+
   public MBOutcome(MBOutcome outcome)
   {
     _originName = outcome.getOriginName();
@@ -148,6 +159,7 @@ public class MBOutcome implements Parcelable
     _transferDocument = outcome.getTransferDocument();
     _preCondition = outcome.getPreCondition();
     _noBackgroundProcessing = outcome.getNoBackgroundProcessing();
+    _indicator = outcome.getIndicator();
   }
 
   public MBOutcome(MBOutcomeDefinition definition)
@@ -162,6 +174,7 @@ public class MBOutcome implements Parcelable
     _document = null;
     _path = null;
     _preCondition = definition.getPreCondition();
+    _indicator = definition.getIndicator();
   }
 
   public MBOutcome(String outcomeName, MBDocument document)
