@@ -1,5 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.util;
 
+import android.util.Log;
+
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 
 public class MBScreenUtilities
@@ -41,6 +43,7 @@ public class MBScreenUtilities
   public final static int getHeightPixelsForPercentage(float percentage)
   {
     final float height = MBApplicationController.getInstance().getBaseContext().getResources().getDisplayMetrics().heightPixels;
+    Log.d("ali", "" + height);
 
     return (int) ((height / 100) * percentage);
   }
