@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.R;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -59,6 +60,7 @@ public final class MBResourceService
         if (_instance == null)
         {
           _instance = new MBResourceService();
+
           MBResourceConfigurationParser parser = new MBResourceConfigurationParser();
 
           byte[] data = DataUtil.getInstance().readFromAssetOrFile(RESOURCE_CONFIG_FILE_NAME);
@@ -91,9 +93,10 @@ public final class MBResourceService
 
   public int getDrawableIdentifier(String drawableName)
   {
-    Resources resources = MBApplicationController.getInstance().getBaseContext().getResources();
+    Context baseContext = MBApplicationController.getInstance().getBaseContext();
+    Resources resources = baseContext.getResources();
 
-    return resources.getIdentifier(drawableName, "drawable", MBApplicationController.getInstance().getBaseContext().getPackageName());
+    return resources.getIdentifier(drawableName, "drawable", baseContext.getPackageName());
   }
 
   public Drawable getImageByID(String resourceId)
@@ -127,21 +130,23 @@ public final class MBResourceService
 
     if (def.getUrl() != null && def.getUrl().startsWith("file://"))
     {
+
+      Context baseContext = MBApplicationController.getInstance().getBaseContext();
+
       String imageName = def.getUrl().substring(7);
       imageName = imageName.substring(0, imageName.indexOf(".")).toLowerCase();
-      Resources resources = MBApplicationController.getInstance().getBaseContext().getResources();
+
+      Resources resources = baseContext.getResources();
 
       try
       {
-        int identifier = resources.getIdentifier(imageName, "drawable", MBApplicationController.getInstance().getBaseContext()
-            .getPackageName());
+        int identifier = resources.getIdentifier(imageName, "drawable", baseContext.getPackageName());
         return resources.getDrawable(identifier);
       }
       catch (Exception e)
       {
         error = e;
       }
-
     }
 
     // Now attempt to get the image from different sources
@@ -167,8 +172,8 @@ public final class MBResourceService
     }
 
     Resources res = MBApplicationController.getInstance().getBaseContext().getResources();
-
     return new BitmapDrawable(res, bitmap);
+
   }
 
   private Drawable buildStatedImage(MBStatedResourceDefinition def)
@@ -280,7 +285,10 @@ public final class MBResourceService
   public byte[] getResourceByURL(String urlString, boolean cacheable, int ttl)
   {
     boolean isPng = urlString.endsWith(".png");
-    if (isPng && _pngCache.containsKey(urlString)) return _pngCache.get(urlString);
+    if (isPng && _pngCache.containsKey(urlString))
+    {
+      return _pngCache.get(urlString);
+    }
 
     if (urlString.startsWith("file://"))
     {
