@@ -130,7 +130,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
     MBEditableMatrix result = new MBEditableMatrix(context, initialiseInEditMode, panel);
     result.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
     result.setOrientation(LinearLayout.VERTICAL);
-    //    buildChildren(panel.getChildren(), result.getCurrentContentView(), bounds, viewState);
 
     buildChildrenForEditableMatrix(panel.getChildren(), result.getCurrentContentView(), viewState);
 
