@@ -13,6 +13,7 @@ import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 
 public class MBComponent
+
 {
   private MBDefinition         _definition;
   private MBComponentContainer _parent;
@@ -143,7 +144,25 @@ public class MBComponent
 
   public String substituteExpressions(String expression)
   {
-    if (expression == null || expression.indexOf('{') < 0) return expression;
+    if (expression == null)
+    {
+      return expression;
+    }
+
+    if (expression.equalsIgnoreCase("YES"))
+    {
+      return "TRUE";
+    }
+
+    if (expression.equalsIgnoreCase("NO"))
+    {
+      return "FALSE";
+    }
+
+    if (expression.indexOf('{') < 0)
+    {
+      return expression;
+    }
 
     StringBuilder result = new StringBuilder(); // we really want to end this statement
 
