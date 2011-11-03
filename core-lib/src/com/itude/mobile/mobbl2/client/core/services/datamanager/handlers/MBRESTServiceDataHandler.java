@@ -25,8 +25,6 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import android.util.Log;
-
 import com.itude.mobile.mobbl2.client.core.configuration.webservices.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationFactory;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
@@ -40,10 +38,15 @@ import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.excepti
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBProperties;
 import com.itude.mobile.mobbl2.client.core.util.https.EasySSLSocketFactory;
+import com.itude.mobile.mobbl2.client.core.util.log.Logger;
+import com.itude.mobile.mobbl2.client.core.util.log.LoggerFactory;
 
 public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 {
-  private String _documentFactoryType;
+
+  protected final Logger _log = LoggerFactory.getInstance(Constants.APPLICATION_NAME);
+
+  private String         _documentFactoryType;
 
   public MBRESTServiceDataHandler()
   {
@@ -66,28 +69,34 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     MBEndPointDefinition endPoint = getEndPointForDocument(documentName);
     if (endPoint == null)
     {
-      Log.w(Constants.APPLICATION_NAME, "No endpoint defined for document name " + documentName);
+      if (_log.isWarnEnabled())
+      {
+        _log.warn("No endpoint defined for document name " + documentName);
+      }
       return null;
     }
-    // C.H: Log.isLoggable is not working as expected. To get it to work, each developer should
-    // set a property using setprop. However, (some) logging should be omitted when releasing to
-    // the android market.
-    //    boolean debugLoggingEnabled = Log.isLoggable(Constants.APPLICATION_NAME, Log.DEBUG);
-    boolean debugLoggingEnabled = true;
-    Log.d(Constants.APPLICATION_NAME, "MBRESTServiceDataHandler:doLoadDocument " + documentName + " from " + endPoint.getEndPointUri());
 
+    if (_log.isDebugEnabled())
+    {
+      _log.debug("MBRESTServiceDataHandler:doLoadDocument " + documentName + " from " + endPoint.getEndPointUri());
+    }
     String dataString = null;
     MBDocument responseDoc = null;
     String body = args.getValueForPath("/*[0]").toString();
 
     try
     {
-      if (debugLoggingEnabled) Log.d(Constants.APPLICATION_NAME, "RestServiceDataHandler is about to send this message: \n" + body
-                                                                 + "\n to " + endPoint.getEndPointUri());
-
+      if (_log.isDebugEnabled())
+      {
+        _log.debug("RestServiceDataHandler is about to send this message: \n" + body + "\n to " + endPoint.getEndPointUri());
+      }
       dataString = postAndGetResult(endPoint, body);
 
-      if (debugLoggingEnabled) Log.d(Constants.APPLICATION_NAME, "RestServiceDataHandler received this message: " + dataString);
+      if (_log.isDebugEnabled())
+      {
+        _log.debug("RestServiceDataHandler received this message: " + dataString);
+
+      }
 
       boolean serverErrorHandled = false;
 
@@ -125,8 +134,12 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     // TODO: clean up exception handling
     catch (Exception e)
     {
-      Log.d(Constants.APPLICATION_NAME, "Sent xml:\n" + body);
-      Log.d(Constants.APPLICATION_NAME, "Received:\n" + dataString);
+      if (_log.isDebugEnabled())
+      {
+        _log.debug("Sent xml:\n" + body);
+        _log.debug("Received:\n" + dataString, e.getCause());
+      }
+
       if (e instanceof RuntimeException)
       {
         throw (RuntimeException) e;
@@ -189,8 +202,10 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     String responseMessage = httpResponse.getStatusLine().getReasonPhrase();
     if (responseCode != HttpStatus.SC_OK)
     {
-      Log.e(Constants.APPLICATION_NAME, "MBRESTServiceDataHandler.loadDocument: Received HTTP responseCode=" + responseCode + ": "
-                                        + responseMessage);
+      if (_log.isErrorEnabled())
+      {
+        _log.error("MBRESTServiceDataHandler.loadDocument: Received HTTP responseCode=" + responseCode + ": " + responseMessage);
+      }
     }
 
     HttpEntity entity = httpResponse.getEntity();
