@@ -17,8 +17,9 @@ public class MBCacheWriter extends Thread
   private Map<String, byte[]>       _temporaryMemoryCache;
   private String                    _key;
 
-  public MBCacheWriter(Map<String, String> registry, String registryFileName, Map<String, String> documentTypes, Hashtable<String, String> ttls,
-                       String ttlsFileName, String fileName, byte[] data, Map<String, byte[]> temporaryMemoryCache, String key)
+  public MBCacheWriter(Map<String, String> registry, String registryFileName, Map<String, String> documentTypes,
+                       Hashtable<String, String> ttls, String ttlsFileName, String fileName, byte[] data,
+                       Map<String, byte[]> temporaryMemoryCache, String key)
   {
     setRegistry(registry);
     setRegistryFileName(registryFileName);
@@ -37,7 +38,7 @@ public class MBCacheWriter extends Thread
     try
     {
       Hashtable<String, String> combined = new Hashtable<String, String>();
-      
+
       for (String key : getRegistry().keySet())
       {
         String value = getRegistry().get(key);
@@ -138,7 +139,10 @@ public class MBCacheWriter extends Thread
 
   public void setData(byte[] data)
   {
-    _data = data.clone();
+    if (data != null)
+    {
+      _data = data.clone();
+    }
   }
 
   public Map<String, byte[]> getTemporaryMemoryCache()

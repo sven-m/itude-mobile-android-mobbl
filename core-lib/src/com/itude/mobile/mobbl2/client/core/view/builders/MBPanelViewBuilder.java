@@ -484,7 +484,10 @@ public class MBPanelViewBuilder extends MBViewBuilder
       styleHandler.styleDivider(headerPanel);
       return headerPanel;
     }
-    else styleHandler.styleMatrixHeader(headerPanel);
+    else
+    {
+      styleHandler.styleMatrixHeader(headerPanel);
+    }
 
     //Header
     if (!matrixTitles.isEmpty())
@@ -530,7 +533,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
         }
       }
-
       headerPanel.addView(headerLabel);
     }
 
@@ -545,13 +547,13 @@ public class MBPanelViewBuilder extends MBViewBuilder
       styleHandler.styleMatrixHeaderLabelRow(headerRow);
 
       buildMatrixRowPanelChildren(matrixLabels, headerRow, true);
-
       headerPanel.addView(headerRow);
     }
 
     headerPanelContainer.addView(headerPanel);
 
     panel.attachView(headerPanelContainer);
+
     return headerPanelContainer;
   }
 
@@ -633,7 +635,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
     if (matrixRowLabels.size() > 0)
     {
-      currentId = buildMatrixRowPanelLabels(panel, linearContainer, matrixRowLabels, currentId);
+      buildMatrixRowPanelLabels(panel, linearContainer, matrixRowLabels, currentId);
     }
 
     if (panel.getOutcomeName() != null)
@@ -673,17 +675,22 @@ public class MBPanelViewBuilder extends MBViewBuilder
     }
 
     styleHandler.styleMatrixRowPanel(panel, rowPanel, isClickable, rowStyle, _matrixRowNumber);
-
     return rowPanel;
   }
 
   private int buildMatrixRowPanelLabels(MBPanel panel, ViewGroup rowPanel, ArrayList<MBComponent> matrixRowLabels, int currentId)
   {
     // Row with labels
-    if (matrixRowLabels.isEmpty()) return currentId;
+    if (matrixRowLabels.isEmpty())
+    {
+      return currentId;
+    }
     RelativeLayout.LayoutParams rowParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
         RelativeLayout.LayoutParams.WRAP_CONTENT);
-    if (currentId != -1) rowParams.addRule(RelativeLayout.BELOW, currentId);
+    if (currentId != -1)
+    {
+      rowParams.addRule(RelativeLayout.BELOW, currentId);
+    }
 
     LinearLayout row = new LinearLayout(rowPanel.getContext());
     row.setLayoutParams(rowParams);
@@ -845,8 +852,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
     if (((MBPanel) panel.getParent()).isChildrenDraggable())
     {
 
-      //      if (MBDevice.getInstance().isPhone())
-      //      {
       ImageButton upButton = new ImageButton(context);
       upButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
       upButton.setTag(Constants.C_EDITABLEMATRIX_UPBUTTON);
@@ -858,15 +863,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
       downButton.setTag(Constants.C_EDITABLEMATRIX_DOWNBUTTON);
       rightButtonContainer.addView(downButton);
       styleHandler.styleImageButtonWithName(downButton, Constants.C_EDITABLEMATRIX_DOWNBUTTON);
-      //      }
-      //      else
-      //      {
-      //        Button dragButton = new Button(context);
-      //        dragButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-      //        dragButton.setTag(Constants.C_EDITABLEMATRIX_DRAGBUTTON);
-      //        rightButtonContainer.addView(dragButton);
-      //        getStyleHandler().styleButtonWithName(dragButton, Constants.C_EDITABLEMATRIX_DRAGBUTTON);
-      //      }
     }
 
     relativeContainer.addView(rightButtonContainer);
@@ -908,28 +904,18 @@ public class MBPanelViewBuilder extends MBViewBuilder
       }
     }
 
+    int currentId = -1;
+
     //Header
     if (!matrixRowTitles.isEmpty())
     {
-      LinearLayout rowHeaderLabel = new LinearLayout(context);
-      rowHeaderLabel.setOrientation(LinearLayout.HORIZONTAL);
-      rowHeaderLabel.setPadding(MBScreenUtilities.TWO, MBScreenUtilities.TWO, MBScreenUtilities.FOUR, MBScreenUtilities.TWO);
-
-      buildChildren(matrixRowTitles, rowHeaderLabel, null);
-      rowPanel.addView(rowHeaderLabel);
+      currentId = buildMatrixRowPanelHeader(panel, rowPanel, matrixRowTitles, currentId);
     }
 
     // Row with labels
     if (!matrixRowLabels.isEmpty())
     {
-      LinearLayout row = new LinearLayout(context);
-      row.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-      row.setOrientation(LinearLayout.HORIZONTAL);
-      styleHandler.styleMatrixRow(panel, row);
-
-      buildChildren(matrixRowLabels, row, null);
-
-      rowPanel.addView(row);
+      buildMatrixRowPanelLabels(panel, rowPanel, matrixRowLabels, currentId);
     }
 
     relativeContainer.addView(rowPanel);
@@ -961,7 +947,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
     }
 
     styleHandler.styleMatrixRowPanel(panel, borderWrapper, isClickable, rowStyle, _matrixRowNumber);
-
     return borderWrapper;
   }
 

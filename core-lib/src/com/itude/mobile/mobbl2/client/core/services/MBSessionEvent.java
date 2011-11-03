@@ -3,16 +3,16 @@ package com.itude.mobile.mobbl2.client.core.services;
 public class MBSessionEvent extends MBEvent
 {
 
-  private final boolean loggedIn;
+  private final boolean _loggedIn;
 
   public MBSessionEvent(boolean loggedIn)
   {
-    this.loggedIn = loggedIn;
+    _loggedIn = loggedIn;
   }
 
   public boolean isLoggedIn()
   {
-    return this.loggedIn;
+    return _loggedIn;
   }
 
 }
