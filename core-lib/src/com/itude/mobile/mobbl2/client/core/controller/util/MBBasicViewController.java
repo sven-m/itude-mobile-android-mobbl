@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +23,7 @@ import android.widget.ScrollView;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
+import com.itude.mobile.mobbl2.client.core.controller.util.trace.StrictModeWrapper;
 import com.itude.mobile.mobbl2.client.core.services.MBEvent;
 import com.itude.mobile.mobbl2.client.core.services.MBEventListener;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
@@ -59,17 +59,34 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   private boolean             _isDialogFullscreen    = false;
   private boolean             _isDialogCancelable    = false;                   //i.e. back button dismisses dialog when true
   private final List<MBEvent> eventQueue             = new ArrayList<MBEvent>();
+  private static boolean      _strictModeAvailable;
+
+  //use the StrictModeWrapper to see if we are running on Android 2.3 or higher and StrictMode is available
+  static
+  {
+    try
+    {
+      StrictModeWrapper.checkAvailable();
+      _strictModeAvailable = true;
+    }
+    catch (Throwable throwable)
+    {
+      _strictModeAvailable = false;
+    }
+  }
 
   /////////////////////////////////////////
   @Override
   public void onCreate(Bundle savedInstanceState)
   {
-    String inDevelopment = MBProperties.getInstance().getValueForProperty(Constants.C_PROPERTY_INDEVELOPMENT);
-    if ("true".equals(inDevelopment))
+    if (_strictModeAvailable)
     {
-      StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
-      StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
-    } 
+      String inDevelopment = MBProperties.getInstance().getValueForProperty(Constants.C_PROPERTY_INDEVELOPMENT);
+      if ("true".equals(inDevelopment))
+      {
+        StrictModeWrapper.enableDefaults();
+      }
+    }
 
     // setStyle has no effect when used as a normal Fragment, only when used as a dialog
     setStyle(STYLE_NO_TITLE, getTheme());
