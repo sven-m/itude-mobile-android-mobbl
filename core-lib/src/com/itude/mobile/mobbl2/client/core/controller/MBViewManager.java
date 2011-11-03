@@ -360,6 +360,8 @@ public class MBViewManager extends ActivityGroup
         // skip if the DialogController is already activated or not created yet.
         if (dialogController != null && dialogController != this.getLocalActivityManager().getCurrentActivity())
         {
+          // Some Android smartphone devices don't onPause an Activity when expected. 
+          // This is a workaround to make sure that all activities handle their stuff when leaving.
           dialogController.handleAllOnLeavingWindow();
         }
       }
@@ -425,6 +427,8 @@ public class MBViewManager extends ActivityGroup
           MBDialogController previousDialogController = getDialogWithName(previousDialogName);
           if (previousDialogController != null)
           {
+            // Some Android smartphone devices don't onPause an Activity when expected. 
+            // This is a workaround to make sure that all activities handle their stuff when leaving.
             previousDialogController.handleAllOnLeavingWindow();
           }
         }
@@ -767,27 +771,27 @@ public class MBViewManager extends ActivityGroup
 
   public void showProgressIndicatorInTool()
   {
-    throw new UnsupportedOperationException("This method is not support on smartphone");
+    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
   public void hideProgressIndicatorInTool()
   {
-    throw new UnsupportedOperationException("This method is not support on smartphone");
+    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
   public MBTabBar getTabBar()
   {
-    throw new UnsupportedOperationException("This method is not support on smartphone");
+    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
   public void selectTab(int hashCode)
   {
-    throw new UnsupportedOperationException("This method is not support on smartphone");
+    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
   public void hideSearchView()
   {
-    throw new UnsupportedOperationException("This method is not support on smartphone");
+    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
 }

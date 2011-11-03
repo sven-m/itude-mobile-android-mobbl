@@ -41,11 +41,12 @@ public class MBDialogController extends FragmentActivity
   private Object                     _rootController;
   private int                        _activityIndicatorCount;
   private boolean                    _temporary;
-  private final Stack<View>          _viewStack       = new Stack<View>();
-  private final Stack<String>        _pageIdStack     = new Stack<String>();
-  private final List<Integer>        _sortedDialogIds = new ArrayList<Integer>();
-  private final Map<String, Integer> _dialogIds       = new HashMap<String, Integer>();
-  private boolean                    _clearDialog     = false;
+  private final Stack<View>          _viewStack        = new Stack<View>();
+  private final Stack<String>        _pageIdStack      = new Stack<String>();
+  private final List<Integer>        _sortedDialogIds  = new ArrayList<Integer>();
+  private final Map<String, Integer> _dialogIds        = new HashMap<String, Integer>();
+  private final Map<String, String>  _childDialogModes = new HashMap<String, String>();
+  private boolean                    _clearDialog      = false;
 
   // Android lifecycle methods
 
@@ -82,12 +83,12 @@ public class MBDialogController extends FragmentActivity
         for (MBDialogDefinition dialogDef : children)
         {
           int id = UniqueIntegerGenerator.getId();
-          addDialogChild(dialogDef.getName(), id);
+          addDialogChild(dialogDef.getName(), id, dialogDef.getMode());
         }
       }
       else
       {
-        addDialogChild(_name, UniqueIntegerGenerator.getId());
+        addDialogChild(_name, UniqueIntegerGenerator.getId(), _dialogMode);
       }
       _usesNavbar = ("STACK".equals(dialogDefinition.getMode()) || "TRUE".equals(dialogDefinition.getAddToNavbar()));
 
@@ -106,10 +107,16 @@ public class MBDialogController extends FragmentActivity
    * @param name
    * @param id
    */
-  private void addDialogChild(String name, int id)
+  private void addDialogChild(String name, int id, String mode)
   {
     _dialogIds.put(name, id);
     _sortedDialogIds.add(id);
+
+    // only add the modes of the children
+    if (!name.equals(_name))
+    {
+      _childDialogModes.put(name, mode);
+    }
   }
 
   private void viewInit()
@@ -172,10 +179,11 @@ public class MBDialogController extends FragmentActivity
     _clearDialog = false;
     FragmentManager fragmentManager = getSupportFragmentManager();
 
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack(fragmentManager.getBackStackEntryAt(0).getId(),FragmentManager.POP_BACK_STACK_INCLUSIVE);
-    } 
-                                                                                   
+    if (fragmentManager.getBackStackEntryCount() > 0)
+    {
+      fragmentManager.popBackStack(fragmentManager.getBackStackEntryAt(0).getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
   }
 
   public void popView()
@@ -258,7 +266,7 @@ public class MBDialogController extends FragmentActivity
     {
       popView();
     }
-    else if ("REPLACE".equals(displayMode))
+    else if ("REPLACE".equals(displayMode) || "SINGLE".equals(_childDialogModes.get(dialogName)))
     {
       addToBackStack = false;
     }

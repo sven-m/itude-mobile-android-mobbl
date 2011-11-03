@@ -175,8 +175,6 @@ public class MBOutcomeHandler extends Handler
             {
               viewManager.endModalDialog(applicationController.getModalPageID());
             }
-            ((MBDialogController) viewManager.getCurrentActivity()).handleAllOnWindowActivated();
-
           }
           else if ("ENDMODAL_CONTINUE".equals(outcomeToProcess.getDisplayMode()))
           {
