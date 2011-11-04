@@ -266,10 +266,10 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
   @Override
   public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
   {
-    if (position == _adapter.getSelectedElement())
-    {
-      return;
-    }
+//    if (position == _adapter.getSelectedElement())
+//    {
+//      return;
+//    }
 
     MBDialogDefinition dialogDef = null;
 

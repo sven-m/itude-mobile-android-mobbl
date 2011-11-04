@@ -454,6 +454,4 @@ public class MBPage extends MBPanel
     _selectedView = selectedView;
   }
 
-  
-  
 }
