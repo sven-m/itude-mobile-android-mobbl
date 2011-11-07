@@ -24,12 +24,18 @@ public class MBSplashScreen extends Activity
       @Override
       public void run()
       {
-        Intent viewManager = new Intent(getBaseContext(), MBViewManagerFactory.getViewManagerClass());
-        startActivity(viewManager);
+        finishSplashScreen();
       }
     };
     // Keep splashscreen visible for at least 1 second
     new Handler().postDelayed(thread, 1000);
+  }
+
+  protected void finishSplashScreen()
+  {
+    Intent viewManager = new Intent(getBaseContext(), MBViewManagerFactory.getViewManagerClass());
+    startActivity(viewManager);
+    
   }
 
   protected void setView()
