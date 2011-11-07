@@ -167,7 +167,6 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
   public MBTab setText(CharSequence text)
   {
     _textView.setText(text);
-
     return this;
   }
 
@@ -266,10 +265,10 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
   @Override
   public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
   {
-//    if (position == _adapter.getSelectedElement())
-//    {
-//      return;
-//    }
+    //    if (position == _adapter.getSelectedElement())
+    //    {
+    //      return;
+    //    }
 
     MBDialogDefinition dialogDef = null;
 

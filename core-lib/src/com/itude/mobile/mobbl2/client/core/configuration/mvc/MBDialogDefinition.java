@@ -7,6 +7,7 @@ import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 public class MBDialogDefinition extends MBDefinition
 {
   private String _title;
+  private String _titlePortrait;
   private String _mode;
   private String _icon;
   private String _parent;
@@ -16,7 +17,7 @@ public class MBDialogDefinition extends MBDefinition
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
     return StringUtilities.appendIndentString(appendToMe, level).append("<Dialog name='").append(getName()).append('\'')
-        .append(getAttributeAsXml("mode", _mode)).append(getAttributeAsXml("title", _title)).append(getAttributeAsXml("icon", _icon))
+        .append(getAttributeAsXml("mode", _mode)).append(getAttributeAsXml("title", _title)).append(getAttributeAsXml("titlePortrait", _titlePortrait)).append(getAttributeAsXml("icon", _icon))
         .append(getAttributeAsXml("addToNavbar", _addToNavbar)).append(getAttributeAsXml("domain", getDomain())).append("/>\n");
   }
 
@@ -37,6 +38,16 @@ public class MBDialogDefinition extends MBDefinition
   public void setTitle(String title)
   {
     _title = title;
+  }
+
+  public void setTitlePortrait(String titlePortrait)
+  {
+    _titlePortrait = titlePortrait;
+  }
+
+  public String getTitlePortrait()
+  {
+    return _titlePortrait;
   }
 
   public String getMode()

@@ -557,9 +557,10 @@ public class MBViewManager extends ActivityGroup
 
   public MBViewState getCurrentViewState()
   {
-    // Currently fullscreen is not implemented
-    //    if (_modalType != null) return MBViewState.MBViewStateModal;
-    if (_dialogControllers.size() > 1) return MBViewState.MBViewStateTabbed;
+    if (_dialogControllers.size() > 1)
+    {
+      return MBViewState.MBViewStateTabbed;
+    }
     return MBViewState.MBViewStatePlain;
   }
 
@@ -710,22 +711,19 @@ public class MBViewManager extends ActivityGroup
     Log.d(Constants.APPLICATION_NAME, "MBViewManager.onConfigurationChanged");
 
     // Only handle orientationchanges when orientation changed, obviously
-    //    if (getResources().getConfiguration().orientation != newConfig.orientation)
+    // Tell all ViewControllers about the configuration change
+    for (MBBasicViewController controller : getAllFragments())
     {
-      // Tell all ViewControllers about the configuration change
-      for (MBBasicViewController controller : getAllFragments())
-      {
-        controller.handleOrientationChange(newConfig);
-      }
+      controller.handleOrientationChange(newConfig);
+    }
 
-      if (MBDevice.getInstance().isTablet())
+    if (MBDevice.getInstance().isTablet())
+    {
+      // Also, tell all Dialogs
+      for (String dialog : _dialogControllers)
       {
-        // Also, tell all Dialogs
-        for (String dialog : _dialogControllers)
-        {
-          MBDialogController dc = (MBDialogController) getLocalActivityManager().getActivity(dialog);
-          dc.handleOrientationChange(newConfig);
-        }
+        MBDialogController dc = (MBDialogController) getLocalActivityManager().getActivity(dialog);
+        dc.handleOrientationChange(newConfig);
       }
     }
 

@@ -7,6 +7,7 @@ import android.R;
 import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
@@ -39,6 +40,7 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBRunnable;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
+import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSpinnerAdapter;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
@@ -321,22 +323,16 @@ public class MBTabletViewManager extends MBViewManager
       {
         final ActionBar actionBar = getActionBar();
 
+        MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
+
         //fix the Home icon padding
         View homeIcon = findViewById(R.id.home);
         if (homeIcon != null)
         {
-          // https://dev.itude.com/jira/browse/BINCKAPPS-964
-          //          ViewParent parent = homeIcon.getParent();
-          //          if (parent instanceof FrameLayout)
-          //          {
-          //            FrameLayout fl = (FrameLayout) parent;
-          //            fl.setPadding(0, 0, 0, 0);
-          //          }
-
-          MBViewBuilderFactory.getInstance().getStyleHandler().styleHomeIcon(homeIcon);
+          styleHandler.styleHomeIcon(homeIcon);
         }
 
-        MBViewBuilderFactory.getInstance().getStyleHandler().styleActionBar(actionBar);
+        styleHandler.styleActionBar(actionBar);
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
@@ -361,14 +357,26 @@ public class MBTabletViewManager extends MBViewManager
             }
 
             Drawable drawable = MBResourceService.getInstance().getImageByID("tab-spinner-leaf");
-            tabBar.addTab(new MBTab(MBTabletViewManager.this).setAdapter(spinnerAdapter).setSelectedBackground(drawable)
-                .setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon())).setText(dialogDefinition.getTitle())
-                .setTabId(dialogName.hashCode()).setListener(new MBTabListener(dialogName.hashCode())));
+
+            MBTab tab = new MBTab(MBTabletViewManager.this);
+            tab.setAdapter(spinnerAdapter);
+            tab.setSelectedBackground(drawable);
+            tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+
+            setTabText(dialogDefinition, tab);
+
+            tab.setTabId(dialogName.hashCode());
+            tab.setListener(new MBTabListener(dialogName.hashCode()));
+
+            tabBar.addTab(tab);
           }
           else
           {
-            MBTab tab = new MBTab(MBTabletViewManager.this).setText(dialogDefinition.getTitle())
-                .setListener(new MBTabListener(dialogName.hashCode())).setTabId(dialogName.hashCode());
+            MBTab tab = new MBTab(MBTabletViewManager.this);
+            setTabText(dialogDefinition, tab);
+
+            tab.setListener(new MBTabListener(dialogName.hashCode()));
+            tab.setTabId(dialogName.hashCode());
 
             if (dialogDefinition.getIcon() != null)
             {
@@ -379,6 +387,25 @@ public class MBTabletViewManager extends MBViewManager
         }
         actionBar.setCustomView(tabBar, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
             ActionBar.LayoutParams.MATCH_PARENT, Gravity.LEFT));
+      }
+
+      private void setTabText(MBDialogDefinition dialogDefinition, MBTab tab)
+      {
+        String title;
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+        {
+          title = dialogDefinition.getTitlePortrait();
+        }
+        else
+        {
+          title = dialogDefinition.getTitle();
+        }
+
+        if (StringUtilities.isNotBlank(title))
+        {
+          tab.setText(title);
+        }
       }
     });
   }
@@ -508,5 +535,14 @@ public class MBTabletViewManager extends MBViewManager
     String msg = "Expression of tool with name=" + def.getName() + " precondition=" + def.getPreCondition() + " is not boolean (result="
                  + result + ")";
     throw new MBExpressionNotBooleanException(msg);
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig)
+  {
+    MBTabletViewManager.getInstance().invalidateActionBar(false);
+
+    super.onConfigurationChanged(newConfig);
+
   }
 }

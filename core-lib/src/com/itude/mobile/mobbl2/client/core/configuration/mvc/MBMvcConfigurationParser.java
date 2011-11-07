@@ -102,6 +102,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _dialogGroupAttributes.add("xmlns");
       _dialogGroupAttributes.add("name");
       _dialogGroupAttributes.add("title");
+      _dialogGroupAttributes.add("titlePortrait");
       _dialogGroupAttributes.add("mode");
       _dialogGroupAttributes.add("icon");
       _dialogGroupAttributes.add("addToNavbar");
@@ -337,6 +338,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       MBDialogGroupDefinition dialogDef = new MBDialogGroupDefinition();
       dialogDef.setName(attributeDict.get("name"));
       dialogDef.setTitle(attributeDict.get("title"));
+      dialogDef.setTitlePortrait(attributeDict.get("titlePortrait"));
       dialogDef.setMode(attributeDict.get("mode"));
       dialogDef.setIcon(attributeDict.get("icon"));
       dialogDef.setAddToNavbar(attributeDict.get("addToNavbar"));

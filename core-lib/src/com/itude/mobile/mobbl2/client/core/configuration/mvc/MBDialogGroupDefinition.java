@@ -55,7 +55,7 @@ public class MBDialogGroupDefinition extends MBDialogDefinition
   {
     StringUtilities.appendIndentString(appendToMe, level).append("<DialogGroup name='").append(getName()).append('\'')
         .append(getAttributeAsXml("mode", getMode())).append(getAttributeAsXml("title", getTitle()))
-        .append(getAttributeAsXml("icon", getIcon())).append(">\n");
+        .append(getAttributeAsXml("titlePortrait", getTitlePortrait())).append(getAttributeAsXml("icon", getIcon())).append(">\n");
 
     for (MBDialogDefinition dialog : _children)
     {
