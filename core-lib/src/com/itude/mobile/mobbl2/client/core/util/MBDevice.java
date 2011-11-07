@@ -40,7 +40,10 @@ public final class MBDevice
     {
       synchronized (MBDevice.class)
       {
-        if (_instance == null) _instance = new MBDevice();
+        if (_instance == null)
+        {
+          _instance = new MBDevice();
+        }
       }
     }
 
