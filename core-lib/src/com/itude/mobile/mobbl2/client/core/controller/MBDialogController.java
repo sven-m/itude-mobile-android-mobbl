@@ -266,7 +266,8 @@ public class MBDialogController extends FragmentActivity
     {
       popView();
     }
-    else if ("REPLACE".equals(displayMode) || "SINGLE".equals(_childDialogModes.get(dialogName)))
+    else if ("REPLACE".equals(displayMode)
+             || ("SINGLE".equals(_childDialogModes.get(dialogName)) && page.getCurrentViewState() != MBViewState.MBViewStateModal))
     {
       addToBackStack = false;
     }
