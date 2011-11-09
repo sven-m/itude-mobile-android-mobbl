@@ -22,6 +22,7 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
@@ -178,8 +179,9 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     {
       httpPost.setEntity(new StringEntity(body));
     }
-
     HttpParams httpParameters = new BasicHttpParams();
+    httpParameters.setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
+    
     // Set the timeout in milliseconds until a connection is established.
     int timeoutConnection = 5000;
     // Set the default socket timeout (SO_TIMEOUT) 
@@ -198,6 +200,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     if (Boolean.parseBoolean(allowAnyCertificate)) allowAnyCertificate(httpClient);
 
     HttpResponse httpResponse = httpClient.execute(httpPost);
+    
     int responseCode = httpResponse.getStatusLine().getStatusCode();
     String responseMessage = httpResponse.getStatusLine().getReasonPhrase();
     if (responseCode != HttpStatus.SC_OK)
