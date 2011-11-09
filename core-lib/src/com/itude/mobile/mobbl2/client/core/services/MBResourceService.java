@@ -189,6 +189,7 @@ public final class MBResourceService
     MBItemDefinition selected = items.get("selected");
     MBItemDefinition pressed = items.get("pressed");
     MBItemDefinition disabled = items.get("disabled");
+    MBItemDefinition checked = items.get("checked");
 
     StateListDrawable stateDrawable = new StateListDrawable();
 
@@ -222,6 +223,13 @@ public final class MBResourceService
       validateItemInStatedResource(resource);
       Drawable drawable = getImageByID(resource);
       stateDrawable.addState(new int[]{R.attr.state_selected}, drawable);
+    }
+    if (checked != null)
+    {
+      String resource = checked.getResource();
+      validateItemInStatedResource(resource);
+      Drawable drawable = getImageByID(resource);
+      stateDrawable.addState(new int[]{R.attr.state_checked}, drawable);
     }
 
     return stateDrawable;
