@@ -347,6 +347,19 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     return ((MBHeader) root.findViewWithTag(Constants.C_PAGE_CONTENT_HEADER_VIEW));
   }
 
+  public View getMainScrollViewContentFromRoot(View root)
+  {
+    if (root != null)
+    {
+      ScrollView mainScrollViewFromRoot = getMainScrollViewFromRoot(root);
+      if (mainScrollViewFromRoot != null)
+      {
+        return mainScrollViewFromRoot.getChildAt(0);
+      }
+    }
+    return null;
+  }
+
   public View getMainScrollViewContent()
   {
     if (_mainScrollViewContent == null)
