@@ -64,6 +64,7 @@ public class MBStyleHandler
     if (view instanceof EditText)
     {
       EditText textField = (EditText) view;
+      textField.setSelection(textField.getText().length());
       textField.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
     }
 
