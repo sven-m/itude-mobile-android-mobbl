@@ -96,7 +96,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     buildChildren(panel.getChildren(), result, viewState);
 
     getStyleHandler().styleMatrixContainer(panel, result);
-
+    
     if (panel.getOutcomeName() != null && panel.getOutcomeName().length() > 0)
     {
       result.setOnClickListener(panel);
