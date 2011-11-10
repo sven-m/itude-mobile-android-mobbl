@@ -12,7 +12,10 @@ import org.apache.commons.collections.CollectionUtils;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.Message;
+import android.os.MessageQueue;
+import android.os.MessageQueue.IdleHandler;
 import android.util.Log;
 
 import com.itude.mobile.mobbl2.client.core.MBException;
@@ -51,14 +54,16 @@ public class MBApplicationController extends Application
   private Map<String, HashMap<String, MBPage>> _pagesForName;
   private Stack<String>                        _modalPageStack;
   private MBOutcomeHandler                     _outcomeHandler;
-//  private boolean                              _applicationStarted;
+  private boolean                              _applicationStarted = false;
 
-  private static MBApplicationController       _instance = null;
+  private static MBApplicationController       _instance           = null;
 
   ///////////////////// Android lifecycle methods
   @Override
   public void onCreate()
   {
+    _applicationStarted = false;
+
     Context context = getBaseContext();
     DataUtil.getInstance().setContext(context);
     DeviceUtil.getInstance().setContext(context);
@@ -68,7 +73,8 @@ public class MBApplicationController extends Application
     _pages = new HashMap<String, MBPage>();
     _pagesForName = new HashMap<String, HashMap<String, MBPage>>();
     _modalPageStack = new Stack<String>();
-//    _applicationStarted = false;
+
+    //    Looper.getMainLooper().setMessageLogging(new LogPrinter(Log.VERBOSE, "uithread"));
   }
 
   ////////////////////////////////////////////////
@@ -155,16 +161,24 @@ public class MBApplicationController extends Application
     if (MBDevice.getInstance().isTablet())
     {
       MBTabletViewManager.getInstance().invalidateActionBar(true);
-//      _viewManager.runOnUiThread(new Runnable()
-//      {
-//        @Override
-//        public void run()
-//        {
-//          Log.d("coen", "action bar invalidated");
-//          _applicationStarted = true;
-//          Log.d("coen", "application started is true");
-//        }
-//      });
+      _viewManager.runOnUiThread(new Runnable()
+      {
+        @Override
+        public void run()
+        {
+          MessageQueue myQueue = Looper.myQueue();
+          myQueue.addIdleHandler(new IdleHandler()
+          {
+
+            @Override
+            public boolean queueIdle()
+            {
+              _applicationStarted = true;
+              return false;
+            }
+          });
+        }
+      });
     }
 
   }
@@ -478,12 +492,13 @@ public class MBApplicationController extends Application
 
   public void handleException(Exception exception, MBOutcome outcome)
   {
-//    if (_outcomeHandler == null)
-//    {
-//      // https://dev.itude.com/jira/browse/BINCKAPPS-831
-//      Log.w(Constants.APPLICATION_NAME, "Skipping handleException because outcomeHandler is null");
-//      return;
-//    }
+    if (_outcomeHandler == null)
+    {
+      // https://dev.itude.com/jira/browse/BINCKAPPS-831
+      Log.w(Constants.APPLICATION_NAME, "Skipping handleException because outcomeHandler is null");
+      return;
+    }
+
     Log.w(Constants.APPLICATION_NAME, "________EXCEPTION RAISED______________________________________________________________");
     Log.w(Constants.APPLICATION_NAME, exception);
     Log.w(Constants.APPLICATION_NAME, "______________________________________________________________________________________");
@@ -620,13 +635,11 @@ public class MBApplicationController extends Application
     {
       _outcomeHandler.getLooper().quit();
       _outcomeHandler = null;
-//
-//      Log.d("coen", "is application started is: " + _applicationStarted);
-//      if (!_applicationStarted)
-//      {
-//        _viewManager.finish();
-//        Log.d("coen", "finished viewmanager");
-//      }
+
+      if (!_applicationStarted)
+      {
+        _viewManager.finish();
+      }
     }
   }
 
