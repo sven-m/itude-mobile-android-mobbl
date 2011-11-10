@@ -37,7 +37,7 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
-import com.itude.mobile.mobbl2.client.core.util.MBRunnable;
+import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 
 public class MBApplicationController extends Application
@@ -51,6 +51,7 @@ public class MBApplicationController extends Application
   private Map<String, HashMap<String, MBPage>> _pagesForName;
   private Stack<String>                        _modalPageStack;
   private MBOutcomeHandler                     _outcomeHandler;
+//  private boolean                              _applicationStarted;
 
   private static MBApplicationController       _instance = null;
 
@@ -67,6 +68,7 @@ public class MBApplicationController extends Application
     _pages = new HashMap<String, MBPage>();
     _pagesForName = new HashMap<String, HashMap<String, MBPage>>();
     _modalPageStack = new Stack<String>();
+//    _applicationStarted = false;
   }
 
   ////////////////////////////////////////////////
@@ -130,7 +132,7 @@ public class MBApplicationController extends Application
     _outcomeHandler.sendEmptyMessage(Constants.C_MESSAGE_INITIAL_OUTCOMES_FINISHED);
   }
 
-  /**
+  /*
    * Visibility should be as strict as possible (as always). Because this method is called
    * from the MBOutcomeHandler the visibility is set to package (controller).
    */
@@ -153,7 +155,18 @@ public class MBApplicationController extends Application
     if (MBDevice.getInstance().isTablet())
     {
       MBTabletViewManager.getInstance().invalidateActionBar(true);
+//      _viewManager.runOnUiThread(new Runnable()
+//      {
+//        @Override
+//        public void run()
+//        {
+//          Log.d("coen", "action bar invalidated");
+//          _applicationStarted = true;
+//          Log.d("coen", "application started is true");
+//        }
+//      });
     }
+
   }
 
   private String getActiveDialogName()
@@ -305,7 +318,7 @@ public class MBApplicationController extends Application
         page.setDialogName(getActiveDialogName());
       }
       final boolean doSelect = "yes".equals(selectPageInDialog) && !_suppressPageSelection;
-      _viewManager.runOnUiThread(new MBRunnable(page)
+      _viewManager.runOnUiThread(new MBThread(page)
       {
 
         @Override
@@ -465,6 +478,12 @@ public class MBApplicationController extends Application
 
   public void handleException(Exception exception, MBOutcome outcome)
   {
+//    if (_outcomeHandler == null)
+//    {
+//      // https://dev.itude.com/jira/browse/BINCKAPPS-831
+//      Log.w(Constants.APPLICATION_NAME, "Skipping handleException because outcomeHandler is null");
+//      return;
+//    }
     Log.w(Constants.APPLICATION_NAME, "________EXCEPTION RAISED______________________________________________________________");
     Log.w(Constants.APPLICATION_NAME, exception);
     Log.w(Constants.APPLICATION_NAME, "______________________________________________________________________________________");
@@ -601,6 +620,13 @@ public class MBApplicationController extends Application
     {
       _outcomeHandler.getLooper().quit();
       _outcomeHandler = null;
+//
+//      Log.d("coen", "is application started is: " + _applicationStarted);
+//      if (!_applicationStarted)
+//      {
+//        _viewManager.finish();
+//        Log.d("coen", "finished viewmanager");
+//      }
     }
   }
 

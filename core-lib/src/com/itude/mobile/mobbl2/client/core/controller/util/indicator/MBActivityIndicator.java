@@ -6,7 +6,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
-import com.itude.mobile.mobbl2.client.core.util.MBRunnable;
+import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 
 public final class MBActivityIndicator implements MBIndicatorI
 {
@@ -36,7 +36,7 @@ public final class MBActivityIndicator implements MBIndicatorI
       return;
     }
 
-    activity.runOnUiThread(new MBRunnable()
+    activity.runOnUiThread(new MBThread()
     {
       @Override
       public void runMethod()
@@ -52,7 +52,7 @@ public final class MBActivityIndicator implements MBIndicatorI
   {
     if (_queue.decrementAndGet() > 0) return;
 
-    activity.runOnUiThread(new MBRunnable()
+    activity.runOnUiThread(new MBThread()
     {
       @Override
       public void runMethod()

@@ -9,6 +9,11 @@ public class MBException extends RuntimeException
    */
   private static final long serialVersionUID = 1271249723743935918L;
 
+  public MBException()
+  {
+
+  }
+
   public MBException(String msg)
   {
     super(msg);

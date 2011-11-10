@@ -9,8 +9,10 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.MBDataHandler;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
+import com.itude.mobile.mobbl2.client.core.util.threads.exception.MBInterruptedException;
 
-public class MBDocumentOperation implements Runnable
+public class MBDocumentOperation extends MBThread
 {
   private MBDataHandler               _dataHandler;
   private String                      _documentName;
@@ -101,7 +103,8 @@ public class MBDocumentOperation implements Runnable
       if (docDef.getAutoCreate()) doc = docDef.createDocument();
     }
     doc.setArgumentsUsed(getArguments());
-    Log.d(Constants.APPLICATION_NAME, "Loading of document " + getDocumentName() + " took " + (new Date().getTime() - now) / 1000 + " seconds");
+    Log.d(Constants.APPLICATION_NAME, "Loading of document " + getDocumentName() + " took " + (new Date().getTime() - now) / 1000
+                                      + " seconds");
     return doc;
   }
 
@@ -110,23 +113,32 @@ public class MBDocumentOperation implements Runnable
     getDataHandler().storeDocument(getDocument());
   }
 
-  public void run()
+  @Override
+  public void runMethod()
   {
     try
     {
+      checkForInterruption();
       if (_document == null)
       {
         MBDocument document = load();
+        checkForInterruption();
         getDelegate().processResult(document);
       }
       else
       {
         store();
+        checkForInterruption();
         getDelegate().processResult(getDocument());
       }
     }
     catch (Exception e)
     {
+      if (e instanceof MBInterruptedException)
+      {
+        throw (MBInterruptedException) e;
+      }
+
       Log.w(Constants.APPLICATION_NAME, "Exception during Document Operation: " + e.getMessage(), e);
       getDelegate().processException(e);
     }

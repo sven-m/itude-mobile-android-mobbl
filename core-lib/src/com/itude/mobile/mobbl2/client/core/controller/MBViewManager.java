@@ -41,6 +41,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowCha
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.helper.MBSecurityHelper;
+import com.itude.mobile.mobbl2.client.core.util.threads.MBThreadHandler;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
 
@@ -91,9 +92,11 @@ public class MBViewManager extends ActivityGroup
   @Override
   protected void onStop()
   {
-    super.onStop();
+    MBThreadHandler.getInstance().stopAllRunningThreads();
 
     MBApplicationController.getInstance().stopOutcomeHandler();
+
+    super.onStop();
   }
 
   @Override

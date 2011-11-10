@@ -31,8 +31,8 @@ import com.itude.mobile.mobbl2.client.core.services.MBWindowChangedEventListener
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.MBProperties;
-import com.itude.mobile.mobbl2.client.core.util.MBRunnable;
 import com.itude.mobile.mobbl2.client.core.util.ViewUtilities;
+import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBPanelViewBuilder;
@@ -245,7 +245,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     MBPage page = getPage();
     page.rebuildView();
 
-    MBRunnable runnable = new MBRunnable(page)
+    MBThread runnable = new MBThread(page)
     {
       @Override
       public void runMethod()

@@ -87,16 +87,14 @@ public class MBDataManagerService
   {
     MBDocumentOperation loader = getLoaderForDocumentName(documentName, null);
     loader.setDelegate(delegate);
-    Thread thread = new Thread(loader);
-    thread.start();
+    loader.start();
   }
 
   public void loadDocument(String documentName, MBDocument args, MBDocumentOperationDelegate delegate)
   {
     MBDocumentOperation loader = getLoaderForDocumentName(documentName, args);
     loader.setDelegate(delegate);
-    Thread thread = new Thread(loader);
-    thread.start();
+    loader.start();
   }
 
   public void storeDocument(MBDocument document)
@@ -109,8 +107,7 @@ public class MBDataManagerService
   {
     MBDocumentOperation storer = new MBDocumentOperation(getHandlerForDocument(document.getName()), document);
     storer.setDelegate(delegate);
-    Thread thread = new Thread(storer);
-    thread.start();
+    storer.start();
   }
 
   public void registerDataHandler(MBDataHandler handler, String name)

@@ -20,7 +20,7 @@ import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBNoOutcomesDef
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.exceptions.MBRunnable;
+import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 
 /**
  * @author Coen Houtman
@@ -261,7 +261,7 @@ public class MBOutcomeHandler extends Handler
               Bundle bundle = new Bundle();
               bundle.putString("selectPageInDialog", selectPageInDialog);
 
-              Runnable runnable = new MBRunnable(null, bundle)
+              Runnable runnable = new MBThread(null, bundle)
               {
                 @Override
                 public void runMethod()

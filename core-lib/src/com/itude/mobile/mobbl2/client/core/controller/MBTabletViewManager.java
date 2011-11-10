@@ -37,9 +37,9 @@ import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.MBRunnable;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
+import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSpinnerAdapter;
@@ -413,7 +413,7 @@ public class MBTabletViewManager extends MBViewManager
   @Override
   public final void invalidateActionBar(final boolean selectFirstTab)
   {
-    runOnUiThread(new MBRunnable()
+    runOnUiThread(new MBThread()
     {
       @Override
       public void runMethod()
@@ -467,7 +467,7 @@ public class MBTabletViewManager extends MBViewManager
 
       frameLayout.addView(rotationImage);
 
-      runOnUiThread(new MBRunnable()
+      runOnUiThread(new MBThread()
       {
         @Override
         public void runMethod()
@@ -503,7 +503,7 @@ public class MBTabletViewManager extends MBViewManager
     {
       final MenuItem item = _menu.findItem(_refreshToolDef.getName().hashCode());
 
-      runOnUiThread(new MBRunnable()
+      runOnUiThread(new MBThread()
       {
         @Override
         public void runMethod()
