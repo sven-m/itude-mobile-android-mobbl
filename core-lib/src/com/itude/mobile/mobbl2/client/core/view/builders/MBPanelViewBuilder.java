@@ -96,7 +96,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     buildChildren(panel.getChildren(), result, viewState);
 
     getStyleHandler().styleMatrixContainer(panel, result);
-    
+
     if (panel.getOutcomeName() != null && panel.getOutcomeName().length() > 0)
     {
       result.setOnClickListener(panel);
@@ -283,8 +283,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
     // Content view
     buildChildrenForRowPanel(panel.getChildren(), rowPanel, null);
 
-    //    styleHandler.styleRow(rowView);
-
     // Arrow and clickable style of row
     if (panel.getOutcomeName() != null)
     {
@@ -387,14 +385,14 @@ public class MBPanelViewBuilder extends MBViewBuilder
       else
       {
         childView.setId(childID);
-
-        styleHandler.styleRowButton(childView, childParams);
-
+        
         childParams.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
-
+        
+        styleHandler.styleRowButton(childView, childParams);
+        
         if (previousButton == -1)
         {
-          childParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+          styleHandler.styleRowButtonAligment(child, childParams);
         }
         else
         {
@@ -412,7 +410,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
         childView.setLayoutParams(childParams);
         parent.addView(childView);
       }
-
     }
 
     if (nonButtonLayout != null)

@@ -23,6 +23,7 @@ import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
+import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.MBComponent;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
@@ -375,7 +376,7 @@ public class MBStyleHandler
   public void styleRowItemRight(RelativeLayout.LayoutParams params)
   {
   }
-
+  
   public void styleRowButton(View button, RelativeLayout.LayoutParams params)
   {
   }
@@ -408,7 +409,7 @@ public class MBStyleHandler
 
   public void styleListPanelContainer(View view)
   {
-    view.setPadding(0, MBScreenUtilities.SEVEN, 0, 0);
+    view.setPadding(0, MBScreenUtilities.SEVEN, 0,  MBScreenUtilities.SEVEN);
   }
 
   public void styleMainScrollbarView(MBPage page, View scrollableView)
@@ -518,6 +519,42 @@ public class MBStyleHandler
 
   public void styleWebView(WebView webView, MBField field)
   {
+
+  }
+
+  public void styleRowButtonAligment(MBComponent child, RelativeLayout.LayoutParams childParams)
+  {
+    if (child instanceof MBField)
+    {
+      MBField field = (MBField) child;
+
+      String alignment = field.getAlignment();
+      if (StringUtilities.isNotBlank(alignment))
+      {
+        if (alignment.equals(Constants.C_ALIGNMENT_RIGHT))
+        {
+          childParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+          childParams.setMargins(0, 0, MBScreenUtilities.FIVE, MBScreenUtilities.FIVE);
+        }
+        else if (alignment.equals(Constants.C_ALIGNMENT_LEFT))
+        {
+          childParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+          childParams.setMargins(MBScreenUtilities.FIVE, 0, 0, MBScreenUtilities.FIVE);
+        }
+        else
+        {
+          childParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        }
+      }
+      else
+      {
+        childParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+      }
+    }
+    else
+    {
+      childParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+    }
 
   }
 }
