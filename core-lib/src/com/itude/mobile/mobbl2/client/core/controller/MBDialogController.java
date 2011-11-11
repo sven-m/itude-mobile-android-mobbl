@@ -177,11 +177,18 @@ public class MBDialogController extends FragmentActivity
   private void doClearAllViews()
   {
     _clearDialog = false;
-    FragmentManager fragmentManager = getSupportFragmentManager();
+    final FragmentManager fragmentManager = getSupportFragmentManager();
 
     if (fragmentManager.getBackStackEntryCount() > 0)
     {
-      fragmentManager.popBackStack(fragmentManager.getBackStackEntryAt(0).getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      runOnUiThread(new Runnable()
+      {
+        @Override
+        public void run()
+        {
+          fragmentManager.popBackStackImmediate(fragmentManager.getBackStackEntryAt(0).getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+      });
     }
 
   }
