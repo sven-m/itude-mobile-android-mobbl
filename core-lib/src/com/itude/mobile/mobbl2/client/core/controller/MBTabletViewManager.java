@@ -540,7 +540,7 @@ public class MBTabletViewManager extends MBViewManager
   @Override
   public void onConfigurationChanged(Configuration newConfig)
   {
-    MBTabletViewManager.getInstance().invalidateActionBar(false);
+    invalidateActionBar(false);
 
     super.onConfigurationChanged(newConfig);
 
