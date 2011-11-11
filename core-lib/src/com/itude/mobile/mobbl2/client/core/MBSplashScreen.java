@@ -32,7 +32,7 @@ public class MBSplashScreen extends Activity
       }
     };
     // Keep splashscreen visible for at least 1 second
-    _handler.postDelayed(_thread, 5000);
+    _handler.postDelayed(_thread, 1000);
   }
 
   @Override
