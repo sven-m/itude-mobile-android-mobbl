@@ -410,8 +410,18 @@ public class MBTabletViewManager extends MBViewManager
     });
   }
 
+  private void refreshActionBar()
+  {
+    invalidateActionBar(false, false);
+  }
+
   @Override
-  public final void invalidateActionBar(final boolean selectFirstTab)
+  public void invalidateActionBar(boolean selectFirstTab)
+  {
+    invalidateActionBar(selectFirstTab, true);
+  }
+
+  private final void invalidateActionBar(final boolean selectFirstTab, final boolean notifyListener)
   {
     runOnUiThread(new MBThread()
     {
@@ -437,11 +447,11 @@ public class MBTabletViewManager extends MBViewManager
           if (selectFirstTab)
           {
             MBTab tab = tabBar.getTab(0);
-            tabBar.selectTab(tab, true);
+            tabBar.selectTab(tab, notifyListener);
           }
           else if (selectedTab >= 0)
           {
-            tabBar.selectTab(tabBar.getTab(selectedTab), true);
+            tabBar.selectTab(tabBar.getTab(selectedTab), notifyListener);
           }
         }
       }
@@ -540,7 +550,7 @@ public class MBTabletViewManager extends MBViewManager
   @Override
   public void onConfigurationChanged(Configuration newConfig)
   {
-    invalidateActionBar(false);
+    refreshActionBar();
 
     super.onConfigurationChanged(newConfig);
 

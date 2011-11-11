@@ -164,6 +164,7 @@ public class MBViewManager extends ActivityGroup
         {
           runOnUiThread(new Runnable()
           {
+            @Override
             public void run()
             {
               selectTab(firstDialog.hashCode());
@@ -180,6 +181,7 @@ public class MBViewManager extends ActivityGroup
         new AlertDialog.Builder(this).setMessage(message).setPositiveButton(positive, new OnClickListener()
         {
 
+          @Override
           public void onClick(DialogInterface dialog, int which)
           {
             MBSecurityHelper.getInstance().logOutIfCheckNotSelected();
@@ -188,6 +190,7 @@ public class MBViewManager extends ActivityGroup
         }).setNegativeButton(negative, new OnClickListener()
         {
 
+          @Override
           public void onClick(DialogInterface dialog, int which)
           {
             dialog.dismiss();
@@ -311,6 +314,7 @@ public class MBViewManager extends ActivityGroup
     final AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setMessage(message).setTitle(title).setCancelable(true).setNeutralButton("Ok", new DialogInterface.OnClickListener()
     {
+      @Override
       public void onClick(DialogInterface dialog, int id)
       {
         dialog.cancel();
@@ -441,6 +445,7 @@ public class MBViewManager extends ActivityGroup
         final View view = window.getDecorView();
         runOnUiThread(new Runnable()
         {
+          @Override
           public void run()
           {
             setContentView(view);
@@ -715,7 +720,7 @@ public class MBViewManager extends ActivityGroup
 
     // Only handle orientationchanges when orientation changed, obviously
     // Tell all ViewControllers about the configuration change
-    for (MBBasicViewController controller : getAllFragments())
+    for (MBBasicViewController controller : getViewControllers(getActiveDialogName()))
     {
       controller.handleOrientationChange(newConfig);
     }
