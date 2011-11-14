@@ -122,8 +122,8 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
       ViewGroup view = buildInitialView();
 
       // unable to use the holo light theme as pre honeycomb doesn't know AlertDialog.Builder(context, theme) 
-      return new AlertDialog.Builder(getActivity()).setNeutralButton(MBLocalizationService.getInstance().getTextForKey("Close"), this)
-          .setView(view).create();
+      return new AlertDialog.Builder(MBApplicationController.getInstance().getBaseContext())
+          .setNeutralButton(MBLocalizationService.getInstance().getTextForKey("Close"), this).setView(view).create();
     }
 
     if (_isDialogFullscreen)
@@ -279,16 +279,19 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     }
   }
 
+  @Override
   public void addEventToQueue(MBEvent event)
   {
     eventQueue.add(event);
   }
 
+  @Override
   public void removeEventFromQueue(MBEvent event)
   {
     eventQueue.remove(event);
   }
 
+  @Override
   public void onAfterHandlingEvents()
   {
     eventQueue.clear();
@@ -304,6 +307,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     return (eventQueue != null && eventQueue.size() > 0);
   }
 
+  @Override
   public void handleOnWindowActivated()
   {
     if (hasOutstandingEvents())
@@ -315,6 +319,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     MBViewManager.getInstance().setOrientation(getPage());
   }
 
+  @Override
   public void handleOnLeavingWindow()
   {
   }
@@ -400,6 +405,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   {
     getActivity().runOnUiThread(new Runnable()
     {
+      @Override
       public void run()
       {
         getMainScrollView().removeAllViews();
