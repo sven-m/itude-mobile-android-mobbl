@@ -719,9 +719,8 @@ public class MBViewManager extends ActivityGroup
     Log.d(Constants.APPLICATION_NAME, "MBViewManager.onConfigurationChanged");
 
     // Only handle orientationchanges when orientation changed, obviously
-    // Tell all ViewControllers about the configuration change
-    //FIXME http://dev.itude.com/jira/browse/BINCKAPPS-1096
-    for (MBBasicViewController controller : getViewControllers(getActiveDialogName()))
+    // http://dev.itude.com/jira/browse/BINCKAPPS-1096
+    for (MBBasicViewController controller : getAllFragments())
     {
       controller.handleOrientationChange(newConfig);
     }
