@@ -74,7 +74,7 @@
 		<resources>
 			<resource>
 				<directory>${project.basedir}/assets</directory>
-				<filtering>true</filtering>
+				<filtering>false</filtering>
 				<targetPath>${project.build.directory}/filtered-assets</targetPath>
 				<includes>
 					<include>**/*.xml</include>
@@ -83,7 +83,7 @@
 
 			<resource>
 				<directory>${project.basedir}</directory>
-				<filtering>true</filtering>
+				<filtering>false</filtering>
 				<targetPath>${project.build.directory}/filtered-manifest</targetPath>
 				<includes>
 					<include>AndroidManifest.xml</include>
