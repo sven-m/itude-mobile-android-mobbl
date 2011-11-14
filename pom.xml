@@ -56,24 +56,10 @@
 		</dependencies>
 	</dependencyManagement>
 	
-	 <profiles>
-        <profile>
-			<id>development</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>core-lib</module>
-                <module>core-app</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>release</id>
-            <modules>
-                <module>core-lib</module>
-            </modules>
-        </profile>
-    </profiles>
+	<modules>
+        <module>core-lib</module>
+        <module>core-app</module>    
+    </modules>
 	
 	<scm>
 		<connection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk</connection>
@@ -93,16 +79,21 @@
                 </plugin>
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                    <artifactId>maven-android-plugin</artifactId>
-                    <version>2.9.0-beta-4</version>
+                    <artifactId>android-maven-plugin</artifactId>
+                    <version>3.0.0-alpha-13</version>
                     <configuration>
 						<sdk>
 							<platform>11</platform>
 						</sdk>
-						<jvmArguments>
-							<argument>-Xms256m</argument>
-							<argument>-Xmx512m</argument>
-						</jvmArguments>
+						<dex>
+							<jvmArguments>
+								<argument>-Xms256m</argument>
+								<argument>-Xmx512m</argument>
+							</jvmArguments>
+						</dex>
+						<run>
+    						<debug>true</debug>
+						</run>
 			        </configuration>
 					<extensions>true</extensions>
 				</plugin>
