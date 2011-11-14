@@ -197,6 +197,11 @@ public class MBApplicationController extends Application
   {
     handleOutcome(outcome, true);
   }
+  
+  public void handleOutcomeSynchronously(MBOutcome outcome)
+  {
+    _outcomeHandler.handleOutcomeSynchronously(outcome, true);
+  }
 
   /**
    * @param outcome

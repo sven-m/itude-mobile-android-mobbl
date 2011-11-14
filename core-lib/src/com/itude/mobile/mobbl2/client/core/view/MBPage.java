@@ -140,11 +140,21 @@ public class MBPage extends MBPanel
 
   public void handleOutcome(String outcomeName)
   {
-    handleOutcome(outcomeName, null);
+    handleTheOutcome(outcomeName, null, false);
+  }
+
+  public void handleOutcomeSynchrone(String outcomeName)
+  {
+    handleTheOutcome(outcomeName, null, true);
   }
 
   @Override
   public void handleOutcome(String outcomeName, String path)
+  {
+    handleTheOutcome(outcomeName, path, false);
+  }
+
+  public void handleTheOutcome(String outcomeName, String path, boolean synchro)
   {
     MBOutcome outcome = new MBOutcome();
     outcome.setOriginName(getPageName());
@@ -157,8 +167,15 @@ public class MBPage extends MBPanel
     {
       lsnr.outcomeProduced(outcome);
     }
+    if (synchro)
+    {
+      _controller.handleOutcomeSynchronously(outcome);
+    }
+    else
+    {
+      _controller.handleOutcome(outcome);
 
-    _controller.handleOutcome(outcome);
+    }
   }
 
   @Override
