@@ -82,7 +82,6 @@
                     <artifactId>android-maven-plugin</artifactId>
                     <version>3.0.0-alpha-14</version>
                     <configuration>
-			<genDirectory>${project.build.directory}/generated-sources/gen</genDirectory>
 						<sdk>
 							<platform>11</platform>
 						</sdk>
