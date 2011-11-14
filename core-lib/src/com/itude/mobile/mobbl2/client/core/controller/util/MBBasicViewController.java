@@ -122,7 +122,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
       ViewGroup view = buildInitialView();
 
       // unable to use the holo light theme as pre honeycomb doesn't know AlertDialog.Builder(context, theme) 
-      return new AlertDialog.Builder(MBApplicationController.getInstance().getBaseContext())
+      return new AlertDialog.Builder(getActivity())
           .setNeutralButton(MBLocalizationService.getInstance().getTextForKey("Close"), this).setView(view).create();
     }
 
