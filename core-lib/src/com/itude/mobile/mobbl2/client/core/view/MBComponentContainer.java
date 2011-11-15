@@ -59,6 +59,32 @@ public class MBComponentContainer extends MBComponent
     return result;
   }
 
+  @SuppressWarnings("unchecked")
+  public <T extends MBComponent> T getComponentOfKindWithName(Class<?> clazz, String name)
+  {
+
+    // Walk through all children
+    for (MBComponent child : _children)
+    {
+
+      if (clazz.isInstance(child) && name.equals(child.getName()))
+      {
+        return (T) child;
+      }
+      else if (child instanceof MBComponentContainer)
+      {
+        MBComponent recursiveChild = ((MBComponentContainer) child).getComponentOfKindWithName(clazz, name);
+        if (recursiveChild != null)
+        {
+          return (T) recursiveChild;
+        }
+      }
+
+    }
+
+    return null;
+  }
+
   @Override
   public ArrayList<Object> getDescendantsOfKind(Class<?> clazz)
   {

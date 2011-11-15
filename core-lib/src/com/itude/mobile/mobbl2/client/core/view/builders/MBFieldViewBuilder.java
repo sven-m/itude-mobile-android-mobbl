@@ -63,7 +63,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
     {
       Log.w(Constants.APPLICATION_NAME, "MBFieldViewBuilder.buildFieldView(): Failed to build unsupported view type " + field.getType());
     }
-
+    field.attachView(view);
     return view;
   }
 

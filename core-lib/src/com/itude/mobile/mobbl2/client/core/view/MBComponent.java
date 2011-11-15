@@ -396,21 +396,6 @@ public class MBComponent
     return null;
   }
 
-  public MBPanel getFirstChildOfPanelWithName(String name)
-  {
-    ArrayList<MBComponent> result = getChildrenOfKind(MBPanel.class);
-
-    for (MBComponent component : result)
-    {
-      if (((MBPanel) component).getName().equals(name))
-      {
-        return (MBPanel) component;
-      }
-    }
-
-    return null;
-  }
-
   // TODO Method has a selector, needs implementation
   public Object getFirstChildOfKind(Class<?> clazz, Object selector, Object value)
   {
