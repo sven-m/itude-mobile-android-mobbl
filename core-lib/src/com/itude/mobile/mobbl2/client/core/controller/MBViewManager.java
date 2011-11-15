@@ -118,7 +118,19 @@ public class MBViewManager extends ActivityGroup
 
   ///////////////////// 
 
-  ///////////////////// Android methods
+  ///////////////////// Android method
+
+  @Override
+  protected void onNewIntent(Intent intent)
+  {
+    super.onNewIntent(intent);
+    setIntent(intent);
+
+    if (Intent.ACTION_SEARCH.equals(intent.getAction()) || Intent.ACTION_VIEW.equals(intent.getAction()))
+    {
+      MBApplicationController.getInstance().handleSearchRequest(intent);
+    }
+  }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu)

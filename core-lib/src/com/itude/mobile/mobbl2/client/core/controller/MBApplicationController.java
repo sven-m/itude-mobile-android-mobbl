@@ -11,6 +11,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
@@ -40,6 +41,7 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
+import com.itude.mobile.mobbl2.client.core.util.MBSearchUtil;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 
@@ -55,6 +57,7 @@ public class MBApplicationController extends Application
   private Stack<String>                        _modalPageStack;
   private MBOutcomeHandler                     _outcomeHandler;
   private boolean                              _applicationStarted = false;
+  private MBSearchUtil                         _searchUtil;
 
   private static MBApplicationController       _instance           = null;
 
@@ -648,6 +651,14 @@ public class MBApplicationController extends Application
     }
   }
 
+  public void handleSearchRequest(Intent searchIntent)
+  {
+    if (_searchUtil != null)
+    {
+      _searchUtil.handleSearchRequest(searchIntent);
+    }
+  }
+
   /////////////////////////////////////////////////////////////////////////
   // Android cannot pass object between activities without serializing them.
   // This is a workaround for passing Pages between the controller and the DialogControllers
@@ -701,5 +712,15 @@ public class MBApplicationController extends Application
   public MBOutcomeHandler getOutcomeHandler()
   {
     return _outcomeHandler;
+  }
+
+  public void setSearchUtil(MBSearchUtil searchUtil)
+  {
+    _searchUtil = searchUtil;
+  }
+
+  public MBSearchUtil getSearchUtil()
+  {
+    return _searchUtil;
   }
 }
