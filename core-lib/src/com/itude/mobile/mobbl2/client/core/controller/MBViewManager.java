@@ -720,7 +720,7 @@ public class MBViewManager extends ActivityGroup
 
     // Only handle orientationchanges when orientation changed, obviously
     // http://dev.itude.com/jira/browse/BINCKAPPS-1096
-    for (MBBasicViewController controller : getAllFragments())
+    for (MBBasicViewController controller : getViewControllers(getActiveDialogName()))
     {
       controller.handleOrientationChange(newConfig);
     }
