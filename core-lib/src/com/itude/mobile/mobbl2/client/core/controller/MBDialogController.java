@@ -398,6 +398,11 @@ public class MBDialogController extends FragmentActivity
    */
   public void handleAllOnWindowActivated()
   {
+    if (_clearDialog)
+    {
+      doClearAllViews();
+    }
+
     List<MBBasicViewController> allFragments = getAllFragments();
 
     for (int i = 0; i < allFragments.size(); i++)
@@ -424,10 +429,6 @@ public class MBDialogController extends FragmentActivity
     */
   public void handleOnWindowActivated(MBBasicViewController vc)
   {
-    if (_clearDialog)
-    {
-      doClearAllViews();
-    }
     if (vc != null) vc.handleOnWindowActivated();
   }
 
