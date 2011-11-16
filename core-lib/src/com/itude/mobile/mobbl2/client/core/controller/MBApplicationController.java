@@ -10,8 +10,10 @@ import java.util.Stack;
 import org.apache.commons.collections.CollectionUtils;
 
 import android.app.Application;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
@@ -41,7 +43,6 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
-import com.itude.mobile.mobbl2.client.core.util.MBSearchUtil;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 
@@ -57,7 +58,6 @@ public class MBApplicationController extends Application
   private Stack<String>                        _modalPageStack;
   private MBOutcomeHandler                     _outcomeHandler;
   private boolean                              _applicationStarted = false;
-  private MBSearchUtil                         _searchUtil;
 
   private static MBApplicationController       _instance           = null;
 
@@ -200,7 +200,7 @@ public class MBApplicationController extends Application
   {
     handleOutcome(outcome, true);
   }
-  
+
   public void handleOutcomeSynchronously(MBOutcome outcome)
   {
     _outcomeHandler.handleOutcomeSynchronously(outcome, true);
@@ -653,10 +653,31 @@ public class MBApplicationController extends Application
 
   public void handleSearchRequest(Intent searchIntent)
   {
-    if (_searchUtil != null)
+    final String query;
+    final String isProgressive;
+
+    if (Intent.ACTION_SEARCH.equals(searchIntent.getAction()))
     {
-      _searchUtil.handleSearchRequest(searchIntent);
+      query = searchIntent.getStringExtra(SearchManager.QUERY);
+      isProgressive = "FALSE";
     }
+    else
+    {
+      query = searchIntent.getStringExtra(SearchManager.USER_QUERY);
+      isProgressive = "TRUE";
+    }
+
+    MBDocument searchRequest = MBDataManagerService.getInstance().loadDocument("MBSearchRequestDoc");
+    searchRequest.setValue(query, "SearchRequest[0]/@query");
+    searchRequest.setValue(isProgressive, "SearchRequest[0]/@isProgressive");
+
+    MBOutcome searchOutcome = new MBOutcome();
+    searchOutcome.setOriginName("Controller");
+    searchOutcome.setOutcomeName("search");
+    searchOutcome.setDocument(searchRequest);
+    searchOutcome.setPath(Uri.decode(searchIntent.getDataString()));
+
+    handleOutcome(searchOutcome);
   }
 
   /////////////////////////////////////////////////////////////////////////
@@ -712,15 +733,5 @@ public class MBApplicationController extends Application
   public MBOutcomeHandler getOutcomeHandler()
   {
     return _outcomeHandler;
-  }
-
-  public void setSearchUtil(MBSearchUtil searchUtil)
-  {
-    _searchUtil = searchUtil;
-  }
-
-  public MBSearchUtil getSearchUtil()
-  {
-    return _searchUtil;
   }
 }
