@@ -376,7 +376,7 @@ public class MBStyleHandler
   public void styleRowItemRight(RelativeLayout.LayoutParams params)
   {
   }
-  
+
   public void styleRowButton(View button, RelativeLayout.LayoutParams params)
   {
   }
@@ -409,7 +409,7 @@ public class MBStyleHandler
 
   public void styleListPanelContainer(View view)
   {
-    view.setPadding(0, MBScreenUtilities.SEVEN, 0,  MBScreenUtilities.SEVEN);
+    view.setPadding(0, MBScreenUtilities.SEVEN, 0, MBScreenUtilities.SEVEN);
   }
 
   public void styleMainScrollbarView(MBPage page, View scrollableView)
@@ -508,6 +508,11 @@ public class MBStyleHandler
 
   }
 
+  public void styleFirstMatrixHeaderRowChild(View childView, MBField field)
+  {
+
+  }
+
   public void styleFirstMatrixHeaderRowChild(View childView)
   {
 
@@ -557,4 +562,5 @@ public class MBStyleHandler
     }
 
   }
+
 }

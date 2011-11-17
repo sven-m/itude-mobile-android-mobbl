@@ -385,11 +385,11 @@ public class MBPanelViewBuilder extends MBViewBuilder
       else
       {
         childView.setId(childID);
-        
+
         childParams.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
-        
+
         styleHandler.styleRowButton(childView, childParams);
-        
+
         if (previousButton == -1)
         {
           styleHandler.styleRowButtonAligment(child, childParams);
@@ -731,7 +731,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
         if (needsToProcessFirstLabel)
         {
-          styleHandler.styleFirstMatrixHeaderRowChild(childView);
+          styleHandler.styleFirstMatrixHeaderRowChild(childView, (MBField) child);
         }
         styleHandler.styleMatrixHeaderRowChild(childView);
       }
@@ -751,9 +751,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
         {
           ((TextView) childView).setGravity(Gravity.CENTER_HORIZONTAL);
         }
-
       }
-
     }
 
   }
