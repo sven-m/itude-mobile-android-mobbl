@@ -567,8 +567,12 @@ public class MBStyleHandler
 
   }
 
-  public void styleSearchLayout(LinearLayout searchLayout)
+  public void styleSearchPlate(LinearLayout searchLayout)
   {
   }
 
+  public void styleSearchSubmitArea(LinearLayout submitArea)
+  {
+  }
+  
 }

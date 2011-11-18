@@ -132,18 +132,19 @@ public class MBTabletViewManager extends MBViewManager
               ImageView searchButton = (ImageView) searchButtonField.get(searchView);
               searchButton.setImageDrawable(image);
 
-              // change the searchview icon
+              // change the searchview
               Field searchEditField = searchView.getClass().getDeclaredField("mSearchEditFrame");
               searchEditField.setAccessible(true);
               LinearLayout searchLayout = (LinearLayout) searchEditField.get(searchView);
-
-              LinearLayout linearLayout = (LinearLayout) searchLayout.getChildAt(0);
-
-              MBViewBuilderFactory.getInstance().getStyleHandler().styleSearchLayout(linearLayout);
+              
+              LinearLayout searchPlate = (LinearLayout) searchLayout.getChildAt(0);
+              MBViewBuilderFactory.getInstance().getStyleHandler().styleSearchPlate(searchPlate);
 
               // find first image view, assuming this is the icon we need
-              setImage(image, linearLayout);
+              setImage(image, searchPlate);
               
+              LinearLayout submitArea = (LinearLayout) searchLayout.getChildAt(1);
+              MBViewBuilderFactory.getInstance().getStyleHandler().styleSearchSubmitArea(submitArea);
             }
             catch (Exception e)
             {
@@ -165,7 +166,7 @@ public class MBTabletViewManager extends MBViewManager
   private void setImage(Drawable image, LinearLayout linearLayout)
   {
     ImageView searchViewIcon = null;
-    
+
     for (int i = 0; i < linearLayout.getChildCount(); i++)
     {
       View view = linearLayout.getChildAt(i);
