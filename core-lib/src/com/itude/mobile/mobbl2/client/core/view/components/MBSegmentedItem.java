@@ -4,14 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.GradientDrawable.Orientation;
-import android.graphics.drawable.LayerDrawable;
 import android.widget.RadioButton;
 
+import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 
 public class MBSegmentedItem extends RadioButton
@@ -19,11 +15,13 @@ public class MBSegmentedItem extends RadioButton
 
   private Paint     _textPaint;
   private String    _text;
-  private final int _currentTextColor        = Color.WHITE;
-  private float     _textSize                = MBScreenUtilities.ELEVEN;
+  private final int _currentTextColor   = Color.WHITE;
+  private float     _textSize           = MBScreenUtilities.ELEVEN;
   private int       _ascent;
-  private int       _backgroundColor         = Color.parseColor("#515050");
-  private int       _selectedBackgroundColor = 0xff111111;
+  private String    _defaultBackground  = "button-segmented-normal";
+  private String    _selectedBackground = "button-segmented-selected";
+  private String     _pressedBackground = "button-segmented-pressed";
+ 
 
   public MBSegmentedItem(Context context)
   {
@@ -47,26 +45,35 @@ public class MBSegmentedItem extends RadioButton
 
     if (isChecked())
     {
-      GradientDrawable grad = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{0xffa5a5a5, _selectedBackgroundColor});
-      grad.setBounds(0, 0, this.getWidth(), this.getHeight());
-      Drawable drawable = new LayerDrawable(new Drawable[]{new ColorDrawable(_selectedBackgroundColor), grad});
-      drawable.draw(canvas);
+
+      Drawable drawable = MBResourceService.getInstance().getImageByID(_selectedBackground);
+      if (drawable != null)
+      {
+        drawable.setBounds(0, 0, this.getWidth(), this.getHeight());
+        drawable.draw(canvas);
+      }
+
+    }
+    else if(isPressed())
+    {
+      Drawable drawable = MBResourceService.getInstance().getImageByID(_pressedBackground);
+      if (drawable != null)
+      {
+        drawable.setBounds(0, 0, this.getWidth(), this.getHeight());
+        drawable.draw(canvas);
+      }
     }
     else
     {
-      GradientDrawable grad = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{0xffa5a5a5, _backgroundColor});
-      grad.setBounds(0, 0, this.getWidth(), this.getHeight());
-      Drawable drawable = new LayerDrawable(new Drawable[]{new ColorDrawable(_backgroundColor), grad});
-      drawable.draw(canvas);
+      Drawable drawable = MBResourceService.getInstance().getImageByID(_defaultBackground);
+      if (drawable != null)
+      {
+        drawable.setBounds(0, 0, this.getWidth(), this.getHeight());
+        drawable.draw(canvas);
+      }
     }
 
     canvas.drawText(_text, getWidth() / 2, getPaddingTop() - _ascent, _textPaint);
-
-    Paint paint = new Paint();
-    paint.setColor(Color.BLACK);
-    paint.setStyle(Style.STROKE);
-    paint.setStrokeWidth(1);
-    canvas.drawRect(0, 0, this.getWidth() - paint.getStrokeWidth(), this.getHeight() - paint.getStrokeWidth(), paint);
   }
 
   @Override
@@ -163,18 +170,25 @@ public class MBSegmentedItem extends RadioButton
     return _textSize;
   }
 
-  public void setSelectedBackgroundColor(int selectedBackgroundColor)
+  public void setDefaultBackground(String defaultBackground)
   {
-    _selectedBackgroundColor = selectedBackgroundColor;
+    _defaultBackground = defaultBackground;
     requestLayout();
     invalidate();
   }
 
-  @Override
-  public void setBackgroundColor(int backgroundColor)
+  public void setSelectedBackground(String selectedBackground)
   {
-    _backgroundColor = backgroundColor;
+    _selectedBackground = selectedBackground;
     requestLayout();
     invalidate();
   }
+  
+  public void setPressedBackground(String pressedBackground)
+  {
+    _pressedBackground = pressedBackground;
+    requestLayout();
+    invalidate();
+  }
+
 }
