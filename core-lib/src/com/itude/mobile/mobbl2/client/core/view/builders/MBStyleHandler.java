@@ -563,4 +563,8 @@ public class MBStyleHandler
 
   }
 
+  public void styleSearchLayout(LinearLayout searchLayout)
+  {
+  }
+
 }

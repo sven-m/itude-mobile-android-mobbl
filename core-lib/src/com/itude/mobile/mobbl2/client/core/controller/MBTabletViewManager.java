@@ -136,19 +136,14 @@ public class MBTabletViewManager extends MBViewManager
               Field searchEditField = searchView.getClass().getDeclaredField("mSearchEditFrame");
               searchEditField.setAccessible(true);
               LinearLayout searchLayout = (LinearLayout) searchEditField.get(searchView);
+
               LinearLayout linearLayout = (LinearLayout) searchLayout.getChildAt(0);
 
+              MBViewBuilderFactory.getInstance().getStyleHandler().styleSearchLayout(linearLayout);
+
               // find first image view, assuming this is the icon we need
-              ImageView searchViewIcon = null;
-              for (int i = 0; searchViewIcon == null && i < linearLayout.getChildCount(); i++)
-              {
-                View view = linearLayout.getChildAt(i);
-                if (view instanceof ImageView)
-                {
-                  searchViewIcon = (ImageView) view;
-                }
-              }
-              searchViewIcon.setImageDrawable(image);
+              setImage(image, linearLayout);
+              
             }
             catch (Exception e)
             {
@@ -165,6 +160,22 @@ public class MBTabletViewManager extends MBViewManager
     }
 
     return true;
+  }
+
+  private void setImage(Drawable image, LinearLayout linearLayout)
+  {
+    ImageView searchViewIcon = null;
+    
+    for (int i = 0; i < linearLayout.getChildCount(); i++)
+    {
+      View view = linearLayout.getChildAt(i);
+      if (view instanceof ImageView)
+      {
+        searchViewIcon = (ImageView) view;
+        break;
+      }
+    }
+    searchViewIcon.setImageDrawable(image);
   }
 
   private int getMenuItemActionFlags(MBToolDefinition def)
