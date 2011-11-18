@@ -365,10 +365,14 @@ public class MBStyleHandler
   {
   }
 
-  public void styleRow(LinearLayout view)
+  public void styleRowAlignment(LinearLayout rowPanel)
   {
   }
-
+  
+  public void styleRow(ViewGroup rowPanel)
+  {
+  }
+  
   public void styleRowItemLeft(RelativeLayout.LayoutParams params)
   {
   }

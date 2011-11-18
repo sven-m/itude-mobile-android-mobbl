@@ -305,7 +305,10 @@ public class MBViewManager extends ActivityGroup
   private void showAlertView(MBPage page)
   {
 
-    if (getCurrentAlert() != null) getCurrentAlert().dismiss();
+    if (getCurrentAlert() != null)
+    {
+      getCurrentAlert().dismiss();
+    }
 
     String title = null;
     String message = null;
@@ -319,8 +322,10 @@ public class MBViewManager extends ActivityGroup
     {
       title = page.getTitle();
       message = MBLocalizationService.getInstance().getTextForKey((String) page.getDocument().getValueForPath("/message[0]/@text"));
-      if (message == null) message = MBLocalizationService.getInstance().getTextForKey((String) page.getDocument()
-                                                                                           .getValueForPath("/message[0]/@text()"));
+      if (message == null)
+      {
+        message = MBLocalizationService.getInstance().getTextForKey((String) page.getDocument().getValueForPath("/message[0]/@text()"));
+      }
     }
 
     final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -782,6 +787,11 @@ public class MBViewManager extends ActivityGroup
   }
 
   public void invalidateActionBar(boolean selectFirstTab)
+  {
+    throw new UnsupportedOperationException("This method is not supported on smartphone");
+  }
+
+  public void invalidateActionBar(boolean selectFirstTab, boolean notifyListener)
   {
     throw new UnsupportedOperationException("This method is not supported on smartphone");
   }

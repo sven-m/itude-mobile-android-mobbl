@@ -432,7 +432,7 @@ public class MBTabletViewManager extends MBViewManager
     invalidateActionBar(selectFirstTab, true);
   }
 
-  private final void invalidateActionBar(final boolean selectFirstTab, final boolean notifyListener)
+  public void invalidateActionBar(final boolean selectFirstTab, final boolean notifyListener)
   {
     runOnUiThread(new MBThread()
     {

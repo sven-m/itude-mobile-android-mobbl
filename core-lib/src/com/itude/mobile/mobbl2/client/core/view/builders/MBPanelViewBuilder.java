@@ -284,13 +284,19 @@ public class MBPanelViewBuilder extends MBViewBuilder
     buildChildrenForRowPanel(panel.getChildren(), rowPanel, null);
 
     // Arrow and clickable style of row
+    MBStyleHandler styleHandler = getStyleHandler();
     if (panel.getOutcomeName() != null)
     {
       rowPanel.setClickable(true);
       rowPanel.setFocusable(true);
       rowPanel.setOnClickListener(panel);
 
-      getStyleHandler().styleClickableRow(rowPanel);
+      styleHandler.styleClickableRow(rowPanel);
+    }
+    else
+    {
+      // Make sure to style the unclickable row
+      styleHandler.styleRow(rowPanel);
     }
 
     // Processed the row so the next one isn't the first one anymore
@@ -354,6 +360,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
           nonButtonLayout.setId(childID);
           styleHandler.styleRow(nonButtonLayout);
+          styleHandler.styleRowAlignment(nonButtonLayout);
         }
 
         if (isFieldWithType(child, Constants.C_FIELD_LABEL) && !processingLabel)
