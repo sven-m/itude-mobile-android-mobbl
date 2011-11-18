@@ -359,7 +359,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
           nonButtonLayout.setGravity(Gravity.CENTER_VERTICAL);
 
           nonButtonLayout.setId(childID);
-          styleHandler.styleRow(nonButtonLayout);
           styleHandler.styleRowAlignment(nonButtonLayout);
         }
 
