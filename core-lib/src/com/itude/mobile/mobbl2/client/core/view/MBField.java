@@ -42,7 +42,6 @@ public class MBField extends MBComponent
       TextWatcher,
       OnKeyListener
 {
-  private Object                _responder;
   private MBAttributeDefinition _attributeDefinition;
   private boolean               _domainDetermined;
   private MBDomainDefinition    _domainDefinition;
@@ -71,7 +70,6 @@ public class MBField extends MBComponent
   {
     super(definition, document, parent);
 
-    _responder = null;
     _attributeDefinition = null;
     _domainDetermined = false;
 
@@ -137,18 +135,22 @@ public class MBField extends MBComponent
                           || (_diffableMarker = Constants.C_FIELD_STYLE_DIFFABLE_MARKER.equals(getCustom2()))
                           || (_diffableMarker = Constants.C_FIELD_STYLE_DIFFABLE_MARKER.equals(getCustom3())))
     {
-      String value = getValue();
-      if (value == null) value = getLabel();
-      if (value != null) parent.setDiffableMarkerValue(MBParseUtil.doubleValueDutch(value));
+      String path = getAbsoluteDataPath();
+      if (path != null) 
+      {
+        parent.setDiffableMarkerPath(path);
+      }
     }
     else if (_diffablePrimary = Constants.C_FIELD_STYLE_DIFFABLE_PRIMARY.equals(getStyle())
                                 || (_diffablePrimary = Constants.C_FIELD_STYLE_DIFFABLE_PRIMARY.equals(getCustom1()))
                                 || (_diffablePrimary = Constants.C_FIELD_STYLE_DIFFABLE_PRIMARY.equals(getCustom2()))
                                 || (_diffablePrimary = Constants.C_FIELD_STYLE_DIFFABLE_PRIMARY.equals(getCustom3())))
     {
-      String value = getValue();
-      if (value == null) value = getLabel();
-      if (value != null) parent.setDiffablePrimaryValue(MBParseUtil.doubleValueDutch(value));
+      String path = getAbsoluteDataPath();
+      if (path != null)
+      {
+        parent.setDiffablePrimaryPath(path);
+      }
     }
 
     _diffableSecondary = Constants.C_FIELD_STYLE_DIFFABLE_SECONDARY.equals(getStyle())
@@ -161,16 +163,6 @@ public class MBField extends MBComponent
   public View buildViewWithMaxBounds(MBViewState viewState)
   {
     return MBViewBuilderFactory.getInstance().getFieldViewBuilder().buildFieldView(this);
-  }
-
-  public Object getResponder()
-  {
-    return _responder;
-  }
-
-  public void setResponder(Object responder)
-  {
-    _responder = responder;
   }
 
   public int getWidth()

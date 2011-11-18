@@ -24,7 +24,6 @@ public class MBParseUtil
 
   public static Double doubleValueDutch(String stringToConvert)
   {
-
     if (stringToConvert == null)
     {
       return null;
@@ -33,6 +32,9 @@ public class MBParseUtil
     // if we have a comma, replace with a dot
     String converted = stringToConvert.replace(",", ".");
 
+    // remove everything but a dash, point/period, comma and numerics
+    converted = converted.replaceAll("[^-.,0-9]", "");
+
     Double returnValue = null;
     try
     {
@@ -40,7 +42,7 @@ public class MBParseUtil
     }
     catch (NumberFormatException e)
     {
-      Log.d(Constants.APPLICATION_NAME, "Could not convert " + stringToConvert + " to double");
+      Log.w(Constants.APPLICATION_NAME, "Could not convert " + stringToConvert + " to double");
     }
 
     return returnValue;

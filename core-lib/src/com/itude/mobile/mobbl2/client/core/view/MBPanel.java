@@ -1,6 +1,5 @@
 package com.itude.mobile.mobbl2.client.core.view;
 
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
-import com.itude.mobile.mobbl2.client.core.util.MathUtilities;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
@@ -26,14 +24,15 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   private String  _path;
   private String  _translatedPath;
   private String  _mode;
+
   private boolean _childrenDeletable     = false;
   private boolean _childrenDraggable     = false;
   private boolean _childrenSelectable    = false;
   private boolean _childrenClickable     = false;
   private boolean _childrenLongClickable = false;
-  private Double  _diffableMarkerValue   = null;
-  private Double  _diffablePrimaryValue  = null;
-  private double  _diffablePrimaryDelta;
+
+  private String  _diffableMarkerPath    = null;
+  private String  _diffablePrimaryPath   = null;
   private boolean _diffableMaster        = false;
 
   public MBPanel(MBPanelDefinition definition, MBDocument document, MBComponentContainer parent)
@@ -56,7 +55,10 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     if (buildViewStructure)
     {
       buildChildren(definition, document, parent);
-      if (Constants.C_MATRIX.equals(_type) || Constants.C_MATRIXROW.equals(_type)) calculateDiffValues();
+      if (Constants.C_MATRIX.equals(_type) || Constants.C_MATRIXROW.equals(_type))
+      {
+        processDiffResponsibility();
+      }
     }
   }
 
@@ -77,9 +79,9 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     }
   }
 
-  private void calculateDiffValues()
+  private void processDiffResponsibility()
   {
-    if (getDiffableMarkerValue() == null || getDiffablePrimaryValue() == null)
+    if (getDiffableMarkerPath() == null || getDiffablePrimaryPath() == null)
     {
       if (!Constants.C_MATRIX.equals(getType()))
       {
@@ -91,23 +93,21 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
           parent = getFirstParentPanelWithType(Constants.C_EDITABLEMATRIX);
         }
         parent.setDiffableMaster(true);
-        if (getDiffableMarkerValue() != null) parent.setDiffableMarkerValue(getDiffableMarkerValue());
-        if (getDiffablePrimaryValue() != null) parent.setDiffablePrimaryValue(getDiffablePrimaryValue());
-      }
-      else
-      {
-
-        Log.w(Constants.APPLICATION_NAME, "Setting primary delta to zero because either the marker value (" + getDiffableMarkerValue()
-                                          + ")" + " or the primary value (" + getDiffablePrimaryValue() + ")" + " was null)");
-        _diffablePrimaryDelta = 0;
+        if (getDiffableMarkerPath() != null) 
+        {
+          parent.setDiffableMarkerPath(getDiffableMarkerPath());
+        }
+        
+        if (getDiffablePrimaryPath() != null) 
+        {
+          parent.setDiffablePrimaryPath(getDiffablePrimaryPath());
+        }
       }
     }
     else
     {
-      _diffablePrimaryDelta = MathUtilities.truncate(getDiffablePrimaryValue() - getDiffableMarkerValue());
       setDiffableMaster(true);
     }
-
   }
 
   public String getType()
@@ -379,31 +379,6 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     return _childrenLongClickable;
   }
 
-  public void setDiffableMarkerValue(Double value)
-  {
-    _diffableMarkerValue = value;
-  }
-
-  public Double getDiffableMarkerValue()
-  {
-    return _diffableMarkerValue;
-  }
-
-  public void setDiffablePrimaryValue(Double value)
-  {
-    _diffablePrimaryValue = value;
-  }
-
-  public Double getDiffablePrimaryValue()
-  {
-    return _diffablePrimaryValue;
-  }
-
-  public double getDiffablePrimaryDelta()
-  {
-    return _diffablePrimaryDelta;
-  }
-
   public void setDiffableMaster(boolean diffableMaster)
   {
     _diffableMaster = diffableMaster;
@@ -412,6 +387,26 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   public boolean isDiffableMaster()
   {
     return _diffableMaster;
+  }
+
+  public void setDiffableMarkerPath(String diffableMarkerPath)
+  {
+    _diffableMarkerPath = diffableMarkerPath;
+  }
+
+  public String getDiffableMarkerPath()
+  {
+    return _diffableMarkerPath;
+  }
+
+  public void setDiffablePrimaryPath(String diffablePrimaryPath)
+  {
+    _diffablePrimaryPath = diffablePrimaryPath;
+  }
+
+  public String getDiffablePrimaryPath()
+  {
+    return _diffablePrimaryPath;
   }
 
   // android.view.View.OnClickListener method

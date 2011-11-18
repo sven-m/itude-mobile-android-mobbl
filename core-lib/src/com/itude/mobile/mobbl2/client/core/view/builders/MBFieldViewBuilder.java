@@ -157,41 +157,39 @@ public class MBFieldViewBuilder extends MBViewBuilder
     if (parent != null && !parent.isDiffableMaster()) parent = parent.getFirstParentPanelWithType("MATRIX");
     if (parent != null && !parent.isDiffableMaster()) parent = null;
 
-    if (parent != null && (field.isDiffablePrimary() || field.isDiffableSecondary()))
-    {
-      // apply style based on diff
-      getStyleHandler().styleDiffableValue(label, parent.getDiffablePrimaryDelta());
-    }
-    else return label;
-
     MBDocumentDiff documentDiff = field.getPage().getDocumentDiff();
-    String path = field.evaluatedDataPath();
 
-    //FIXME, werkt nog niet goed heeft last van DataTypes
-    //Mark the delta (<0, 0, >0) of the cell's value
-    if (documentDiff != null && path != null && documentDiff.isChanged(path))
+    if (parent != null && field.isDiffablePrimary() || field.isDiffableSecondary())
     {
+      double styleDelta = 0;
+      double styleValue = 0;
 
-      String valueA = documentDiff.valueOfAForPath(path);
-      String valueB = documentDiff.valueOfBForPath(path);
+      String primaryPath = parent.getDiffablePrimaryPath();
+      String primaryValueString = field.getDocument().getValueForPath(primaryPath);
+      Double primaryValue = MBParseUtil.doubleValueDutch(primaryValueString);
 
-      if (valueA != null && valueB != null)
+      if (documentDiff == null || !documentDiff.isChanged() || !documentDiff.isChanged(primaryPath))
       {
-        Double a = MBParseUtil.doubleValueDutch(valueA);
-        Double b = MBParseUtil.doubleValueDutch(valueB);
+        String markerValueString = field.getDocument().getValueForPath(parent.getDiffableMarkerPath());
+        Double markerValue = MBParseUtil.doubleValueDutch(markerValueString);
 
-        if (a != null && b != null && !Double.isNaN(a) && !Double.isNaN(b))
+        if (primaryValue != null && markerValue != null && !Double.isNaN(primaryValue) && !Double.isNaN(markerValue))
         {
-          double delta = MathUtilities.truncate(a - b);
-          getStyleHandler().styleChangedValue(label, a, delta);
+          styleValue = MathUtilities.truncate(primaryValue - markerValue);
         }
       }
       else
       {
-        Log.w(Constants.APPLICATION_NAME,
-              "MBFieldViewBuilder.buildMatrixCell(): Failed to calculate delta because documentDiff.valueOfAForPath return null for path "
-                  + path);
+        String valueOfBForPath = documentDiff.valueOfBForPath(primaryPath);
+
+        Double valueB = MBParseUtil.doubleValueDutch(valueOfBForPath);
+
+        if (primaryValue != null && valueB != null && !Double.isNaN(primaryValue) && !Double.isNaN(valueB))
+        {
+          styleDelta = MathUtilities.truncate(primaryValue - valueB);
+        }
       }
+      getStyleHandler().styleChangedValue(label, styleValue, styleDelta);
     }
 
     return label;
