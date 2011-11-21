@@ -61,6 +61,9 @@ public class MBField extends MBComponent
   private String                _custom2;
   private String                _custom3;
 
+  private String                _cachedValue    = null;
+  private boolean               _cachedValueSet = false;
+
   // diffable
   private boolean               _diffableMarker;
   private boolean               _diffablePrimary;
@@ -136,7 +139,7 @@ public class MBField extends MBComponent
                           || (_diffableMarker = Constants.C_FIELD_STYLE_DIFFABLE_MARKER.equals(getCustom3())))
     {
       String path = getAbsoluteDataPath();
-      if (path != null) 
+      if (path != null)
       {
         parent.setDiffableMarkerPath(path);
       }
@@ -363,9 +366,6 @@ public class MBField extends MBComponent
     _cachedValueSet = true;
     return result;
   }
-
-  private String  _cachedValue    = null;
-  private boolean _cachedValueSet = false;
 
   public void setValue(String value)
   {
