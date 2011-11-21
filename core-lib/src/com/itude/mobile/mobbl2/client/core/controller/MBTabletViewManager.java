@@ -141,7 +141,7 @@ public class MBTabletViewManager extends MBViewManager
               MBViewBuilderFactory.getInstance().getStyleHandler().styleSearchPlate(searchPlate);
 
               // find first image view, assuming this is the icon we need
-              setImage(image, searchPlate);
+              setSearchImage(image, searchPlate);
               
               LinearLayout submitArea = (LinearLayout) searchLayout.getChildAt(1);
               MBViewBuilderFactory.getInstance().getStyleHandler().styleSearchSubmitArea(submitArea);
@@ -163,7 +163,7 @@ public class MBTabletViewManager extends MBViewManager
     return true;
   }
 
-  private void setImage(Drawable image, LinearLayout linearLayout)
+  private void setSearchImage(Drawable image, LinearLayout linearLayout)
   {
     ImageView searchViewIcon = null;
 

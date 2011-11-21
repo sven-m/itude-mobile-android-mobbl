@@ -369,7 +369,7 @@ public class MBStyleHandler
   {
   }
   
-  public void styleRow(ViewGroup rowPanel)
+  public void styleRow(ViewGroup rowPanel, String style)
   {
   }
   

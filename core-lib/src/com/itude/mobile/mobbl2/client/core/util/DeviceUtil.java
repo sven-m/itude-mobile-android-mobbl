@@ -3,6 +3,7 @@ package com.itude.mobile.mobbl2.client.core.util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
 
 public final class DeviceUtil
 {
@@ -40,7 +41,7 @@ public final class DeviceUtil
     return androidID;
   }
 
-  public boolean checkInternetConnection()
+  public boolean isInternetConnectionAvailable()
   {
     ConnectivityManager cm = (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
     if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isAvailable() && cm.getActiveNetworkInfo().isConnected())
@@ -53,4 +54,14 @@ public final class DeviceUtil
     }
   }
 
+  public boolean isPhoneServiceAvailable()
+  {
+    TelephonyManager tm = (TelephonyManager) _context.getSystemService(Context.TELEPHONY_SERVICE);
+    if (tm.getPhoneType() == TelephonyManager.PHONE_TYPE_NONE)
+    {
+      return false;
+    }
+    return true;
+
+  }
 }

@@ -296,7 +296,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     else
     {
       // Make sure to style the unclickable row
-      styleHandler.styleRow(rowPanel);
+      styleHandler.styleRow(rowPanel, panel.getStyle());
     }
 
     // Processed the row so the next one isn't the first one anymore
