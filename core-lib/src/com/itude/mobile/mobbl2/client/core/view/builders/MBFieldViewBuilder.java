@@ -168,25 +168,28 @@ public class MBFieldViewBuilder extends MBViewBuilder
       String primaryValueString = field.getDocument().getValueForPath(primaryPath);
       Double primaryValue = MBParseUtil.doubleValueDutch(primaryValueString);
 
-      if (documentDiff == null || !documentDiff.isChanged() || !documentDiff.isChanged(primaryPath))
+      if (primaryPath != null)
       {
-        String markerValueString = field.getDocument().getValueForPath(parent.getDiffableMarkerPath());
-        Double markerValue = MBParseUtil.doubleValueDutch(markerValueString);
-
-        if (primaryValue != null && markerValue != null && !Double.isNaN(primaryValue) && !Double.isNaN(markerValue))
+        if (documentDiff == null || !documentDiff.isChanged() || !documentDiff.isChanged(primaryPath))
         {
-          styleValue = MathUtilities.truncate(primaryValue - markerValue);
+          String markerValueString = field.getDocument().getValueForPath(parent.getDiffableMarkerPath());
+          Double markerValue = MBParseUtil.doubleValueDutch(markerValueString);
+
+          if (primaryValue != null && markerValue != null && !Double.isNaN(primaryValue) && !Double.isNaN(markerValue))
+          {
+            styleValue = MathUtilities.truncate(primaryValue - markerValue);
+          }
         }
-      }
-      else
-      {
-        String valueOfBForPath = documentDiff.valueOfBForPath(primaryPath);
-
-        Double valueB = MBParseUtil.doubleValueDutch(valueOfBForPath);
-
-        if (primaryValue != null && valueB != null && !Double.isNaN(primaryValue) && !Double.isNaN(valueB))
+        else
         {
-          styleDelta = MathUtilities.truncate(primaryValue - valueB);
+          String valueOfBForPath = documentDiff.valueOfBForPath(primaryPath);
+
+          Double valueB = MBParseUtil.doubleValueDutch(valueOfBForPath);
+
+          if (primaryValue != null && valueB != null && !Double.isNaN(primaryValue) && !Double.isNaN(valueB))
+          {
+            styleDelta = MathUtilities.truncate(primaryValue - valueB);
+          }
         }
       }
       getStyleHandler().styleChangedValue(label, styleValue, styleDelta);
