@@ -23,7 +23,8 @@ public class MBActivityHelper
     if (!tasks.isEmpty())
     {
       ComponentName topActivity = tasks.get(0).topActivity;
-      if (!topActivity.getPackageName().equals(context.getPackageName()))
+      if (!topActivity.getPackageName().equals(context.getPackageName())
+          && !topActivity.getPackageName().equals("com.google.android.voicesearch"))
       {
         return true;
       }
@@ -31,7 +32,4 @@ public class MBActivityHelper
 
     return false;
   }
-
- 
-
 }
