@@ -15,6 +15,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuCompat;
 import android.util.Log;
@@ -735,23 +736,32 @@ public class MBViewManager extends ActivityGroup
   {
     Log.d(Constants.APPLICATION_NAME, "MBViewManager.onConfigurationChanged");
 
-    // Only handle orientationchanges when orientation changed, obviously
-    for (MBBasicViewController controller : getViewControllers(getActiveDialogName()))
-    {
-      controller.handleOrientationChange(newConfig);
-    }
-
-    if (MBDevice.getInstance().isTablet())
-    {
-      // Also, tell all Dialogs
-      for (String dialog : _dialogControllers)
-      {
-        MBDialogController dc = (MBDialogController) getLocalActivityManager().getActivity(dialog);
-        dc.handleOrientationChange(newConfig);
-      }
-    }
-
     super.onConfigurationChanged(newConfig);
+
+    final Configuration config = newConfig;
+    Runnable r = new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        // Only handle orientationchanges when orientation changed, obviously
+        for (MBBasicViewController controller : getViewControllers(getActiveDialogName()))
+        {
+          controller.handleOrientationChange(config);
+        }
+
+        if (MBDevice.getInstance().isTablet())
+        {
+          // Also, tell all Dialogs
+          for (String dialog : _dialogControllers)
+          {
+            MBDialogController dc = (MBDialogController) getLocalActivityManager().getActivity(dialog);
+            dc.handleOrientationChange(config);
+          }
+        }
+      }
+    };
+    new Handler().post(r);
   }
 
   public List<MBBasicViewController> getAllFragments()
