@@ -245,6 +245,11 @@
 						<configuration>
 							<proguardVersion>4.4</proguardVersion>
 							<maxMemory>256m</maxMemory>
+							<injar>android-classes</injar>
+							<libs>
+								<lib>${rt.jar.path}</lib>
+								<lib>${jce.jar.path}</lib>
+							</libs>
 							<skip>false</skip>
 							<obfuscate>true</obfuscate>
 							<addMavenDescriptor>false</addMavenDescriptor>
@@ -334,5 +339,49 @@
 				</plugins>
 			</build>
 		</profile>
+		<!-- to avoid having to do symlinks to rt.jar like documented e.g. here 
+			http://bruehlicke.blogspot.com/2009/11/missing-rtjar-mac-os-x-using-proguard.html 
+			http://codebistro.com/2010/07/18/proguard-and-runtime-libraries-on-mac-os-x/ -->
+		<profile>
+			<id>linux</id>
+			<activation>
+				<os>
+					<family>unix</family>
+				</os>
+			</activation>
+			<properties>
+				<rt.jar.path>${env.JAVA_HOME}/jre/lib/rt.jar</rt.jar.path>
+				<jce.jar.path>${env.JAVA_HOME}/jre/lib/jce.jar</jce.jar.path>
+
+			</properties>
+		</profile>
+		<!-- mac profile has to be after unix since running on mac will trigger 
+			both -->
+		<profile>
+			<id>mac</id>
+			<activation>
+				<os>
+					<family>mac</family>
+				</os>
+			</activation>
+			<!-- absolute path -->
+			<properties>
+				<rt.jar.path>/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes/classes.jar</rt.jar.path>
+				<jce.jar.path>/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes/jce.jar</jce.jar.path>
+			</properties>
+		</profile>
+		<profile>
+			<id>windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<properties>
+				<rt.jar.path>${env.JAVA_HOME}/jre/lib/rt.jar</rt.jar.path>
+				<jce.jar.path>${env.JAVA_HOME}/jre/lib/jce.jar</jce.jar.path>
+			</properties>
+		</profile>
 	</profiles>
+</profiles>
 </project>   
