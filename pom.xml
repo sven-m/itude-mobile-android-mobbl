@@ -56,10 +56,24 @@
 		</dependencies>
 	</dependencyManagement>
 	
-	<modules>
-        <module>core-lib</module>
-        <module>core-app</module>    
-    </modules>
+    <profiles>
+        <profile>
+			<id>development</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>core-lib</module>
+                <module>core-app</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>release</id>
+            <modules>
+                <module>core-lib</module>
+            </modules>
+        </profile>
+    </profiles>
     
     
     <profiles>
