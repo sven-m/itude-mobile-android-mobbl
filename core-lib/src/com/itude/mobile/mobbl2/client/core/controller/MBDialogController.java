@@ -403,11 +403,9 @@ public class MBDialogController extends FragmentActivity
       doClearAllViews();
     }
 
-    List<MBBasicViewController> allFragments = getAllFragments();
-
-    for (int i = 0; i < allFragments.size(); i++)
+    for (MBBasicViewController controller : getAllFragments())
     {
-      handleOnWindowActivated(allFragments.get(i));
+      handleOnWindowActivated(controller);
     }
   }
 
@@ -416,11 +414,9 @@ public class MBDialogController extends FragmentActivity
    */
   public void handleAllOnLeavingWindow()
   {
-    List<MBBasicViewController> allFragments = getAllFragments();
-
-    for (int i = 0; i < allFragments.size(); i++)
+    for (MBBasicViewController controller : getAllFragments())
     {
-      handleOnLeavingWindow(allFragments.get(i));
+      handleOnLeavingWindow(controller);
     }
   }
 
@@ -446,7 +442,7 @@ public class MBDialogController extends FragmentActivity
 
   public void handleOrientationChange(Configuration newConfig)
   {
-    if ("SPLIT".equals(_dialogMode))
+    if (MBDevice.getInstance().isTablet() && "SPLIT".equals(_dialogMode))
     {
       for (int i = 0; i < _sortedDialogIds.size() - 1; i++)
       {
@@ -454,6 +450,11 @@ public class MBDialogController extends FragmentActivity
         FrameLayout fragmentContainer = (FrameLayout) fragment.getView().getParent();
         fragmentContainer.getLayoutParams().width = MBScreenUtilities.getWidthPixelsForPercentage(33);
       }
+    }
+
+    for (MBBasicViewController controller : getAllFragments())
+    {
+      controller.handleOrientationChange(newConfig);
     }
   }
 }
