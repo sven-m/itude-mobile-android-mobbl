@@ -30,11 +30,4 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>itude-mobile-android-mobbl-core-lib_src</name>
-			<type>2</type>
-			<locationURI>_android_itude_mobile_android_mobbl_core_lib_1e51c781/src</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>
