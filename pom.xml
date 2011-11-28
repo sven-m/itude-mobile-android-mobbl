@@ -34,11 +34,6 @@
 				<version>${android.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>commons-collections</groupId>
-				<artifactId>commons-collections</artifactId>
-				<version>3.2</version>
-			</dependency>
-            <dependency>
 				<groupId>commons-codec</groupId>
 				<artifactId>commons-codec</artifactId>
 				<version>1.4</version>
@@ -56,26 +51,12 @@
 		</dependencies>
 	</dependencyManagement>
 	
-    <profiles>
-        <profile>
-			<id>development</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>core-lib</module>
-                <module>core-app</module>   
-            </modules>
-        </profile>
-        <profile>
-            <id>release</id>
-            <modules>
-                <module>core-lib</module>
-            </modules>
-        </profile>
-    </profiles>
-	
-	<scm>
+    <modules>
+       <module>core-lib</module>
+       <module>core-app</module>   
+    </modules>
+   
+    <scm>
 		<connection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk</connection>
 		<developerConnection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk</developerConnection>
 		<url>http://svn/repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk</url>
@@ -84,6 +65,10 @@
 	<build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <artifactId>maven-jarsigner-plugin</artifactId>
+                    <version>1.2</version>
+                </plugin>
             	<plugin>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>2.4.3</version>
@@ -94,7 +79,7 @@
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
-                    <version>3.0.0-alpha-14</version>
+                    <version>3.0.0</version>
                     <configuration>
 						<sdk>
 							<platform>11</platform>
@@ -119,6 +104,16 @@
 					    <encoding>UTF-8</encoding>
  					</configuration>
 				</plugin>
+                <plugin>
+                    <groupId>com.pyx4me</groupId>
+                    <artifactId>proguard-maven-plugin</artifactId>
+                    <version>2.0.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>1.5</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
