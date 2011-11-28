@@ -53,7 +53,7 @@
 	<build>
 		<defaultGoal>install</defaultGoal>
 		<finalName>${project.artifactId}-${project.version}</finalName>
-		<sourceDirectory>${project.basedir}/src</sourceDirectory>
+		<sourceDirectory>src</sourceDirectory> 
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
