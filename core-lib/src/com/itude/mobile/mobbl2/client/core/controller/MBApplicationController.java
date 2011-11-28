@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 
-import org.apache.commons.collections.CollectionUtils;
-
 import android.app.Application;
 import android.app.SearchManager;
 import android.content.Context;
@@ -39,6 +37,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowChangeType;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBNoDocumentException;
+import com.itude.mobile.mobbl2.client.core.util.CollectionUtilities;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.DeviceUtil;
@@ -717,7 +716,7 @@ public class MBApplicationController extends Application
 
   public String getModalPageID()
   {
-    return CollectionUtils.isNotEmpty(_modalPageStack) ? _modalPageStack.peek() : null;
+    return CollectionUtilities.isNotEmpty(_modalPageStack) ? _modalPageStack.peek() : null;
   }
 
   public void removeLastModalPageID()

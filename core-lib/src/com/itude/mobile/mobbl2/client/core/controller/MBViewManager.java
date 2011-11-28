@@ -3,8 +3,6 @@ package com.itude.mobile.mobbl2.client.core.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
-
 import android.app.Activity;
 import android.app.ActivityGroup;
 import android.app.AlertDialog;
@@ -39,6 +37,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowChangeType;
+import com.itude.mobile.mobbl2.client.core.util.CollectionUtilities;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.helper.MBSecurityHelper;
@@ -379,7 +378,7 @@ public class MBViewManager extends ActivityGroup
       _dialogControllers.add(dialogName);
       Intent intent = MBApplicationFactory.getInstance().createIntent(page.getDialogName());
 
-      if (!CollectionUtils.isEqualCollection(getViewControllers(dialogName), getViewControllers(getActiveDialogName())))
+      if (!CollectionUtilities.isEqualCollection(getViewControllers(dialogName), getViewControllers(getActiveDialogName())))
       {
         MBDialogController dialogController = getDialogWithName(getActiveDialogName());
         // skip if the DialogController is already activated or not created yet.
@@ -447,7 +446,7 @@ public class MBViewManager extends ActivityGroup
       {
         String previousDialogName = ((MBDialogController) getLocalActivityManager().getCurrentActivity()).getName();
 
-        if (!CollectionUtils.isEqualCollection(getViewControllers(dialogName), getViewControllers(previousDialogName)))
+        if (!CollectionUtilities.isEqualCollection(getViewControllers(dialogName), getViewControllers(previousDialogName)))
         {
           MBDialogController previousDialogController = getDialogWithName(previousDialogName);
           if (previousDialogController != null)

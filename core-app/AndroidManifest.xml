@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.itude.mobile.mobbl2.client.core"
-      android:versionCode="1"
-      android:versionName="${project.version}">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0.9.2-SNAPSHOT" package="com.itude.mobile.mobbl2.client.core">
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="11"/>
 
-    <application android:name="MBApplicationCore" android:debuggable="true">
+    <application android:debuggable="true" android:name="MBApplicationCore">
 
-		<activity android:name="MBSplashScreen" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:noHistory="true">
+		<activity android:name="MBSplashScreen" android:noHistory="true" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".controller.MBViewManager" android:configChanges="orientation" />
-        <activity android:name=".controller.MBTabletViewManager" android:configChanges="orientation" />
-		<activity android:name=".controller.MBDialogController" android:configChanges="orientation" />
-		<activity android:name=".controller.util.MBBasicViewController" />
+        <activity android:configChanges="orientation" android:name=".controller.MBViewManager"/>
+        <activity android:configChanges="orientation" android:name=".controller.MBTabletViewManager"/>
+		<activity android:configChanges="orientation" android:name=".controller.MBDialogController"/>
+		<activity android:name=".controller.util.MBBasicViewController"/>
     </application>
 </manifest>
