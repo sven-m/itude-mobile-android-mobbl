@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.itude.mobile.android.mobbl</groupId>
+		<artifactId>mobbl-core</artifactId>
+		<version>1.0.11.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>mobbl-core-test</artifactId>
+	<packaging>apk</packaging>
+	<name>Android Mobbl Core Test</name>
+	<description>Android Mobbl Core Whitelabel test application</description>
+	<url>http://www.itude.com</url>
+	<inceptionYear>2011</inceptionYear>
+	<developers>
+		<developer>
+			<name>Wiebe Elsinga</name>
+			<id>w.elsinga</id>
+			<roles>
+				<role>Developer</role>
+				<role>Contributor</role>
+			</roles>
+		</developer>
+	</developers>
+	<dependencies>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android-test</artifactId>
+			<version>2.2.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.itude.mobile.android.mobbl</groupId>
+			<artifactId>mobbl-core-app</artifactId>
+			<version>${project.version}</version>
+			<type>apk</type>
+		</dependency>
+		<dependency>
+			<groupId>com.itude.mobile.android.mobbl</groupId>
+			<artifactId>mobbl-core-app</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
+
+	<scm>
+		<connection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-test</connection>
+		<developerConnection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-test</developerConnection>
+		<url>http://svn/repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-test</url>
+	</scm>
+
+
+	<build>
+		<defaultGoal>install</defaultGoal>
+		<finalName>${project.artifactId}-${project.version}</finalName>
+		<sourceDirectory>${project.basedir}/src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+				<configuration>
+					<emulator>
+						<avd>Android2.2</avd>
+						<wait>10000</wait>
+						<options>-no-skin</options>
+					</emulator>
+					<test>
+						<createReport>true</createReport>
+					</test>
+				</configuration>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+
+
+          
