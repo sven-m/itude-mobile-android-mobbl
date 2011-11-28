@@ -1,0 +1,8 @@
+<Application>
+	<Property name="application" value="Default"/>
+	<Property name="inDevelopment" value="true"/>
+	
+	<!-- ANDROID LOG LEVELS -->
+	<Property name="logLevel" value="3"/>
+	
+</Application>
