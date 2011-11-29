@@ -27,7 +27,7 @@ public class FileUtilTest extends ApplicationTestCase<MBApplicationController>
 
   public void testAssetFileReading()
   {
-    byte[] data = AssetUtil.getInstance().getByteArray("testconfig/testconfig.xml");
+    byte[] data = AssetUtil.getInstance().getByteArray("unittests/config_unittests.xml");
 
     assertNotNull(data);
     assertTrue(data.length > 0);

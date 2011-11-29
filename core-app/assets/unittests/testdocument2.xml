@@ -1,0 +1,112 @@
+<ServerResponse duration="93"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:json="http://json.org/">
+	<JsonObject name="EXT-GebruikersInstellingenGetResponse">{
+      "EXT-GebruikersInstellingenGetResponse": {
+            "EXT-GebruikersInstellingenGetResult": {
+                  "Homeindices": {
+                        "EXTGebruikersInstellingenGetReplyHomeindicesHomeindex": [
+                              {
+                                    "Fondsid": 3829, 
+                                    "Fondslijstnummer": 1, 
+                                    "Classificatie": 4350
+                              }, 
+                              {
+                                    "Fondsid": 42054, 
+                                    "Fondslijstnummer": 2, 
+                                    "Classificatie": 4351
+                              }, 
+                              {
+                                    "Fondsid": 3831, 
+                                    "Fondslijstnummer": 10, 
+                                    "Classificatie": 4356
+                              }, 
+                              {
+                                    "Fondsid": 27463, 
+                                    "Fondslijstnummer": 11, 
+                                    "Classificatie": 4357
+                              }
+                        ]
+                  }, 
+                  "Indexlistindices": {
+                        "EXTGebruikersInstellingenGetReplyIndexlistindicesIndexlistindex": [
+                              {
+                                    "Fondsid": 3829
+                              }, 
+                              {
+                                    "Fondsid": 42054
+                              }, 
+                              {
+                                    "Fondsid": 184689
+                              }, 
+                              {
+                                    "Fondsid": 135380
+                              }, 
+                              {
+                                    "Fondsid": 3831
+                              }, 
+                              {
+                                    "Fondsid": 131813
+                              }, 
+                              {
+                                    "Fondsid": 3832
+                              }, 
+                              {
+                                    "Fondsid": 138074
+                              }, 
+                              {
+                                    "Fondsid": 191264
+                              }, 
+                              {
+                                    "Fondsid": 27463
+                              }, 
+                              {
+                                    "Fondsid": 191263
+                              }, 
+                              {
+                                    "Fondsid": 12573
+                              }, 
+                              {
+                                    "Fondsid": 3830
+                              }
+                        ]
+                  }, 
+                  "Koersenmenuoptions": {
+                        "EXTGebruikersInstellingenGetReplyKoersenmenuoptionsKoersenmenuoption": [
+                              {
+                                    "Fondsenlijstnummer": 1, 
+                                    "Naam": "AEX Hoofdfondsen", 
+                                    "HoofdfondstypeNr": 1
+                              }, 
+                              {
+                                    "Fondsenlijstnummer": 2, 
+                                    "Naam": "AMX Hoofdfondsen", 
+                                    "HoofdfondstypeNr": 1
+                              }, 
+                              {
+                                    "Fondsenlijstnummer": 27, 
+                                    "Naam": "Opties Amsterdam", 
+                                    "HoofdfondstypeNr": 12
+                              }, 
+                              {
+                                    "Fondsenlijstnummer": 10, 
+                                    "Naam": "AEX Hoofdfondsen", 
+                                    "HoofdfondstypeNr": 1
+                              },
+                              {
+                                    "Fondsenlijstnummer": 28, 
+                                    "Naam": "Futures Amsterdam", 
+                                    "HoofdfondstypeNr": 9
+                              },
+                              {
+                                    "Fondsenlijstnummer": 10, 
+                                    "Naam": "AEX Hoofdfondsen", 
+                                    "HoofdfondstypeNr": 2
+                              }
+                        ]
+                  }
+            }
+      }
+}
+	</JsonObject>
+</ServerResponse>

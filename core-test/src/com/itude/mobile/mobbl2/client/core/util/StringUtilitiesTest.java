@@ -24,7 +24,7 @@ public class StringUtilitiesTest extends ApplicationTestCase<MBApplicationContro
   protected void setUp() throws Exception
   {
     createApplication();
-    MBMetadataService.setConfigName("testconfig/testconfig.xml");
+    MBMetadataService.setConfigName("unittests/config_unittests.xml");
     MBMetadataService.setEndpointsName("testconfig/endpoints.xml");
 
     super.setUp();
