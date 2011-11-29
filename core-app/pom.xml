@@ -73,6 +73,8 @@
 				<targetPath>${project.build.directory}/filtered-assets</targetPath>
 				<includes>
 					<include>**/*.xml</include>
+					<include>**/*.txt</include>
+					
 				</includes>
 			</resource>
 		</resources>
