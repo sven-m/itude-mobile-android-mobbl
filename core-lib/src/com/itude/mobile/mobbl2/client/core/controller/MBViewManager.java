@@ -72,7 +72,8 @@ public class MBViewManager extends ActivityGroup
   {
     onPreCreate();
 
-    super.onCreate(savedInstanceState);
+    // https://dev.itude.com/jira/browse/BINCKAPPS-1131
+    super.onCreate(null);
 
     _dialogControllers = new ArrayList<String>();
     _sortedDialogNames = new ArrayList<String>();
