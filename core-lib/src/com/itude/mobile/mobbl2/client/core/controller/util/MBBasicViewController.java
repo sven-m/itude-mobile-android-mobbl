@@ -31,6 +31,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBWindowChangedEventListener
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.MBProperties;
+import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.ViewUtilities;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
@@ -94,7 +95,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     if (getArguments() != null)
     {
       String outcomeID = getArguments().getString("id");
-      if (outcomeID != null)
+      if (StringUtilities.isNotBlank(outcomeID))
       {
         Log.d(Constants.APPLICATION_NAME, "MBBasicViewController.onCreate: found id=" + outcomeID);
 
