@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.itude.mobile.android.mobbl</groupId>
 		<artifactId>mobbl-core</artifactId>
-		<version>1.0.11.0</version>
+		<version>2.0.1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>mobbl-core-lib</artifactId>
 	<packaging>apklib</packaging>
@@ -45,9 +45,9 @@
 	</dependencies>
 
 	<scm>
-		<connection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/tags/mobbl-core-1.0.11.0/core-lib</connection>
-		<developerConnection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/tags/mobbl-core-1.0.11.0/core-lib</developerConnection>
-		<url>http://svn/repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/tags/mobbl-core-1.0.11.0/core-lib</url>
+		<connection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-lib</connection>
+		<developerConnection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-lib</developerConnection>
+		<url>http://svn/repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-lib</url>
 	</scm>
 
 	<build>
