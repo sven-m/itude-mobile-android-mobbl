@@ -163,25 +163,25 @@ public class MBApplicationController extends Application
     if (MBDevice.getInstance().isTablet())
     {
       MBTabletViewManager.getInstance().invalidateActionBar(true);
-      _viewManager.runOnUiThread(new Runnable()
-      {
-        @Override
-        public void run()
-        {
-          MessageQueue myQueue = Looper.myQueue();
-          myQueue.addIdleHandler(new IdleHandler()
-          {
-
-            @Override
-            public boolean queueIdle()
-            {
-              _applicationStarted = true;
-              return false;
-            }
-          });
-        }
-      });
     }
+    _viewManager.runOnUiThread(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        MessageQueue myQueue = Looper.myQueue();
+        myQueue.addIdleHandler(new IdleHandler()
+        {
+
+          @Override
+          public boolean queueIdle()
+          {
+            _applicationStarted = true;
+            return false;
+          }
+        });
+      }
+    });
 
   }
 
