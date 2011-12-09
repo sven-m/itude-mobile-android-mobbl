@@ -11,11 +11,10 @@ import android.widget.LinearLayout;
 public abstract class MBAbstractPageIndicator extends LinearLayout
 {
 
-  private List<View>            _indicators;
-  private int                   _indicatorCount;
-  private final ViewGroup       _indicatorContainer;
-  private int                   _activeIndicator;
-  private MBSlidableViewFlipper _viewFlipper;
+  private List<View>      _indicators;
+  private int             _indicatorCount;
+  private final ViewGroup _indicatorContainer;
+  private int             _activeIndicator;
 
   public MBAbstractPageIndicator(Context context)
   {
@@ -55,8 +54,6 @@ public abstract class MBAbstractPageIndicator extends LinearLayout
     _indicatorContainer.removeAllViews();
     for (int i = 0; i < _indicatorCount; i++)
     {
-      final int index = i;
-
       if (i == _activeIndicator)
       {
         _indicators.add(setupActiveIndicatorView());
@@ -66,17 +63,7 @@ public abstract class MBAbstractPageIndicator extends LinearLayout
         _indicators.add(setupInactiveIndicatorView());
       }
 
-      View addedIndicator = _indicators.get(i);
-      addedIndicator.setOnClickListener(new OnClickListener()
-      {
-
-        @Override
-        public void onClick(View arg0)
-        {
-          onIndicatorClick(index);
-        }
-      });
-      _indicatorContainer.addView(addedIndicator);
+      _indicatorContainer.addView(_indicators.get(i));
     }
   }
 
@@ -111,17 +98,4 @@ public abstract class MBAbstractPageIndicator extends LinearLayout
 
     return _indicators;
   }
-
-  public void attachViewFlipper(MBSlidableViewFlipper viewFlipper)
-  {
-    _viewFlipper = viewFlipper;
-  }
-
-  public MBSlidableViewFlipper getAttachedViewFlipper()
-  {
-    return _viewFlipper;
-  }
-
-  public abstract void onIndicatorClick(int indicatorIndex);
-
 }

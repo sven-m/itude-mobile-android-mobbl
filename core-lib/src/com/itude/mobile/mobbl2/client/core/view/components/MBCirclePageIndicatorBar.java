@@ -92,10 +92,4 @@ public class MBCirclePageIndicatorBar extends MBAbstractPageIndicator
     _inactiveIndicatorColour = colour;
     resetPageIndicator();
   }
-
-  @Override
-  public void onIndicatorClick(int indicatorIndex)
-  {
-  }
-
 }
