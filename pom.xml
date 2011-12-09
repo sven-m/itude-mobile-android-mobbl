@@ -33,6 +33,11 @@
 				<artifactId>android</artifactId>
 				<version>${android.version}</version>
 			</dependency>
+            <dependency>
+                <groupId>com.google.android.compatibility</groupId>
+                <artifactId>android-support</artifactId>
+                <version>v4</version>
+            </dependency>
 			<dependency>
 				<groupId>commons-codec</groupId>
 				<artifactId>commons-codec</artifactId>
@@ -42,11 +47,6 @@
 				<groupId>rhino</groupId>
 				<artifactId>js</artifactId>
 				<version>1.7R2</version>
-			</dependency>
-            <dependency>
-				<groupId>com.google.android</groupId>
-				<artifactId>android-support</artifactId>
-				<version>4.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
