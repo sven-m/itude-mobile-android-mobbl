@@ -25,7 +25,6 @@ public class MBDataHandlerBase implements MBDataHandler
   @Override
   public MBDocument loadDocument(String documentName, String parser)
   {
-    Log.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No loadDocument implementation for " + documentName + " with parser " + parser);
     return loadDocument(documentName);
   }
 
@@ -39,7 +38,6 @@ public class MBDataHandlerBase implements MBDataHandler
   @Override
   public MBDocument loadDocument(String documentName, MBDocument args, String parser)
   {
-    Log.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No loadDocument implementation for " + documentName + " with parser " + parser);
     return loadDocument(documentName, args);
   }
 
