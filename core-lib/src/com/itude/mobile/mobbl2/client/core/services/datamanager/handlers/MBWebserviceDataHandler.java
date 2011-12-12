@@ -20,18 +20,18 @@ public abstract class MBWebserviceDataHandler extends MBDataHandlerBase
     byte[] data = DataUtil.getInstance().readFromAssetOrFile(documentName);
     _webServiceConfiguration = (MBWebservicesConfiguration) parser.parseData(data, documentName);
   }
-  
+
   @Override
   public MBDocument loadDocument(String documentName)
   {
-    return loadDocument(documentName, null);
+    return loadDocument(documentName, (MBDocument) null);
   }
 
   @Override
   public MBDocument loadDocument(String documentName, MBDocument doc)
   {
     MBEndPointDefinition endPoint = getEndPointForDocument(documentName);
-    boolean cacheable =  endPoint.getCacheable();
+    boolean cacheable = endPoint.getCacheable();
 
     if (cacheable)
     {
@@ -50,9 +50,9 @@ public abstract class MBWebserviceDataHandler extends MBDataHandlerBase
         return result;
       }
     }
-    
+
     MBDocument result = doLoadDocument(documentName, doc);
-    
+
     if (cacheable)
     {
       if (doc == null)
@@ -64,12 +64,12 @@ public abstract class MBWebserviceDataHandler extends MBDataHandlerBase
         MBCacheManager.setDocument(result, documentName + doc.getUniqueId(), endPoint.getTtl());
       }
     }
-    
+
     return result;
   }
-  
+
   protected abstract MBDocument doLoadDocument(String documentName, MBDocument doc);
-  
+
   @Override
   public void storeDocument(MBDocument document)
   {

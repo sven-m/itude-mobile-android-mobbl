@@ -19,6 +19,7 @@ public class MBDocumentOperation extends MBThread
   private MBDocument                  _document;
   private MBDocument                  _arguments;
   private MBDocumentOperationDelegate _delegate;
+  private String                      _documentParser;
 
   public MBDataHandler getDataHandler()
   {
@@ -60,6 +61,16 @@ public class MBDocumentOperation extends MBThread
     _document = document;
   }
 
+  public String getDocumentParser()
+  {
+    return _documentParser;
+  }
+
+  public void setDocumentParser(String documentParser)
+  {
+    _documentParser = documentParser;
+  }
+
   public MBDocumentOperation(MBDataHandler dataHandler, MBDocument document)
   {
     super();
@@ -91,16 +102,22 @@ public class MBDocumentOperation extends MBThread
     long now = new Date().getTime();
 
     MBDocument doc = null;
-    if (this.getArguments() == null) doc = getDataHandler().loadDocument(getDocumentName());
+    if (this.getArguments() == null)
+    {
+      doc = getDataHandler().loadDocument(getDocumentName(), getDocumentParser());
+    }
     else
     {
-      doc = getDataHandler().loadDocument(getDocumentName(), getArguments().clone());
+      doc = getDataHandler().loadDocument(getDocumentName(), getArguments().clone(), getDocumentParser());
     }
 
     if (doc == null)
     {
       MBDocumentDefinition docDef = MBMetadataService.getInstance().getDefinitionForDocumentName(getDocumentName());
-      if (docDef.getAutoCreate()) doc = docDef.createDocument();
+      if (docDef.getAutoCreate())
+      {
+        doc = docDef.createDocument();
+      }
     }
     doc.setArgumentsUsed(getArguments());
     Log.d(Constants.APPLICATION_NAME, "Loading of document " + getDocumentName() + " took " + (new Date().getTime() - now) / 1000

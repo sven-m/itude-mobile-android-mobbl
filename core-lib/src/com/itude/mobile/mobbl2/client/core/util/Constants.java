@@ -74,6 +74,7 @@ public interface Constants
 
   // Locale related constants
   public static final String C_LOCALE_CODE_DUTCH                           = "nl_NL";
+  public static final String C_LANGUAGE_ENGLISH                            = "en";
 
   public static final String C_TRUE                                        = "1";
   public static final String C_FALSE                                       = "0";

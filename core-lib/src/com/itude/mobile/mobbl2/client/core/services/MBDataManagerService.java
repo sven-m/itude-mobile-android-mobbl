@@ -97,6 +97,14 @@ public class MBDataManagerService
     loader.start();
   }
 
+  public void loadDocument(String documentName, MBDocument args, MBDocumentOperationDelegate delegate, String documentParser)
+  {
+    MBDocumentOperation loader = getLoaderForDocumentName(documentName, args);
+    loader.setDelegate(delegate);
+    loader.setDocumentParser(documentParser);
+    loader.start();
+  }
+
   public void storeDocument(MBDocument document)
   {
     getHandlerForDocument(document.getName()).storeDocument(document);

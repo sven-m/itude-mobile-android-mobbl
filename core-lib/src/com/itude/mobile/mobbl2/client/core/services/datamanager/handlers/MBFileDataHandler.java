@@ -10,6 +10,7 @@ import com.itude.mobile.mobbl2.client.core.services.datamanager.MBDataHandlerBas
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.FileUtil;
+import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBFileDataHandler extends MBDataHandlerBase
 {
@@ -17,14 +18,31 @@ public class MBFileDataHandler extends MBDataHandlerBase
   @Override
   public MBDocument loadDocument(String documentName)
   {
+    return loadDocument(documentName, "");
+  }
 
+  @Override
+  public MBDocument loadDocument(String documentName, String parser)
+  {
     Log.d(Constants.APPLICATION_NAME, "MBFileDataHandler.loadDocument: " + documentName);
-    String fileName = determineFileName(documentName);
+    String fileName = determineFileName(documentName, parser);
     MBDocumentDefinition docDef = MBMetadataService.getInstance().getDefinitionForDocumentName(documentName);
     byte[] data = DataUtil.getInstance().readFromAssetOrFile(fileName);
 
-    if (data == null) return null;
-    else return MBDocumentFactory.getInstance().getDocumentWithData(data, MBDocumentFactory.PARSER_XML, docDef);
+    if (data == null)
+    {
+      return null;
+    }
+    else
+    {
+      // User XML parser as a default
+      if (StringUtilities.isNotEmpty(parser))
+      {
+        return MBDocumentFactory.getInstance().getDocumentWithData(data, parser, docDef);
+      }
+
+      return MBDocumentFactory.getInstance().getDocumentWithData(data, MBDocumentFactory.PARSER_XML, docDef);
+    }
   }
 
   @Override
@@ -46,15 +64,25 @@ public class MBFileDataHandler extends MBDataHandlerBase
       }
       catch (Exception e)
       {
-        Log.w(Constants.APPLICATION_NAME, "MBFileDataHandler.storeDocument: Error writing document " + document.getName() + " to " + fileName, e);
+        Log.w(Constants.APPLICATION_NAME, "MBFileDataHandler.storeDocument: Error writing document " + document.getName() + " to "
+                                          + fileName, e);
       }
     }
   }
 
   private String determineFileName(String documentName)
   {
-    return "documents/" + documentName + ".xml";
+    return determineFileName(documentName, null);
+  }
 
+  private String determineFileName(String documentName, String documentParser)
+  {
+    if (MBDocumentFactory.PARSER_JSON.equals(documentParser))
+    {
+      return "documents/" + documentName + ".json";
+    }
+
+    return "documents/" + documentName + ".xml";
   }
 
   @Override
@@ -63,4 +91,9 @@ public class MBFileDataHandler extends MBDataHandlerBase
     return loadDocument(documentName);
   }
 
+  @Override
+  public MBDocument loadDocument(String documentName, MBDocument args, String parser)
+  {
+    return loadDocument(documentName, parser);
+  }
 }
