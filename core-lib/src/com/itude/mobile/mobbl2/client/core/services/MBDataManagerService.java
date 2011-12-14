@@ -78,9 +78,9 @@ public class MBDataManagerService
     return getLoaderForDocumentName(documentName, null).load();
   }
 
-  public MBDocument loadDocument(String documentName, MBDocument args)
+  public MBDocument loadDocument(String documentName, MBDocument doc)
   {
-    return getLoaderForDocumentName(documentName, args).load();
+    return getLoaderForDocumentName(documentName, doc).load();
   }
 
   public void loadDocument(String documentName, MBDocumentOperationDelegate delegate)

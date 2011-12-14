@@ -65,7 +65,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
   }
 
   @Override
-  public MBDocument doLoadDocument(String documentName, MBDocument args)
+  public MBDocument doLoadDocument(String documentName, MBDocument doc)
   {
     MBEndPointDefinition endPoint = getEndPointForDocument(documentName);
     if (endPoint == null)
@@ -83,7 +83,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     }
     String dataString = null;
     MBDocument responseDoc = null;
-    String body = args.getValueForPath("/*[0]").toString();
+    String body = doc.getValueForPath("/*[0]").toString();
 
     try
     {
@@ -106,7 +106,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
         if (lsnr.matches(dataString))
         {
           MBResultListener rl = MBApplicationFactory.getInstance().createResultListener(lsnr.getName());
-          rl.handleResult(dataString, args, lsnr);
+          rl.handleResult(dataString, doc, lsnr);
           serverErrorHandled = true;
         }
       }
@@ -225,7 +225,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     InputStream inStream = entity.getContent();
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
     byte[] buffer = new byte[1024];
-    int i = inStream.read(buffer);;
+    int i = inStream.read(buffer);
     while (i > -1)
     {
       bos.write(buffer, 0, i);

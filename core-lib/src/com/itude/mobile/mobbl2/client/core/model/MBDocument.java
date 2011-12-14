@@ -96,20 +96,6 @@ public class MBDocument extends MBElementContainer
     return uid;
   }
 
-  /**
-   * @deprecated
-   * Please use loadFreshCopy instead
-   *
-   * @param delegate
-   * @param resultSelector
-   * @param errorSelector
-   */
-  @Deprecated
-  public void loadFreshCopyForDelegate(MBDocumentOperationDelegate delegate, Object resultSelector, Object errorSelector)
-  {
-    MBDataManagerService.getInstance().loadDocument(_definition.getName(), _argumentsUsed, delegate);
-  }
-
   public void loadFreshCopy(MBDocumentOperationDelegate delegate)
   {
     MBDataManagerService.getInstance().loadDocument(_definition.getName(), _argumentsUsed, delegate);

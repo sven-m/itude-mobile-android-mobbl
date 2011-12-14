@@ -33,18 +33,13 @@ public abstract class MBWebserviceDataHandler extends MBDataHandlerBase
     MBEndPointDefinition endPoint = getEndPointForDocument(documentName);
     boolean cacheable = endPoint.getCacheable();
 
+    String key = "";
+
     if (cacheable)
     {
-      MBDocument result;
-      if (doc == null)
-      {
-        result = MBCacheManager.documentForKey(documentName);
-      }
-      else
-      {
-        result = MBCacheManager.documentForKey(documentName + doc.getUniqueId());
-      }
+      key = doc == null ? documentName : documentName + doc.getUniqueId();
 
+      MBDocument result = MBCacheManager.documentForKey(key);
       if (result != null)
       {
         return result;
@@ -55,14 +50,7 @@ public abstract class MBWebserviceDataHandler extends MBDataHandlerBase
 
     if (cacheable)
     {
-      if (doc == null)
-      {
-        MBCacheManager.setDocument(result, documentName, endPoint.getTtl());
-      }
-      else
-      {
-        MBCacheManager.setDocument(result, documentName + doc.getUniqueId(), endPoint.getTtl());
-      }
+      MBCacheManager.setDocument(result, key, endPoint.getTtl());
     }
 
     return result;
