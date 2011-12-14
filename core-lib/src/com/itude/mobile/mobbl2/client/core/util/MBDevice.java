@@ -27,11 +27,18 @@ public final class MBDevice
   private String                       _screenDensityClassification = null;
   private TwinResult<Float, Float>     _screenDensity               = null;
   private String                       _screenType                  = null;
+  private String                       _deviceModel                 = null;
 
   private MBDevice()
   {
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) _deviceType = DEVICE_TYPE_TABLET;
-    else _deviceType = DEVICE_TYPE_PHONE;
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1)
+    {
+      _deviceType = DEVICE_TYPE_TABLET;
+    }
+    else
+    {
+      _deviceType = DEVICE_TYPE_PHONE;
+    }
   }
 
   public static MBDevice getInstance()
@@ -52,9 +59,32 @@ public final class MBDevice
 
   public String getDeviceType()
   {
-    if (isPhone()) return "Smartphone";
-    else if (isTablet()) return "Tablet";
-    else return "Unknown";
+    if (isPhone())
+    {
+      return "Smartphone";
+    }
+    else if (isTablet())
+    {
+      return "Tablet";
+    }
+    else
+    {
+      return "Unknown";
+    }
+  }
+
+  public String getDeviceModel()
+  {
+    if (_deviceModel == null)
+    {
+      _deviceModel = Build.MODEL;
+      if (_deviceModel == null)
+      {
+        _deviceModel = "";
+      }
+    }
+
+    return _deviceModel;
   }
 
   public String getOSVersion()
