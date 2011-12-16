@@ -341,7 +341,9 @@ public class MBDialogController extends FragmentActivity
       }
       transaction.add(fragment, id);
     }
-    else transaction.replace(_dialogIds.get(dialogName), fragment);
+    else {
+      transaction.replace(_dialogIds.get(dialogName), fragment);
+    }
 
     // commitAllowingStateLoss makes sure that the transaction is being commit,
     // even when the target activity is stopped. For now, this comes with the price,
