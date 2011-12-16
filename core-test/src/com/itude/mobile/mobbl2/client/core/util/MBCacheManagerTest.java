@@ -25,8 +25,8 @@ public class MBCacheManagerTest extends ApplicationTestCase<MBApplicationCore>
   protected void setUp() throws Exception
   {
     createApplication();
-    MBMetadataService.setEndpointsName("testconfig/endpoints.xml");
     MBMetadataService.setConfigName("unittests/config_unittests.xml");
+    MBMetadataService.getInstance().parseEndPointFile("testconfig/endpoints.xml");
     super.setUp();
   }
 

@@ -3,6 +3,7 @@ package com.itude.mobile.mobbl2.client.core.services.datamanager.handlers;
 import java.util.Hashtable;
 import java.util.Map;
 
+import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
@@ -82,7 +83,7 @@ public class MBSystemDataHandler extends MBDataHandlerBase
   }
 
   @Override
-  public MBDocument loadDocument(String documentName, MBDocument args)
+  public MBDocument loadDocument(String documentName, MBDocument args, MBEndPointDefinition endPoint)
   {
     return loadDocument(documentName);
   }

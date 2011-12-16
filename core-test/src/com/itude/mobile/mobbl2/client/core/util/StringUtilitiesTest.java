@@ -25,8 +25,7 @@ public class StringUtilitiesTest extends ApplicationTestCase<MBApplicationContro
   {
     createApplication();
     MBMetadataService.setConfigName("unittests/config_unittests.xml");
-    MBMetadataService.setEndpointsName("testconfig/endpoints.xml");
-
+    MBMetadataService.getInstance().parseEndPointFile("testconfig/endpoints.xml");
     super.setUp();
   }
 
@@ -88,8 +87,8 @@ public class StringUtilitiesTest extends ApplicationTestCase<MBApplicationContro
 
   public void testFormatPriceWithThreeDecimals()
   {
-	    // Set dutch locale
-	StringUtilities.setDefaultFormattingLocale(new Locale("nl", "NL"));
+    // Set dutch locale
+    StringUtilities.setDefaultFormattingLocale(new Locale("nl", "NL"));
     String formattedNumber;
 
     String[] numbers = {"100000", "1000.1234", "-1000.5366", "10.1", "-10.001", "-10.1", ".25"};
@@ -97,12 +96,12 @@ public class StringUtilitiesTest extends ApplicationTestCase<MBApplicationContro
     String[] dutchNumbers = {"100.000,000", "1.000,123", "-1.000,537", "10,100", "-10,001", "-10,100", "0,250"};
 
     // Using default locale
-/*    for (int i = 0; i < numbers.length; i++)
-    {
-      formattedNumber = StringUtilities.formatPriceWithThreeDecimals(numbers[i]);
-      assertEquals("dutch=" + dutchNumbers[i] + " formatted=" + formattedNumber, dutchNumbers[i], formattedNumber);
-    }
-*/
+    /*    for (int i = 0; i < numbers.length; i++)
+        {
+          formattedNumber = StringUtilities.formatPriceWithThreeDecimals(numbers[i]);
+          assertEquals("dutch=" + dutchNumbers[i] + " formatted=" + formattedNumber, dutchNumbers[i], formattedNumber);
+        }
+    */
     // Set british locale
     StringUtilities.setDefaultFormattingLocale(new Locale("en", "GB"));
 
@@ -160,117 +159,113 @@ public class StringUtilitiesTest extends ApplicationTestCase<MBApplicationContro
 
   private void compareEqual(List<String> p_splittedOld, List<String> p_splittedNew, String p_path)
   {
-	  assertTrue(p_path + ", one is null, other is not", (p_splittedNew == null && p_splittedOld == null) || p_splittedNew != null && p_splittedOld != null);
-	  if (p_splittedNew==null) return;
-	  assertTrue(p_path + ", sizes are different n=" + p_splittedNew.size() + "o=" + p_splittedOld.size(), p_splittedNew.size() == p_splittedOld.size());
-	  assertTrue(p_path + ", values are different", p_splittedNew.equals(p_splittedOld));
+    assertTrue(p_path + ", one is null, other is not", (p_splittedNew == null && p_splittedOld == null) || p_splittedNew != null
+                                                       && p_splittedOld != null);
+    if (p_splittedNew == null) return;
+    assertTrue(p_path + ", sizes are different n=" + p_splittedNew.size() + "o=" + p_splittedOld.size(),
+               p_splittedNew.size() == p_splittedOld.size());
+    assertTrue(p_path + ", values are different", p_splittedNew.equals(p_splittedOld));
   }
 
   public void testSplitPathShouldThrow()
   {
-	  Pattern splitPathPattern = Pattern.compile("/");
-	  String[] pathsThatThrow = {"../a/b/c", "/../a/b/c", "/a/../../b"};
-	  List<String> splittedOld = null;
-	  List<String> splittedNew = null;
-	  for (String path : pathsThatThrow)
-	  {
-		  try
-		  {
-			  splittedOld = splitPathOldImplementation(path, splitPathPattern);
-			  throw new AssertionError("expected an MBInvalidRelativePathException (old) " + path);
-		  }
-		  catch (MBInvalidRelativePathException e)
-		  {
-			  // expected
-		  }
-		  try
-		  {
-			  splittedNew = StringUtilities.splitPath(path);
-			  throw new AssertionError("expected an MBInvalidRelativePathException (new) " + path);
-		  }
-		  catch (MBInvalidRelativePathException e)
-		  {
-			  // expected
-		  }
-		  compareEqual(splittedOld, splittedNew, path);
-	  }
+    Pattern splitPathPattern = Pattern.compile("/");
+    String[] pathsThatThrow = {"../a/b/c", "/../a/b/c", "/a/../../b"};
+    List<String> splittedOld = null;
+    List<String> splittedNew = null;
+    for (String path : pathsThatThrow)
+    {
+      try
+      {
+        splittedOld = splitPathOldImplementation(path, splitPathPattern);
+        throw new AssertionError("expected an MBInvalidRelativePathException (old) " + path);
+      }
+      catch (MBInvalidRelativePathException e)
+      {
+        // expected
+      }
+      try
+      {
+        splittedNew = StringUtilities.splitPath(path);
+        throw new AssertionError("expected an MBInvalidRelativePathException (new) " + path);
+      }
+      catch (MBInvalidRelativePathException e)
+      {
+        // expected
+      }
+      compareEqual(splittedOld, splittedNew, path);
+    }
   }
-
 
   public void testSplitPath()
   {
-	  Pattern splitPathPattern = Pattern.compile("/");
-	  String[] pathsToTest = {"a/b/c", "/a/b/c", "a/b/c/", "/a/b/c/",
-			  "a/../c", "/a/../c", "a/../c/", "/a/../c/",
-			  "a/b/..", "/a/b/..", "a/b/../", "/a/b/../",
-			  "a///////b/..", "/a/b////////////..", "a/////////b////////../", "////////////a/b/../",
-			  "./a/b/c", "/./a/b/c", "a/b/./c/", "/a/b/c/.","/a/b/c/./",
-			  "aaaaaaaaaaaaaaa/b/c", "/a/bbbbbbbbbbbbbbbbbbbbbbbbbb/c", "a/b/ccccccccccccccccccccccccccc/"};
-	  List<String> splittedOld = null;
-	  List<String> splittedNew = null;
-	  for (String path : pathsToTest)
-	  {
-		  splittedOld = splitPathOldImplementation(path, splitPathPattern);
-		  splittedNew = StringUtilities.splitPath(path);
-		  compareEqual(splittedOld, splittedNew, path);
-	  }
+    Pattern splitPathPattern = Pattern.compile("/");
+    String[] pathsToTest = {"a/b/c", "/a/b/c", "a/b/c/", "/a/b/c/", "a/../c", "/a/../c", "a/../c/", "/a/../c/", "a/b/..", "/a/b/..",
+        "a/b/../", "/a/b/../", "a///////b/..", "/a/b////////////..", "a/////////b////////../", "////////////a/b/../", "./a/b/c",
+        "/./a/b/c", "a/b/./c/", "/a/b/c/.", "/a/b/c/./", "aaaaaaaaaaaaaaa/b/c", "/a/bbbbbbbbbbbbbbbbbbbbbbbbbb/c",
+        "a/b/ccccccccccccccccccccccccccc/"};
+    List<String> splittedOld = null;
+    List<String> splittedNew = null;
+    for (String path : pathsToTest)
+    {
+      splittedOld = splitPathOldImplementation(path, splitPathPattern);
+      splittedNew = StringUtilities.splitPath(path);
+      compareEqual(splittedOld, splittedNew, path);
+    }
   }
 
   public void testSplitPathPerformance()
   {
-	  // the current splitPath implementation shows a major improvement
-	  // over the old implementation.
-	  // we don't want any changes to splitPath that make the implementation
-	  // a lot slower.
-	  // this test checks if the current impl is still ~4 times as fast as
-	  // originally created.
-	  Pattern splitPathPattern = Pattern.compile("/");
-	  String[] pathsToTest = {"a/b/c", "/a/b/c", "a/b/c/", "/a/b/c/",
-			  "a/../c", "/a/../c", "a/../c/", "/a/../c/",
-			  "a/b/..", "/a/b/..", "a/b/../", "/a/b/../",
-			  "a///////b/..", "/a/b////////////..", "a/////////b////////../", "////////////a/b/../",
-			  "./a/b/c", "/./a/b/c", "a/b/./c/", "/a/b/c/.","/a/b/c/./",
-			  "aaaaaaaaaaaaaaa/b/c", "/a/bbbbbbbbbbbbbbbbbbbbbbbbbb/c", "a/b/ccccccccccccccccccccccccccc/"};
-	  int numTimesToIterate = 500;
-	  long timeOld = 0;
-	  long timeNew = 0;
-	  // old implementation
-	  {
-		  System.gc();
-		  System.gc();
-		  long start = System.currentTimeMillis();
-		  for (int i=0;i<numTimesToIterate;i++)
-		  {
-			  for (String path : pathsToTest)
-			  {
-				  splitPathOldImplementation(path, splitPathPattern);
-			  }
-		  }
-		  long end = System.currentTimeMillis();
-		  timeOld = end - start;
-	  }
-	  // new implementation
-	  {
-		  System.gc();
-		  System.gc();
-		  long start = System.currentTimeMillis();
-		  for (int i=0;i<numTimesToIterate;i++)
-		  {
-			  for (String path : pathsToTest)
-			  {
-				  StringUtilities.splitPath(path);
-			  }
-		  }
-		  long end = System.currentTimeMillis();
-		  timeNew = end - start;
-	  }
-	  long difference = timeOld - timeNew;
-	  assertTrue("splitPath implementation performs badly: slower than old impl", difference > 0);
-	  assertTrue("splitPath implementation performs badly: should be 4 times faster as old impl" +
-			  "* old=" + timeOld + " new=" + timeNew
-			  , timeNew < (timeOld / 4));
+    // the current splitPath implementation shows a major improvement
+    // over the old implementation.
+    // we don't want any changes to splitPath that make the implementation
+    // a lot slower.
+    // this test checks if the current impl is still ~4 times as fast as
+    // originally created.
+    Pattern splitPathPattern = Pattern.compile("/");
+    String[] pathsToTest = {"a/b/c", "/a/b/c", "a/b/c/", "/a/b/c/", "a/../c", "/a/../c", "a/../c/", "/a/../c/", "a/b/..", "/a/b/..",
+        "a/b/../", "/a/b/../", "a///////b/..", "/a/b////////////..", "a/////////b////////../", "////////////a/b/../", "./a/b/c",
+        "/./a/b/c", "a/b/./c/", "/a/b/c/.", "/a/b/c/./", "aaaaaaaaaaaaaaa/b/c", "/a/bbbbbbbbbbbbbbbbbbbbbbbbbb/c",
+        "a/b/ccccccccccccccccccccccccccc/"};
+    int numTimesToIterate = 500;
+    long timeOld = 0;
+    long timeNew = 0;
+    // old implementation
+    {
+      System.gc();
+      System.gc();
+      long start = System.currentTimeMillis();
+      for (int i = 0; i < numTimesToIterate; i++)
+      {
+        for (String path : pathsToTest)
+        {
+          splitPathOldImplementation(path, splitPathPattern);
+        }
+      }
+      long end = System.currentTimeMillis();
+      timeOld = end - start;
+    }
+    // new implementation
+    {
+      System.gc();
+      System.gc();
+      long start = System.currentTimeMillis();
+      for (int i = 0; i < numTimesToIterate; i++)
+      {
+        for (String path : pathsToTest)
+        {
+          StringUtilities.splitPath(path);
+        }
+      }
+      long end = System.currentTimeMillis();
+      timeNew = end - start;
+    }
+    long difference = timeOld - timeNew;
+    assertTrue("splitPath implementation performs badly: slower than old impl", difference > 0);
+    assertTrue("splitPath implementation performs badly: should be 4 times faster as old impl" + "* old=" + timeOld + " new=" + timeNew,
+               timeNew < (timeOld / 4));
   }
-  
+
   private static List<String> splitPathOldImplementation(String path, Pattern splitPathPattern)
   {
     List<String> components = new ArrayList<String>();

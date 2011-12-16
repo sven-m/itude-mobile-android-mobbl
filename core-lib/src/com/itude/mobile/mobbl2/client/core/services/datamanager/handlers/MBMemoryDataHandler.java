@@ -5,6 +5,7 @@ import java.util.Map;
 
 import android.util.Log;
 
+import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
@@ -48,7 +49,7 @@ public class MBMemoryDataHandler extends MBDataHandlerBase
   }
 
   @Override
-  public MBDocument loadDocument(String documentName, MBDocument args)
+  public MBDocument loadDocument(String documentName, MBDocument args, MBEndPointDefinition endPoint)
   {
     return loadDocument(documentName);
   }

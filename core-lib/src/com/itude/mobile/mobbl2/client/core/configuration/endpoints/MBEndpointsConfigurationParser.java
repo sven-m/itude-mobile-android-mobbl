@@ -1,4 +1,4 @@
-package com.itude.mobile.mobbl2.client.core.configuration.webservices;
+package com.itude.mobile.mobbl2.client.core.configuration.endpoints;
 
 import java.util.Map;
 
@@ -6,13 +6,13 @@ import com.itude.mobile.mobbl2.client.core.configuration.MBConfigurationParser;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.services.MBResultListenerDefinition;
 
-public class MBWebservicesConfigurationParser extends MBConfigurationParser
+public class MBEndpointsConfigurationParser extends MBConfigurationParser
 {
 
   @Override
   public MBDefinition parseData(byte[] data, String documentName)
   {
-    MBWebservicesConfiguration config = (MBWebservicesConfiguration) super.parseData(data, documentName);
+    MBEndpointsConfiguration config = (MBEndpointsConfiguration) super.parseData(data, documentName);
     config.linkGlobalListeners();
 
     return config;
@@ -24,7 +24,7 @@ public class MBWebservicesConfigurationParser extends MBConfigurationParser
 
     if (elementName.equals("EndPoints"))
     {
-      MBWebservicesConfiguration confDef = new MBWebservicesConfiguration();
+      MBEndpointsConfiguration confDef = new MBEndpointsConfiguration();
       getStack().push(confDef);
     }
     else if (elementName.equals("EndPoint"))

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import android.util.Log;
 
+import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
@@ -18,6 +19,7 @@ public class MBDocumentOperation extends MBThread
   private String                      _documentName;
   private MBDocument                  _document;
   private MBDocument                  _arguments;
+  private MBEndPointDefinition        _endPointDefinition;
   private MBDocumentOperationDelegate _delegate;
   private String                      _documentParser;
 
@@ -43,7 +45,7 @@ public class MBDocumentOperation extends MBThread
 
   public MBDocument getArguments()
   {
-    return _arguments;
+    return _arguments != null ? _arguments.clone() : null;
   }
 
   public void setArguments(MBDocument arguments)
@@ -101,15 +103,7 @@ public class MBDocumentOperation extends MBThread
 
     long now = new Date().getTime();
 
-    MBDocument doc = null;
-    if (this.getArguments() == null)
-    {
-      doc = getDataHandler().loadDocument(getDocumentName(), getDocumentParser());
-    }
-    else
-    {
-      doc = getDataHandler().loadDocument(getDocumentName(), getArguments().clone(), getDocumentParser());
-    }
+    MBDocument doc = getDataHandler().loadDocument(getDocumentName(), getArguments(), getEndPointDefinition(), getDocumentParser());
 
     if (doc == null)
     {
@@ -159,5 +153,15 @@ public class MBDocumentOperation extends MBThread
       Log.w(Constants.APPLICATION_NAME, "Exception during Document Operation: " + e.getMessage(), e);
       getDelegate().processException(e);
     }
+  }
+
+  public void setEndPointDefinition(MBEndPointDefinition endPointDefinition)
+  {
+    _endPointDefinition = endPointDefinition;
+  }
+
+  public MBEndPointDefinition getEndPointDefinition()
+  {
+    return _endPointDefinition;
   }
 }

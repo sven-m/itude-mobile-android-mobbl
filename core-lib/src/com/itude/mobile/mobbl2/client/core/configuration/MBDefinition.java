@@ -5,6 +5,7 @@ import java.util.Collection;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
@@ -17,7 +18,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBItemDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceDefinition;
-import com.itude.mobile.mobbl2.client.core.configuration.webservices.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBResultListenerDefinition;
 import com.itude.mobile.mobbl2.client.core.util.Constants;

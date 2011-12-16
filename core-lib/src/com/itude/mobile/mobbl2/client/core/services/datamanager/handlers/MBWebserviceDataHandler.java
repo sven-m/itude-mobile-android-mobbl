@@ -1,36 +1,24 @@
 package com.itude.mobile.mobbl2.client.core.services.datamanager.handlers;
 
-import com.itude.mobile.mobbl2.client.core.configuration.webservices.MBEndPointDefinition;
-import com.itude.mobile.mobbl2.client.core.configuration.webservices.MBWebservicesConfiguration;
-import com.itude.mobile.mobbl2.client.core.configuration.webservices.MBWebservicesConfigurationParser;
+import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.MBDataHandlerBase;
-import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBCacheManager;
 
 public abstract class MBWebserviceDataHandler extends MBDataHandlerBase
 {
-  private final MBWebservicesConfiguration _webServiceConfiguration;
-
-  public MBWebserviceDataHandler()
-  {
-    MBWebservicesConfigurationParser parser = new MBWebservicesConfigurationParser();
-    String documentName = MBMetadataService.getEndpointsName();
-    byte[] data = DataUtil.getInstance().readFromAssetOrFile(documentName);
-    _webServiceConfiguration = (MBWebservicesConfiguration) parser.parseData(data, documentName);
-  }
-
   @Override
   public MBDocument loadDocument(String documentName)
   {
-    return loadDocument(documentName, (MBDocument) null);
+    return loadDocument(documentName, (MBDocument) null, null);
   }
 
   @Override
-  public MBDocument loadDocument(String documentName, MBDocument doc)
+  public MBDocument loadDocument(String documentName, MBDocument doc, MBEndPointDefinition endPointDefenition)
   {
-    MBEndPointDefinition endPoint = getEndPointForDocument(documentName);
+    MBEndPointDefinition endPoint = endPointDefenition != null ? endPointDefenition : getEndPointForDocument(documentName);
+
     boolean cacheable = endPoint.getCacheable();
 
     String key = "";
@@ -65,7 +53,6 @@ public abstract class MBWebserviceDataHandler extends MBDataHandlerBase
 
   public MBEndPointDefinition getEndPointForDocument(String name)
   {
-    return _webServiceConfiguration.getEndPointForDocumentName(name);
+    return MBMetadataService.getInstance().getEndpointForDocumentName(name);
   }
-
 }

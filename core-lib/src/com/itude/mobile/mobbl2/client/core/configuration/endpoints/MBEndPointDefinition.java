@@ -1,4 +1,4 @@
-package com.itude.mobile.mobbl2.client.core.configuration.webservices;
+package com.itude.mobile.mobbl2.client.core.configuration.endpoints;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +16,20 @@ public class MBEndPointDefinition extends MBDefinition
   private int                              _timeout;
   private int                              _ttl;
 
-  
-  
   public MBEndPointDefinition()
   {
     _resultListeners = new ArrayList<MBResultListenerDefinition>();
+  }
+
+  public MBEndPointDefinition(MBEndPointDefinition mbEndPointDefinition)
+  {
+    _documentIn = mbEndPointDefinition.getDocumentIn();
+    _documentOut = mbEndPointDefinition.getDocumentOut();
+    _endPointUri = mbEndPointDefinition.getEndPointUri();
+    _resultListeners = mbEndPointDefinition.getResultListeners();
+    _cacheable = mbEndPointDefinition.getCacheable();
+    _timeout = mbEndPointDefinition.getTimeout();
+    _ttl = mbEndPointDefinition.getTtl();
   }
 
   public String getDocumentIn()
@@ -92,5 +101,4 @@ public class MBEndPointDefinition extends MBDefinition
   {
     return _resultListeners;
   }
-
 }

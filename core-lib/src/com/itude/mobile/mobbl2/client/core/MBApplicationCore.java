@@ -12,7 +12,7 @@ public class MBApplicationCore extends MBApplicationController
   {
     MBMetadataService.setPhoneConfigName("testconfig/testconfig.xml");
     MBMetadataService.setTabletConfigName("testconfig/testconfig_tablet.xml");
-    MBMetadataService.setEndpointsName("testconfig/endpoints.xml");
+    MBMetadataService.getInstance().parseEndPointFile("testconfig/endpoints.xml");
     startApplication(MBApplicationFactory.getInstance());
   }
 }

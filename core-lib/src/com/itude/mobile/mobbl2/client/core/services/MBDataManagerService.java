@@ -3,6 +3,7 @@ package com.itude.mobile.mobbl2.client.core.services;
 import java.util.Hashtable;
 import java.util.Map;
 
+import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.MBDataHandler;
@@ -96,7 +97,15 @@ public class MBDataManagerService
     loader.setDelegate(delegate);
     loader.start();
   }
-
+  
+  public void loadDocument(String documentName, MBDocument args, MBDocumentOperationDelegate delegate, MBEndPointDefinition endPointDefinition)
+  {
+    MBDocumentOperation loader = getLoaderForDocumentName(documentName, args);
+    loader.setEndPointDefinition(endPointDefinition);
+    loader.setDelegate(delegate);
+    loader.start();
+  }
+  
   public void loadDocument(String documentName, MBDocument args, MBDocumentOperationDelegate delegate, String documentParser)
   {
     MBDocumentOperation loader = getLoaderForDocumentName(documentName, args);

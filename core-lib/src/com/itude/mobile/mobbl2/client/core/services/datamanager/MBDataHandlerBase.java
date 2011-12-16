@@ -2,6 +2,7 @@ package com.itude.mobile.mobbl2.client.core.services.datamanager;
 
 import android.util.Log;
 
+import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 
@@ -29,22 +30,37 @@ public class MBDataHandlerBase implements MBDataHandler
   }
 
   @Override
-  public MBDocument loadDocument(String documentName, MBDocument args)
+  public MBDocument loadDocument(String documentName, MBDocument args, MBEndPointDefinition endPoint)
   {
     Log.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No loadDocument implementation for " + documentName);
     return null;
   }
 
   @Override
-  public MBDocument loadDocument(String documentName, MBDocument args, String parser)
+  public MBDocument loadDocument(String documentName, MBDocument args, String parser, MBEndPointDefinition endPoint)
   {
-    return loadDocument(documentName, args);
+    return loadDocument(documentName, args, endPoint);
   }
 
   @Override
   public void storeDocument(MBDocument document)
   {
     Log.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No storeDocument implementation for " + document.getDefinition().getName());
+  }
+
+  @Override
+  public MBDocument loadDocument(String documentName, MBDocument args, MBEndPointDefinition endPointDefenition, String documentParser)
+  {
+    MBDocument result = null;
+    if (args != null)
+    {
+      result = loadDocument(documentName, args, documentParser, endPointDefenition);
+    }
+    else
+    {
+      result = loadDocument(documentName, documentParser);
+    }
+    return result;
   }
 
 }

@@ -2,6 +2,7 @@ package com.itude.mobile.mobbl2.client.core.services.datamanager.handlers;
 
 import android.util.Log;
 
+import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
@@ -86,13 +87,13 @@ public class MBFileDataHandler extends MBDataHandlerBase
   }
 
   @Override
-  public MBDocument loadDocument(String documentName, MBDocument args)
+  public MBDocument loadDocument(String documentName, MBDocument args, MBEndPointDefinition endPoint)
   {
     return loadDocument(documentName);
   }
 
   @Override
-  public MBDocument loadDocument(String documentName, MBDocument args, String parser)
+  public MBDocument loadDocument(String documentName, MBDocument args, String parser, MBEndPointDefinition endPoint)
   {
     return loadDocument(documentName, parser);
   }

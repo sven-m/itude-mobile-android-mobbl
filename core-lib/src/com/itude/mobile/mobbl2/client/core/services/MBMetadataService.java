@@ -5,6 +5,9 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndpointsConfiguration;
+import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndpointsConfigurationParser;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
@@ -27,6 +30,7 @@ import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 public final class MBMetadataService
 {
   private final MBConfigurationDefinition _cfg;
+  private MBEndpointsConfiguration        _endpointConfiguration;
 
   private static MBMetadataService        _instance;
   private static String                   _configName       = "config.xml";
@@ -36,11 +40,23 @@ public final class MBMetadataService
 
   private MBMetadataService()
   {
-    MBMvcConfigurationParser parser = new MBMvcConfigurationParser();
+    MBMvcConfigurationParser mvcParser = new MBMvcConfigurationParser();
     if (_phoneConfigName != null && MBDevice.getInstance().isPhone()) _configName = _phoneConfigName;
     else if (_tabletConfigName != null && MBDevice.getInstance().isTablet()) _configName = _tabletConfigName;
 
-    _cfg = (MBConfigurationDefinition) parser.parseData(DataUtil.getInstance().readFromAssetOrFile(_configName), _configName);
+    _cfg = (MBConfigurationDefinition) mvcParser.parseData(DataUtil.getInstance().readFromAssetOrFile(_configName), _configName);
+
+    parseEndPointFile(_endpointsName);
+
+  }
+
+  public void parseEndPointFile(String endpointsName)
+  {
+    _endpointsName = endpointsName;
+
+    MBEndpointsConfigurationParser endpointParser = new MBEndpointsConfigurationParser();
+    byte[] data = DataUtil.getInstance().readFromAssetOrFile(endpointsName);
+    _endpointConfiguration = (MBEndpointsConfiguration) endpointParser.parseData(data, endpointsName);
   }
 
   public static MBMetadataService getInstance()
@@ -71,14 +87,14 @@ public final class MBMetadataService
     _instance = null;
   }
 
-  public static void setEndpointsName(String name)
-  {
-    _endpointsName = name;
-  }
-
   public static String getEndpointsName()
   {
     return _endpointsName;
+  }
+
+  public MBEndPointDefinition getEndpointForDocumentName(String name)
+  {
+    return _endpointConfiguration.getEndPointForDocumentName(name);
   }
 
   public MBDomainDefinition getDefinitionForDomainName(String domainName)

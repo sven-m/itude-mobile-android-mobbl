@@ -1,4 +1,4 @@
-package com.itude.mobile.mobbl2.client.core.configuration.webservices;
+package com.itude.mobile.mobbl2.client.core.configuration.endpoints;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,12 +8,12 @@ import java.util.Map;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.services.MBResultListenerDefinition;
 
-public class MBWebservicesConfiguration extends MBDefinition
+public class MBEndpointsConfiguration extends MBDefinition
 {
   private final Map<String, MBEndPointDefinition> _endPoints;
   private final List<MBResultListenerDefinition>  _resultListeners;
 
-  public MBWebservicesConfiguration()
+  public MBEndpointsConfiguration()
   {
     _endPoints = new HashMap<String, MBEndPointDefinition>();
     _resultListeners = new ArrayList<MBResultListenerDefinition>();
