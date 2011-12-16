@@ -19,7 +19,7 @@ public class MBLocalizationServiceTest extends ApplicationTestCase<MBApplication
   {
     createApplication();
     MBMetadataService.setConfigName("unittests/config_unittests.xml");
-    MBMetadataService.getInstance().parseEndPointFile("testconfig/endpoints.xml");
+    MBMetadataService.getInstance().parseEndPointFile("unittests/endpoints.xml");
 
     super.setUp();
   }
