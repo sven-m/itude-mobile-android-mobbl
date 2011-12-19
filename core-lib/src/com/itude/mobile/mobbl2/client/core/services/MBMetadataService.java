@@ -26,6 +26,7 @@ import com.itude.mobile.mobbl2.client.core.services.exceptions.MBToolNotDefinedE
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
+import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public final class MBMetadataService
 {
@@ -52,11 +53,17 @@ public final class MBMetadataService
 
   public void parseEndPointFile(String endpointsName)
   {
-    _endpointsName = endpointsName;
+    if (StringUtilities.isNotBlank(endpointsName))
+    {
+      _endpointsName = endpointsName;
 
-    MBEndpointsConfigurationParser endpointParser = new MBEndpointsConfigurationParser();
-    byte[] data = DataUtil.getInstance().readFromAssetOrFile(endpointsName);
-    _endpointConfiguration = (MBEndpointsConfiguration) endpointParser.parseData(data, endpointsName);
+      MBEndpointsConfigurationParser endpointParser = new MBEndpointsConfigurationParser();
+      byte[] data = DataUtil.getInstance().readFromAssetOrFile(endpointsName);
+      if (data != null)
+      {
+        _endpointConfiguration = (MBEndpointsConfiguration) endpointParser.parseData(data, endpointsName);
+      }
+    }
   }
 
   public static MBMetadataService getInstance()
