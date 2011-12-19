@@ -157,14 +157,14 @@ public class StringUtilitiesTest extends ApplicationTestCase<MBApplicationContro
 
   }
 
-  private void compareEqual(List<String> p_splittedOld, List<String> p_splittedNew, String p_path)
+  private void compareEqual(List<String> splittedOld, List<String> splittedNew, String path)
   {
-    assertTrue(p_path + ", one is null, other is not", (p_splittedNew == null && p_splittedOld == null) || p_splittedNew != null
-                                                       && p_splittedOld != null);
-    if (p_splittedNew == null) return;
-    assertTrue(p_path + ", sizes are different n=" + p_splittedNew.size() + "o=" + p_splittedOld.size(),
-               p_splittedNew.size() == p_splittedOld.size());
-    assertTrue(p_path + ", values are different", p_splittedNew.equals(p_splittedOld));
+    assertTrue(path + ", one is null, other is not", (splittedNew == null && splittedOld == null) || splittedNew != null
+                                                       && splittedOld != null);
+    if (splittedNew == null) return;
+    assertTrue(path + ", sizes are different n=" + splittedNew.size() + "o=" + splittedOld.size(),
+               splittedNew.size() == splittedOld.size());
+    assertTrue(path + ", values are different", splittedNew.equals(splittedOld));
   }
 
   public void testSplitPathShouldThrow()
@@ -220,7 +220,7 @@ public class StringUtilitiesTest extends ApplicationTestCase<MBApplicationContro
     // over the old implementation.
     // we don't want any changes to splitPath that make the implementation
     // a lot slower.
-    // this test checks if the current impl is still ~4 times as fast as
+    // this test checks if the current impl is still ~3 times as fast as
     // originally created.
     Pattern splitPathPattern = Pattern.compile("/");
     String[] pathsToTest = {"a/b/c", "/a/b/c", "a/b/c/", "/a/b/c/", "a/../c", "/a/../c", "a/../c/", "/a/../c/", "a/b/..", "/a/b/..",
@@ -262,8 +262,8 @@ public class StringUtilitiesTest extends ApplicationTestCase<MBApplicationContro
     }
     long difference = timeOld - timeNew;
     assertTrue("splitPath implementation performs badly: slower than old impl", difference > 0);
-    assertTrue("splitPath implementation performs badly: should be 4 times faster as old impl" + "* old=" + timeOld + " new=" + timeNew,
-               timeNew < (timeOld / 4));
+    assertTrue("splitPath implementation performs badly: should be 3 times faster as old impl" + "* old=" + timeOld + " new=" + timeNew,
+               timeNew < (timeOld / 3));
   }
 
   private static List<String> splitPathOldImplementation(String path, Pattern splitPathPattern)
