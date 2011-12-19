@@ -15,4 +15,5 @@
 		<activity android:configChanges="orientation" android:name=".controller.MBDialogController"/>
 		<activity android:name=".controller.util.MBBasicViewController"/>
     </application>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
 </manifest>

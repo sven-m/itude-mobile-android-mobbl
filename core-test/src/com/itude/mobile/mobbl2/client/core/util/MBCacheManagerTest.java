@@ -26,7 +26,7 @@ public class MBCacheManagerTest extends ApplicationTestCase<MBApplicationCore>
   {
     createApplication();
     MBMetadataService.setConfigName("unittests/config_unittests.xml");
-    MBMetadataService.getInstance().parseEndPointFile("testconfig/endpoints.xml");
+    MBMetadataService.setEndpointsName("testconfig/endpoints.xml");
     super.setUp();
   }
 

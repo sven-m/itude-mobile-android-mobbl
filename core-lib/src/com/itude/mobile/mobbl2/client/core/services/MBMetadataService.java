@@ -26,12 +26,11 @@ import com.itude.mobile.mobbl2.client.core.services.exceptions.MBToolNotDefinedE
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public final class MBMetadataService
 {
   private final MBConfigurationDefinition _cfg;
-  private MBEndpointsConfiguration        _endpointConfiguration;
+  private final MBEndpointsConfiguration  _endpointConfiguration;
 
   private static MBMetadataService        _instance;
   private static String                   _configName       = "config.xml";
@@ -45,25 +44,13 @@ public final class MBMetadataService
     if (_phoneConfigName != null && MBDevice.getInstance().isPhone()) _configName = _phoneConfigName;
     else if (_tabletConfigName != null && MBDevice.getInstance().isTablet()) _configName = _tabletConfigName;
 
+    // Configuration definition
     _cfg = (MBConfigurationDefinition) mvcParser.parseData(DataUtil.getInstance().readFromAssetOrFile(_configName), _configName);
 
-    parseEndPointFile(_endpointsName);
-
-  }
-
-  public void parseEndPointFile(String endpointsName)
-  {
-    if (StringUtilities.isNotBlank(endpointsName))
-    {
-      _endpointsName = endpointsName;
-
-      MBEndpointsConfigurationParser endpointParser = new MBEndpointsConfigurationParser();
-      byte[] data = DataUtil.getInstance().readFromAssetOrFile(endpointsName);
-      if (data != null)
-      {
-        _endpointConfiguration = (MBEndpointsConfiguration) endpointParser.parseData(data, endpointsName);
-      }
-    }
+    // Endpoint configuration
+    MBEndpointsConfigurationParser endpointParser = new MBEndpointsConfigurationParser();
+    byte[] data = DataUtil.getInstance().readFromAssetOrFile(_endpointsName);
+    _endpointConfiguration = data!=null ? (MBEndpointsConfiguration) endpointParser.parseData(data, _endpointsName) : null;
   }
 
   public static MBMetadataService getInstance()
@@ -91,6 +78,12 @@ public final class MBMetadataService
   public static void setTabletConfigName(String name)
   {
     _tabletConfigName = name;
+    _instance = null;
+  }
+
+  public static void setEndpointsName(String name)
+  {
+    _endpointsName = name;
     _instance = null;
   }
 
