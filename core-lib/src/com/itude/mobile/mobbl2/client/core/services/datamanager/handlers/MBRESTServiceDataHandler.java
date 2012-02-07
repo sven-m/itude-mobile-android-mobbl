@@ -45,8 +45,10 @@ import com.itude.mobile.mobbl2.client.core.util.log.LoggerFactory;
 public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 {
 
-  protected final Logger _log = LoggerFactory.getInstance(Constants.APPLICATION_NAME);
+  protected final Logger _log     = LoggerFactory.getInstance(Constants.APPLICATION_NAME);
 
+  private static final String   ENCODINGTYPE = "UTF-8";
+  
   private String         _documentFactoryType;
 
   public MBRESTServiceDataHandler()
@@ -124,11 +126,8 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
       // if the response document is empty and unhandled by endpoint listeners let the user know there is a problem
       if (!serverErrorHandled && responseDoc == null)
       {
-        String msg = MBLocalizationService.getInstance().getTextForKey("The server returned an error. Please try again later");
-        //                if(delegate.err != nil) {
-        //                    msg = [NSString stringWithFormat:@"%@ %@: %@", msg, delegate.err.domain, delegate.err.code];
-        //                }
-        throw new MBServerErrorException(msg);
+        throw new MBServerErrorException(MBLocalizationService.getInstance()
+            .getTextForKey("The server returned an error. Please try again later"));
       }
       return responseDoc;
     }
@@ -173,12 +172,14 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
   {
     String dataString = null;
     HttpPost httpPost = new HttpPost(endPoint.getEndPointUri());
+    
     // Content-Type must be set because otherwise the MidletCommandProcessor servlet cannot read the XML
     httpPost.setHeader("Content-Type", "text/xml");
     if (body != null)
     {
-      httpPost.setEntity(new StringEntity(body));
+      httpPost.setEntity(new StringEntity(body, ENCODINGTYPE));
     }
+    
     HttpParams httpParameters = new BasicHttpParams();
     httpParameters.setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
     

@@ -31,7 +31,7 @@ public final class MBDevice
 
   private MBDevice()
   {
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1)
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1 && Build.VERSION.SDK_INT < 14)
     {
       _deviceType = DEVICE_TYPE_TABLET;
     }
@@ -117,8 +117,15 @@ public final class MBDevice
         case (Build.VERSION_CODES.GINGERBREAD_MR1) :
           _osVersion = "Android 2.3.3 Gingerbread";
           break;
-        case (Build.VERSION_CODES.HONEYCOMB) :
+        case (Build.VERSION_CODES.HONEYCOMB) : //$FALL-THROUGH$
+        case (12) : //$FALL-THROUGH$ 
+        case (13) :
           _osVersion = "Android 3.0 Honeycomb";
+          break;
+        case (14) :
+        case (15) :
+        case (16) :
+          _osVersion = "Android 4.0 ICS";
           break;
         default :
           _osVersion = "Unknown";
