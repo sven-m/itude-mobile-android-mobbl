@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -42,6 +43,8 @@ public class MBField extends MBComponent
       TextWatcher,
       OnKeyListener
 {
+  private static final Pattern  NUMBERPATTERN   = Pattern.compile("\\[[0-9]+\\]");
+
   private MBAttributeDefinition _attributeDefinition;
   private boolean               _domainDetermined;
   private MBDomainDefinition    _domainDefinition;
@@ -431,7 +434,7 @@ public class MBField extends MBComponent
   {
     if (_attributeDefinition == null)
     {
-      String path = StringUtilities.normalizedPath(StringUtilities.stripCharacters(getAbsoluteDataPath(), "[]0123456789"));
+      String path = NUMBERPATTERN.matcher(getAbsoluteDataPath()).replaceAll("");
       if (path == null)
       {
         return null;

@@ -21,7 +21,7 @@ public abstract class MBWebserviceDataHandler extends MBDataHandlerBase
 
     boolean cacheable = endPoint.getCacheable();
 
-    String key = "";
+    String key = null;
 
     if (cacheable)
     {

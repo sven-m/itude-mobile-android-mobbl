@@ -59,7 +59,7 @@ public final class StringUtilities
 
     for (char c : charArray)
     {
-      inputString = inputString.replaceAll(Pattern.quote(Character.toString(c)), "");
+      inputString = inputString.replace(String.valueOf(c), "");
     }
 
     return inputString;

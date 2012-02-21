@@ -3,6 +3,7 @@ package com.itude.mobile.mobbl2.client.core.model;
 import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Stack;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -23,6 +24,8 @@ import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBXmlDocumentParser extends DefaultHandler
 {
+  private static final Pattern      NUMBERPATTERN = Pattern.compile("\\[[0-9]+\\]");
+  
   private Stack<MBElementContainer> _stack;
   private Stack<String>             _pathStack;
   private MBDocumentDefinition      _definition;
@@ -78,7 +81,7 @@ public class MBXmlDocumentParser extends DefaultHandler
           List<String> parts = StringUtilities.splitPath(rootPath);
           for (String part : parts)
           {
-            _pathStack.add(StringUtilities.stripCharacters(part, "[]0123456789"));
+            _pathStack.add(NUMBERPATTERN.matcher(part).replaceAll(""));
           }
 
           _rootElementName = _pathStack.peek();
