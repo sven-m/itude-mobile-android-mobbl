@@ -11,6 +11,8 @@ public interface Constants
   public static String       C_ARROW                                       = "arrow";
   public static String       C_LEAF                                        = "leaf";
 
+  public static String       C_APPLICATION_ENVIRONMENT                     = "Environment";
+
   //container types
   public static final String C_SECTION                                     = "SECTION";
   public static final String C_ROW                                         = "ROW";
@@ -109,7 +111,6 @@ public interface Constants
   public static final String C_EDITABLEMATRIX_PERMISSION_LONGCLICKABLE     = "LONGCLICKABLE";
 
   // Properties
-  public static final String C_PROPERTY_HTTPS_ALLOW_ALL_CERTIFICATES       = "allowAllHttpsCertificates";
   public static final String C_PROPERTY_INDEVELOPMENT                      = "inDevelopment";
   public static final String C_PROPERTY_LOGLEVEL                           = "logLevel";
 

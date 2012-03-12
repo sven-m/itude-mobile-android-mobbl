@@ -30,12 +30,14 @@ import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDef
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationFactory;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
+import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResultListener;
 import com.itude.mobile.mobbl2.client.core.services.MBResultListenerDefinition;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.exceptions.MBNetworkErrorException;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.exceptions.MBServerErrorException;
+import com.itude.mobile.mobbl2.client.core.services.exceptions.MBDocumentNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBProperties;
 import com.itude.mobile.mobbl2.client.core.util.https.EasySSLSocketFactory;
@@ -45,11 +47,11 @@ import com.itude.mobile.mobbl2.client.core.util.log.LoggerFactory;
 public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 {
 
-  protected final Logger _log     = LoggerFactory.getInstance(Constants.APPLICATION_NAME);
+  protected final Logger      _log         = LoggerFactory.getInstance(Constants.APPLICATION_NAME);
 
-  private static final String   ENCODINGTYPE = "UTF-8";
-  
-  private String         _documentFactoryType;
+  private static final String ENCODINGTYPE = "UTF-8";
+
+  private String              _documentFactoryType;
 
   public MBRESTServiceDataHandler()
   {
@@ -172,17 +174,17 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
   {
     String dataString = null;
     HttpPost httpPost = new HttpPost(endPoint.getEndPointUri());
-    
+
     // Content-Type must be set because otherwise the MidletCommandProcessor servlet cannot read the XML
     httpPost.setHeader("Content-Type", "text/xml");
     if (body != null)
     {
       httpPost.setEntity(new StringEntity(body, ENCODINGTYPE));
     }
-    
+
     HttpParams httpParameters = new BasicHttpParams();
     httpParameters.setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
-    
+
     // Set the timeout in milliseconds until a connection is established.
     int timeoutConnection = 5000;
     // Set the default socket timeout (SO_TIMEOUT) 
@@ -197,11 +199,32 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
     HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
-    String allowAnyCertificate = MBProperties.getInstance().getValueForProperty(Constants.C_PROPERTY_HTTPS_ALLOW_ALL_CERTIFICATES);
-    if (Boolean.parseBoolean(allowAnyCertificate)) allowAnyCertificate(httpClient);
+    boolean allowAnyCertificate = false;
+
+    String inDevelopment = MBProperties.getInstance().getValueForProperty(Constants.C_PROPERTY_INDEVELOPMENT);
+    if ("true".equals(inDevelopment))
+    {
+      try
+      {
+        MBDocument environmentDocument = MBDataManagerService.getInstance().loadDocument(Constants.C_APPLICATION_ENVIRONMENT);
+        allowAnyCertificate = Boolean.parseBoolean((String) environmentDocument.getValueForPath("Secure[0]/@allowAll"));
+      }
+      catch (MBDocumentNotDefinedException dnde)
+      {
+        if (_log.isDebugEnabled())
+        {
+          _log.debug("No Environment properties set");
+        }
+      }
+    }
+
+    if (allowAnyCertificate)
+    {
+      allowAnyCertificate(httpClient);
+    }
 
     HttpResponse httpResponse = httpClient.execute(httpPost);
-    
+
     int responseCode = httpResponse.getStatusLine().getStatusCode();
     String responseMessage = httpResponse.getStatusLine().getReasonPhrase();
     if (responseCode != HttpStatus.SC_OK)
