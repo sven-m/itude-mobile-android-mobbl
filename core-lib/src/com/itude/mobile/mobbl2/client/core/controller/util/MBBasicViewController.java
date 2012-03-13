@@ -60,7 +60,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   private boolean             _isDialogFullscreen    = false;
   private boolean             _isDialogCancelable    = false;                   //i.e. back button dismisses dialog when true
   private final List<MBEvent> eventQueue             = new ArrayList<MBEvent>();
-  private static boolean      _strictModeAvailable;
+  private static boolean      _strictModeAvailable   = false;
 
   //use the StrictModeWrapper to see if we are running on Android 2.3 or higher and StrictMode is available
   static
@@ -123,8 +123,8 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
       ViewGroup view = buildInitialView();
 
       // unable to use the holo light theme as pre honeycomb doesn't know AlertDialog.Builder(context, theme) 
-      return new AlertDialog.Builder(getActivity())
-          .setNeutralButton(MBLocalizationService.getInstance().getTextForKey("Close"), this).setView(view).create();
+      return new AlertDialog.Builder(getActivity()).setNeutralButton(MBLocalizationService.getInstance().getTextForKey("Close"), this)
+          .setView(view).create();
     }
 
     if (_isDialogFullscreen)
