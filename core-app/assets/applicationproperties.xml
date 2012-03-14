@@ -1,6 +1,7 @@
 <Application>
 	<Property name="application" value="Default"/>
 	<Property name="inDevelopment" value="true"/>
+	<Property name="enableStrictMode" value="false"/>
 	
 	<!-- ANDROID LOG LEVELS -->
 	<Property name="logLevel" value="3"/>

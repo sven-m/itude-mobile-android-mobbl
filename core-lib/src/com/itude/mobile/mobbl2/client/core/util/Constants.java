@@ -112,6 +112,7 @@ public interface Constants
 
   // Properties
   public static final String C_PROPERTY_INDEVELOPMENT                      = "inDevelopment";
+  public static final String C_PROPERTY_STRICTMODE                         = "enableStrictMode";
   public static final String C_PROPERTY_LOGLEVEL                           = "logLevel";
 
   // Parcelable types
