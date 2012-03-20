@@ -18,6 +18,7 @@ public final class MBDevice
 {
   private static final int             DEVICE_TYPE_TABLET           = 0;
   private static final int             DEVICE_TYPE_PHONE            = 1;
+  private static final int             DEVICE_TYPE_PHONE_V14        = 2;
 
   private static MBDevice              _instance;
 
@@ -31,13 +32,17 @@ public final class MBDevice
 
   private MBDevice()
   {
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1 && Build.VERSION.SDK_INT < 14)
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1 && Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     {
       _deviceType = DEVICE_TYPE_TABLET;
     }
-    else
+    else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
     {
       _deviceType = DEVICE_TYPE_PHONE;
+    }
+    else
+    {
+      _deviceType = DEVICE_TYPE_PHONE_V14;
     }
   }
 
@@ -62,6 +67,10 @@ public final class MBDevice
     if (isPhone())
     {
       return "Smartphone";
+    }
+    else if (isPhoneV14())
+    {
+      return "Smartphone V14";
     }
     else if (isTablet())
     {
@@ -118,13 +127,12 @@ public final class MBDevice
           _osVersion = "Android 2.3.3 Gingerbread";
           break;
         case (Build.VERSION_CODES.HONEYCOMB) : //$FALL-THROUGH$
-        case (12) : //$FALL-THROUGH$ 
-        case (13) :
+        case (Build.VERSION_CODES.HONEYCOMB_MR1) : //$FALL-THROUGH$ 
+        case (Build.VERSION_CODES.HONEYCOMB_MR2) :
           _osVersion = "Android 3.0 Honeycomb";
           break;
-        case (14) :
-        case (15) :
-        case (16) :
+        case (Build.VERSION_CODES.ICE_CREAM_SANDWICH) : //$FALL-THROUGH$
+        case (Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) :
           _osVersion = "Android 4.0 ICS";
           break;
         default :
@@ -231,6 +239,11 @@ public final class MBDevice
   public boolean isPhone()
   {
     return _deviceType == DEVICE_TYPE_PHONE;
+  }
+
+  public boolean isPhoneV14()
+  {
+    return _deviceType == DEVICE_TYPE_PHONE_V14;
   }
 
   public boolean isTablet()

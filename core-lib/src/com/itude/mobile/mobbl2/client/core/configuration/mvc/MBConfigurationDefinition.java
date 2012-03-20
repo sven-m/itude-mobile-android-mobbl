@@ -34,7 +34,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   private final List<MBOutcomeDefinition>         _outcomeTypes;
   private final Map<String, MBPageDefinition>     _pageTypes;
   private final Map<String, MBDialogDefinition>   _dialogs;
-  private MBDialogDefinition                      _firstDialog;
+  private MBDialogDefinition                      _homeDialog;
   private final Map<String, MBToolDefinition>     _tools;
 
   public MBConfigurationDefinition()
@@ -57,9 +57,9 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
       otherConfig = (MBConfigurationDefinition) otherDefinition;
     }
 
-    if (_firstDialog == null)
+    if (_homeDialog == null)
     {
-      _firstDialog = otherConfig.getFirstDialogDefinition();
+      _homeDialog = otherConfig.getHomeDialogDefinition();
     }
 
     for (MBDocumentDefinition documentDef : otherConfig.getDocuments().values())
@@ -147,37 +147,6 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return appendToMe;
   }
 
-  /*
-  @Override
-  public void addChildElement(Object child)
-  {
-
-    if (child instanceof MBDomainDefinition)
-    {
-      addDomain((MBDomainDefinition) child);
-    }
-    if (child instanceof MBDocumentDefinition)
-    {
-      addDocument((MBDocumentDefinition) child);
-    }
-    if (child instanceof MBActionDefinition)
-    {
-      addAction((MBActionDefinition) child);
-    }
-    if (child instanceof MBOutcomeDefinition)
-    {
-      addOutcome((MBOutcomeDefinition) child);
-    }
-    if (child instanceof MBPageDefinition)
-    {
-      addPage((MBPageDefinition) child);
-    }
-    if (child instanceof MBDialogDefinition)
-    {
-      addDialog((MBDialogDefinition) child);
-    }
-
-  }*/
   @Override
   public void addChildElement(MBActionDefinition child)
   {
@@ -268,9 +237,9 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
       Log.w(Constants.APPLICATION_NAME, "Dialog definition overridden: multiple definitions for action with name " + dialog.getName());
     }
 
-    if (_firstDialog == null)
+    if (_homeDialog == null)
     {
-      _firstDialog = dialog;
+      _homeDialog = dialog;
     }
     _dialogs.put(dialog.getName(), dialog);
   }
@@ -383,9 +352,9 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return _pageTypes;
   }
 
-  public MBDialogDefinition getFirstDialogDefinition()
+  public MBDialogDefinition getHomeDialogDefinition()
   {
-    return _firstDialog;
+    return _homeDialog;
   }
 
   public Map<String, MBToolDefinition> getTools()

@@ -13,7 +13,6 @@ public class MBToolNotDefinedException extends MBException
   public MBToolNotDefinedException(String msg)
   {
     super(msg);
-    // TODO Auto-generated constructor stub
   }
 
   public MBToolNotDefinedException(String msg, Throwable throwable)

@@ -160,10 +160,9 @@ public class StringUtilitiesTest extends ApplicationTestCase<MBApplicationContro
   private void compareEqual(List<String> splittedOld, List<String> splittedNew, String path)
   {
     assertTrue(path + ", one is null, other is not", (splittedNew == null && splittedOld == null) || splittedNew != null
-                                                       && splittedOld != null);
+                                                     && splittedOld != null);
     if (splittedNew == null) return;
-    assertTrue(path + ", sizes are different n=" + splittedNew.size() + "o=" + splittedOld.size(),
-               splittedNew.size() == splittedOld.size());
+    assertTrue(path + ", sizes are different n=" + splittedNew.size() + "o=" + splittedOld.size(), splittedNew.size() == splittedOld.size());
     assertTrue(path + ", values are different", splittedNew.equals(splittedOld));
   }
 
@@ -262,8 +261,6 @@ public class StringUtilitiesTest extends ApplicationTestCase<MBApplicationContro
     }
     long difference = timeOld - timeNew;
     assertTrue("splitPath implementation performs badly: slower than old impl", difference > 0);
-    assertTrue("splitPath implementation performs badly: should be 3 times faster as old impl" + "* old=" + timeOld + " new=" + timeNew,
-               timeNew < (timeOld / 3));
   }
 
   private static List<String> splitPathOldImplementation(String path, Pattern splitPathPattern)

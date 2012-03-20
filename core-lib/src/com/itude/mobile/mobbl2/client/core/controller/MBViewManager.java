@@ -136,7 +136,7 @@ public class MBViewManager extends ActivityGroup
   @Override
   public boolean onCreateOptionsMenu(Menu menu)
   {
-    if (MBDevice.getInstance().isTablet())
+    if (MBDevice.getInstance().isTablet() || MBDevice.getInstance().isPhoneV14())
     {
       return false;
     }
@@ -165,7 +165,7 @@ public class MBViewManager extends ActivityGroup
     if (child instanceof MBDialogController)
     {
       final MBDialogController childController = (MBDialogController) child;
-      MBDialogDefinition firstDialogDefinition = MBMetadataService.getInstance().getFirstDialogDefinition();
+      MBDialogDefinition firstDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
       final String firstDialog = firstDialogDefinition.getName();
       if (!childController.getName().equals(firstDialog))
       {
@@ -790,12 +790,12 @@ public class MBViewManager extends ActivityGroup
 
   public void invalidateActionBar(boolean selectFirstTab)
   {
-    throw new UnsupportedOperationException("This method is not supported on smartphone");
+    //    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
   public void invalidateActionBar(boolean selectFirstTab, boolean notifyListener)
   {
-    throw new UnsupportedOperationException("This method is not supported on smartphone");
+    //    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
   public void showProgressIndicatorInTool()

@@ -41,7 +41,7 @@ public final class MBMetadataService
   private MBMetadataService()
   {
     MBMvcConfigurationParser mvcParser = new MBMvcConfigurationParser();
-    if (_phoneConfigName != null && MBDevice.getInstance().isPhone()) _configName = _phoneConfigName;
+    if (_phoneConfigName != null && (MBDevice.getInstance().isPhone() || MBDevice.getInstance().isPhoneV14())) _configName = _phoneConfigName;
     else if (_tabletConfigName != null && MBDevice.getInstance().isTablet()) _configName = _tabletConfigName;
 
     // Configuration definition
@@ -50,7 +50,7 @@ public final class MBMetadataService
     // Endpoint configuration
     MBEndpointsConfigurationParser endpointParser = new MBEndpointsConfigurationParser();
     byte[] data = DataUtil.getInstance().readFromAssetOrFile(_endpointsName);
-    _endpointConfiguration = data!=null ? (MBEndpointsConfiguration) endpointParser.parseData(data, _endpointsName) : null;
+    _endpointConfiguration = data != null ? (MBEndpointsConfiguration) endpointParser.parseData(data, _endpointsName) : null;
   }
 
   public static MBMetadataService getInstance()
@@ -197,9 +197,9 @@ public final class MBMetadataService
     return def;
   }
 
-  public MBDialogDefinition getFirstDialogDefinition()
+  public MBDialogDefinition getHomeDialogDefinition()
   {
-    return _cfg.getFirstDialogDefinition();
+    return _cfg.getHomeDialogDefinition();
   }
 
   public List<MBDialogDefinition> getDialogs()

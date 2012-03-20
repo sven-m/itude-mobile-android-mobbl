@@ -26,6 +26,18 @@ public class MBViewManagerFactory
         // Failed to load MBTabletViewManager, so return the default
       }
     }
+    else if (MBDevice.getInstance().isPhoneV14())
+    {
+      try
+      {
+        return (Class<? extends MBViewManager>) Class.forName("com.itude.mobile.mobbl2.client.core.controller.MBPhoneViewManager");
+      }
+      catch (ClassNotFoundException e)
+      {
+        Log.e(Constants.APPLICATION_NAME, "Error initializing MBPhoneViewManager");
+        // Failed to load MBTabletViewManager, so return the default
+      }
+    }
     return MBViewManager.class;
   }
 }

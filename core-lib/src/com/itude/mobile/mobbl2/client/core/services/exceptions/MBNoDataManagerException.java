@@ -13,7 +13,6 @@ public class MBNoDataManagerException extends MBException
   public MBNoDataManagerException(String msg)
   {
     super(msg);
-    // TODO Auto-generated constructor stub
   }
 
 }

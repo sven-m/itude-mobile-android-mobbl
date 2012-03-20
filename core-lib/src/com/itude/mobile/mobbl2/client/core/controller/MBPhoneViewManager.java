@@ -15,11 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
-import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
@@ -46,16 +41,9 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBSpinnerAdapter;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
 
-/**
- * @author Coen Houtman
- *
- *  This ViewManager can be used to perform actions that cannot be done on pre-Honeycomb devices.
- *  For example the use of the ActionBar.
- */
-public class MBTabletViewManager extends MBViewManager
+public class MBPhoneViewManager extends MBViewManager
 {
-  private Menu             _menu           = null;
-  private MBToolDefinition _refreshToolDef = null;
+  private Menu _menu = null;
 
   @Override
   protected void onPreCreate()
@@ -90,11 +78,7 @@ public class MBTabletViewManager extends MBViewManager
         int menuItemActionFlags = getMenuItemActionFlags(def);
         menuItem.setShowAsAction(menuItemActionFlags);
 
-        if ("REFRESH".equals(def.getType()))
-        {
-          _refreshToolDef = def;
-        }
-        else if ("SEARCH".equals(def.getType()))
+        if ("SEARCH".equals(def.getType()))
         {
           final SearchView searchView = new SearchView(MBViewManager.getInstance().getApplicationContext());
           searchView.setTag(def);
@@ -136,14 +120,13 @@ public class MBTabletViewManager extends MBViewManager
               Field searchEditField = searchView.getClass().getDeclaredField("mSearchEditFrame");
               searchEditField.setAccessible(true);
               LinearLayout searchLayout = (LinearLayout) searchEditField.get(searchView);
-              
-              LinearLayout searchPlate = (LinearLayout) searchLayout.getChildAt(0);
+
+              setSearchImage(image, searchLayout);
+
+              LinearLayout searchPlate = (LinearLayout) searchLayout.getChildAt(1);
               MBViewBuilderFactory.getInstance().getStyleHandler().styleSearchPlate(searchPlate);
 
-              // find first image view, assuming this is the icon we need
-              setSearchImage(image, searchPlate);
-              
-              LinearLayout submitArea = (LinearLayout) searchLayout.getChildAt(1);
+              LinearLayout submitArea = (LinearLayout) searchLayout.getChildAt(2);
               MBViewBuilderFactory.getInstance().getStyleHandler().styleSearchSubmitArea(submitArea);
             }
             catch (Exception e)
@@ -264,16 +247,23 @@ public class MBTabletViewManager extends MBViewManager
 
   private void onHomeSelected()
   {
+    MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
+    boolean isInNavbar = "TRUE".equalsIgnoreCase(homeDialogDefinition.getAddToNavbar());
+
     MBTabBar tabBar = getTabBar();
-    if (tabBar != null)
+    if (isInNavbar && tabBar != null)
     {
       resetViewPreservingCurrentDialog();
-      int firstDialog = MBMetadataService.getInstance().getHomeDialogDefinition().getName().hashCode();
+      int firstDialog = homeDialogDefinition.getName().hashCode();
       MBTab selectedTab = tabBar.getSelectedTab();
       if (selectedTab == null || firstDialog != selectedTab.getTabId())
       {
         tabBar.selectTab(firstDialog, true);
       }
+    }
+    else if (!isInNavbar)
+    {
+      activateDialogWithName(homeDialogDefinition.getName());
     }
   }
 
@@ -346,11 +336,10 @@ public class MBTabletViewManager extends MBViewManager
 
         styleHandler.styleActionBar(actionBar);
 
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO);
 
-        MBTabBar tabBar = new MBTabBar(MBTabletViewManager.this);
+        MBTabBar tabBar = new MBTabBar(MBPhoneViewManager.this);
         tabBar.setTabPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
 
         for (String dialogName : getSortedDialogNames())
@@ -361,7 +350,7 @@ public class MBTabletViewManager extends MBViewManager
           {
             MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDefinition.getDomain());
 
-            final MBSpinnerAdapter spinnerAdapter = new MBSpinnerAdapter(MBTabletViewManager.this, R.layout.simple_spinner_dropdown_item);
+            final MBSpinnerAdapter spinnerAdapter = new MBSpinnerAdapter(MBPhoneViewManager.this, R.layout.simple_spinner_dropdown_item);
 
             for (MBDomainValidatorDefinition domDef : domainDef.getDomainValidators())
             {
@@ -370,7 +359,7 @@ public class MBTabletViewManager extends MBViewManager
 
             Drawable drawable = MBResourceService.getInstance().getImageByID("tab-spinner-leaf");
 
-            MBTab tab = new MBTab(MBTabletViewManager.this);
+            MBTab tab = new MBTab(MBPhoneViewManager.this);
             tab.setAdapter(spinnerAdapter);
             tab.setSelectedBackground(drawable);
             tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
@@ -384,7 +373,7 @@ public class MBTabletViewManager extends MBViewManager
           }
           else
           {
-            MBTab tab = new MBTab(MBTabletViewManager.this);
+            MBTab tab = new MBTab(MBPhoneViewManager.this);
             setTabText(dialogDefinition, tab);
 
             tab.setListener(new MBTabListener(dialogName.hashCode()));
@@ -468,72 +457,6 @@ public class MBTabletViewManager extends MBViewManager
         }
       }
     });
-  }
-
-  @Override
-  public synchronized void showProgressIndicatorInTool()
-  {
-    if (_refreshToolDef != null && _menu != null)
-    {
-      final MenuItem item = _menu.findItem(_refreshToolDef.getName().hashCode());
-
-      ImageView rotationImage = getRotationImage();
-
-      float imageWidth = rotationImage.getDrawable().getIntrinsicWidth();
-      int framePadding = (int) ((MBScreenUtilities.convertDimensionPixelsToPixels(80) - imageWidth) / 2);
-
-      final FrameLayout frameLayout = new FrameLayout(this);
-      frameLayout.setLayoutParams(new FrameLayout.LayoutParams(MBScreenUtilities.convertDimensionPixelsToPixels(80),
-          LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-      frameLayout.setPadding(framePadding, 0, framePadding, 0);
-
-      frameLayout.addView(rotationImage);
-
-      runOnUiThread(new MBThread()
-      {
-        @Override
-        public void runMethod()
-        {
-          item.setActionView(frameLayout);
-          getRotationImage().getAnimation().startNow();
-        }
-      });
-    }
-  }
-
-  private ImageView getRotationImage()
-  {
-    RotateAnimation rotateAnimation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-    rotateAnimation.setDuration(1000L);
-    rotateAnimation.setRepeatMode(Animation.INFINITE);
-    rotateAnimation.setRepeatCount(Animation.INFINITE);
-    rotateAnimation.setFillEnabled(false);
-    rotateAnimation.setInterpolator(new LinearInterpolator());
-
-    Drawable drawable = MBResourceService.getInstance().getImageByID(_refreshToolDef.getIcon());
-    ImageView rotationImage = new ImageView(this);
-    rotationImage.setImageDrawable(drawable);
-    rotationImage.setAnimation(rotateAnimation);
-
-    return rotationImage;
-  }
-
-  @Override
-  public synchronized void hideProgressIndicatorInTool()
-  {
-    if (_refreshToolDef != null && _menu != null)
-    {
-      final MenuItem item = _menu.findItem(_refreshToolDef.getName().hashCode());
-
-      runOnUiThread(new MBThread()
-      {
-        @Override
-        public void runMethod()
-        {
-          item.setActionView(null);
-        }
-      });
-    }
   }
 
   private boolean isPreConditionValid(MBToolDefinition def)

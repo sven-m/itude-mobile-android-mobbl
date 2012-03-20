@@ -22,14 +22,12 @@ public class MBApplicationControllerBackgroundRunner extends AsyncTask<Object[],
   @Override
   protected void onPostExecute(Object[] result)
   {
-    // TODO Auto-generated method stub
     super.onPostExecute(result);
   }
 
   @Override
   protected Object[] doInBackground(Object[]... params)
   {
-    // TODO Auto-generated method stub
     return null;
   }
 

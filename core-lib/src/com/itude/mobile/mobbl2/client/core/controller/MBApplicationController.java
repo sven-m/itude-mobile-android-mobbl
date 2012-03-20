@@ -22,6 +22,7 @@ import android.util.Log;
 import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
@@ -148,22 +149,23 @@ public class MBApplicationController extends Application
   {
     _suppressPageSelection = false;
     _backStackEnabled = true;
-    if (MBDevice.getInstance().isPhone())
+
+    final MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
+    boolean isInNavbar = "TRUE".equalsIgnoreCase(homeDialogDefinition.getAddToNavbar());
+    MBViewManager.getInstance().invalidateActionBar(isInNavbar);
+
+    if (!isInNavbar || MBDevice.getInstance().isPhone())
     {
       _viewManager.runOnUiThread(new Runnable()
       {
         @Override
         public void run()
         {
-          activateDialogWithName(MBMetadataService.getInstance().getFirstDialogDefinition().getName());
+          activateDialogWithName(homeDialogDefinition.getName());
         }
       });
     }
 
-    if (MBDevice.getInstance().isTablet())
-    {
-      MBTabletViewManager.getInstance().invalidateActionBar(true);
-    }
     _viewManager.runOnUiThread(new Runnable()
     {
       @Override
@@ -655,16 +657,9 @@ public class MBApplicationController extends Application
     final String query;
     final String isProgressive;
 
-    if (Intent.ACTION_SEARCH.equals(searchIntent.getAction()))
-    {
-      query = searchIntent.getStringExtra(SearchManager.QUERY);
-      isProgressive = "FALSE";
-    }
-    else
-    {
-      query = searchIntent.getStringExtra(SearchManager.USER_QUERY);
-      isProgressive = "TRUE";
-    }
+    query = searchIntent.getStringExtra(SearchManager.QUERY);
+
+    isProgressive = Intent.ACTION_SEARCH.equals(searchIntent.getAction()) ? "FALSE" : "TRUE";
 
     MBDocument searchRequest = MBDataManagerService.getInstance().loadDocument("MBSearchRequestDoc");
     searchRequest.setValue(query, "SearchRequest[0]/@query");
