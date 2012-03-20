@@ -45,12 +45,6 @@ public class MBPhoneViewManager extends MBViewManager
 {
   private Menu _menu = null;
 
-  @Override
-  protected void onPreCreate()
-  {
-    // empty to override request window feature to hide Android's standard indeterminate progress indicator
-  }
-
   // Android hooks
   @Override
   public boolean onCreateOptionsMenu(Menu menu)
