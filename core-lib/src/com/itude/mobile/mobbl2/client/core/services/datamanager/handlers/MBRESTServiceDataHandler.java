@@ -4,11 +4,21 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,6 +29,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
@@ -40,7 +51,6 @@ import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.excepti
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBDocumentNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBProperties;
-import com.itude.mobile.mobbl2.client.core.util.https.EasySSLSocketFactory;
 import com.itude.mobile.mobbl2.client.core.util.log.Logger;
 import com.itude.mobile.mobbl2.client.core.util.log.LoggerFactory;
 
@@ -267,12 +277,89 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 
   private void allowAnyCertificate(HttpClient httpClient) throws KeyManagementException, NoSuchAlgorithmException
   {
-    /*
-     * C.H: Tried to port this from mobile web. Didn't work unfortunately. 
-     */
-    ClientConnectionManager ccm = httpClient.getConnectionManager();
-    SchemeRegistry sr = ccm.getSchemeRegistry();
-    sr.register(new Scheme("https", new EasySSLSocketFactory(), 443));
+
+    KeyStore trustStore;
+    try
+    {
+      trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+      trustStore.load(null, null);
+
+      SSLSocketFactory sf = new TrustedSSLSocketFactory(trustStore);
+      sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+      ClientConnectionManager ccm = httpClient.getConnectionManager();
+      SchemeRegistry sr = ccm.getSchemeRegistry();
+      sr.register(new Scheme("https", sf, 443));
+    }
+    catch (KeyStoreException kse)
+    {
+      if (_log.isErrorEnabled())
+      {
+        _log.error("Could not make keystore " + kse.getMessage(), kse);
+      }
+    }
+    catch (CertificateException ce)
+    {
+      if (_log.isErrorEnabled())
+      {
+        _log.error("Could not make locate certificate " + ce.getMessage(), ce);
+      }
+    }
+    catch (IOException ioe)
+    {
+      if (_log.isErrorEnabled())
+      {
+        _log.error(ioe.getMessage(), ioe);
+      }
+    }
+    catch (UnrecoverableKeyException urke)
+    {
+      if (_log.isErrorEnabled())
+      {
+        _log.error(urke.getMessage(), urke);
+      }
+    }
+  }
+
+  public class TrustedSSLSocketFactory extends SSLSocketFactory
+  {
+    private SSLContext sslContext = SSLContext.getInstance("TLS");
+
+    public TrustedSSLSocketFactory(KeyStore truststore) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException,
+        UnrecoverableKeyException
+    {
+      super(truststore);
+
+      TrustManager tm = new X509TrustManager()
+      {
+        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException
+        {
+        }
+
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException
+        {
+        }
+
+        public X509Certificate[] getAcceptedIssuers()
+        {
+          return null;
+        }
+      };
+
+      sslContext.init(null, new TrustManager[]{tm}, null);
+    }
+
+    @Override
+    public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException, UnknownHostException
+    {
+      return sslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
+    }
+
+    @Override
+    public Socket createSocket() throws IOException
+    {
+      return sslContext.getSocketFactory().createSocket();
+    }
   }
 
 }
