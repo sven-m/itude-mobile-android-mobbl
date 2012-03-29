@@ -721,34 +721,21 @@
 						defaultValue="" />
 				</Element>
 			</Document>
-			<Document name="MBRequestDoc-EXTGebruikersLogon"
-				dataManager="MBMemoryDataHandler" autoCreate="TRUE">
+			<Document name="MBRequestDoc-EXTGebruikersLogon" dataManager="MBMemoryDataHandler" autoCreate="TRUE">
 				<Element name="EXTGebruikersLogon" minOccurs="1">
-					<Attribute name="outcomeOK" type="string"
-						defaultValue="OUTCOME-MBFormSubmissionOK" />
-					<Attribute name="outcomeERROR" type="string"
-						defaultValue="OUTCOME-MBFormSubmissionERROR" />
-					<Attribute name="field_login_username" type="string"
-						defaultValue="" />
-					<Attribute name="field_login_password" type="string"
-						defaultValue="" />
+					<Attribute name="outcomeOK" type="string" defaultValue="OUTCOME-MBFormSubmissionOK" />
+					<Attribute name="outcomeERROR" type="string" defaultValue="OUTCOME-MBFormSubmissionERROR" />
+					<Attribute name="field_login_username" type="string" defaultValue="" />
+					<Attribute name="field_login_password" type="string" defaultValue="" />
 				</Element>
 			</Document>
-			<Document name="MBRequestDoc-EXTGebruikersWachtwoordWijzigen"
-				dataManager="MBMemoryDataHandler" autoCreate="TRUE">
+			<Document name="MBRequestDoc-EXTGebruikersWachtwoordWijzigen" dataManager="MBMemoryDataHandler" autoCreate="TRUE">
 				<Element name="EXTGebruikersWachtwoordWijzigen" minOccurs="1">
-					<Attribute name="outcomeOK" type="string"
-						defaultValue="OUTCOME-MBFormSubmissionOK" />
-					<Attribute name="outcomeERROR" type="string"
-						defaultValue="OUTCOME-MBFormSubmissionERROR" />
-					<Attribute name="field_old_password" type="string"
-						defaultValue="" />
-					<Attribute name="field_new_password" type="string"
-						defaultValue="" />
-					<Attribute name="field_accountID" type="string"
-						defaultValue="" />
-					<Attribute name="field_accountID" type="string"
-						defaultValue="" />
+					<Attribute name="outcomeOK" type="string" defaultValue="OUTCOME-MBFormSubmissionOK" />
+					<Attribute name="outcomeERROR" type="string" defaultValue="OUTCOME-MBFormSubmissionERROR" />
+					<Attribute name="field_old_password" type="string" defaultValue="" />
+					<Attribute name="field_new_password" type="string" defaultValue="" />
+					<Attribute name="field_accountID" type="string" defaultValue="" />
 				</Element>
 			</Document>
 			<!-- ********************* Custom Documents ******************** -->
@@ -816,9 +803,8 @@
 					</Element>
 				</Element>
 			</Document>
-			<Document autoCreate="TRUE" name="EXT-GebruikersLogonResponse"
-				dataManager="BinckDataHandler">
-				<Element name="EXT-GebruikersLogonResult">
+			<Document autoCreate="TRUE" name="EXT-GebruikersLogonEncryptedResponse" dataManager="BinckDataHandler">
+				<Element name="EXT-GebruikersLogonEncryptedResult">
 					<Element name="SessieInfo">
 						<Attribute name="SessieId" type="string" />
 						<Attribute name="RekeningId" type="string" />
@@ -2617,7 +2603,7 @@
 			<Panel type="LIST">
 				<Panel type="SECTION">
 					<Panel type="ROW">
-						<Field type="TEXT" path="/Response[0]/@body" />
+						<Field type="TEXT" label="PasswordChanged" />
 					</Panel>
 					<Panel type="ROW" suppressRowComponent="TRUE">
 						<Field type="BUTTON" outcome="OUTCOME-change_password_OK_dismiss"
@@ -4582,7 +4568,7 @@
 			<Panel type="LIST">
 				<Panel type="SECTION">
 					<Panel type="ROW">
-						<Field type="TEXT" path="/Response[0]/@body" />
+						<Field type="TEXT" label="PasswordChanged" />
 					</Panel>
 					<Panel type="ROW" suppressRowComponent="TRUE">
 						<Field type="BUTTON" outcome="OUTCOME-change_password_OK_dismiss"
