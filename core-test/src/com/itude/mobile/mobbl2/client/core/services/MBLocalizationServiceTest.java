@@ -28,11 +28,11 @@ public class MBLocalizationServiceTest extends ApplicationTestCase<MBApplication
   {
     String localeCode = MBLocalizationService.getInstance().getLocaleCode();
     assertNotNull(localeCode);
-    assertEquals("en_US", localeCode);
+    assertEquals("en_NL", localeCode);
 
     Locale locale = MBLocalizationService.getInstance().getLocale();
     assertNotNull(locale);
     assertEquals("en", locale.getLanguage());
-    assertEquals("US", locale.getCountry());
+    assertEquals("NL", locale.getCountry());
   }
 }
