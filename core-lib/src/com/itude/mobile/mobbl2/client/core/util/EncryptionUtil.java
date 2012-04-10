@@ -7,20 +7,20 @@ class EncryptionUtil
 
   static private int keylength = 8;   // keylength for WEP; deprecated
 
-  private byte[]     S;
+  private byte[]     s;
   private int        the_i;
   private int        the_j;
   private int        next_j    = -666; // not really needed after all
 
   public EncryptionUtil()
   {
-    S = new byte[256];
+    s = new byte[256];
     the_i = the_j = 0;
   }
 
-  public EncryptionUtil(byte[] S)
+  public EncryptionUtil(byte[] s)
   {
-    this.S = S;
+    this.s = s;
     the_i = the_j = 0;
   }
 
@@ -32,27 +32,27 @@ class EncryptionUtil
     int keylength = key.length; // NOT keylength above!!
     int i = 0;
     for (i = 0; i < 256; i++)
-      S[i] = (byte) i;
+      s[i] = (byte) i;
     the_j = 0;
     for (the_i = 0; the_i < n; the_i++)
     {
-      the_j = (the_j + posify(S[the_i]) + posify(key[the_i % keylength])) % 256;
-      sswap(S, the_i, the_j);
+      the_j = (the_j + posify(s[the_i]) + posify(key[the_i % keylength])) % 256;
+      sswap(s, the_i, the_j);
     }
     if (n != 256)
     {
-      next_j = (the_j + posify(S[n]) + posify(key[n % keylength])) % 256;
+      next_j = (the_j + posify(s[n]) + posify(key[n % keylength])) % 256;
     }
     if (printstats)
     {
-      System.out.print("S_" + (n - 1) + ":");
+      System.out.print("s_" + (n - 1) + ":");
       for (int k = 0; k <= n; k++)
-        System.out.print(" " + posify(S[k]));
+        System.out.print(" " + posify(s[k]));
       System.out.print("   j_" + (n - 1) + "=" + the_j);
       System.out.print("   j_" + n + "=" + next_j);
-      System.out.print("   S_" + (n - 1) + "[j_" + (n - 1) + "]=" + posify(S[the_j]));
-      System.out.print("   S_" + (n - 1) + "[j_" + (n) + "]=" + posify(S[next_j]));
-      if (S[1] != 0) System.out.print("   S[1]!=0");
+      System.out.print("   s_" + (n - 1) + "[j_" + (n - 1) + "]=" + posify(s[the_j]));
+      System.out.print("   s_" + (n - 1) + "[j_" + (n) + "]=" + posify(s[next_j]));
+      if (s[1] != 0) System.out.print("   s[1]!=0");
       System.out.println();
     }
   }
@@ -70,19 +70,19 @@ class EncryptionUtil
   byte nextVal()
   {
     the_i = (the_i + 1) % 256;
-    the_j = (the_j + posify(S[the_i])) % 256;
-    sswap(S, the_i, the_j);
-    byte value = S[(posify(S[the_i]) + posify(S[the_j])) % 256];
+    the_j = (the_j + posify(s[the_i])) % 256;
+    sswap(s, the_i, the_j);
+    byte value = s[(posify(s[the_i]) + posify(s[the_j])) % 256];
     return value;
   }
 
-  // returns i for which x = S[i]
+  // returns i for which x = s[i]
   byte inverse(byte x)
   {
     int i = 0;
     while (i < 256)
     {
-      if (x == S[i]) return (byte) i;
+      if (x == s[i]) return (byte) i;
       i++;
     }
     return (byte) 0; // never get here
@@ -103,16 +103,16 @@ class EncryptionUtil
     return this.next_j;
   }
 
-  int S(int n)
+  int s(int n)
   {
-    return posify(S[(byte) n]);
+    return posify(s[(byte) n]);
   }
 
-  private static void sswap(byte[] S, int i, int j)
+  private static void sswap(byte[] s, int i, int j)
   {
-    byte temp = S[i];
-    S[i] = S[j];
-    S[j] = temp;
+    byte temp = s[i];
+    s[i] = s[j];
+    s[j] = temp;
   }
 
   // returns value of b as an unsigned int
