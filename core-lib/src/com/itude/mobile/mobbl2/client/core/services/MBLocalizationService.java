@@ -12,7 +12,7 @@ import com.itude.mobile.mobbl2.client.core.util.MBProperties;
 
 public class MBLocalizationService
 {
-  private final Map<String, Map<String, String>> _languages;      //DictionaryofDictionaries(languagecode->(key->value))
+  private final Map<String, Map<String, String>> _languages;         //DictionaryofDictionaries(languagecode->(key->value))
   private String                                 _currentLanguage;
   private Map<String, String>                    _currentLanguageMap;
   private String                                 _localeCode;
@@ -22,7 +22,9 @@ public class MBLocalizationService
   private MBLocalizationService()
   {
     _languages = new Hashtable<String, Map<String, String>>();
-    setCurrentLanguage("nl");
+
+    // Let's set our language to the one we've set in our applicationproperties.xml or to a default one if none were found.
+    setCurrentLanguage(getLocale().getLanguage());
   }
 
   public static MBLocalizationService getInstance()
@@ -32,8 +34,7 @@ public class MBLocalizationService
     {
       synchronized (MBLocalizationService.class)
       {
-        if (_instance == null)
-          _instance = new MBLocalizationService();
+        if (_instance == null) _instance = new MBLocalizationService();
       }
     }
 
@@ -71,6 +72,12 @@ public class MBLocalizationService
 
   public synchronized void setCurrentLanguage(String currentLanguage)
   {
+    // If no localeCode was found then we set the default language to nl
+    if (currentLanguage == null || currentLanguage.length() <= 0)
+    {
+      currentLanguage = "nl";
+    }
+
     _currentLanguage = currentLanguage;
     _currentLanguageMap = getLanguageForCode(_currentLanguage);
   }
