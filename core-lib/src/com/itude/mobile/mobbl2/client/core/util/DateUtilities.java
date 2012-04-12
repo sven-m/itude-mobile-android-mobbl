@@ -1,8 +1,10 @@
 package com.itude.mobile.mobbl2.client.core.util;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import com.itude.mobile.mobbl2.client.core.util.exceptions.MBDateParsingException;
 
@@ -30,8 +32,7 @@ public final class DateUtilities
     String result = dateString;
     Date date = dateFromXML(dateString);
 
-    String dateFormatMask = "";
-
+    DateFormat df;
     // We can't just compare two dates, because the time is also compared.
     // Therefore the time is removed and the two dates without time are compared
     Calendar calendar = Calendar.getInstance();
@@ -43,17 +44,19 @@ public final class DateUtilities
     if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) && calendar.get(Calendar.MONTH) == today.get(Calendar.MONTH)
         && calendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR))
     {
-      dateFormatMask = "HH:mm:ss";
+      df = new SimpleDateFormat("HH:mm:ss");
     }
     else
     {
-      dateFormatMask = "dd-MM-yy";
+      df = DateFormat.getDateInstance(DateFormat.SHORT,
+                                      StringUtilities.getDefaultFormattingLocale() != null
+                                          ? StringUtilities.getDefaultFormattingLocale()
+                                          : Locale.getDefault());
     }
 
     // Format the date
     try
     {
-      SimpleDateFormat df = new SimpleDateFormat(dateFormatMask);
       result = df.format(date);
 
       return result;

@@ -5,5 +5,6 @@
 	
 	<!-- ANDROID LOG LEVELS -->
 	<Property name="logLevel" value="3"/>
+	<Property name="localeCode" value="nl_NL"/>
 	
 </Application>
