@@ -2384,13 +2384,13 @@
 			<Dialog name="DIALOG-tab_shares" mode="STACK" icon="ICON-tab_shares"
 				title="Koersen" />
 			<Dialog name="DIALOG-page_search_cis_name" mode="STACK"
-				icon="ICON-page_search_cis_name" title="Zoek" />
+				icon="ICON-page_search_cis_name" title="SearchPageName" />
 			<Dialog name="DIALOG-tab_my_account" mode="STACK"
 				icon="ICON-tab_my_account" title="Mijn rekening" />
 			<Dialog name="DIALOG-tab_favourites" mode="STACK"
 				icon="ICON-tab_favourites" title="Favorieten" />
 			<Dialog name="DIALOG-tab_settings" mode="STACK" icon="ICON-tab_settings"
-				title="Instellingen" />
+				title=Settings />
 		</Dialogs>
 		<!-- ***************** Custom Pages ***************** -->
 		<!-- ***************** -->
@@ -3233,7 +3233,7 @@
 			title="LocalizedSearchtipsPopupTitle" />
 		<!-- ***************** -->
 		<Page name="PAGE-page_search_cis_name" document="EXT-ZoekenProgressiveResponse"
-			title="Zoek">
+			title="SearchPageName">
 			<Panel type="LIST">
 				<Panel type="SECTION">
 					<ForEach
@@ -3514,7 +3514,7 @@
 			</Panel>
 		</Page>
 		<!-- ***************** -->
-		<Page name="PAGE-tab_settings" document="ApplicationState" title="Instellingen">
+		<Page name="PAGE-tab_settings" document="ApplicationState" title=Settings>
 			<Panel type="LIST">
 				<Panel preCondition="!${SessionState:Session[0]/@loggedIn}"
 					type="SECTION" title="Aanmelden">
@@ -3674,7 +3674,7 @@
 		</Page>
 		<!-- ***************** -->
 		<Page name="PAGE-page_mainindex_cis" document="EXT-KoersenLijstenGetByFondsenlijstResponse"
-			title="AEX Fondsen">
+			title="MainIndexFunds">
 			<Panel type="MATRIX">
 				<Panel type="MATRIX-HEADER">
 					<Field label="Fonds" type="MATRIX-TITLE" />
@@ -3719,7 +3719,7 @@
 		</Page>
 		<!-- ***************** -->
 		<Page name="PAGE-page_midindex_cis" document="EXT-KoersenLijstenGetByFondsenlijstResponse"
-			title="AMX Fondsen">
+			title="MidIndexFunds">
 			<Panel type="MATRIX">
 				<Panel type="MATRIX-HEADER">
 					<Field label="Fonds" type="MATRIX-TITLE" />
@@ -4121,19 +4121,19 @@
 						label="Indices" />
 				</Panel>
 				<Panel type="ROW">
-					<Field type="LABEL" label="AEX Fondsen" />
+					<Field type="LABEL" label="MainIndexFunds" />
 					<Field type="BUTTON" outcome="OUTCOME-page_mainindex_cis"
-						style="NAVIGATION" label="AEX Fondsen" />
+						style="NAVIGATION" label="MainIndexFunds" />
 				</Panel>
 				<Panel type="ROW">
-					<Field type="LABEL" label="AMX Fondsen" />
+					<Field type="LABEL" label="MidIndexFunds" />
 					<Field type="BUTTON" outcome="OUTCOME-page_midindex_cis"
-						style="NAVIGATION" label="AMX Fondsen" />
+						style="NAVIGATION" label="MidIndexFunds" />
 				</Panel>
 				<Panel type="ROW">
-					<Field type="LABEL" label="Opties Euronext Amsterdam" />
+					<Field type="LABEL" label="OptiesEuronextAmsterdam" />
 					<Field type="BUTTON" outcome="OUTCOME-page_options" style="NAVIGATION"
-						label="Opties Euronext Amsterdam" />
+						label="OptiesEuronextAmsterdam" />
 				</Panel>
 				<Panel type="ROW">
 					<Field type="LABEL" label="Futures" />
@@ -4149,7 +4149,7 @@
 		</Page>
 		<!-- ***************** -->
 		<Page name="PAGE-page_options" document="MBRequestDoc-EXTKoersenOptionSheetGet"
-			title="Opties Euronext Amsterdam">
+			title="OptiesEuronextAmsterdam">
 			<Panel type="LIST">
 				<Panel type="ROW">
 					<Field type="DROPDOWNLIST" label="Fonds"
