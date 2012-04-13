@@ -23,6 +23,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
+import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
@@ -76,7 +77,7 @@ public class MBDialogController extends FragmentActivity
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
       setIconName(dialogDefinition.getIcon());
       setDialogMode(dialogDefinition.getMode());
-      setTitle(dialogDefinition.getTitle());
+      setTitle(MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
       if (dialogDefinition instanceof MBDialogGroupDefinition)
       {
         List<MBDialogDefinition> children = ((MBDialogGroupDefinition) dialogDefinition).getChildren();
