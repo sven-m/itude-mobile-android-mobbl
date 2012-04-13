@@ -1735,7 +1735,7 @@
 					<!-- De te tonen positie -->
 					<Attribute name="Valuta" type="string" />
 					<Attribute name="Vermogen" type="string" />
-					<Attribute name="Portefeuille" type="string" />
+					<Attribute name="Portfolio" type="string" />
 					<Attribute name="Kas" type="string" />
 					<Attribute name="KasEUR" type="string" />
 					<Attribute name="KasUSD" type="string" />
@@ -2499,7 +2499,7 @@
 		</Page>
 		<!-- ***************** -->
 		<Page name="PAGE-page_accounts_summary" document="EXT-GebruikersRekeningenGetResponse"
-			title="Uw Alex-rekeningen">
+			title="YourAccounts">
 			<Panel type="LIST" name="summary">
 				<Panel type="SECTION" title="Kies een rekening">
 					<ForEach
@@ -2538,7 +2538,7 @@
 				<Panel type="MATRIX-HEADER">
 					<Field label="Rekeningoverzicht" type="MATRIX-TITLE" />
 					<Field label="Rekening" type="LABEL" />
-					<Field label="Portefeuille" type="LABEL" width="70" />
+					<Field label="Portfolio" type="LABEL" width="70" />
 					<Field label="Kas" type="LABEL" width="65" />
 					<Field label="Vermogen" type="LABEL" width="65" />
 					<Field label="VBR" type="LABEL" width="65" alignment="RIGHT" />
@@ -2858,7 +2858,7 @@
 		</Page>
 		<!-- ***************** -->
 		<Page name="PAGE-page_my_portfolio" document="EXT-PortefeuillesGetResponse"
-			title="Portefeuille">
+			title="Portfolio">
 			<Panel type="MATRIX" name="detail">
 				<Panel type="MATRIX-HEADER">
 					<Field type="LABEL" label="Overzicht" />
@@ -2888,7 +2888,7 @@
 						valueIfNil="---" width="60" alignment="RIGHT" />
 				</Panel>
 				<Panel type="MATRIX-ROW">
-					<Field label="Portefeuille" type="MATRIX-CELL" style="TITLE"
+					<Field label="Portfolio" type="MATRIX-CELL" style="TITLE"
 						width="70" alignment="LEFT" />
 					<Field path="/EXT-PortefeuillesGetResult[0]/@Portefeuille"
 						type="MATRIX-CELL" valueIfNil="---" width="70" alignment="RIGHT" />
@@ -2959,7 +2959,7 @@
 		</Page>
 		<!-- ***************** -->
 		<Page name="PAGE-page_my_transactions" document="TransactionAccountSelection"
-			title="Rekeningoverzicht">
+			title="TransactionOverview">
 			<ForEach value="/TransactionAccountSelection[0]/Accounts[0]/Account"
 				suppressRowComponent="TRUE">
 				<Panel type="MATRIX">
@@ -3037,7 +3037,7 @@
 				</Panel>
 				<Panel type="ROW">
 					<Field type="BUTTON" outcome="OUTCOME-page_my_portfolio"
-						style="NETWORK" label="Portefeuille" />
+						style="NETWORK" label="Portfolio" />
 					<Field type="BUTTON" outcome="OUTCOME-page_my_orders_detail"
 						style="NETWORK" label="Orderinfo" />
 				</Panel>
@@ -3045,7 +3045,7 @@
 		</Page>
 		<!-- ***************** -->
 		<Page name="PAGE-page_portfolio_details" document="EXT-PortefeuillesGetResponse"
-			title="Portefeuille">
+			title="Portfolio">
 			<Panel type="MATRIX">
 				<Panel type="MATRIX-HEADER" label="Saldo" />
 				<ForEach value="PortfolioDetailListRows:Row"
@@ -4200,24 +4200,24 @@
 		<Page name="PAGE-tab_my_account" document="MBEmptyDoc" title="Mijn rekening">
 			<Panel type="LIST">
 				<Panel type="ROW">
-					<Field type="LABEL" label="Portefeuille" />
+					<Field type="LABEL" label="Portfolio" />
 					<Field type="BUTTON" outcome="OUTCOME-page_my_portfolio"
-						style="NAVIGATION" label="Portefeuille" />
+						style="NAVIGATION" label="Portfolio" />
 				</Panel>
 				<Panel type="ROW">
-					<Field type="LABEL" label="Orderoverzicht" />
+					<Field type="LABEL" label="OrderOverview" />
 					<Field type="BUTTON" outcome="OUTCOME-page_my_orders" style="NAVIGATION"
-						label="Orderoverzicht" />
+						label="OrderOverview" />
 				</Panel>
 				<Panel type="ROW">
 					<Field type="LABEL" label="Rekeningoverzicht" />
 					<Field type="BUTTON" outcome="OUTCOME-page_my_transactions"
-						style="NAVIGATION" label="Rekeningoverzicht" />
+						style="NAVIGATION" label="TransactionOverview" />
 				</Panel>
 				<Panel type="ROW">
-					<Field type="LABEL" label="Uw Alex-rekeningen" />
+					<Field type="LABEL" label="YourAccounts" />
 					<Field type="BUTTON" outcome="OUTCOME-page_accounts_summary"
-						style="NAVIGATION" label="Uw Alex-rekeningen" />
+						style="NAVIGATION" label="YourAccounts" />
 				</Panel>
 			</Panel>
 		</Page>
