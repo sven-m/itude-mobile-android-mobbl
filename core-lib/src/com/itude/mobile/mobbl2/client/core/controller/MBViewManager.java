@@ -144,7 +144,8 @@ public class MBViewManager extends ActivityGroup
     for (String dialogName : getSortedDialogNames())
     {
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      MenuItem menuItem = menu.add(Menu.NONE, dialogName.hashCode(), Menu.NONE, MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
+      MenuItem menuItem = menu.add(Menu.NONE, dialogName.hashCode(), Menu.NONE,
+                                   MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
       menuItem.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
       MenuCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
     }

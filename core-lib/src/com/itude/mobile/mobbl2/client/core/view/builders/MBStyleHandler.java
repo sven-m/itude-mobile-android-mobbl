@@ -368,11 +368,11 @@ public class MBStyleHandler
   public void styleRowAlignment(LinearLayout rowPanel)
   {
   }
-  
+
   public void styleRow(ViewGroup rowPanel, String style)
   {
   }
-  
+
   public void styleRowItemLeft(RelativeLayout.LayoutParams params)
   {
   }
@@ -574,5 +574,5 @@ public class MBStyleHandler
   public void styleSearchSubmitArea(LinearLayout submitArea)
   {
   }
-  
+
 }
