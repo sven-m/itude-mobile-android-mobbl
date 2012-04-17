@@ -170,7 +170,7 @@ public class MBViewManager extends ActivityGroup
       final String firstDialog = firstDialogDefinition.getName();
       if (!childController.getName().equals(firstDialog))
       {
-        if (MBDevice.getInstance().isPhone())
+        if (MBDevice.getInstance().isPhone() || MBDevice.getInstance().isPhoneV14())
         {
           activateDialogWithName(firstDialog);
         }

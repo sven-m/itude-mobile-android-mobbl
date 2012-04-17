@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -14,7 +13,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -38,12 +36,8 @@ public class MBDialogController extends FragmentActivity
   private String                     _name;
   private String                     _iconName;
   private String                     _dialogMode;
-  private boolean                    _usesNavbar;
   private Object                     _rootController;
-  private int                        _activityIndicatorCount;
   private boolean                    _temporary;
-  private final Stack<View>          _viewStack        = new Stack<View>();
-  private final Stack<String>        _pageIdStack      = new Stack<String>();
   private final List<Integer>        _sortedDialogIds  = new ArrayList<Integer>();
   private final Map<String, Integer> _dialogIds        = new HashMap<String, Integer>();
   private final Map<String, String>  _childDialogModes = new HashMap<String, String>();
@@ -83,16 +77,13 @@ public class MBDialogController extends FragmentActivity
         List<MBDialogDefinition> children = ((MBDialogGroupDefinition) dialogDefinition).getChildren();
         for (MBDialogDefinition dialogDef : children)
         {
-          int id = UniqueIntegerGenerator.getId();
-          addDialogChild(dialogDef.getName(), id, dialogDef.getMode());
+          addDialogChild(dialogDef.getName(), UniqueIntegerGenerator.getId(), dialogDef.getMode());
         }
       }
       else
       {
         addDialogChild(_name, UniqueIntegerGenerator.getId(), _dialogMode);
       }
-      _usesNavbar = ("STACK".equals(dialogDefinition.getMode()) || "TRUE".equals(dialogDefinition.getAddToNavbar()));
-
       return true;
     }
     else
@@ -292,8 +283,9 @@ public class MBDialogController extends FragmentActivity
       transaction.addToBackStack(id);
     }
 
-    if (MBDevice.getInstance().isTablet()
-        && (page.getCurrentViewState() == MBViewState.MBViewStateModal || MBApplicationController.getInstance().getModalPageID() != null))
+    if (MBDevice.getInstance().isTablet() //
+        && (page.getCurrentViewState() == MBViewState.MBViewStateModal //
+        || MBApplicationController.getInstance().getModalPageID() != null))
     {
       String modalPageID = MBApplicationController.getInstance().getModalPageID();
 
