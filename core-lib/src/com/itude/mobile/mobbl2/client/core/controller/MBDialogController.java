@@ -342,7 +342,8 @@ public class MBDialogController extends FragmentActivity
       }
       transaction.add(fragment, id);
     }
-    else {
+    else
+    {
       transaction.replace(_dialogIds.get(dialogName), fragment);
     }
 

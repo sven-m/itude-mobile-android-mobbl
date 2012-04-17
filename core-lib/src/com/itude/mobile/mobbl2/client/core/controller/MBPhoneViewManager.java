@@ -334,7 +334,6 @@ public class MBPhoneViewManager extends MBViewManager
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO);
 
         MBTabBar tabBar = new MBTabBar(MBPhoneViewManager.this);
-        tabBar.setTabPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
 
         for (String dialogName : getSortedDialogNames())
         {
@@ -357,8 +356,7 @@ public class MBPhoneViewManager extends MBViewManager
             tab.setAdapter(spinnerAdapter);
             tab.setSelectedBackground(drawable);
             tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
-
-            setTabText(dialogDefinition, tab);
+            setTabText(dialogDefinition, tab, tabBar);
 
             tab.setTabId(dialogName.hashCode());
             tab.setListener(new MBTabListener(dialogName.hashCode()));
@@ -368,7 +366,7 @@ public class MBPhoneViewManager extends MBViewManager
           else
           {
             MBTab tab = new MBTab(MBPhoneViewManager.this);
-            setTabText(dialogDefinition, tab);
+            setTabText(dialogDefinition, tab, tabBar);
 
             tab.setListener(new MBTabListener(dialogName.hashCode()));
             tab.setTabId(dialogName.hashCode());
@@ -384,7 +382,7 @@ public class MBPhoneViewManager extends MBViewManager
             ActionBar.LayoutParams.MATCH_PARENT, Gravity.LEFT));
       }
 
-      private void setTabText(MBDialogDefinition dialogDefinition, MBTab tab)
+      private void setTabText(MBDialogDefinition dialogDefinition, MBTab tab, MBTabBar tabBar)
       {
         String title;
 
@@ -400,6 +398,11 @@ public class MBPhoneViewManager extends MBViewManager
         if (StringUtilities.isNotBlank(title))
         {
           tab.setText(title);
+          tabBar.setTabPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
+        }
+        else
+        {
+          tabBar.setTabPadding(0, 0, 0, 0);
         }
       }
     });

@@ -136,13 +136,13 @@ public class MBTabletViewManager extends MBViewManager
               Field searchEditField = searchView.getClass().getDeclaredField("mSearchEditFrame");
               searchEditField.setAccessible(true);
               LinearLayout searchLayout = (LinearLayout) searchEditField.get(searchView);
-              
+
               LinearLayout searchPlate = (LinearLayout) searchLayout.getChildAt(0);
               MBViewBuilderFactory.getInstance().getStyleHandler().styleSearchPlate(searchPlate);
 
               // find first image view, assuming this is the icon we need
               setSearchImage(image, searchPlate);
-              
+
               LinearLayout submitArea = (LinearLayout) searchLayout.getChildAt(1);
               MBViewBuilderFactory.getInstance().getStyleHandler().styleSearchSubmitArea(submitArea);
             }
@@ -351,7 +351,6 @@ public class MBTabletViewManager extends MBViewManager
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO);
 
         MBTabBar tabBar = new MBTabBar(MBTabletViewManager.this);
-        tabBar.setTabPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
 
         for (String dialogName : getSortedDialogNames())
         {
@@ -375,7 +374,7 @@ public class MBTabletViewManager extends MBViewManager
             tab.setSelectedBackground(drawable);
             tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
 
-            setTabText(dialogDefinition, tab);
+            setTabText(dialogDefinition, tab, tabBar);
 
             tab.setTabId(dialogName.hashCode());
             tab.setListener(new MBTabListener(dialogName.hashCode()));
@@ -385,7 +384,7 @@ public class MBTabletViewManager extends MBViewManager
           else
           {
             MBTab tab = new MBTab(MBTabletViewManager.this);
-            setTabText(dialogDefinition, tab);
+            setTabText(dialogDefinition, tab, tabBar);
 
             tab.setListener(new MBTabListener(dialogName.hashCode()));
             tab.setTabId(dialogName.hashCode());
@@ -401,7 +400,7 @@ public class MBTabletViewManager extends MBViewManager
             ActionBar.LayoutParams.MATCH_PARENT, Gravity.LEFT));
       }
 
-      private void setTabText(MBDialogDefinition dialogDefinition, MBTab tab)
+      private void setTabText(MBDialogDefinition dialogDefinition, MBTab tab, MBTabBar tabBar)
       {
         String title;
 
@@ -417,7 +416,13 @@ public class MBTabletViewManager extends MBViewManager
         if (StringUtilities.isNotBlank(title))
         {
           tab.setText(title);
+          tabBar.setTabPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
         }
+        else
+        {
+          tabBar.setTabPadding(0, 0, 0, 0);
+        }
+
       }
     });
   }

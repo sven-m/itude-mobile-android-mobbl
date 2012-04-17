@@ -23,8 +23,10 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
+import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
+import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
@@ -160,13 +162,16 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
   public MBTab setIcon(Drawable drawable)
   {
     _icon.setImageDrawable(drawable);
-
     return this;
   }
 
-  public MBTab setText(CharSequence text)
+  public MBTab setText(String text)
   {
-    _textView.setText(text);
+    if (StringUtilities.isNotBlank(text))
+    {
+      _textView.setText(MBLocalizationService.getInstance().getTextForKey(text));
+    }
+
     return this;
   }
 
