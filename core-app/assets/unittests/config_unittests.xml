@@ -2390,7 +2390,7 @@
 			<Dialog name="DIALOG-tab_favourites" mode="STACK"
 				icon="ICON-tab_favourites" title="Favorieten" />
 			<Dialog name="DIALOG-tab_settings" mode="STACK" icon="ICON-tab_settings"
-				title=Settings />
+				title="Settings" />
 		</Dialogs>
 		<!-- ***************** Custom Pages ***************** -->
 		<!-- ***************** -->
@@ -3514,7 +3514,7 @@
 			</Panel>
 		</Page>
 		<!-- ***************** -->
-		<Page name="PAGE-tab_settings" document="ApplicationState" title=Settings>
+		<Page name="PAGE-tab_settings" document="ApplicationState" title="Settings">
 			<Panel type="LIST">
 				<Panel preCondition="!${SessionState:Session[0]/@loggedIn}"
 					type="SECTION" title="Aanmelden">
