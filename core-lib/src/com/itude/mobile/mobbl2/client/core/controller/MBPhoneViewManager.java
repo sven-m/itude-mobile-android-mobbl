@@ -242,20 +242,23 @@ public class MBPhoneViewManager extends MBViewManager
   private void onHomeSelected()
   {
     MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
-    boolean isInNavbar = "TRUE".equalsIgnoreCase(homeDialogDefinition.getAddToNavbar());
 
     MBTabBar tabBar = getTabBar();
-    if (isInNavbar && tabBar != null)
+    resetViewPreservingCurrentDialog();
+    int firstDialog = homeDialogDefinition.getName().hashCode();
+    MBTab selectedTab = tabBar.getSelectedTab();
+    if (selectedTab == null || firstDialog != selectedTab.getTabId())
     {
-      resetViewPreservingCurrentDialog();
-      int firstDialog = homeDialogDefinition.getName().hashCode();
-      MBTab selectedTab = tabBar.getSelectedTab();
-      if (selectedTab == null || firstDialog != selectedTab.getTabId())
+      if (tabBar.findTabById(firstDialog) != null)
       {
         tabBar.selectTab(firstDialog, true);
       }
+      else
+      {
+        activateDialogWithName(homeDialogDefinition.getName());
+      }
     }
-    else if (!isInNavbar)
+    else
     {
       activateDialogWithName(homeDialogDefinition.getName());
     }
