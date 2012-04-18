@@ -350,7 +350,6 @@ public class MBApplicationController extends Application
           _viewManager.showPage(page, displayMode, doSelect, backStackEnabled);
         }
       });
-
       hideIndicatorForOutcome(causingOutcome);
     }
     catch (Exception e)

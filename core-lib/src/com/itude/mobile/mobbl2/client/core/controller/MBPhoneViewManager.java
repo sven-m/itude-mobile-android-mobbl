@@ -43,24 +43,19 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
 
 public class MBPhoneViewManager extends MBViewManager
 {
-  private Menu _menu = null;
 
   // Android hooks
   @Override
   public boolean onCreateOptionsMenu(Menu menu)
   {
-    _menu = menu;
-
     List<MBToolDefinition> tools = MBMetadataService.getInstance().getTools();
 
     for (MBToolDefinition def : tools)
     {
       if (isPreConditionValid(def))
       {
-        int index = tools.indexOf(def);
-
         String localizedTitle = MBLocalizationService.getInstance().getTextForKey(def.getTitle());
-        MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), index, localizedTitle);
+        MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), tools.indexOf(def), localizedTitle);
 
         Drawable image = null;
         if (def.getIcon() != null)
@@ -69,8 +64,7 @@ public class MBPhoneViewManager extends MBViewManager
           menuItem.setIcon(image);
         }
 
-        int menuItemActionFlags = getMenuItemActionFlags(def);
-        menuItem.setShowAsAction(menuItemActionFlags);
+        menuItem.setShowAsAction(getMenuItemActionFlags(def));
 
         if ("SEARCH".equals(def.getType()))
         {
@@ -136,7 +130,6 @@ public class MBPhoneViewManager extends MBViewManager
         }
       }
     }
-
     return true;
   }
 
@@ -286,6 +279,7 @@ public class MBPhoneViewManager extends MBViewManager
           tabBar.selectTab(null, true);
         }
       }
+
     }
   }
 
@@ -358,7 +352,10 @@ public class MBPhoneViewManager extends MBViewManager
             MBTab tab = new MBTab(MBPhoneViewManager.this);
             tab.setAdapter(spinnerAdapter);
             tab.setSelectedBackground(drawable);
-            tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+            if (dialogDefinition.getIcon() != null)
+            {
+              tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+            }
             setTabText(dialogDefinition, tab, tabBar);
 
             tab.setTabId(dialogName.hashCode());

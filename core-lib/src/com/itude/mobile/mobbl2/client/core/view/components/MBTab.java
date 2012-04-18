@@ -25,7 +25,6 @@ import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
-import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
@@ -61,7 +60,7 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
     MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
     styleHandler.styleTab(this);
 
-    setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, MBScreenUtilities.convertDimensionPixelsToPixels(56)));
+    setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.FILL_PARENT));
 
     RelativeLayout.LayoutParams leftSpacerParams = new RelativeLayout.LayoutParams(0, 0);
     leftSpacerParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -78,7 +77,7 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
     _content.setId(UniqueIntegerGenerator.getId());
     _content.setLayoutParams(contentParams);
     _content.setOrientation(LinearLayout.HORIZONTAL);
-    _content.setGravity(Gravity.CENTER_VERTICAL);
+    _content.setGravity(Gravity.CENTER);
 
     _icon = new ImageView(context);
     _icon.setId(UniqueIntegerGenerator.getId());
@@ -86,7 +85,6 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
     _textView = new TextView(context);
     _textView.setId(UniqueIntegerGenerator.getId());
     _textView.setSingleLine();
-    _textView.setTextSize(18);
 
     styleHandler.styleTabText(_textView);
 

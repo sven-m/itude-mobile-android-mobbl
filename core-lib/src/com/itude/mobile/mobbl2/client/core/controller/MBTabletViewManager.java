@@ -75,10 +75,8 @@ public class MBTabletViewManager extends MBViewManager
     {
       if (isPreConditionValid(def))
       {
-        int index = tools.indexOf(def);
-
         String localizedTitle = MBLocalizationService.getInstance().getTextForKey(def.getTitle());
-        MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), index, localizedTitle);
+        MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), tools.indexOf(def), localizedTitle);
 
         Drawable image = null;
         if (def.getIcon() != null)
@@ -87,8 +85,7 @@ public class MBTabletViewManager extends MBViewManager
           menuItem.setIcon(image);
         }
 
-        int menuItemActionFlags = getMenuItemActionFlags(def);
-        menuItem.setShowAsAction(menuItemActionFlags);
+        menuItem.setShowAsAction(getMenuItemActionFlags(def));
 
         if ("REFRESH".equals(def.getType()))
         {

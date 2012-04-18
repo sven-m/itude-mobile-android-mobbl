@@ -500,7 +500,7 @@ public class MBStyleHandler
 
   public void styleTabText(TextView view)
   {
-
+    view.setTextSize(18);
   }
 
   public void styleTabSpinner(MBSpinner spinner)

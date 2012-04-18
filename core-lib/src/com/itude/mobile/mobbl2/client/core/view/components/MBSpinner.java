@@ -43,9 +43,6 @@ public class MBSpinner extends Spinner
     }
     _mode = mode;
 
-    //    int spinnerDrawableId = getResources().getIdentifier("spinner_cab_background_holo_dark", "drawable", "android");
-    //    setBackgroundResource(spinnerDrawableId);
-
     MBViewBuilderFactory.getInstance().getStyleHandler().styleTabSpinner(this);
   }
 

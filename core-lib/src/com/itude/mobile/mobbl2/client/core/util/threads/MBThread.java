@@ -74,7 +74,6 @@ public class MBThread extends Thread
     {
       handleException(e);
     }
-
     MBThreadHandler.getInstance().unregister(this);
   }
 
