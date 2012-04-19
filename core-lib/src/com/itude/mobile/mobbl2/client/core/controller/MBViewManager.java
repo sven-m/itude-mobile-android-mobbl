@@ -796,7 +796,7 @@ public class MBViewManager extends ActivityGroup
    */
   public void supportInvalidateOptionsMenu()
   {
-    if (MBDevice.getInstance().isTablet())
+    if (MBDevice.getInstance().isTablet() || MBDevice.getInstance().isPhoneV14())
     {
       // If we are running on HC or greater, we can use the framework
       // API to invalidate the options menu.
