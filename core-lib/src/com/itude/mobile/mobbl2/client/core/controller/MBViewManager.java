@@ -160,6 +160,21 @@ public class MBViewManager extends ActivityGroup
     return super.onMenuItemSelected(featureId, item);
   }
 
+  public boolean onMenuKeyDown(int keyCode, KeyEvent event, View callingView)
+  {
+    Activity currentActivity = getLocalActivityManager().getCurrentActivity();
+    boolean onKeyDown = currentActivity.onKeyDown(keyCode, event);
+
+    if (!onKeyDown)
+    {
+      hideSoftKeyBoard(callingView);
+      this.openOptionsMenu();
+      return true;
+    }
+
+    return false;
+  }
+
   @Override
   public void finishFromChild(Activity child)
   {
