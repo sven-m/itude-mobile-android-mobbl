@@ -187,7 +187,7 @@ public class MBStyleHandler
   {
   }
 
-  public void styleInputfieldBackgroundWithName(View inputField, String style)
+  public void styleInputfieldBackgroundWithName(EditText inputField, String style)
   {
   }
 
@@ -312,7 +312,7 @@ public class MBStyleHandler
   {
   }
 
-  public void styleBasicPanelHeader(View result)
+  public void styleBasicPanelHeader(LinearLayout result, String style)
   {
   }
 
@@ -369,7 +369,7 @@ public class MBStyleHandler
   {
   }
 
-  public void styleRow(ViewGroup rowPanel, String style)
+  public void styleRow(RelativeLayout rowPanel, String style)
   {
   }
 

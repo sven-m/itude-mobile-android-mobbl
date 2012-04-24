@@ -196,7 +196,8 @@ public class MBPanelViewBuilder extends MBViewBuilder
   {
     final Context context = MBApplicationController.getInstance().getBaseContext();
 
-    getStyleHandler().styleBasicPanelHeader(viewToFill);
+    getStyleHandler().styleBasicPanelHeader(viewToFill, panel.getStyle());
+
     if (panel.getTitle() != null)
     {
       TextView title = new TextView(context);

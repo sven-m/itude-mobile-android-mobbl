@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
@@ -50,6 +51,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
     if (Constants.C_FIELD_INPUT.equals(field.getType())) view = buildTextField(field);
     else if (Constants.C_FIELD_PASSWORD.equals(field.getType())) view = buildTextField(field);
     else if (Constants.C_FIELD_BUTTON.equals(field.getType())) view = buildButton(field);
+    else if (Constants.C_FIELD_IMAGE.equals(field.getType())) view = buildImage(field);
     else if (Constants.C_FIELD_IMAGEBUTTON.equals(field.getType())) view = buildImageButton(field);
     else if (Constants.C_FIELD_LABEL.equals(field.getType())) view = buildLabel(field);
     else if (Constants.C_FIELD_SUBLABEL.equals(field.getType())) view = buildSubLabel(field);
@@ -91,18 +93,42 @@ public class MBFieldViewBuilder extends MBViewBuilder
     return button;
   }
 
+  public View buildImage(MBField field)
+  {
+    String source = field.getSource();
+    if (StringUtilities.isBlank(source))
+    {
+      Log.w(Constants.APPLICATION_NAME, "Source is null or empty for field");
+      return null;
+    }
+
+    ImageView image = new ImageView(MBApplicationController.getInstance().getBaseContext());
+    image.setOnClickListener(field);
+    image.setOnKeyListener(field);
+
+    Drawable drawable = MBResourceService.getInstance().getImageByID(source);
+    image.setBackgroundDrawable(drawable);
+
+    return image;
+
+  }
+
   public View buildImageButton(MBField field)
   {
+    String source = field.getSource();
+    if (StringUtilities.isBlank(source))
+    {
+      Log.w(Constants.APPLICATION_NAME, "Source is null or empty for field");
+      return null;
+    }
+
     ImageButton button = new ImageButton(MBApplicationController.getInstance().getBaseContext());
     button.setOnClickListener(field);
     button.setOnKeyListener(field);
 
-    String source = field.getSource();
-    if (source != null)
-    {
-      Drawable drawable = MBResourceService.getInstance().getImageByID(source);
-      button.setBackgroundDrawable(drawable);
-    }
+    Drawable drawable = MBResourceService.getInstance().getImageByID(source);
+    button.setBackgroundDrawable(drawable);
+
     return button;
   }
 

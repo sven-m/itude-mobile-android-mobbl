@@ -47,7 +47,7 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     setType(definition.getType());
     setWidth(definition.getWidth());
     setHeight(definition.getHeight());
-    setOutcomeName(definition.getOutcomeName());
+    setOutcomeName(substituteExpressions(definition.getOutcomeName()));
     setPath(definition.getPath());
     setMode(definition.getMode());
     parsePermissions(definition.getPermissions());
@@ -93,12 +93,12 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
           parent = getFirstParentPanelWithType(Constants.C_EDITABLEMATRIX);
         }
         parent.setDiffableMaster(true);
-        if (getDiffableMarkerPath() != null) 
+        if (getDiffableMarkerPath() != null)
         {
           parent.setDiffableMarkerPath(getDiffableMarkerPath());
         }
-        
-        if (getDiffablePrimaryPath() != null) 
+
+        if (getDiffablePrimaryPath() != null)
         {
           parent.setDiffablePrimaryPath(getDiffablePrimaryPath());
         }
