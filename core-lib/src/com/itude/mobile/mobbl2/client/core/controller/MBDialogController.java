@@ -283,7 +283,7 @@ public class MBDialogController extends FragmentActivity
       transaction.addToBackStack(id);
     }
 
-    if (MBDevice.getInstance().isTablet() //
+    if ((MBDevice.getInstance().isTablet() || MBDevice.getInstance().isPhoneV14())//
         && (page.getCurrentViewState() == MBViewState.MBViewStateModal //
         || MBApplicationController.getInstance().getModalPageID() != null))
     {
