@@ -17,7 +17,7 @@ public class MBHeader extends RelativeLayout
     RelativeLayout.LayoutParams titleViewParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
         RelativeLayout.LayoutParams.WRAP_CONTENT);
     titleViewParams.addRule(RelativeLayout.CENTER_VERTICAL);
-    setTitleView(new TextView(context));
+    _titleView = new TextView(context);
     _titleView.setLayoutParams(titleViewParams);
     addView(getTitleView());
   }

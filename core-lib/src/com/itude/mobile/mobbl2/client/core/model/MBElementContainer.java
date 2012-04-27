@@ -1,7 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -566,15 +565,23 @@ public class MBElementContainer implements Parcelable
   {
     this();
 
-    Bundle elementsBundle = in.readBundle();
+    Bundle elementsBundle = in.readBundle(MBElement.class.getClassLoader());
 
     for (String key : elementsBundle.keySet())
     {
-      MBElement[] elements = (MBElement[]) elementsBundle.getParcelableArray(key);
-      _elements.put(key, Arrays.asList(elements));
+      Parcelable[] parcelableElements = elementsBundle.getParcelableArray(key);
+      if (parcelableElements != null)
+      {
+        List<MBElement> elements = new ArrayList<MBElement>(parcelableElements.length);
+        for (Parcelable parcelableElement : parcelableElements)
+        {
+          elements.add((MBElement) parcelableElement);
+        }
+        _elements.put(key, elements);
+      }
     }
 
-    _parent = in.readParcelable(null);
+    _parent = in.readParcelable(MBElementContainer.class.getClassLoader());
   }
 
   @Override
@@ -591,7 +598,8 @@ public class MBElementContainer implements Parcelable
     for (String key : _elements.keySet())
     {
       List<MBElement> list = _elements.get(key);
-      elementsBundle.putParcelableArray(key, (MBElement[]) list.toArray());
+      MBElement[] elements = (MBElement[]) list.toArray(new MBElement[list.size()]);
+      elementsBundle.putParcelableArray(key, elements);
     }
 
     out.writeBundle(elementsBundle);

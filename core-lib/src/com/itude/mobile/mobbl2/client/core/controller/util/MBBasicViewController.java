@@ -191,7 +191,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     if (getShowsDialog() && _isDialogClosable)
     {
       FrameLayout layout = (FrameLayout) getDialog().findViewById(android.R.id.custom);
-      layout.setPadding(0, 0, 0, 0);
+      if (layout != null) layout.setPadding(0, 0, 0, 0);
 
       if (MBDevice.getInstance().isTablet())
       {

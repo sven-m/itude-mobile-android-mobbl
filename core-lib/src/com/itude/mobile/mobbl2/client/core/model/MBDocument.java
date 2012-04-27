@@ -231,10 +231,12 @@ public class MBDocument extends MBElementContainer
     _sharedContext = new HashMap<String, MBDocument>();
     _pathCache = new HashMap<String, MBElement>();
 
-    _definition = in.readParcelable(null);
-    Bundle sharedContext = in.readBundle();
-    Bundle pathCache = in.readBundle();
-    _argumentsUsed = in.readParcelable(null);
+    _definition = in.readParcelable(MBDocumentDefinition.class.getClassLoader());
+
+    Bundle sharedContext = in.readBundle(MBDocument.class.getClassLoader());
+    Bundle pathCache = in.readBundle(MBElement.class.getClassLoader());
+
+    _argumentsUsed = in.readParcelable(MBDocument.class.getClassLoader());
 
     for (String key : sharedContext.keySet())
     {
@@ -256,6 +258,8 @@ public class MBDocument extends MBElementContainer
   @Override
   public void writeToParcel(Parcel out, int flags)
   {
+    super.writeToParcel(out, flags);
+
     Bundle sharedContext = new Bundle();
 
     for (String key : _sharedContext.keySet())

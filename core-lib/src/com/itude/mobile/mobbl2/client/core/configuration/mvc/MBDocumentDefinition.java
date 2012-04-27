@@ -216,7 +216,7 @@ public class MBDocumentDefinition extends MBDefinition
   {
     super(in);
 
-    Bundle elements = in.readBundle();
+    Bundle elements = in.readBundle(MBDocumentDefinition.class.getClassLoader());
     _dataManager = in.readString();
     _autoCreate = (Boolean) in.readValue(null);
 

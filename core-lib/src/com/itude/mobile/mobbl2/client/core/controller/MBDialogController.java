@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.BackStackEntry;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Window;
@@ -26,6 +28,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
+import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBDialogViewBuilder.MBDialogType;
@@ -38,10 +41,12 @@ public class MBDialogController extends FragmentActivity
   private String                     _dialogMode;
   private Object                     _rootController;
   private boolean                    _temporary;
-  private final List<Integer>        _sortedDialogIds  = new ArrayList<Integer>();
-  private final Map<String, Integer> _dialogIds        = new HashMap<String, Integer>();
-  private final Map<String, String>  _childDialogModes = new HashMap<String, String>();
-  private boolean                    _clearDialog      = false;
+  private final List<Integer>        _sortedDialogIds               = new ArrayList<Integer>();
+  private final Map<String, Integer> _dialogIds                     = new HashMap<String, Integer>();
+  private final Map<String, String>  _childDialogModes              = new HashMap<String, String>();
+  private boolean                    _clearDialog                   = false;
+
+  private boolean                    _addedBackStackChangedListener = false;
 
   // Android lifecycle methods
 
@@ -53,6 +58,41 @@ public class MBDialogController extends FragmentActivity
     {
       viewInit();
     }
+
+    /*
+     *  We will add a backStackChangedListener which will give us a hook to perform code when something was 
+     *  added or removed from the backStack.
+     */
+    if (!_addedBackStackChangedListener)
+    {
+      getSupportFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener()
+      {
+
+        @Override
+        public void onBackStackChanged()
+        {
+          FragmentManager fm = getSupportFragmentManager();
+          if (fm.getBackStackEntryCount() > 0)
+          {
+            /*
+             * Find the last entry from the backStack. When found we get ourselves the MBPage using the backstackEntry.getName() method
+             * With the MBPage we can get the viewController that belongs to the page. 
+             * Finally we will trigger the handleOnWindowActivated
+             */
+            BackStackEntry backStackEntry = fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1);
+            MBPage page = MBApplicationController.getInstance().getPage(backStackEntry.getName());
+
+            if (page != null)
+            {
+              page.getViewController().handleOnWindowActivated();
+            }
+          }
+        }
+      });
+
+      _addedBackStackChangedListener = true;
+    }
+
   }
 
   /**
@@ -449,6 +489,16 @@ public class MBDialogController extends FragmentActivity
     for (MBBasicViewController controller : getAllFragments())
     {
       controller.handleOrientationChange(newConfig);
+    }
+
+    String modalPageID = MBApplicationController.getInstance().getModalPageID();
+    if (StringUtilities.isNotBlank(modalPageID))
+    {
+      Fragment fragment = getSupportFragmentManager().findFragmentByTag(modalPageID);
+      if (fragment != null && fragment instanceof MBBasicViewController)
+      {
+        ((MBBasicViewController) fragment).handleOrientationChange(newConfig);
+      }
     }
   }
 }

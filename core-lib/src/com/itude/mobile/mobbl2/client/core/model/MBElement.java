@@ -24,6 +24,12 @@ public class MBElement extends MBElementContainer
   private final Map<String, String> _values;                  // Dictionaryofstrings
   private MBElementDefinition       _definition;
 
+  public MBElement()
+  {
+    super();
+    _values = new HashMap<String, String>();
+  }
+
   public MBElement(MBElementDefinition definition)
   {
     super();
@@ -344,7 +350,7 @@ public class MBElement extends MBElementContainer
       _values.put(key, valueBundle.getString(key));
     }
 
-    _definition = in.readParcelable(null);
+    _definition = in.readParcelable(MBElementDefinition.class.getClassLoader());
   }
 
   @Override

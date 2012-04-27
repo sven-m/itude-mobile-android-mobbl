@@ -218,24 +218,24 @@ public class MBElementDefinition extends MBDefinition
   {
     super(in);
 
-    MBAttributeDefinition[] attributes = (MBAttributeDefinition[]) in.readParcelableArray(null);
-    MBElementDefinition[] children = (MBElementDefinition[]) in.readParcelableArray(null);
+    Parcelable[] attributes = in.readParcelableArray(MBAttributeDefinition.class.getClassLoader());
+    Parcelable[] children = in.readParcelableArray(MBElementDefinition.class.getClassLoader());
     _minOccurs = in.readInt();
     _maxOccurs = in.readInt();
 
-    _attributes = new HashMap<String, MBAttributeDefinition>();
-    _attributesSorted = new ArrayList<MBAttributeDefinition>();
-    _children = new HashMap<String, MBElementDefinition>();
-    _childrenSorted = new ArrayList<MBElementDefinition>();
+    _attributes = new HashMap<String, MBAttributeDefinition>(attributes.length);
+    _attributesSorted = new ArrayList<MBAttributeDefinition>(attributes.length);
+    _children = new HashMap<String, MBElementDefinition>(children.length);
+    _childrenSorted = new ArrayList<MBElementDefinition>(children.length);
 
-    for (MBAttributeDefinition def : attributes)
+    for (Parcelable def : attributes)
     {
-      addAttribute(def);
+      addAttribute((MBAttributeDefinition) def);
     }
 
-    for (MBElementDefinition def : children)
+    for (Parcelable def : children)
     {
-      addElement(def);
+      addElement((MBElementDefinition) def);
     }
   }
 
@@ -250,8 +250,9 @@ public class MBElementDefinition extends MBDefinition
   {
     super.writeToParcel(out, flags);
 
-    MBAttributeDefinition[] attributes = (MBAttributeDefinition[]) _attributesSorted.toArray();
-    MBElementDefinition[] children = (MBElementDefinition[]) _childrenSorted.toArray();
+    MBAttributeDefinition[] attributes = (MBAttributeDefinition[]) _attributesSorted.toArray(new MBAttributeDefinition[_attributesSorted
+        .size()]);
+    MBElementDefinition[] children = (MBElementDefinition[]) _childrenSorted.toArray(new MBElementDefinition[_childrenSorted.size()]);
 
     out.writeParcelableArray(attributes, flags);
     out.writeParcelableArray(children, flags);
