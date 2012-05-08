@@ -84,7 +84,11 @@ public class MBDialogController extends FragmentActivity
 
             if (page != null)
             {
-              page.getViewController().handleOnWindowActivated();
+              MBBasicViewController viewController = page.getViewController();
+              if (viewController != null)
+              {
+                page.getViewController().handleOnWindowActivated();
+              }
             }
           }
         }
