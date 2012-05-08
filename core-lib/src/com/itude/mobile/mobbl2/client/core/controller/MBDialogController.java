@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentManager.BackStackEntry;
-import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Window;
@@ -46,8 +44,6 @@ public class MBDialogController extends FragmentActivity
   private final Map<String, String>  _childDialogModes              = new HashMap<String, String>();
   private boolean                    _clearDialog                   = false;
 
-  private boolean                    _addedBackStackChangedListener = false;
-
   // Android lifecycle methods
 
   @Override
@@ -57,44 +53,6 @@ public class MBDialogController extends FragmentActivity
     if (controllerInit())
     {
       viewInit();
-    }
-
-    /*
-     *  We will add a backStackChangedListener which will give us a hook to perform code when something was 
-     *  added or removed from the backStack.
-     */
-    if (!_addedBackStackChangedListener)
-    {
-      getSupportFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener()
-      {
-
-        @Override
-        public void onBackStackChanged()
-        {
-          FragmentManager fm = getSupportFragmentManager();
-          if (fm.getBackStackEntryCount() > 0)
-          {
-            /*
-             * Find the last entry from the backStack. When found we get ourselves the MBPage using the backstackEntry.getName() method
-             * With the MBPage we can get the viewController that belongs to the page. 
-             * Finally we will trigger the handleOnWindowActivated
-             */
-            BackStackEntry backStackEntry = fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1);
-            MBPage page = MBApplicationController.getInstance().getPage(backStackEntry.getName());
-
-            if (page != null)
-            {
-              MBBasicViewController viewController = page.getViewController();
-              if (viewController != null)
-              {
-                page.getViewController().handleOnWindowActivated();
-              }
-            }
-          }
-        }
-      });
-
-      _addedBackStackChangedListener = true;
     }
 
   }

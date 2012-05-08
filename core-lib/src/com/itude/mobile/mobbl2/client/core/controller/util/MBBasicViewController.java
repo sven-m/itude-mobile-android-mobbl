@@ -112,6 +112,13 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   }
 
   @Override
+  public void onResume()
+  {
+    super.onResume();
+    handleOnWindowActivated();
+  }
+
+  @Override
   public Dialog onCreateDialog(Bundle savedInstanceState)
   {
     _isDialogClosable = getArguments().getBoolean("closable", false);
@@ -224,7 +231,12 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     super.onDismiss(dialog);
     MBApplicationController controller = MBApplicationController.getInstance();
     MBPage rootModalPage = controller.getPage(controller.getModalPageID());
-    if (_page.equals(rootModalPage)) controller.removeLastModalPageID();
+    if (_page.equals(rootModalPage))
+    {
+      controller.removeLastModalPageID();
+    }
+
+    controller.getViewManager().getActiveDialog().handleAllOnWindowActivated();
   }
 
   ////////////////////////////////////////
