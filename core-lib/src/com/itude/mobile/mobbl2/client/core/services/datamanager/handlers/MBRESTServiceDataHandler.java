@@ -138,8 +138,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
       // if the response document is empty and unhandled by endpoint listeners let the user know there is a problem
       if (!serverErrorHandled && responseDoc == null)
       {
-        throw new MBServerErrorException(MBLocalizationService.getInstance()
-            .getTextForKey("The server returned an error. Please try again later"));
+        throw new MBServerErrorException("The server returned an error. Please try again later");
       }
       return responseDoc;
     }
@@ -159,20 +158,20 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
       else if (e instanceof SocketException)
       {
         MBNetworkErrorException networkException = new MBNetworkErrorException("No internet connection");
-        networkException.setName("Network error");
+        networkException.setName(localizedString("Network error"));
         throw networkException;
       }
       else if (e instanceof SocketTimeoutException)
       {
         MBNetworkErrorException networkException = new MBNetworkErrorException("Internet timeout");
-        networkException.setName("Network error");
+        networkException.setName(localizedString("Network error"));
         throw networkException;
       }
       else if (e instanceof UnknownHostException
                || (e instanceof IOException && e.getMessage() != null && e.getMessage().contains("SSL handshake")))
       {
         MBServerErrorException serverException = new MBServerErrorException("Server unreachable");
-        serverException.setName("Server message");
+        serverException.setName(localizedString("Server message"));
         throw serverException;
       }
       throw new RuntimeException(e);
@@ -360,6 +359,11 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     {
       return sslContext.getSocketFactory().createSocket();
     }
+  }
+
+  private String localizedString(String key)
+  {
+    return MBLocalizationService.getInstance().getTextForKey(key);
   }
 
 }

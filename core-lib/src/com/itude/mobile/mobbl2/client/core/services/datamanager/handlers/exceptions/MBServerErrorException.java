@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.exceptions;
 
 import com.itude.mobile.mobbl2.client.core.MBException;
+import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 
 public class MBServerErrorException extends MBException
 {
@@ -12,7 +13,7 @@ public class MBServerErrorException extends MBException
 
   public MBServerErrorException(String msg)
   {
-    super(msg);
+    super(MBLocalizationService.getInstance().getTextForKey(msg));
   }
 
 }
