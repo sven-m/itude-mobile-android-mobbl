@@ -11,8 +11,8 @@ public class MBItemDefinition extends MBDefinition
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    return StringUtilities.appendIndentString(appendToMe, level).append("<Item name='").append(getName()).append("' resource='")
-        .append(_resource).append("'").append(getAttributeAsXml("state", _state)).append("/>");
+    return StringUtilities.appendIndentString(appendToMe, level).append("<Item resource='").append(_resource).append("'")
+        .append(getAttributeAsXml("state", _state)).append("/>");
   }
 
   @Override

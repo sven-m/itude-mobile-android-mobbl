@@ -8,7 +8,7 @@ public class MBStatedResourceDefinition extends MBAbstractResourceCollectionDefi
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<StatedResource name='").append(getName()).append("' >");
+    StringUtilities.appendIndentString(appendToMe, level).append("<StatedResource name='").append(getResourceId()).append("' >");
     for (MBItemDefinition item : getItems().values())
     {
       item.asXmlWithLevel(appendToMe, level + 2);

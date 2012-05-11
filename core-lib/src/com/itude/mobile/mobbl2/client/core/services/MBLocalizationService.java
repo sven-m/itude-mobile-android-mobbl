@@ -102,6 +102,25 @@ public class MBLocalizationService
     return text;
   }
 
+  /***
+   * @see java.util.Formatter.format(String, Object ...)
+   * @param key
+   * @param args
+   * @return
+   */
+  public String getText(String key, Object... args)
+  {
+    if (key == null)
+    {
+      return null;
+    }
+
+    String text = getTextForKey(key);
+
+    return String.format(text, args);
+
+  }
+
   public String getLocaleCode()
   {
     if (_localeCode == null)

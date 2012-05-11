@@ -298,13 +298,17 @@ public class MBPhoneViewManager extends MBViewManager
   {
     try
     {
-      return (MBTabBar) getActionBar().getCustomView();
+      ActionBar actionBar = getActionBar();
+      if (actionBar != null)
+      {
+        return (MBTabBar) actionBar.getCustomView();
+      }
     }
     catch (Exception e)
     {
       Log.w(Constants.APPLICATION_NAME, "Unable to retrieve the tab bar, returning null", e);
-      return null;
     }
+    return null;
   }
 
   private void populateActionBar()

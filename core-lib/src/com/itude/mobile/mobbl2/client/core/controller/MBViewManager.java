@@ -30,9 +30,12 @@ import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatH
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPathException;
 import com.itude.mobile.mobbl2.client.core.controller.helpers.MBActivityHelper;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicatorI;
+import com.itude.mobile.mobbl2.client.core.model.MBDocument;
+import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
@@ -40,6 +43,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowCha
 import com.itude.mobile.mobbl2.client.core.util.CollectionUtilities;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
+import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.helper.MBSecurityHelper;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThreadHandler;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
@@ -330,30 +334,55 @@ public class MBViewManager extends ActivityGroup
     String title = null;
     String message = null;
 
-    if (page.getDocument().getName().equals(MBConfigurationDefinition.DOC_SYSTEM_EXCEPTION))
+    MBDocument pageDoc = page.getDocument();
+    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    boolean buildDefault = true;
+    if (pageDoc.getName().equals(MBConfigurationDefinition.DOC_SYSTEM_EXCEPTION))
     {
-      title = page.getDocument().getValueForPath(MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_NAME);
-      message = page.getDocument().getValueForPath(MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_DESCRIPTION);
+      title = pageDoc.getValueForPath(MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_NAME);
+      message = pageDoc.getValueForPath(MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_DESCRIPTION);
     }
     else
     {
       title = page.getTitle();
-      message = MBLocalizationService.getInstance().getTextForKey((String) page.getDocument().getValueForPath("/message[0]/@text"));
+      message = MBLocalizationService.getInstance().getTextForKey((String) pageDoc.getValueForPath("/message[0]/@text"));
       if (message == null)
       {
-        message = MBLocalizationService.getInstance().getTextForKey((String) page.getDocument().getValueForPath("/message[0]/@text()"));
+        message = MBLocalizationService.getInstance().getTextForKey((String) pageDoc.getValueForPath("/message[0]/@text()"));
+      }
+
+      try
+      {
+        MBElement buttons = pageDoc.getValueForPath("/buttons[0]");
+        MBElement neutral = buttons.getValueForPath("/neutral[0]");
+        MBElement negative = buttons.getValueForPath("/negative[0]");
+        MBElement positive = buttons.getValueForPath("/positive[0]");
+
+        builder.setMessage(message).setTitle(title).setCancelable(true);
+
+        buildAlertDialogButtons(builder, neutral);
+        buildAlertDialogButtons(builder, negative);
+        buildAlertDialogButtons(builder, positive);
+
+        buildDefault = false;
+      }
+      catch (MBInvalidPathException e)
+      {
+        Log.w(Constants.APPLICATION_NAME, "Popup document " + pageDoc.getName() + " has no buttons defined. Adding neutral button Ok");
       }
     }
 
-    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setMessage(message).setTitle(title).setCancelable(true).setNeutralButton("Ok", new DialogInterface.OnClickListener()
+    if (buildDefault)
     {
-      @Override
-      public void onClick(DialogInterface dialog, int id)
+      builder.setMessage(message).setTitle(title).setCancelable(true).setNeutralButton("Ok", new DialogInterface.OnClickListener()
       {
-        dialog.cancel();
-      }
-    });
+        @Override
+        public void onClick(DialogInterface dialog, int id)
+        {
+          dialog.cancel();
+        }
+      });
+    }
 
     runOnUiThread(new Runnable()
     {
@@ -366,6 +395,75 @@ public class MBViewManager extends ActivityGroup
         setCurrentAlert(dialog);
       }
     });
+
+  }
+
+  private void buildAlertDialogButtons(AlertDialog.Builder builder, final MBElement element)
+  {
+    String label = element.getValueForAttribute("label");
+    if (StringUtilities.isNotBlank(label))
+    {
+      if ("neutral".equals(element.getName()))
+      {
+        builder.setNeutralButton(MBLocalizationService.getInstance().getTextForKey(label), new OnClickListener()
+        {
+          @Override
+          public void onClick(DialogInterface dialog, int which)
+          {
+            String outcome = element.getValueForAttribute("outcome");
+            if (StringUtilities.isBlank(outcome))
+            {
+              dialog.cancel();
+            }
+            else
+            {
+              MBApplicationController.getInstance().handleOutcome(new MBOutcome(outcome, null));
+            }
+          }
+        });
+      }
+      else if ("positive".equals(element.getName()))
+      {
+        builder.setPositiveButton(MBLocalizationService.getInstance().getTextForKey(label), new OnClickListener()
+        {
+          @Override
+          public void onClick(DialogInterface dialog, int which)
+          {
+            String outcome = element.getValueForAttribute("outcome");
+            if (StringUtilities.isBlank(outcome))
+            {
+              dialog.cancel();
+            }
+            else
+            {
+              MBApplicationController.getInstance().handleOutcome(new MBOutcome(outcome, null));
+            }
+          }
+        });
+
+      }
+      else if ("negative".equals(element.getName()))
+      {
+        builder.setNegativeButton(MBLocalizationService.getInstance().getTextForKey(label), new OnClickListener()
+        {
+          @Override
+          public void onClick(DialogInterface dialog, int which)
+          {
+            String outcome = element.getValueForAttribute("outcome");
+            if (StringUtilities.isBlank(outcome))
+            {
+              dialog.cancel();
+            }
+            else
+            {
+              MBApplicationController.getInstance().handleOutcome(new MBOutcome(outcome, null));
+            }
+          }
+        });
+
+      }
+
+    }
 
   }
 
