@@ -1,4 +1,6 @@
 <Resources>
+	<Bundle languageCode="nl" 						url="file://texts-nl.xml"/>
+	
 	<Resource id="whitelabel-splashscreen" url="file://whitelabel_splashscreen.png" />
 	<Resource id="icon1" url="file://icon.png" />
 	<Resource id="icon2" url="file://icon.png" />
