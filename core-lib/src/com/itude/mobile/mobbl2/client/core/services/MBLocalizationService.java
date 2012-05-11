@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingFormatArgumentException;
 
 import android.util.Log;
 
@@ -116,8 +117,18 @@ public class MBLocalizationService
     }
 
     String text = getTextForKey(key);
+    String result = "";
+    try
+    {
+      result = String.format(text, args);
+    }
+    catch (MissingFormatArgumentException e)
+    {
+      Log.w(Constants.APPLICATION_NAME, e);
+      result = text;
+    }
 
-    return String.format(text, args);
+    return result;
 
   }
 
