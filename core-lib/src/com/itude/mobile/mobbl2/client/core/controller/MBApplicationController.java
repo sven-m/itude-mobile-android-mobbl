@@ -57,9 +57,12 @@ public class MBApplicationController extends Application
   private Map<String, HashMap<String, MBPage>> _pagesForName;
   private Stack<String>                        _modalPageStack;
   private MBOutcomeHandler                     _outcomeHandler;
-  private boolean                              _applicationStarted = false;
+  private boolean                              _applicationStarted      = false;
 
-  private static MBApplicationController       _instance           = null;
+  private static MBApplicationController       _instance                = null;
+
+  private String                               _searchResultNormal      = null;
+  private String                               _searchResultProgressive = null;
 
   ///////////////////// Android lifecycle methods
   @Override
@@ -660,17 +663,33 @@ public class MBApplicationController extends Application
 
     isProgressive = Intent.ACTION_SEARCH.equals(searchIntent.getAction()) ? "FALSE" : "TRUE";
 
+    String searchPath = "";
+
+    Bundle bundle = searchIntent.getBundleExtra(SearchManager.APP_DATA);
+    if (bundle != null)
+    {
+
+      _searchResultNormal = bundle.getString("searchResultNormal");
+      _searchResultProgressive = bundle.getString("searchResultProgressive");
+      searchPath = bundle.getString("searchPath");
+    }
+
+    String path = Uri.decode(searchIntent.getDataString());
+
     MBDocument searchRequest = MBDataManagerService.getInstance().loadDocument("MBSearchRequestDoc");
     searchRequest.setValue(query, "SearchRequest[0]/@query");
     searchRequest.setValue(isProgressive, "SearchRequest[0]/@isProgressive");
+    searchRequest.setValue(_searchResultNormal, "SearchRequest[0]/@searchResultNormal");
+    searchRequest.setValue(_searchResultProgressive, "SearchRequest[0]/@searchResultProgressive");
 
     MBOutcome searchOutcome = new MBOutcome();
     searchOutcome.setOriginName("Controller");
     searchOutcome.setOutcomeName("search");
     searchOutcome.setDocument(searchRequest);
-    searchOutcome.setPath(Uri.decode(searchIntent.getDataString()));
+    searchOutcome.setPath(path + searchPath);
 
     handleOutcome(searchOutcome);
+
   }
 
   /////////////////////////////////////////////////////////////////////////
