@@ -16,6 +16,12 @@ public class MBDefaultOnKeyListenerImpl implements OnKeyListener
       MBViewManager.getInstance().onKeyDown(keyCode, event);
       return true;
     }
+    else if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_MENU)
+    {
+      MBViewManager.getInstance().onMenuKeyDown(keyCode, event, v);
+      return true;
+    }
+
     return false;
   }
 

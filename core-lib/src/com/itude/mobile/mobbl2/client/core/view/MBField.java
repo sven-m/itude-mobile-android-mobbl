@@ -50,6 +50,7 @@ public class MBField extends MBComponent
   private MBDomainDefinition    _domainDefinition;
   private String                _translatedPath;
   private String                _label;
+  private String[]              _labelAttrs;
   private String                _source;
   private String                _type;
   private String                _dataType;
@@ -115,11 +116,13 @@ public class MBField extends MBComponent
 
     setStyle(substituteExpressions(fieldDef.getStyle()));
     setDataType(substituteExpressions(fieldDef.getDataType()));
+    setValueIfNil(substituteExpressions(fieldDef.getValueIfNil()));
     setLabel(substituteExpressions(fieldDef.getLabel()));
+    String labelAttrs = fieldDef.getLabelAttrs();
+    setLabelAttrs((labelAttrs != null) ? labelAttrs.split(",") : null);
     setSource(substituteExpressions(fieldDef.getSource()));
     setFormatMask(substituteExpressions(fieldDef.getFormatMask()));
     setAlignment(substituteExpressions(fieldDef.getAlignment()));
-    setValueIfNil(substituteExpressions(fieldDef.getValueIfNil()));
     setHidden(Boolean.parseBoolean(substituteExpressions(fieldDef.getHidden())));
     setRequired(Boolean.parseBoolean(substituteExpressions(fieldDef.getRequired())));
     setCustom1(substituteExpressions(fieldDef.getCustom1()));
@@ -193,12 +196,40 @@ public class MBField extends MBComponent
 
   public String getLabel()
   {
-    return MBLocalizationService.getInstance().getTextForKey(_label);
+    if (getLabelAttrs() == null)
+    {
+      return MBLocalizationService.getInstance().getTextForKey(_label);
+    }
+    else
+    {
+      return MBLocalizationService.getInstance().getText(_label, (Object[]) getLabelAttrs());
+    }
   }
 
   public void setLabel(String label)
   {
     _label = label;
+  }
+
+  public void setLabelAttrs(String[] labelAttrs)
+  {
+    if (labelAttrs != null && labelAttrs.length > 0)
+    {
+      String[] substitutes = new String[labelAttrs.length];
+      for (int i = 0; i < substitutes.length; i++)
+      {
+        String attr = labelAttrs[i];
+        String substituded = substituteExpressions(attr);
+        substitutes[i] = (substituded == null) ? getValueIfNil() : substituded;
+      }
+      labelAttrs = substitutes;
+    }
+    _labelAttrs = labelAttrs;
+  }
+
+  public String[] getLabelAttrs()
+  {
+    return _labelAttrs;
   }
 
   public String getSource()
@@ -266,7 +297,7 @@ public class MBField extends MBComponent
 
   public String getValueIfNil()
   {
-    return _valueIfNil;
+    return MBLocalizationService.getInstance().getTextForKey(_valueIfNil);
   }
 
   public void setValueIfNil(String valueIfNil)

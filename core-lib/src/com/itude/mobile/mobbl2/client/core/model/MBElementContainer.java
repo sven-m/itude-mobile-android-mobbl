@@ -25,6 +25,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBScriptService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDynamicAttributeComparator;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
+import com.itude.mobile.mobbl2.client.core.util.TwinResult;
 
 public class MBElementContainer implements Parcelable
 {
@@ -123,7 +124,46 @@ public class MBElementContainer implements Parcelable
     return null;
   }
 
+  /***
+   * @deprecated Please use createElement(String name)
+   * @param name
+   * @return
+   */
+  @Deprecated
   public MBElement createElementWithName(String name)
+  {
+    return createElement(name);
+  }
+
+  public MBElement createElement(String name)
+  {
+    TwinResult<MBElementContainer, MBElement> result = doCreateElement(name);
+
+    MBElement element = result._secondResult;
+    result._mainResult.addElement(element);
+
+    return element;
+  }
+
+  /***
+   * Create an element on the position specified with the index. After invoking this method, please consider clearing the
+   * document's path cache by invoking {@link MBDocument.clearPathCache()}.
+   * 
+   * @param name
+   * @param index
+   * @return
+   */
+  public MBElement createElement(String name, int index)
+  {
+    TwinResult<MBElementContainer, MBElement> result = doCreateElement(name);
+
+    MBElement element = result._secondResult;
+    result._mainResult.addElement(element, index);
+
+    return element;
+  }
+
+  protected TwinResult<MBElementContainer, MBElement> doCreateElement(String name)
   {
     Stack<String> pathComponents = new Stack<String>();
     pathComponents.addAll(StringUtilities.splitPath(name));
@@ -134,17 +174,22 @@ public class MBElementContainer implements Parcelable
 
       MBElement target = (MBElement) getValueForPathComponents(pathComponents, name, false, null);
 
-      return target.createElementWithName(elementName);
+      return target.doCreateElement(elementName);
     }
     else
     {
       MBElementDefinition childDef = null;
-      if (getDefinition() instanceof MBElementDefinition) childDef = ((MBElementDefinition) getDefinition()).getChildWithName(name);
-      else if (getDefinition() instanceof MBDocumentDefinition) childDef = ((MBDocumentDefinition) getDefinition()).getChildWithName(name);
+      if (getDefinition() instanceof MBElementDefinition)
+      {
+        childDef = ((MBElementDefinition) getDefinition()).getChildWithName(name);
+      }
+      else if (getDefinition() instanceof MBDocumentDefinition)
+      {
+        childDef = ((MBDocumentDefinition) getDefinition()).getChildWithName(name);
+      }
       MBElement element = childDef.createElement();
-      addElement(element);
 
-      return element;
+      return new TwinResult<MBElementContainer, MBElement>(this, element);
     }
   }
 
@@ -168,6 +213,13 @@ public class MBElementContainer implements Parcelable
 
   public void addElement(MBElement element)
   {
+    List<MBElement> elemContainer = prepareAddElement(element);
+
+    elemContainer.add(element);
+  }
+
+  private List<MBElement> prepareAddElement(MBElement element)
+  {
     String name = element.getDefinition().getName();
     element.setParent(this);
 
@@ -177,7 +229,28 @@ public class MBElementContainer implements Parcelable
       elemContainer = new ArrayList<MBElement>();
       _elements.put(name, elemContainer);
     }
-    elemContainer.add(element);
+    return elemContainer;
+  }
+
+  /***
+   * Add an element on the position specified with the index. After invoking this method, please consider clearing the
+   * document's path cache by invoking {@link MBDocument.clearPathCache()}.
+   * 
+   * @param element
+   * @param index
+   */
+  public void addElement(MBElement element, int index)
+  {
+    List<MBElement> elemContainer = prepareAddElement(element);
+
+    if (index < 0 || index > elemContainer.size())
+    {
+      String message = "Invalid index (" + index + ") for element with name " + element.getDefinition().getName() + " (count="
+                       + elemContainer.size() + ")";
+      throw new MBInvalidPathException(message);
+    }
+
+    elemContainer.add(index, element);
   }
 
   public Map<String, List<MBElement>> getElements()
