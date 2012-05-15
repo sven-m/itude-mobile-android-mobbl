@@ -28,6 +28,7 @@ public class MBScreenUtilities
   public final static int SEVENTY               = convertDimensionPixelsToPixels(70);
   public final static int SEVENTYFIVE           = convertDimensionPixelsToPixels(75);
   public final static int HUNDRED               = convertDimensionPixelsToPixels(100);
+  public final static int HUNDREDANDTEN         = convertDimensionPixelsToPixels(110);
   public final static int HUNDREDANDFIFTY       = convertDimensionPixelsToPixels(150);
   public final static int HUNDREDANDSEVENTYFIVE = convertDimensionPixelsToPixels(175);
   public final static int TWOHUNDRED            = convertDimensionPixelsToPixels(200);
