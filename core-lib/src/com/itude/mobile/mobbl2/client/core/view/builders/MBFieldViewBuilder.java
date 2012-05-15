@@ -312,7 +312,8 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
       // Depending on the localeCode-settings in the applicationProperties, we want to display a comma or a dot as decimal seperator for floats and doubles
       if (MBLocalizationService.getInstance().getLocaleCode() != null
-          && MBLocalizationService.getInstance().getLocaleCode().equals(Constants.C_LOCALE_CODE_DUTCH))
+          && (MBLocalizationService.getInstance().getLocaleCode().equals(Constants.C_LOCALE_CODE_DUTCH) || MBLocalizationService
+              .getInstance().getLocaleCode().equals(Constants.C_LOCALE_CODE_ITALIAN)))
       {
 
         if (inputField.getText().toString().length() > 0)

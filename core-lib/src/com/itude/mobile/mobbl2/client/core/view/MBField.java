@@ -719,7 +719,8 @@ public class MBField extends MBComponent
     String textFieldValue = s.toString();
 
     // Representation to the User can be in Dutch (comma for decimal seperator). We need to check this before we store the value
-    if (MBLocalizationService.getInstance().getLocaleCode().equals(Constants.C_LOCALE_CODE_DUTCH))
+    if (MBLocalizationService.getInstance().getLocaleCode().equals(Constants.C_LOCALE_CODE_DUTCH)
+        || MBLocalizationService.getInstance().getLocaleCode().equals(Constants.C_LOCALE_CODE_ITALIAN))
     {
       if (getDataType().equals("double") || getDataType().equals("float"))
       {
