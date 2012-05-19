@@ -25,6 +25,7 @@ public class MBFieldDefinition extends MBConditionalDefinition implements MBStyl
   private String _custom2;
   private String _custom3;
   private String _required;
+  private String _hint;
 
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
@@ -42,7 +43,7 @@ public class MBFieldDefinition extends MBConditionalDefinition implements MBStyl
         .append(getAttributeAsXml("formatMask", _formatMask)).append(getAttributeAsXml("alignment", _alignment))
         .append(getAttributeAsXml("valueIfNil", _valueIfNil)).append(getAttributeAsXml("width", _width))
         .append(getAttributeAsXml("height", _height)).append(getAttributeAsXml("hidden", _hidden))
-        .append(getAttributeAsXml("required", _required));
+        .append(getAttributeAsXml("required", _required)).append(getAttributeAsXml("hint", _hint));
 
     if (bodyText != null)
     {
@@ -244,6 +245,16 @@ public class MBFieldDefinition extends MBConditionalDefinition implements MBStyl
   public void setCustom3(String custom3)
   {
     _custom3 = custom3;
+  }
+
+  public String getHint()
+  {
+    return _hint;
+  }
+
+  public void setHint(String hint)
+  {
+    _hint = hint;
   }
 
 }

@@ -64,6 +64,7 @@ public class MBField extends MBComponent
   private String                _custom1;
   private String                _custom2;
   private String                _custom3;
+  private String                _hint;
 
   private String                _cachedValue    = null;
   private boolean               _cachedValueSet = false;
@@ -128,6 +129,7 @@ public class MBField extends MBComponent
     setCustom1(substituteExpressions(fieldDef.getCustom1()));
     setCustom2(substituteExpressions(fieldDef.getCustom2()));
     setCustom3(substituteExpressions(fieldDef.getCustom3()));
+    setHint(substituteExpressions(fieldDef.getHint()));
 
     checkForDiffable();
   }
@@ -353,6 +355,16 @@ public class MBField extends MBComponent
   public void setCustom3(String custom3)
   {
     _custom3 = custom3;
+  }
+
+  public String getHint()
+  {
+    return _hint;
+  }
+
+  public void setHint(String hint)
+  {
+    _hint = hint;
   }
 
   public boolean isDiffableMarker()
@@ -631,7 +643,7 @@ public class MBField extends MBComponent
           .append(" ").append(attributeAsXml("formatMask", getFormatMask())).append(" ")
           .append(attributeAsXml("alignment", getAlignment())).append(" ").append(attributeAsXml("valueIfNil", getValueIfNil()))
           .append(" ").append(attributeAsXml("required", required)).append(" width='").append(getWidth()).append("' height='")
-          .append(getHeight()).append("'/>\n");
+          .append(getHeight()).append(" hint='").append(getHint()).append("'/>\n");
     }
     catch (Exception e)
     {

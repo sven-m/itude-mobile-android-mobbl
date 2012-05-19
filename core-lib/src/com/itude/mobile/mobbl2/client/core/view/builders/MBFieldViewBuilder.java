@@ -258,6 +258,14 @@ public class MBFieldViewBuilder extends MBViewBuilder
     EditText inputField = new EditText(context);
 
     // Default inputfield should be single lined
+
+    String hint = field.getHint();
+    if (StringUtilities.isNotBlank(hint))
+    {
+      getStyleHandler().styleHint(inputField);
+      inputField.setHint(MBLocalizationService.getInstance().getTextForKey(hint));
+    }
+
     inputField.setSingleLine();
     inputField.setOnKeyListener(field);
     getStyleHandler().styleInputfieldBackgroundWithName(inputField, null);

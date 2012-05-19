@@ -180,6 +180,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _fieldAttributes.add("custom1");
       _fieldAttributes.add("custom2");
       _fieldAttributes.add("custom3");
+      _fieldAttributes.add("hint");
     }
     if (_domainAttributes == null)
     {
@@ -463,6 +464,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       fieldDef.setCustom1(attributeDict.get("custom1"));
       fieldDef.setCustom2(attributeDict.get("custom2"));
       fieldDef.setCustom3(attributeDict.get("custom3"));
+      fieldDef.setHint(attributeDict.get("hint"));
 
       notifyProcessed(fieldDef);
     }

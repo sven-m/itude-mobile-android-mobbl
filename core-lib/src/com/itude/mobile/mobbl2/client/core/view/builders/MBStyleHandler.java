@@ -575,4 +575,8 @@ public class MBStyleHandler
   {
   }
 
+  public void styleHint(EditText inputField)
+  {
+  }
+
 }
