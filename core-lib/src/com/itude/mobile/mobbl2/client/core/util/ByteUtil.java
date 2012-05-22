@@ -16,10 +16,10 @@ public final class ByteUtil
 
   static public byte[] encodeBytes(byte[] bytes, String encodingType)
   {
-    String result = "";
+    String result = encodeBytesToString(bytes, encodingType);
     try
     {
-      result = new String(bytes, encodingType);
+      return result.getBytes("UTF-8");
     }
     catch (UnsupportedEncodingException e)
     {

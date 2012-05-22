@@ -2,13 +2,10 @@ package com.itude.mobile.mobbl2.client.core.util;
 
 public class EncryptionUtilities
 {
-
-  static private int keylength = 8;   // keylength for WEP; deprecated
-
-  private byte[]     S;
-  private int        the_i;
-  private int        the_j;
-  private int        next_j    = -666; // not really needed after all
+  private byte[] S;
+  private int    the_i;
+  private int    the_j;
+  private int    next_j = -666; // not really needed after all
 
   public EncryptionUtilities()
   {
