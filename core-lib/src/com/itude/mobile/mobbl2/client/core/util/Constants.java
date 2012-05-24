@@ -58,6 +58,9 @@ public interface Constants
   public static String       C_STYLE_DOUBLE_LINED_MATRIX_ROW               = "DOUBLE-LINED";
   public static String       C_STYLE_SINGLE_LINED_MATRIX_ROW               = "SINGLE-LINED";
 
+  // Row styles
+  public static String       C_STYLE_WRAP_ROW                              = "WRAP";
+
   // field datatypes
   public static final String C_FIELD_DATATYPE_INT                          = "int";
   public static final String C_FIELD_DATATYPE_DOUBLE                       = "double";

@@ -325,11 +325,11 @@ public class MBStyleHandler
   {
   }
 
-  public void styleMatrixRowPanel(MBPanel panel, ViewGroup row, boolean isClickable, String style, int rowNumber)
+  public void styleMatrixRowPanel(MBPanel panel, RelativeLayout row, boolean isClickable, String style, int rowNumber)
   {
     if (isClickable)
     {
-      styleClickableRow(row);
+      styleClickableRow(row, panel.getStyle());
     }
   }
 
@@ -385,7 +385,7 @@ public class MBStyleHandler
   {
   }
 
-  public void styleClickableRow(ViewGroup view)
+  public void styleClickableRow(RelativeLayout view, String style)
   {
     view.setMinimumHeight(MBScreenUtilities.FIFTY);
 
@@ -398,6 +398,19 @@ public class MBStyleHandler
     arrow.setLayoutParams(arrowParams);
     arrow.setMinimumWidth(MBScreenUtilities.FORTY);
     arrow.setImageDrawable(MBResourceService.getInstance().getImageByID(Constants.C_ARROW));
+
+    if (StringUtilities.isNotBlank(style))
+    {
+      if (Constants.C_STYLE_WRAP_ROW.equals(style))
+      {
+        int siblings = view.getChildCount();
+        if (siblings > 0)
+        {
+          View latestChild = view.getChildAt(siblings - 1);
+          latestChild.setPadding(0, 0, MBScreenUtilities.JACKBAUER, 0);
+        }
+      }
+    }
 
     view.addView(arrow);
   }
@@ -576,6 +589,10 @@ public class MBStyleHandler
   }
 
   public void styleHint(EditText inputField)
+  {
+  }
+
+  public void styleImage(ImageView image)
   {
   }
 

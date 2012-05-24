@@ -292,7 +292,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
       rowPanel.setFocusable(true);
       rowPanel.setOnClickListener(panel);
 
-      styleHandler.styleClickableRow(rowPanel);
+      styleHandler.styleClickableRow(rowPanel, panel.getStyle());
     }
     else
     {
