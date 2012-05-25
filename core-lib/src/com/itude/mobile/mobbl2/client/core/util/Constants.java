@@ -133,4 +133,8 @@ public interface Constants
 
   // Messages
   public static final int    C_MESSAGE_INITIAL_OUTCOMES_FINISHED           = 10;
+
+  // Http request methods
+  public static final String C_HTTP_REQUEST_METHOD_GET                     = "GET";
+  public static final String C_HTTP_REQUEST_METHOD_POST                    = "POST";
 }

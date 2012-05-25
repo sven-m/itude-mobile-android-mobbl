@@ -25,7 +25,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -97,7 +99,14 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     }
     String dataString = null;
     MBDocument responseDoc = null;
-    String body = doc.getValueForPath("/*[0]").toString();
+
+    // We want to be able to perform a request without sending any body (GET request)
+    String body = null;
+
+    if (doc != null)
+    {
+      body = doc.getValueForPath("/*[0]").toString();
+    }
 
     try
     {
@@ -178,18 +187,42 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     }
   }
 
+  protected HttpUriRequest setupHttpUriRequest(HttpUriRequest httpUriRequest)
+  {
+    //     Content-Type must be set because otherwise the MidletCommandProcessor servlet cannot read the XML
+    httpUriRequest.setHeader("Content-Type", "text/xml");
+    return httpUriRequest;
+  }
+
+  protected HttpClient prepareHttpClient(HttpParams httpParams)
+  {
+    return new DefaultHttpClient(httpParams);
+  }
+
   private String postAndGetResult(MBEndPointDefinition endPoint, String body) throws UnsupportedEncodingException, IOException,
       ClientProtocolException, KeyManagementException, NoSuchAlgorithmException
   {
     String dataString = null;
-    HttpPost httpPost = new HttpPost(endPoint.getEndPointUri());
 
-    // Content-Type must be set because otherwise the MidletCommandProcessor servlet cannot read the XML
-    httpPost.setHeader("Content-Type", "text/xml");
-    if (body != null)
+    HttpUriRequest httpUriRequest = null;
+
+    // To be backward compatible we assume that if no request method was set POST will be used. 
+    if (Constants.C_HTTP_REQUEST_METHOD_GET.equalsIgnoreCase(endPoint.getRequestMethod()))
     {
-      httpPost.setEntity(new StringEntity(body, ENCODINGTYPE));
+      httpUriRequest = new HttpGet(endPoint.getEndPointUri());
     }
+    else
+    {
+      httpUriRequest = new HttpPost(endPoint.getEndPointUri());
+
+      if (body != null)
+      {
+        ((HttpPost) httpUriRequest).setEntity(new StringEntity(body, ENCODINGTYPE));
+      }
+    }
+
+    // Make sure our request headers are set (if needed)
+    setupHttpUriRequest(httpUriRequest);
 
     HttpParams httpParameters = new BasicHttpParams();
     httpParameters.setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
@@ -199,7 +232,9 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     // Set the default socket timeout (SO_TIMEOUT) 
     // in milliseconds which is the timeout for waiting for data.
     int timeoutSocket = 5000;
-    HttpClient httpClient = new DefaultHttpClient(httpParameters);
+
+    HttpClient httpClient = prepareHttpClient(httpParameters);
+
     if (endPoint.getTimeout() > 0)
     {
       timeoutSocket = endPoint.getTimeout() * 1000;
@@ -232,7 +267,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
       allowAnyCertificate(httpClient);
     }
 
-    HttpResponse httpResponse = httpClient.execute(httpPost);
+    HttpResponse httpResponse = httpClient.execute(httpUriRequest);
 
     int responseCode = httpResponse.getStatusLine().getStatusCode();
     String responseMessage = httpResponse.getStatusLine().getReasonPhrase();
@@ -322,7 +357,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 
   public class TrustedSSLSocketFactory extends SSLSocketFactory
   {
-    private SSLContext sslContext = SSLContext.getInstance("TLS");
+    private final SSLContext sslContext = SSLContext.getInstance("TLS");
 
     public TrustedSSLSocketFactory(KeyStore truststore) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException,
         UnrecoverableKeyException
@@ -331,14 +366,17 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 
       TrustManager tm = new X509TrustManager()
       {
+        @Override
         public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException
         {
         }
 
+        @Override
         public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException
         {
         }
 
+        @Override
         public X509Certificate[] getAcceptedIssuers()
         {
           return null;
