@@ -361,7 +361,7 @@ public class MBTabletViewManager extends MBViewManager
 
             for (MBDomainValidatorDefinition domDef : domainDef.getDomainValidators())
             {
-              spinnerAdapter.add(domDef.getTitle());
+              spinnerAdapter.add(MBLocalizationService.getInstance().getTextForKey(domDef.getTitle()));
             }
 
             Drawable drawable = MBResourceService.getInstance().getImageByID("tab-spinner-leaf");
