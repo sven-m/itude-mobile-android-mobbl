@@ -1,5 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.view.builders;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
@@ -18,6 +19,7 @@ import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,6 +31,7 @@ import android.widget.TextView;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainValidatorDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
+import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentDiff;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
@@ -38,6 +41,7 @@ import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 import com.itude.mobile.mobbl2.client.core.util.MathUtilities;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
+import com.itude.mobile.mobbl2.client.core.view.MBDateField;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 
@@ -61,6 +65,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
     else if (Constants.C_FIELD_MATRIXCELL.equals(field.getType())) view = buildMatrixCell(field);
     else if (Constants.C_FIELD_TEXT.equals(field.getType())) view = buildTextView(field);
     else if (Constants.C_FIELD_WEB.equals(field.getType())) view = buildWebView(field);
+    else if (Constants.C_FIELD_DATE.equals(field.getType())) view = buildDatePicker(field);
     else
     {
       Log.w(Constants.APPLICATION_NAME, "MBFieldViewBuilder.buildFieldView(): Failed to build unsupported view type " + field.getType());
@@ -353,7 +358,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
     if (field.getLabel() != null && field.getLabel().length() > 0)
     {
-      inputField.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 40));
+      inputField.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
 
       LinearLayout labelLayout = new LinearLayout(context);
       labelLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
@@ -361,7 +366,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
       TextView label = buildTextViewWithValue(field.getLabel());
       getStyleHandler().styleLabel(label, field);
-      label.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 60));
+      label.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
 
       labelLayout.addView(label);
       labelLayout.addView(inputField);
@@ -425,7 +430,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
     if (field.getLabel() != null && field.getLabel().length() > 0)
     {
-      dropdownList.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 40));
+      dropdownList.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
 
       LinearLayout labelLayout = new LinearLayout(context);
       labelLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -433,7 +438,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
       TextView label = buildTextViewWithValue(field.getLabel());
       label.setText(field.getLabel());
-      label.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 60));
+      label.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
       getStyleHandler().styleLabel(label, field);
 
       labelLayout.addView(label);
@@ -443,6 +448,68 @@ public class MBFieldViewBuilder extends MBViewBuilder
     }
 
     return dropdownList;
+  }
+
+  private View buildDatePicker(final MBField field)
+  {
+    final MBDateField df = new MBDateField();
+
+    final Context context = MBApplicationController.getInstance().getBaseContext();
+    final TextView dateDisplay = new TextView(context);
+
+    Button button = new Button(context);
+    button.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+
+    String source = field.getSource();
+    if (source != null)
+    {
+      Drawable drawable = MBResourceService.getInstance().getImageByID(source);
+      button.setBackgroundDrawable(drawable);
+    }
+    else
+    {
+      getStyleHandler().styleButton(button, field);
+    }
+
+    // add a click listener to the button
+    button.setOnClickListener(new View.OnClickListener()
+    {
+      public void onClick(View v)
+      {
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(MBViewManager.getInstance().getActiveDialog(),
+            new DatePickerDialog.OnDateSetListener()
+            {
+              public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
+              {
+                df.setDate(year, monthOfYear, dayOfMonth);
+                field.setValue(df.toString());
+                dateDisplay.setText(df.toString());
+              }
+            }, df.getYear(), df.getMonth(), df.getDay());
+        datePickerDialog.show();
+      }
+    });
+
+    LinearLayout labelLayout = new LinearLayout(context);
+    labelLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+    labelLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+    TextView label = buildTextViewWithValue(field.getLabel());
+    label.setText(field.getLabel());
+    label.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 60));
+    getStyleHandler().styleLabel(label, field);
+
+    if (StringUtilities.isNotBlank(field.getValueIfNil()))
+    {
+      dateDisplay.setText(field.getValueIfNil());
+    }
+
+    labelLayout.addView(label);
+    labelLayout.addView(dateDisplay);
+    labelLayout.addView(button);
+
+    return labelLayout;
   }
 
   public View buildCheckBox(MBField field)

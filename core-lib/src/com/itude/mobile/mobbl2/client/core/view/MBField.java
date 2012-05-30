@@ -535,7 +535,7 @@ public class MBField extends MBComponent
 
       if (getFormatMask() != null && getDataType().equals("dateTime"))
       {
-        // Get a NSDate from a xml-dateFormat
+        // Get a date from a xml-dateFormat
         String xmlDate = fieldValue;
 
         // Formats the date depending on the current date. 
@@ -592,7 +592,7 @@ public class MBField extends MBComponent
   }
 
   // Apply a formatmask
-  public String formattedValue()
+  public String getFormattedValue()
   {
     return formatValue(getValue());
   }
@@ -682,7 +682,6 @@ public class MBField extends MBComponent
       {
         setValue("false");
       }
-
     }
     else
     {
