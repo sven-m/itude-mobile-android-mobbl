@@ -433,7 +433,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
       dropdownList.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
 
       LinearLayout labelLayout = new LinearLayout(context);
-      labelLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+      labelLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
       labelLayout.setOrientation(LinearLayout.HORIZONTAL);
 
       TextView label = buildTextViewWithValue(field.getLabel());
@@ -455,24 +455,38 @@ public class MBFieldViewBuilder extends MBViewBuilder
     final MBDateField df = new MBDateField();
 
     final Context context = MBApplicationController.getInstance().getBaseContext();
-    final TextView dateDisplay = new TextView(context);
 
-    Button button = new Button(context);
-    button.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+    //label
+    LinearLayout labelLayout = new LinearLayout(context);
+    labelLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+    labelLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+    TextView label = buildTextViewWithValue(field.getLabel());
+    label.setGravity(Gravity.CENTER_VERTICAL);
+    label.setText(field.getLabel());
+    label.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
+
+    getStyleHandler().styleLabel(label, field);
+
+    final TextView value = new TextView(context);
+    value.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
+    value.setGravity(Gravity.CENTER_VERTICAL);
+
+    getStyleHandler().styleDatePicketValue(value, field);
+
+    if (StringUtilities.isNotBlank(field.getValueIfNil()))
+    {
+      value.setText(field.getValueIfNil());
+    }
 
     String source = field.getSource();
     if (source != null)
     {
       Drawable drawable = MBResourceService.getInstance().getImageByID(source);
-      button.setBackgroundDrawable(drawable);
-    }
-    else
-    {
-      getStyleHandler().styleButton(button, field);
+      value.setBackgroundDrawable(drawable);
     }
 
-    // add a click listener to the button
-    button.setOnClickListener(new View.OnClickListener()
+    value.setOnClickListener(new View.OnClickListener()
     {
       public void onClick(View v)
       {
@@ -484,30 +498,15 @@ public class MBFieldViewBuilder extends MBViewBuilder
               {
                 df.setDate(year, monthOfYear, dayOfMonth);
                 field.setValue(df.toString());
-                dateDisplay.setText(df.toString());
+                value.setText(df.toString());
               }
             }, df.getYear(), df.getMonth(), df.getDay());
         datePickerDialog.show();
       }
     });
 
-    LinearLayout labelLayout = new LinearLayout(context);
-    labelLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-    labelLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-    TextView label = buildTextViewWithValue(field.getLabel());
-    label.setText(field.getLabel());
-    label.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 60));
-    getStyleHandler().styleLabel(label, field);
-
-    if (StringUtilities.isNotBlank(field.getValueIfNil()))
-    {
-      dateDisplay.setText(field.getValueIfNil());
-    }
-
     labelLayout.addView(label);
-    labelLayout.addView(dateDisplay);
-    labelLayout.addView(button);
+    labelLayout.addView(value);
 
     return labelLayout;
   }
