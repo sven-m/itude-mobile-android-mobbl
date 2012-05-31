@@ -226,12 +226,10 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
     // Only add padding if this list isn't a direct child of a section
     MBComponentContainer parent = panel.getParent();
-    String panelType;
-    if (!(parent != null && parent instanceof MBPanel && (panelType = ((MBPanel) parent).getType()) != null && panelType
-        .equals(Constants.C_SECTION)))
-    {
-      getStyleHandler().styleListPanelContainer(panelView);
-    }
+    boolean notDirectChildOfSection = (!(parent != null && parent instanceof MBPanel && (((MBPanel) parent).getType()) != null && ((MBPanel) parent)
+        .getType().equals(Constants.C_SECTION)));
+
+    getStyleHandler().styleListPanel(panelView, panel.getStyle(), notDirectChildOfSection);
 
     return panelView;
   }

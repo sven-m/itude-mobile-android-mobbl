@@ -424,11 +424,6 @@ public class MBStyleHandler
     view.setPadding(0, MBScreenUtilities.SEVEN, 0, 0);
   }
 
-  public void styleListPanelContainer(View view)
-  {
-    view.setPadding(0, MBScreenUtilities.SEVEN, 0, MBScreenUtilities.SEVEN);
-  }
-
   public void styleMainScrollbarView(MBPage page, View scrollableView)
   {
     scrollableView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
@@ -594,6 +589,15 @@ public class MBStyleHandler
 
   public void styleImage(ImageView image)
   {
+  }
+
+  public void styleListPanel(LinearLayout view, String style, boolean notDirectChildOfSection)
+  {
+    if (notDirectChildOfSection)
+    {
+      view.setPadding(0, MBScreenUtilities.SEVEN, 0, MBScreenUtilities.SEVEN);
+    }
+
   }
 
 }
