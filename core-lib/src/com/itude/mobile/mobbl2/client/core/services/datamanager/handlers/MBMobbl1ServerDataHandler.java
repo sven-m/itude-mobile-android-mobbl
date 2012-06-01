@@ -36,7 +36,7 @@ public class MBMobbl1ServerDataHandler extends MBRESTServiceDataHandler
 
     for (MBElement parameter : parameters)
     {
-      MBElement mobblParameter = mobblRequest.createElementWithName("parameter");
+      MBElement mobblParameter = mobblRequest.createElement("parameter");
       String key = parameter.getValueForAttribute("key");
       String value = parameter.getValueForAttribute("value");
       mobblParameter.setAttributeValue(key, "key");
@@ -44,7 +44,7 @@ public class MBMobbl1ServerDataHandler extends MBRESTServiceDataHandler
       // subparameters
       for (MBElement subparameter : parameter.getElementsWithName("Subparameter"))
       {
-        MBElement mobblSubparameter = mobblParameter.createElementWithName("subparameter");
+        MBElement mobblSubparameter = mobblParameter.createElement("subparameter");
         String subkey = subparameter.getValueForAttribute("key");
         String subvalue = subparameter.getValueForAttribute("value");
         mobblSubparameter.setAttributeValue(subkey, "key");
@@ -86,7 +86,7 @@ public class MBMobbl1ServerDataHandler extends MBRESTServiceDataHandler
   public void setRequestParameter(String value, String key, MBDocument doc)
   {
     MBElement request = (MBElement) doc.getValueForPath("Request[0]");
-    MBElement parameter = request.createElementWithName("Parameter");
+    MBElement parameter = request.createElement("Parameter");
     parameter.setAttributeValue(key, "key");
     parameter.setAttributeValue(value, "value");
   }
