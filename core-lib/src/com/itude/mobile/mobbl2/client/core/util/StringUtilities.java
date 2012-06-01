@@ -221,30 +221,23 @@ public final class StringUtilities
   // WARNING: Only use this method to present data to the screen (BINCKAPPS-32, BINCKMOBILE-35, BINCKMOBILE-113)
   public static String formatNumberWithTwoDecimals(String stringToFormat)
   {
-
-    if (stringToFormat == null || stringToFormat.length() == 0)
-    {
-      return null;
-    }
-
-    String result = null;
-
-    DecimalFormat formatter = new DecimalFormat();
-    formatter.setDecimalFormatSymbols(new DecimalFormatSymbols(getDefaultFormattingLocale()));
-    formatter.setMinimumIntegerDigits(1);
-    formatter.setMinimumFractionDigits(2);
-    formatter.setMaximumFractionDigits(2);
-    formatter.setGroupingUsed(true);
-    formatter.setGroupingSize(3);
-
-    result = formatter.format(Double.parseDouble(stringToFormat));
-
-    return result;
+    return formatNumberWithDecimals(stringToFormat, 2);
   }
 
   // returns a string formatted as a number with three decimals assuming the receiver is a float string read from XML
   // WARNING: Only use this method to present data to the screen (BINCKAPPS-32, BINCKMOBILE-35, BINCKMOBILE-113)
   public static String formatNumberWithThreeDecimals(String stringToFormat)
+  {
+    return formatNumberWithDecimals(stringToFormat, 3);
+  }
+
+  /***
+   * 
+   * @param stringToFormat
+   * @param numberOfDecimals can be any number, also negative as the used DecimalFormatter accepts it and makes it 0
+   * @return
+   */
+  public static String formatNumberWithDecimals(String stringToFormat, int numberOfDecimals)
   {
     if (stringToFormat == null || stringToFormat.length() == 0)
     {
@@ -256,8 +249,8 @@ public final class StringUtilities
     DecimalFormat formatter = new DecimalFormat();
     formatter.setDecimalFormatSymbols(new DecimalFormatSymbols(getDefaultFormattingLocale()));
     formatter.setMinimumIntegerDigits(1);
-    formatter.setMinimumFractionDigits(3);
-    formatter.setMaximumFractionDigits(3);
+    formatter.setMinimumFractionDigits(numberOfDecimals);
+    formatter.setMaximumFractionDigits(numberOfDecimals);
     formatter.setGroupingUsed(true);
     formatter.setGroupingSize(3);
 
