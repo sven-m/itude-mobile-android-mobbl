@@ -114,7 +114,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
       {
         _log.debug("RestServiceDataHandler is about to send this message: \n" + body + "\n to " + endPoint.getEndPointUri());
       }
-      dataString = postAndGetResult(endPoint, body);
+      dataString = postAndGetResult(endPoint, endPoint.getEndPointUri(), body);
 
       if (_log.isDebugEnabled())
       {
@@ -199,9 +199,10 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     return new DefaultHttpClient(httpParams);
   }
 
-  private String postAndGetResult(MBEndPointDefinition endPoint, String body) throws UnsupportedEncodingException, IOException,
-      ClientProtocolException, KeyManagementException, NoSuchAlgorithmException
+  protected String postAndGetResult(MBEndPointDefinition endPoint, String endPointUri, String body) throws UnsupportedEncodingException,
+      IOException, ClientProtocolException, KeyManagementException, NoSuchAlgorithmException
   {
+
     String dataString = null;
 
     HttpUriRequest httpUriRequest = null;
@@ -209,11 +210,11 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     // To be backward compatible we assume that if no request method was set POST will be used. 
     if (Constants.C_HTTP_REQUEST_METHOD_GET.equalsIgnoreCase(endPoint.getRequestMethod()))
     {
-      httpUriRequest = new HttpGet(endPoint.getEndPointUri());
+      httpUriRequest = new HttpGet(endPointUri);
     }
     else
     {
-      httpUriRequest = new HttpPost(endPoint.getEndPointUri());
+      httpUriRequest = new HttpPost(endPointUri);
 
       if (body != null)
       {
