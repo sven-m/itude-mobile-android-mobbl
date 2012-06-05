@@ -21,10 +21,10 @@ import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBDocumentDefinition extends MBDefinition
 {
-  //  private final List<MBElementDefinition>        _elementsSorted;
   private final Map<String, MBElementDefinition> _elements = new TreeMap<String, MBElementDefinition>();
   private String                                 _dataManager;
   private boolean                                _autoCreate;
+  private String                                 _rootElement;
 
   public MBDocumentDefinition()
   {
@@ -41,7 +41,7 @@ public class MBDocumentDefinition extends MBDefinition
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
     StringUtilities.appendIndentString(appendToMe, level).append("<Document name='").append(getName()).append("' dataManager='")
-        .append(_dataManager).append("' autoCreate='" + _autoCreate).append("'>\n");
+        .append(_dataManager).append("' autoCreate='" + _autoCreate).append("' rootElement='" + _rootElement).append("'>\n");
     for (MBElementDefinition elem : _elements.values())
       elem.asXmlWithLevel(appendToMe, level + 2);
 
@@ -219,6 +219,7 @@ public class MBDocumentDefinition extends MBDefinition
     Bundle elements = in.readBundle(MBDocumentDefinition.class.getClassLoader());
     _dataManager = in.readString();
     _autoCreate = (Boolean) in.readValue(null);
+    _rootElement = in.readString();
 
     for (String key : elements.keySet())
     {
@@ -247,6 +248,16 @@ public class MBDocumentDefinition extends MBDefinition
     out.writeBundle(elements);
     out.writeString(_dataManager);
     out.writeValue(_autoCreate);
+  }
+
+  public void setRootElement(String rootElement)
+  {
+    _rootElement = rootElement;
+  }
+
+  public String getRootElement()
+  {
+    return _rootElement;
   }
 
   public static final Parcelable.Creator<MBDocumentDefinition> CREATOR = new Creator<MBDocumentDefinition>()

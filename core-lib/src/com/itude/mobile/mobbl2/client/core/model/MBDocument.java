@@ -182,7 +182,9 @@ public class MBDocument extends MBElementContainer
 
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<").append(_definition.getName());
+    StringUtilities.appendIndentString(appendToMe, level).append("<")
+        .append((_definition.getRootElement() == null) ? _definition.getName() : _definition.getRootElement());
+
     if (getElements().size() == 0)
     {
       appendToMe.append("/>\n");

@@ -45,6 +45,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _documentAttributes.add("name");
       _documentAttributes.add("dataManager");
       _documentAttributes.add("autoCreate");
+      _documentAttributes.add("rootElement");
     }
     if (_elementAttributes == null)
     {
@@ -255,6 +256,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       docDef.setName(attributeDict.get("name"));
       docDef.setDataManager(attributeDict.get("dataManager"));
       docDef.setAutoCreate(Boolean.parseBoolean(attributeDict.get("autoCreate")));
+      docDef.setRootElement(attributeDict.get("rootElement"));
 
       notifyProcessed(docDef);
     }

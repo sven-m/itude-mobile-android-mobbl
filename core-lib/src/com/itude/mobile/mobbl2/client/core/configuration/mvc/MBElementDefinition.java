@@ -9,6 +9,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidElementNameException;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
@@ -57,19 +58,6 @@ public class MBElementDefinition extends MBDefinition
   {
     addElement(child);
   }
-
-  /*@Override
-  public void addChildElement(Object child)
-  {
-    if (child instanceof MBElementDefinition)
-    {
-      addElement((MBElementDefinition) child);
-    }
-    if (child instanceof MBAttributeDefinition)
-    {
-      addAttribute((MBAttributeDefinition) child);
-    }
-  }*/
 
   @Override
   public List<MBElementDefinition> getChildElements()
@@ -161,7 +149,6 @@ public class MBElementDefinition extends MBDefinition
     {
       return this;
     }
-
   }
 
   public MBElement createElement()
@@ -189,6 +176,10 @@ public class MBElementDefinition extends MBDefinition
 
   public MBElementDefinition getChildWithName(String name)
   {
+    if (!isValidChild(name))
+    {
+      throw new MBInvalidElementNameException(name);
+    }
     return _children.get(name);
   }
 

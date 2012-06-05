@@ -590,4 +590,18 @@ public final class StringUtilities
     return str.substring(pos + separator.length());
   }
 
+  /**
+   * @param value value
+   * @return double value
+   */
+  public static Double getDoubleValue(String value)
+  {
+    if (isBlank(value))
+    {
+      throw new NumberFormatException();
+    }
+
+    return Double.parseDouble(value.replaceAll(",", "."));
+  }
+
 }
