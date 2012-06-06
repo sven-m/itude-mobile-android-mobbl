@@ -112,16 +112,16 @@ public class MBFieldViewBuilder extends MBViewBuilder
     image.setOnClickListener(field);
     image.setOnKeyListener(field);
 
+    Drawable drawable = null;
     if (StringUtilities.isNotBlank(source))
     {
-      Drawable drawable = MBResourceService.getInstance().getImageByID(source);
-      image.setBackgroundDrawable(drawable);
+      drawable = MBResourceService.getInstance().getImageByID(source);
     }
     else
     {
-      Drawable drawable = MBResourceService.getInstance().getImageByURL(field.getFormattedValue());
-      image.setImageDrawable(drawable);
+      drawable = MBResourceService.getInstance().getImageByURL(field.getFormattedValue());
     }
+    image.setBackgroundDrawable(drawable);
 
     getStyleHandler().styleImage(image);
     getStyleHandler().styleImage(image, field.getStyle());

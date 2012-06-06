@@ -23,6 +23,7 @@ public class MBScreenUtilities
   public final static int TWENTY                = convertDimensionPixelsToPixels(20);
   public final static int JACKBAUER             = convertDimensionPixelsToPixels(24);
   public final static int TWENTYFIVE            = convertDimensionPixelsToPixels(25);
+  public final static int THIRTYFIVE            = convertDimensionPixelsToPixels(35);
   public final static int FORTY                 = convertDimensionPixelsToPixels(40);
   public final static int FIFTY                 = convertDimensionPixelsToPixels(50);
   public final static int SEVENTY               = convertDimensionPixelsToPixels(70);
