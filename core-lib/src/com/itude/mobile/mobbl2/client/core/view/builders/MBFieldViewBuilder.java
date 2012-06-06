@@ -484,7 +484,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
     value.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
     value.setGravity(Gravity.CENTER_VERTICAL);
 
-    getStyleHandler().styleDatePicketValue(value, field);
+    getStyleHandler().styleDatePickerValue(value, field);
 
     if (StringUtilities.isNotBlank(field.getValueIfNil()))
     {

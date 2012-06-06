@@ -51,7 +51,7 @@ public class MBStyleHandler
     if (field != null) alignLabel(view, field.getAlignment());
   }
 
-  public void styleDatePicketValue(TextView view, MBField field)
+  public void styleDatePickerValue(TextView view, MBField field)
   {
     styleLabel(view, field);
   }
