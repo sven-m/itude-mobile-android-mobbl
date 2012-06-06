@@ -61,6 +61,10 @@ public class MBStyleHandler
     view.setGravity(Gravity.BOTTOM | Gravity.LEFT);
   }
 
+  public void styleSubLabel(TextView view, String style)
+  {
+  }
+
   public void styleMultilineLabel(View view, MBField field)
   {
   }
@@ -412,7 +416,7 @@ public class MBStyleHandler
         if (siblings > 0)
         {
           View latestChild = view.getChildAt(siblings - 1);
-          latestChild.setPadding(0, 0, MBScreenUtilities.JACKBAUER, 0);
+          latestChild.setPadding(MBScreenUtilities.FIVE, 0, MBScreenUtilities.JACKBAUER, 0);
         }
       }
     }
@@ -592,7 +596,16 @@ public class MBStyleHandler
   {
   }
 
+  /***
+   * @deprecated Please use styleImage(ImageView image, String style)
+   * @param image {@link ImageView}
+   */
+  @Deprecated
   public void styleImage(ImageView image)
+  {
+  }
+
+  public void styleImage(ImageView image, String style)
   {
   }
 

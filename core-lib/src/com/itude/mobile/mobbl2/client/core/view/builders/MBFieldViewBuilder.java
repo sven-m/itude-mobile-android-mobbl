@@ -101,9 +101,10 @@ public class MBFieldViewBuilder extends MBViewBuilder
   public View buildImage(MBField field)
   {
     String source = field.getSource();
-    if (StringUtilities.isBlank(source))
+    String path = field.getPath();
+    if (StringUtilities.isBlank(source) && StringUtilities.isBlank(path))
     {
-      Log.w(Constants.APPLICATION_NAME, "Source is null or empty for field");
+      Log.w(Constants.APPLICATION_NAME, "Source or Path is null or empty for field");
       return null;
     }
 
@@ -111,9 +112,19 @@ public class MBFieldViewBuilder extends MBViewBuilder
     image.setOnClickListener(field);
     image.setOnKeyListener(field);
 
-    Drawable drawable = MBResourceService.getInstance().getImageByID(source);
-    image.setBackgroundDrawable(drawable);
+    if (StringUtilities.isNotBlank(source))
+    {
+      Drawable drawable = MBResourceService.getInstance().getImageByID(source);
+      image.setBackgroundDrawable(drawable);
+    }
+    else
+    {
+      Drawable drawable = MBResourceService.getInstance().getImageByURL(field.getFormattedValue());
+      image.setImageDrawable(drawable);
+    }
+
     getStyleHandler().styleImage(image);
+    getStyleHandler().styleImage(image, field.getStyle());
 
     return image;
 
@@ -253,6 +264,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
     TextView label = buildTextViewWithValue(value);
     getStyleHandler().styleSubLabel(label);
+    getStyleHandler().styleSubLabel(label, field.getStyle());
 
     return label;
   }

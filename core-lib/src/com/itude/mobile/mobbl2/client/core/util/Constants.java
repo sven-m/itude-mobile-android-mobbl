@@ -96,6 +96,7 @@ public interface Constants
 
   public static final String C_BUTTON_REFRESH                              = "BUTTON-REFRESH";
   public static final String C_BUTTON_FULLSCREEN                           = "BUTTON-FULLSCREEN";
+  public static final String C_ICON_TRANSPARENT                            = "ICON-transparent";
 
   // EditableMatrix 
   public static final String C_EDITABLEMATRIX_EDITBUTTON                   = "EDITABLEMATRIX-EDITBUTTON";

@@ -12,7 +12,9 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.codec.binary.Hex;
 
+import android.text.Html;
 import android.text.InputType;
+import android.text.Spanned;
 import android.text.method.NumberKeyListener;
 import android.util.Log;
 
@@ -381,6 +383,11 @@ public final class StringUtilities
     }
 
     return defaultFormattingLocale;
+  }
+
+  public static Spanned fromHTML(String textToFransform)
+  {
+    return Html.fromHtml(textToFransform);
   }
 
   public static String stripHTMLTags(String textToStrip)
