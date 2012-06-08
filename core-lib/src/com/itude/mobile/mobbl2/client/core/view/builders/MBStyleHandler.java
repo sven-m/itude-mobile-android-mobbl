@@ -416,7 +416,7 @@ public class MBStyleHandler
         if (siblings > 0)
         {
           View latestChild = view.getChildAt(siblings - 1);
-          latestChild.setPadding(MBScreenUtilities.FIVE, 0, MBScreenUtilities.JACKBAUER, 0);
+          latestChild.setPadding(0, 0, MBScreenUtilities.TWENTYEIGHT, 0);
         }
       }
     }

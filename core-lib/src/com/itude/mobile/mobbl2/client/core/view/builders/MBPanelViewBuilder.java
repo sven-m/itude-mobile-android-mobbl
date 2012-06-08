@@ -644,18 +644,18 @@ public class MBPanelViewBuilder extends MBViewBuilder
     {
       isClickable = true;
 
-      // Arrow
-      ImageView arrow = new ImageView(rowPanel.getContext());
-      arrow.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-      arrow.setMinimumWidth(MBScreenUtilities.FORTY);
-      arrow.setImageDrawable(MBResourceService.getInstance().getImageByID(Constants.C_ARROW));
-      RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-          RelativeLayout.LayoutParams.WRAP_CONTENT);
-      arrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-      arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
-      arrow.setLayoutParams(arrowParams);
-
-      rowPanel.addView(arrow);
+      //      // Arrow
+      //      ImageView arrow = new ImageView(rowPanel.getContext());
+      //      arrow.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
+      //      arrow.setMinimumWidth(MBScreenUtilities.FORTY);
+      //      arrow.setImageDrawable(MBResourceService.getInstance().getImageByID(Constants.C_ARROW));
+      //      RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+      //          RelativeLayout.LayoutParams.WRAP_CONTENT);
+      //      arrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+      //      arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
+      //      arrow.setLayoutParams(arrowParams);
+      //
+      //      rowPanel.addView(arrow);
 
       rowPanel.setClickable(true);
       rowPanel.setFocusable(true);
