@@ -733,12 +733,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
       {
         LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);
         childView.setLayoutParams(params);
-
-        if (needsToProcessFirstLabel)
-        {
-          styleHandler.styleFirstMatrixHeaderRowChild(childView, (MBField) child);
-        }
-        styleHandler.styleMatrixHeaderRowChild(childView);
+        styleHandler.styleMatrixHeaderRowChild(childView, (MBField) child, needsToProcessFirstLabel);
       }
 
       // Add cell to matrix row

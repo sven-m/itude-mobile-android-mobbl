@@ -529,23 +529,8 @@ public class MBStyleHandler
 
   }
 
-  public void styleFirstMatrixHeaderRowChild(View childView, MBField field)
-  {
-
-  }
-
-  public void styleFirstMatrixHeaderRowChild(View childView)
-  {
-
-  }
-
-  public void styleMatrixHeaderRowChild(View childView)
-  {
-  }
-
   public void styleWebView(WebView webView, MBField field)
   {
-
   }
 
   public void styleRowButtonAligment(MBComponent child, RelativeLayout.LayoutParams childParams)
@@ -616,6 +601,10 @@ public class MBStyleHandler
       view.setPadding(0, MBScreenUtilities.SEVEN, 0, MBScreenUtilities.SEVEN);
     }
 
+  }
+
+  public void styleMatrixHeaderRowChild(View childView, MBField field, boolean needsToProcessFirstLabel)
+  {
   }
 
 }
