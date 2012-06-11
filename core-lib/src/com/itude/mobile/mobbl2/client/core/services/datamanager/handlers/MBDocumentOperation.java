@@ -22,6 +22,7 @@ public class MBDocumentOperation extends MBThread
   private MBEndPointDefinition        _endPointDefinition;
   private MBDocumentOperationDelegate _delegate;
   private String                      _documentParser;
+  private boolean                     _loadFreshCopy;
 
   public MBDataHandler getDataHandler()
   {
@@ -78,6 +79,7 @@ public class MBDocumentOperation extends MBThread
     super();
     _dataHandler = dataHandler;
     _document = document;
+    _loadFreshCopy = false;
   }
 
   public MBDocumentOperation(MBDataHandler dataHandler, String documentName, MBDocument arguments)
@@ -86,6 +88,7 @@ public class MBDocumentOperation extends MBThread
     _dataHandler = dataHandler;
     _documentName = documentName;
     _arguments = arguments;
+    _loadFreshCopy = false;
   }
 
   public void setDelegate(MBDocumentOperationDelegate delegate)
@@ -103,7 +106,15 @@ public class MBDocumentOperation extends MBThread
 
     long now = new Date().getTime();
 
-    MBDocument doc = getDataHandler().loadDocument(getDocumentName(), getArguments(), getEndPointDefinition(), getDocumentParser());
+    MBDocument doc;
+    if (_loadFreshCopy)
+    {
+      doc = getDataHandler().loadFreshDocument(getDocumentName(), getArguments(), getEndPointDefinition(), getDocumentParser());
+    }
+    else
+    {
+      doc = getDataHandler().loadDocument(getDocumentName(), getArguments(), getEndPointDefinition(), getDocumentParser());
+    }
 
     if (doc == null)
     {
@@ -163,5 +174,15 @@ public class MBDocumentOperation extends MBThread
   public MBEndPointDefinition getEndPointDefinition()
   {
     return _endPointDefinition;
+  }
+
+  public void setLoadFreshCopy(boolean loadFreshCopy)
+  {
+    _loadFreshCopy = loadFreshCopy;
+  }
+
+  public boolean isLoadFreshCopy()
+  {
+    return _loadFreshCopy;
   }
 }

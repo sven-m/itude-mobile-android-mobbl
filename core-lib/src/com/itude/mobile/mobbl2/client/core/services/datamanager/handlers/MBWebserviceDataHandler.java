@@ -14,6 +14,30 @@ public abstract class MBWebserviceDataHandler extends MBDataHandlerBase
     return loadDocument(documentName, (MBDocument) null, null);
   }
 
+  //
+  @Override
+  public MBDocument loadFreshDocument(String documentName)
+  {
+    return loadFreshDocument(documentName, (MBDocument) null, null);
+  }
+
+  @Override
+  public MBDocument loadFreshDocument(String documentName, MBDocument doc, MBEndPointDefinition endPointDefenition)
+  {
+    MBEndPointDefinition endPoint = endPointDefenition != null ? endPointDefenition : getEndPointForDocument(documentName);
+
+    String key = doc == null ? documentName : documentName + doc.getUniqueId();
+
+    MBDocument result = doLoadDocument(documentName, doc);
+
+    if (endPoint.getCacheable())
+    {
+      MBCacheManager.setDocument(result, key, endPoint.getTtl());
+    }
+
+    return result;
+  }
+
   @Override
   public MBDocument loadDocument(String documentName, MBDocument doc, MBEndPointDefinition endPointDefenition)
   {

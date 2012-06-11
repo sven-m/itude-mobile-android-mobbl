@@ -96,14 +96,14 @@ public class MBDocument extends MBElementContainer
     return uid;
   }
 
-  public void loadFreshCopy(MBDocumentOperationDelegate delegate)
+  public void loadFreshCopyForDelegate(MBDocumentOperationDelegate delegate)
   {
-    MBDataManagerService.getInstance().loadDocument(_definition.getName(), _argumentsUsed, delegate);
+    MBDataManagerService.getInstance().loadFreshDocument(_definition.getName(), _argumentsUsed, delegate);
   }
 
   public MBDocument loadFreshCopy()
   {
-    return MBDataManagerService.getInstance().loadDocument(_definition.getName(), _argumentsUsed);
+    return MBDataManagerService.getInstance().loadFreshDocument(_definition.getName(), _argumentsUsed);
   }
 
   // Be careful with reload since it might change the number of elements; making any existing path (indexes) invalid
@@ -119,7 +119,7 @@ public class MBDocument extends MBElementContainer
     }
     else
     {
-      fresh = MBDataManagerService.getInstance().loadDocument(_definition.getName(), _argumentsUsed);
+      fresh = MBDataManagerService.getInstance().loadFreshDocument(_definition.getName(), _argumentsUsed);
     }
 
     setElements(fresh.getElements());

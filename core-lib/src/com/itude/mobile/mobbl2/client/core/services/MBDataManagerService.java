@@ -79,9 +79,23 @@ public class MBDataManagerService
     return getLoaderForDocumentName(documentName, null).load();
   }
 
+  public MBDocument loadFreshDocument(String documentName)
+  {
+    MBDocumentOperation loader = getLoaderForDocumentName(documentName, null);
+    loader.setLoadFreshCopy(true);
+    return loader.load();
+  }
+
   public MBDocument loadDocument(String documentName, MBDocument doc)
   {
     return getLoaderForDocumentName(documentName, doc).load();
+  }
+
+  public MBDocument loadFreshDocument(String documentName, MBDocument doc)
+  {
+    MBDocumentOperation loader = getLoaderForDocumentName(documentName, doc);
+    loader.setLoadFreshCopy(true);
+    return loader.load();
   }
 
   public void loadDocument(String documentName, MBDocumentOperationDelegate delegate)
@@ -91,26 +105,62 @@ public class MBDataManagerService
     loader.start();
   }
 
+  public void loadFreshDocument(String documentName, MBDocumentOperationDelegate delegate)
+  {
+    MBDocumentOperation loader = getLoaderForDocumentName(documentName, null);
+    loader.setDelegate(delegate);
+    loader.setLoadFreshCopy(true);
+    loader.start();
+  }
+
   public void loadDocument(String documentName, MBDocument args, MBDocumentOperationDelegate delegate)
   {
     MBDocumentOperation loader = getLoaderForDocumentName(documentName, args);
     loader.setDelegate(delegate);
     loader.start();
   }
-  
-  public void loadDocument(String documentName, MBDocument args, MBDocumentOperationDelegate delegate, MBEndPointDefinition endPointDefinition)
+
+  public void loadFreshDocument(String documentName, MBDocument args, MBDocumentOperationDelegate delegate)
+  {
+    MBDocumentOperation loader = getLoaderForDocumentName(documentName, args);
+    loader.setDelegate(delegate);
+    loader.setLoadFreshCopy(true);
+    loader.start();
+  }
+
+  public void loadDocument(String documentName, MBDocument args, MBDocumentOperationDelegate delegate,
+                           MBEndPointDefinition endPointDefinition)
   {
     MBDocumentOperation loader = getLoaderForDocumentName(documentName, args);
     loader.setEndPointDefinition(endPointDefinition);
     loader.setDelegate(delegate);
     loader.start();
   }
-  
+
+  public void loadFreshDocument(String documentName, MBDocument args, MBDocumentOperationDelegate delegate,
+                                MBEndPointDefinition endPointDefinition)
+  {
+    MBDocumentOperation loader = getLoaderForDocumentName(documentName, args);
+    loader.setEndPointDefinition(endPointDefinition);
+    loader.setDelegate(delegate);
+    loader.setLoadFreshCopy(true);
+    loader.start();
+  }
+
   public void loadDocument(String documentName, MBDocument args, MBDocumentOperationDelegate delegate, String documentParser)
   {
     MBDocumentOperation loader = getLoaderForDocumentName(documentName, args);
     loader.setDelegate(delegate);
     loader.setDocumentParser(documentParser);
+    loader.start();
+  }
+
+  public void loadFreshDocument(String documentName, MBDocument args, MBDocumentOperationDelegate delegate, String documentParser)
+  {
+    MBDocumentOperation loader = getLoaderForDocumentName(documentName, args);
+    loader.setDelegate(delegate);
+    loader.setDocumentParser(documentParser);
+    loader.setLoadFreshCopy(true);
     loader.start();
   }
 

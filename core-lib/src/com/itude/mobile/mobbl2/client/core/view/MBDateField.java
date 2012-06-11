@@ -44,4 +44,11 @@ public class MBDateField
     return _day;
   }
 
+  public Calendar getCalender()
+  {
+    final Calendar c = Calendar.getInstance();
+    c.set(_year, _month, _day);
+    return c;
+  }
+
 }

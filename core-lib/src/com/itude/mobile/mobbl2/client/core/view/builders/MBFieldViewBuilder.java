@@ -36,6 +36,7 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocumentDiff;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.DateUtilities;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 import com.itude.mobile.mobbl2.client.core.util.MathUtilities;
@@ -509,8 +510,11 @@ public class MBFieldViewBuilder extends MBViewBuilder
               public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
               {
                 df.setDate(year, monthOfYear, dayOfMonth);
-                field.setValue(df.toString());
-                value.setText(df.toString());
+
+                String formatedDate = DateUtilities.dateToString(df.getCalender().getTime(), field.getFormatMask());
+
+                field.setValue(formatedDate);
+                value.setText(formatedDate);
               }
             }, df.getYear(), df.getMonth(), df.getDay());
         datePickerDialog.show();
