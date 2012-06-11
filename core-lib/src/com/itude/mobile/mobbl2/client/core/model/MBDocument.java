@@ -182,6 +182,11 @@ public class MBDocument extends MBElementContainer
 
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
+    return asXmlWithLevel(appendToMe, level, false);
+  }
+  
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level, boolean escapeContent)
+  {
     StringUtilities.appendIndentString(appendToMe, level).append("<")
         .append((_definition.getRootElement() == null) ? _definition.getName() : _definition.getRootElement());
 
@@ -197,7 +202,7 @@ public class MBDocument extends MBElementContainer
         List<MBElement> lst = getElements().get(elemDef.getName());
         for (MBElement elem : lst)
         {
-          elem.asXmlWithLevel(appendToMe, level + 2);
+          elem.asXmlWithLevel(appendToMe, level + 2, escapeContent);
         }
       }
       StringUtilities.appendIndentString(appendToMe, level).append("</").append(_definition.getName()).append(">\n");

@@ -230,7 +230,7 @@ public final class MBCacheManager
     try
     {
       StringBuffer sb = new StringBuffer(4096);
-      byte[] data = document.asXmlWithLevel(sb, 0).toString().getBytes(Constants.C_ENCODING);
+      byte[] data = document.asXmlWithLevel(sb, 0, true).toString().getBytes(Constants.C_ENCODING);
       byte[] zipped = DataUtil.getInstance().compress(data);
 
       doSetValue(zipped, key, ttl);

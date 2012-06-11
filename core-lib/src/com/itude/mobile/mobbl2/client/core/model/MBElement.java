@@ -1,5 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.model;
 
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +103,12 @@ public class MBElement extends MBElementContainer
 
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
+    return asXmlWithLevel(appendToMe, level, false);
+    // TODO: it should always be true (like in iOS), but to be a 100% sure, every project needs to be tested in order to do that as it changes the behaviour of the toString
+  }
+  
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level, boolean escapeContent)
+  {
     String bodyText = getBodyText();
     boolean hasBodyText = (bodyText != null && bodyText.length() > 0);
 
@@ -124,7 +132,7 @@ public class MBElement extends MBElementContainer
       appendToMe.append(">");
       if (hasBodyText)
       {
-        appendToMe.append(getBodyText());
+        appendToMe.append(StringUtilities.escapeHtml(getBodyText()));
       }
       else
       {
@@ -138,7 +146,7 @@ public class MBElement extends MBElementContainer
         {
           for (MBElement elem : lst)
           {
-            elem.asXmlWithLevel(appendToMe, level + 2);
+            elem.asXmlWithLevel(appendToMe, level + 2, escapeContent);
           }
         }
       }

@@ -611,4 +611,43 @@ public final class StringUtilities
     return Double.parseDouble(value.replaceAll(",", "."));
   }
 
+  // Source: http://www.javapractices.com/topic/TopicAction.do?Id=96
+  public static String escapeHtml(String html)
+  {
+    final StringBuilder escapedHtml = new StringBuilder();
+    final StringCharacterIterator iterator = new StringCharacterIterator(html);
+    char character = iterator.current();
+    while (character != CharacterIterator.DONE)
+    {
+      if (character == '<')
+      {
+        escapedHtml.append("&lt;");
+      }
+      else if (character == '>')
+      {
+        escapedHtml.append("&gt;");
+      }
+      else if (character == '\"')
+      {
+        escapedHtml.append("&quot;");
+      }
+      else if (character == '\'')
+      {
+        escapedHtml.append("&#039;");
+      }
+      else if (character == '&')
+      {
+        escapedHtml.append("&amp;");
+      }
+      else
+      {
+        //the char is not a special one
+        //add it to the result as is
+        escapedHtml.append(character);
+      }
+      character = iterator.next();
+    }
+    return escapedHtml.toString();
+  }
+
 }

@@ -54,7 +54,7 @@ public class MBFileDataHandler extends MBDataHandlerBase
     {
       String fileName = determineFileName(document.getName());
       StringBuffer sb = new StringBuffer(4096);
-      String xml = document.asXmlWithLevel(sb, 0).toString();
+      String xml = document.asXmlWithLevel(sb, 0, false).toString();// TODO, set the last parameter to true if we want to properly escape the document to be stored
 
       Log.d(Constants.APPLICATION_NAME, "Writing document " + document.getName() + " to " + fileName);
 
