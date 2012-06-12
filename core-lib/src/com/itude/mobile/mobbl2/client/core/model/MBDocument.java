@@ -13,6 +13,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBCannotAssignException;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBDocumentOperationDelegate;
+import com.itude.mobile.mobbl2.client.core.util.CollectionUtilities;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
@@ -184,7 +185,7 @@ public class MBDocument extends MBElementContainer
   {
     return asXmlWithLevel(appendToMe, level, false);
   }
-  
+
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level, boolean escapeContent)
   {
     StringUtilities.appendIndentString(appendToMe, level).append("<")
@@ -200,9 +201,12 @@ public class MBDocument extends MBElementContainer
       for (MBElementDefinition elemDef : _definition.getChildren())
       {
         List<MBElement> lst = getElements().get(elemDef.getName());
-        for (MBElement elem : lst)
+        if (CollectionUtilities.isNotEmpty(lst))
         {
-          elem.asXmlWithLevel(appendToMe, level + 2, escapeContent);
+          for (MBElement elem : lst)
+          {
+            elem.asXmlWithLevel(appendToMe, level + 2, escapeContent);
+          }
         }
       }
       StringUtilities.appendIndentString(appendToMe, level).append("</").append(_definition.getName()).append(">\n");
