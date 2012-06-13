@@ -104,7 +104,16 @@ public class MBDocument extends MBElementContainer
 
   public MBDocument loadFreshCopy()
   {
-    return MBDataManagerService.getInstance().loadFreshDocument(_definition.getName(), _argumentsUsed);
+    MBDocument fresh;
+    if (_argumentsUsed == null)
+    {
+      fresh = MBDataManagerService.getInstance().loadDocument(_definition.getName(), _argumentsUsed);
+    }
+    else
+    {
+      fresh = MBDataManagerService.getInstance().loadFreshDocument(_definition.getName(), _argumentsUsed);
+    }
+    return fresh;
   }
 
   // Be careful with reload since it might change the number of elements; making any existing path (indexes) invalid
