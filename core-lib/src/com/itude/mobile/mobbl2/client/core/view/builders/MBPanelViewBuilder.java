@@ -594,6 +594,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
     ArrayList<MBComponent> children = panel.getChildren();
     ArrayList<MBComponent> matrixRowLabels = new ArrayList<MBComponent>();
     ArrayList<MBComponent> matrixRowTitles = new ArrayList<MBComponent>(); // typically just one
+    ArrayList<MBComponent> matrixRowDescription = new ArrayList<MBComponent>(); // typically just one
 
     for (MBComponent mbComponent : children)
     {
@@ -605,6 +606,10 @@ public class MBPanelViewBuilder extends MBViewBuilder
           if (Constants.C_FIELD_MATRIXTITLE.equals(field.getType()))
           {
             matrixRowTitles.add(mbComponent);
+          }
+          else if (Constants.C_FIELD_MATRIXDESCRIPTION.equals(field.getType()))
+          {
+            matrixRowDescription.add(mbComponent);
           }
           else
           {
@@ -637,25 +642,17 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
     if (matrixRowLabels.size() > 0)
     {
-      buildMatrixRowPanelLabels(panel, linearContainer, matrixRowLabels, currentId);
+      currentId = buildMatrixRowPanelLabels(panel, linearContainer, matrixRowLabels, currentId);
+    }
+
+    if (matrixRowDescription.size() > 0)
+    {
+      buildMatrixRowPanelLabels(panel, linearContainer, matrixRowDescription, currentId);
     }
 
     if (panel.getOutcomeName() != null)
     {
       isClickable = true;
-
-      //      // Arrow
-      //      ImageView arrow = new ImageView(rowPanel.getContext());
-      //      arrow.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-      //      arrow.setMinimumWidth(MBScreenUtilities.FORTY);
-      //      arrow.setImageDrawable(MBResourceService.getInstance().getImageByID(Constants.C_ARROW));
-      //      RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-      //          RelativeLayout.LayoutParams.WRAP_CONTENT);
-      //      arrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-      //      arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
-      //      arrow.setLayoutParams(arrowParams);
-      //
-      //      rowPanel.addView(arrow);
 
       rowPanel.setClickable(true);
       rowPanel.setFocusable(true);

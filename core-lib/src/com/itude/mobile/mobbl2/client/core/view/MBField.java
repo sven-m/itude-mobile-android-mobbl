@@ -385,13 +385,12 @@ public class MBField extends MBComponent
   /**
    * Returns the value of this field, please note this is an EXPENSIVE call.
    * Try not to call it repeatedly, but cache the value.
-   * @see #getValueForDisplay()
+   * @see #getValuesForDisplay()
    */
   public String getValue()
   {
     if (_cachedValueSet)
     {
-      //      Log.e(Constants.APPLICATION_NAME, "returning cached value for field " + getName());
       return _cachedValue;
     }
     String result = null;
@@ -768,25 +767,53 @@ public class MBField extends MBComponent
    * 
    * @return the value to use for display on a view
    */
-  public String getValueForDisplay()
+  public String getValuesForDisplay()
   {
     // note that getLabel does an expensive localization call
     // therefore we directly check our member variable to determine
     // if label is null
-    if (_label != null) return getLabel();
+    String value = getValueForDisplay();
+
+    if (_label != null)
+    {
+      String label = getLabel();
+      if (StringUtilities.isNotBlank(value))
+      {
+        return label + " " + value;
+      }
+      else
+      {
+        return label;
+      }
+
+    }
 
     // getValue is not a simple getter, so make sure it isn't called
     // unneeded
-    String value = getValue();
-    if (value != null)
+    if (StringUtilities.isNotBlank(value))
     {
-      if (getDataType() != null) return formatValue(value);
-      else return value;
+      return value;
     }
 
     if (getValueIfNil() != null) return getValueIfNil();
 
     return null;
+  }
+
+  private String getValueForDisplay()
+  {
+    //getValue is not a simple getter, so make sure it isn't called
+    // unneeded
+    String value = getValue();
+    if (value != null)
+    {
+      if (getDataType() != null)
+      {
+        value = formatValue(value);
+      }
+    }
+
+    return value;
   }
 
 }

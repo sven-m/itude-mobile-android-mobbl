@@ -607,4 +607,8 @@ public class MBStyleHandler
   {
   }
 
+  public void styleMatrixRowDescription(TextView label, MBField field)
+  {
+  }
+
 }

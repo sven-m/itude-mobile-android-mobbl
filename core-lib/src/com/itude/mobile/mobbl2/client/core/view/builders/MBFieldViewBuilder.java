@@ -63,6 +63,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
     else if (Constants.C_FIELD_DROPDOWNLIST.equals(field.getType())) view = buildDropdownList(field);
     else if (Constants.C_FIELD_CHECKBOX.equals(field.getType())) view = buildCheckBox(field);
     else if (Constants.C_FIELD_MATRIXTITLE.equals(field.getType())) view = buildMatrixTitle(field);
+    else if (Constants.C_FIELD_MATRIXDESCRIPTION.equals(field.getType())) view = buildMatrixDescription(field);
     else if (Constants.C_FIELD_MATRIXCELL.equals(field.getType())) view = buildMatrixCell(field);
     else if (Constants.C_FIELD_TEXT.equals(field.getType())) view = buildTextView(field);
     else if (Constants.C_FIELD_WEB.equals(field.getType())) view = buildWebView(field);
@@ -152,7 +153,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
   public View buildLabel(MBField field)
   {
-    String value = field.getValueForDisplay();
+    String value = field.getValuesForDisplay();
 
     TextView label = buildTextViewWithValue(value);
     label.setSingleLine(true);
@@ -162,9 +163,21 @@ public class MBFieldViewBuilder extends MBViewBuilder
     return label;
   }
 
+  public View buildMatrixDescription(MBField field)
+  {
+    String value = field.getValuesForDisplay();
+
+    // Title TextView
+    TextView label = buildTextViewWithValue(value);
+
+    getStyleHandler().styleMatrixRowDescription(label, field);
+
+    return label;
+  }
+
   public View buildMatrixTitle(MBField field)
   {
-    String value = field.getValueForDisplay();
+    String value = field.getValuesForDisplay();
 
     // Title TextView
     TextView label = buildTextViewWithValue(value);
@@ -187,7 +200,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
   public View buildMatrixCell(MBField field)
   {
-    String value = field.getValueForDisplay();
+    String value = field.getValuesForDisplay();
 
     // Title TextView
     TextView label = buildTextViewWithValue(value);
@@ -261,7 +274,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
   public View buildSubLabel(MBField field)
   {
-    String value = field.getValueForDisplay();
+    String value = field.getValuesForDisplay();
 
     TextView label = buildTextViewWithValue(value);
     getStyleHandler().styleSubLabel(label);
@@ -587,7 +600,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
   public View buildTextView(MBField field)
   {
-    String value = field.getValueForDisplay();
+    String value = field.getValuesForDisplay();
 
     // Title TextView
     TextView returnView = buildTextViewWithValue(value, true);
