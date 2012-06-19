@@ -57,18 +57,23 @@ public class MBApplicationController extends Application
   private Map<String, HashMap<String, MBPage>> _pagesForName;
   private Stack<String>                        _modalPageStack;
   private MBOutcomeHandler                     _outcomeHandler;
-  private boolean                              _applicationStarted      = false;
 
   private static MBApplicationController       _instance                = null;
 
   private String                               _searchResultNormal      = null;
   private String                               _searchResultProgressive = null;
 
+  private ApplicationState                     _currentApplicationState = ApplicationState.NOTSTARTED;
+
+  public static enum ApplicationState {
+    NOTSTARTED, STARTING, STARTED
+  }
+
   ///////////////////// Android lifecycle methods
   @Override
   public void onCreate()
   {
-    _applicationStarted = false;
+    _currentApplicationState = ApplicationState.STARTING;
 
     Context context = getBaseContext();
     DataUtil.getInstance().setContext(context);
@@ -169,6 +174,21 @@ public class MBApplicationController extends Application
       });
     }
 
+    // Let's see if we want to fire an outcome after the initial ones but before we let the application know it's finished starting
+    final String outcomeName = _viewManager.getIntent().getStringExtra(Constants.C_INTENT_POST_INITIALOUTCOMES_OUTCOMENAME);
+    if (outcomeName != null)
+    {
+      _viewManager.runOnUiThread(new Runnable()
+      {
+
+        @Override
+        public void run()
+        {
+          handleOutcome(new MBOutcome(outcomeName, null));
+        }
+      });
+    }
+
     _viewManager.runOnUiThread(new Runnable()
     {
       @Override
@@ -181,7 +201,7 @@ public class MBApplicationController extends Application
           @Override
           public boolean queueIdle()
           {
-            _applicationStarted = true;
+            _currentApplicationState = ApplicationState.STARTED;
             return false;
           }
         });
@@ -647,7 +667,7 @@ public class MBApplicationController extends Application
       _outcomeHandler.getLooper().quit();
       _outcomeHandler = null;
 
-      if (!_applicationStarted)
+      if (ApplicationState.STARTED != _currentApplicationState)
       {
         _viewManager.finish();
       }
@@ -745,5 +765,15 @@ public class MBApplicationController extends Application
   public MBOutcomeHandler getOutcomeHandler()
   {
     return _outcomeHandler;
+  }
+
+  public ApplicationState getApplicationState()
+  {
+    return _currentApplicationState;
+  }
+
+  public void setApplicationState(ApplicationState state)
+  {
+    _currentApplicationState = state;
   }
 }

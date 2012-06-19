@@ -135,6 +135,9 @@ public interface Constants
   public static final int    C_PARCELABLE_TYPE_DOCUMENT                    = 8;
   public static final int    C_PARCELABLE_TYPE_DOCUMENT_DEFINITION         = 9;
 
+  // Intent related
+  public static final String C_INTENT_POST_INITIALOUTCOMES_OUTCOMENAME     = "POST_INITIALOUTCOMES_OUTCOMENAME";
+
   // Messages
   public static final int    C_MESSAGE_INITIAL_OUTCOMES_FINISHED           = 10;
 

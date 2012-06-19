@@ -45,6 +45,14 @@ public class MBSplashScreen extends Activity
   protected void finishSplashScreen()
   {
     Intent viewManager = new Intent(getBaseContext(), MBViewManagerFactory.getViewManagerClass());
+
+    // Let's make sure that all extras we've set while starting the splashscreen will be tunneled to the viewmanager
+    final Bundle extras = getIntent().getExtras();
+    if (extras != null)
+    {
+      viewManager.putExtras(extras);
+    }
+
     startActivity(viewManager);
   }
 

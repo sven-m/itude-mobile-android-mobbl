@@ -114,7 +114,11 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
       {
         _log.debug("RestServiceDataHandler is about to send this message: \n" + body + "\n to " + endPoint.getEndPointUri());
       }
-      dataString = postAndGetResult(endPoint, endPoint.getEndPointUri(), body);
+
+      // Let's get our possibly altered url
+      String uri = getRequestUriFromDocument(endPoint.getEndPointUri(), doc);
+
+      dataString = postAndGetResult(endPoint, uri, body);
 
       if (_log.isDebugEnabled())
       {
@@ -197,6 +201,11 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
   protected HttpClient prepareHttpClient(HttpParams httpParams)
   {
     return new DefaultHttpClient(httpParams);
+  }
+
+  protected String getRequestUriFromDocument(String inputUri, MBDocument document)
+  {
+    return inputUri;
   }
 
   protected String postAndGetResult(MBEndPointDefinition endPoint, String endPointUri, String body) throws UnsupportedEncodingException,
