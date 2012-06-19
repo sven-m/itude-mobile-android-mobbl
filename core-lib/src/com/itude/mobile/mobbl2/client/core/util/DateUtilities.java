@@ -101,6 +101,32 @@ public final class DateUtilities
     }
   }
 
+  public synchronized static Date dateFromString(String stringToFormat, String format)
+  {
+    try
+    {
+      SimpleDateFormat df = new SimpleDateFormat(format);
+      return df.parse(stringToFormat);
+    }
+    catch (Exception e)
+    {
+      throw new MBDateParsingException("Could not parse date from value: " + stringToFormat, e);
+    }
+  }
+
+  public synchronized static String getYear(Date date, String format)
+  {
+    try
+    {
+      SimpleDateFormat df = new SimpleDateFormat(format);
+      return df.format(date);
+    }
+    catch (Exception e)
+    {
+      throw new MBDateParsingException("Could not get year from value: " + date.getYear(), e);
+    }
+  }
+
   public synchronized static Date dateFromXML(String stringToFormat, String format)
   {
     if (StringUtilities.isEmpty(format))
