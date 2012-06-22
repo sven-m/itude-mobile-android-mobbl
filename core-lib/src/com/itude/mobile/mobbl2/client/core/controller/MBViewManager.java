@@ -31,6 +31,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefi
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPathException;
+import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController.ApplicationState;
 import com.itude.mobile.mobbl2.client.core.controller.helpers.MBActivityHelper;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicatorI;
@@ -100,6 +101,9 @@ public class MBViewManager extends ActivityGroup
     MBThreadHandler.getInstance().stopAllRunningThreads();
 
     MBApplicationController.getInstance().stopOutcomeHandler();
+
+    // Our application is closing so after this point our ApplicationState should return that the application is not started.
+    MBApplicationController.getInstance().setApplicationState(ApplicationState.NOTSTARTED);
 
     super.onStop();
   }
