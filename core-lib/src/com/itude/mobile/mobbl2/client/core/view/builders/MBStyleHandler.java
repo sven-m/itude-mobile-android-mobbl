@@ -250,6 +250,11 @@ public class MBStyleHandler
     view.setPadding(0, MBScreenUtilities.SEVEN, 0, 0);
   }
 
+  public void styleSectionContainer(LinearLayout view, boolean hasTitle, MBPanel panel)
+  {
+    view.setPadding(0, MBScreenUtilities.SEVEN, 0, 0);
+  }
+
   public Object sizeForTextField(MBField field, Object bounds)
   {
     return null;

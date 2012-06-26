@@ -266,6 +266,8 @@ public class MBPanelViewBuilder extends MBViewBuilder
     buildChildren(panel.getChildren(), panelView, null);
 
     getStyleHandler().styleSectionContainer(panelView, hasTitle);
+    getStyleHandler().styleSectionContainer(panelView, hasTitle, panel);
+
     return panelView;
   }
 
