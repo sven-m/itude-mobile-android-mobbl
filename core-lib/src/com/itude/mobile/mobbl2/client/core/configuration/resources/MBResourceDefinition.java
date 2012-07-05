@@ -7,6 +7,7 @@ public class MBResourceDefinition extends MBDefinition
 {
   private String  _resourceId;
   private String  _url;
+  private String  _color;
   private boolean _cacheable;
   private int     _ttl;
 
@@ -14,7 +15,8 @@ public class MBResourceDefinition extends MBDefinition
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
     return StringUtilities.appendIndentString(appendToMe, level).append("<Resource id='").append(getResourceId()).append("' url='")
-        .append(getUrl()).append("' cacheable='").append(getCacheable()).append("' ttl='").append(getTtl()).append("' />");
+        .append(getUrl()).append("' cacheable='").append(getCacheable()).append("' ttl='").append(getTtl()).append("' color='")
+        .append(getColor()).append("' />");
   }
 
   public String getResourceId()
@@ -55,6 +57,16 @@ public class MBResourceDefinition extends MBDefinition
   public void setTtl(int ttl)
   {
     _ttl = ttl;
+  }
+
+  public String getColor()
+  {
+    return _color;
+  }
+
+  public void setColor(String color)
+  {
+    _color = color;
   }
 
 }

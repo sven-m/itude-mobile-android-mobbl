@@ -16,13 +16,12 @@ import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
  */
 public final class MBDevice
 {
-  private static final int             DEVICE_TYPE_TABLET           = 0;
-  private static final int             DEVICE_TYPE_PHONE            = 1;
-  private static final int             DEVICE_TYPE_PHONE_V14        = 2;
 
   private static MBDevice              _instance;
 
-  private int                          _deviceType                  = -1;
+  private static final String          DEVICE_NORMAL                = "No";
+  private static final String          DEVICE_BIG                   = "Yes";
+
   private String                       _osVersion                   = null;
   private TwinResult<Integer, Integer> _screenSize                  = null;
   private String                       _screenDensityClassification = null;
@@ -30,20 +29,10 @@ public final class MBDevice
   private String                       _screenType                  = null;
   private String                       _deviceModel                 = null;
 
+  private static String                _isBigDevice                 = null;
+
   private MBDevice()
   {
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1 && Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    {
-      _deviceType = DEVICE_TYPE_TABLET;
-    }
-    else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
-    {
-      _deviceType = DEVICE_TYPE_PHONE;
-    }
-    else
-    {
-      _deviceType = DEVICE_TYPE_PHONE_V14;
-    }
   }
 
   public static MBDevice getInstance()
@@ -135,6 +124,10 @@ public final class MBDevice
         case (Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) :
           _osVersion = "Android 4.0 ICS";
           break;
+        case (Build.VERSION_CODES.JELLY_BEAN) : //$FALL-THROUGH$
+          _osVersion = "Android 4.1 JellyBean";
+          break;
+
         default :
           _osVersion = "Unknown";
       }
@@ -236,19 +229,59 @@ public final class MBDevice
     return _screenType;
   }
 
+  public static String isBigDeviceType()
+  {
+    if (_isBigDevice == null)
+    {
+      //Verifies if the Generalized Size of the device is XLARGE to be
+      // considered a Tablet
+      boolean xlarge = ((MBApplicationController.getInstance().getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE);
+
+      // If XLarge, checks if the Generalized Density is at least MDPI
+      // (160dpi)
+      if (xlarge)
+      {
+        DisplayMetrics metrics = new DisplayMetrics();
+        ((WindowManager) MBApplicationController.getInstance().getBaseContext().getSystemService(Context.WINDOW_SERVICE))
+            .getDefaultDisplay().getMetrics(metrics);
+
+        // MDPI=160, DEFAULT=160, DENSITY_HIGH=240, DENSITY_MEDIUM=160,
+        // DENSITY_TV=213, DENSITY_XHIGH=320
+        if (metrics.densityDpi == DisplayMetrics.DENSITY_DEFAULT || metrics.densityDpi == DisplayMetrics.DENSITY_HIGH
+            || metrics.densityDpi == DisplayMetrics.DENSITY_MEDIUM || metrics.densityDpi == DisplayMetrics.DENSITY_TV
+            || metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH)
+        {
+
+          _isBigDevice = DEVICE_BIG;
+
+        }
+        else
+        {
+          _isBigDevice = DEVICE_NORMAL;
+        }
+      }
+      else
+      {
+        _isBigDevice = DEVICE_NORMAL;
+
+      }
+    }
+    return _isBigDevice;
+  }
+
   public boolean isPhone()
   {
-    return _deviceType == DEVICE_TYPE_PHONE;
+    return DEVICE_NORMAL.equals(isBigDeviceType()) && (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB);
   }
 
   public boolean isPhoneV14()
   {
-    return _deviceType == DEVICE_TYPE_PHONE_V14;
+    return DEVICE_NORMAL.equals(isBigDeviceType()) && (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1);
   }
 
-  public boolean isTablet()
+  public static boolean isTablet()
   {
-    return _deviceType == DEVICE_TYPE_TABLET;
+    return DEVICE_BIG.equals(isBigDeviceType());
   }
 
   @Override
@@ -260,8 +293,10 @@ public final class MBDevice
     result.append(" - Screen type: " + getScreenType() + "\n");
     result.append(" - Screen size: " + getScreenSize()._mainResult + " x " + getScreenSize()._secondResult + "\n");
     result.append(" - Screen density: " + getScreenDensity()._mainResult + " x " + getScreenDensity()._secondResult + "\n");
-    result.append(" - Screen classification: " + getScreenDensityClassification());
+    result.append(" - Screen classification: " + getScreenDensityClassification() + "\n");
+    result.append(" - Has big screen: " + isBigDeviceType());
 
     return result.toString();
   }
+
 }

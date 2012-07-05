@@ -263,9 +263,24 @@ public class MBFieldViewBuilder extends MBViewBuilder
   private TextView buildTextViewWithValue(String value, boolean isHtml)
   {
     TextView label = new TextView(MBApplicationController.getInstance().getBaseContext());
-    label.setEllipsize(TruncateAt.END);
-    if (isHtml) label.setText(Html.fromHtml(value));
-    else label.setText(value);
+    if (value == null)
+    {
+      // If the value is null we don't want it to be parsed as HTML since that will break the application
+      label.setText("");
+    }
+    else
+    {
+      label.setEllipsize(TruncateAt.END);
+
+      if (isHtml)
+      {
+        label.setText(Html.fromHtml(value));
+      }
+      else
+      {
+        label.setText(value);
+      }
+    }
 
     getStyleHandler().styleLabel(label, null);
 
@@ -440,9 +455,8 @@ public class MBFieldViewBuilder extends MBViewBuilder
       MBDomainValidatorDefinition domDef = field.getDomain().getDomainValidators().get(i);
       adapter.add(MBLocalizationService.getInstance().getTextForKey(domDef.getTitle()));
 
-      String domDefValue = domDef.getValue();
-      if ((fieldValue != null && fieldValue.equals(domDefValue))
-          || (fieldValue == null && field.getValueIfNil() != null && field.getValueIfNil().equals(domDefValue)))
+      if ((fieldValue != null && domDef.getValue() != null && fieldValue.equals(domDef.getValue()))
+          || (field.getValueIfNil() != null && domDef.getValue() != null && field.getValueIfNil().equals(domDef.getValue())))
       {
         selected = i;
       }
@@ -515,12 +529,14 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
     value.setOnClickListener(new View.OnClickListener()
     {
+      @Override
       public void onClick(View v)
       {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(MBViewManager.getInstance().getActiveDialog(),
             new DatePickerDialog.OnDateSetListener()
             {
+              @Override
               public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
               {
                 df.setDate(year, monthOfYear, dayOfMonth);
@@ -569,6 +585,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
     container.setLayoutParams(rlParams);
     container.setOnClickListener(new OnClickListener()
     {
+      @Override
       public void onClick(View v)
       {
         checkBox.toggle();

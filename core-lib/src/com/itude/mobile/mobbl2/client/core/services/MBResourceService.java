@@ -11,9 +11,11 @@ import java.util.Map;
 
 import android.R;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -34,6 +36,7 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBBundleNotFoundException;
+import com.itude.mobile.mobbl2.client.core.services.exceptions.MBResourceInvalidException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBResourceNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
@@ -125,6 +128,112 @@ public final class MBResourceService
     {
       return getImage(resourceId, def);
     }
+  }
+
+  public int getColorById(String resourceId)
+  {
+    MBResourceDefinition def = getConfig().getResourceWithID(resourceId);
+
+    if (def == null)
+    {
+      throw new MBResourceNotDefinedException("Resource for ID=" + resourceId + " could not be found");
+    }
+
+    return Color.parseColor(def.getColor());
+  }
+
+  public ColorStateList getColorStateListById(String resourceId)
+  {
+    MBResourceDefinition def = getConfig().getResourceWithID(resourceId);
+    if (def == null)
+    {
+      throw new MBResourceNotDefinedException("Resource for ID=" + resourceId + " could not be found");
+    }
+
+    // We are assuming a list has been provided
+    if (def instanceof MBStatedResourceDefinition)
+    {
+      Map<String, MBItemDefinition> items = ((MBStatedResourceDefinition) def).getItems();
+
+      final int statedItemCount = items.size();
+      if (statedItemCount == 0)
+      {
+        return null;
+      }
+
+      int[][] states = new int[statedItemCount][];
+      int[] colors = new int[statedItemCount];
+      int counter = 0;
+
+      MBItemDefinition enabled = items.get("enabled");
+      MBItemDefinition selected = items.get("selected");
+      MBItemDefinition pressed = items.get("pressed");
+      MBItemDefinition disabled = items.get("disabled");
+      MBItemDefinition checked = items.get("checked");
+
+      if (pressed != null)
+      {
+        String resource = pressed.getResource();
+        validateItemInStatedResource(resource);
+
+        states[counter] = new int[]{R.attr.state_pressed};
+        colors[counter] = getColorById(resource);
+
+        counter++;
+      }
+
+      if (enabled != null)
+      {
+        String resource = enabled.getResource();
+        validateItemInStatedResource(resource);
+
+        states[counter] = new int[]{R.attr.state_enabled, -R.attr.state_selected};
+        colors[counter] = getColorById(resource);
+
+        counter++;
+      }
+
+      if (disabled != null)
+      {
+        String resource = disabled.getResource();
+        validateItemInStatedResource(resource);
+
+        states[counter] = new int[]{-R.attr.state_enabled};
+        colors[counter] = getColorById(resource);
+
+        counter++;
+      }
+
+      if (selected != null)
+      {
+        String resource = selected.getResource();
+        validateItemInStatedResource(resource);
+
+        states[counter] = new int[]{R.attr.state_selected};
+        colors[counter] = getColorById(resource);
+
+        counter++;
+      }
+      if (checked != null)
+      {
+        String resource = checked.getResource();
+        validateItemInStatedResource(resource);
+
+        states[counter] = new int[]{R.attr.state_checked};
+        colors[counter] = getColorById(resource);
+
+        counter++;
+      }
+
+      return new ColorStateList(states, colors);
+    }
+    else
+    {
+      // No list was provided so we are assuming only one color was provided. 
+      throw new MBResourceInvalidException("Resource for ID=" + resourceId
+                                           + " is not a valid resource for a ColorStateList, define the resource as a StatedResource");
+    }
+
   }
 
   public Drawable getImageByURL(String url)

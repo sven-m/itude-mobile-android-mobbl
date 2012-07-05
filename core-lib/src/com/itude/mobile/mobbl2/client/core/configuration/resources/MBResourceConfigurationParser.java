@@ -25,6 +25,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       _resourceAttributes.add("xmlns");
       _resourceAttributes.add("id");
       _resourceAttributes.add("url");
+      _resourceAttributes.add("color");
       _resourceAttributes.add("cacheable");
       _resourceAttributes.add("ttl");
     }
@@ -96,12 +97,13 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       checkAttributesForElement(elementName, attributeDict, _resourceAttributes);
 
       MBResourceDefinition resourceDef = new MBResourceDefinition();
-      resourceDef.setResourceId((String) attributeDict.get("id"));
-      resourceDef.setUrl((String) attributeDict.get("url"));
-      resourceDef.setCacheable(Boolean.parseBoolean((String) attributeDict.get("cacheable")));
+      resourceDef.setResourceId(attributeDict.get("id"));
+      resourceDef.setUrl(attributeDict.get("url"));
+      resourceDef.setColor(attributeDict.get("color"));
+      resourceDef.setCacheable(Boolean.parseBoolean(attributeDict.get("cacheable")));
       if (attributeDict.containsKey("ttl"))
       {
-        resourceDef.setTtl(Integer.parseInt((String) attributeDict.get("ttl")));
+        resourceDef.setTtl(Integer.parseInt(attributeDict.get("ttl")));
       }
 
       notifyProcessed(resourceDef);
@@ -111,8 +113,8 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       checkAttributesForElement(elementName, attributeDict, _bundleAttributes);
 
       MBBundleDefinition bundleDef = new MBBundleDefinition();
-      bundleDef.setUrl((String) attributeDict.get("url"));
-      bundleDef.setLanguageCode((String) attributeDict.get("languageCode"));
+      bundleDef.setUrl(attributeDict.get("url"));
+      bundleDef.setLanguageCode(attributeDict.get("languageCode"));
 
       notifyProcessed(bundleDef);
     }
@@ -121,7 +123,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       checkAttributesForElement(elementName, attributeDict, _statedResourceAttributes);
 
       MBStatedResourceDefinition statedResourceDef = new MBStatedResourceDefinition();
-      statedResourceDef.setResourceId((String) attributeDict.get("id"));
+      statedResourceDef.setResourceId(attributeDict.get("id"));
 
       notifyProcessed(statedResourceDef);
     }
@@ -130,7 +132,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       checkAttributesForElement(elementName, attributeDict, _layeredResourceAttributes);
 
       MBLayeredResourceDefinition layeredResourceDef = new MBLayeredResourceDefinition();
-      layeredResourceDef.setResourceId((String) attributeDict.get("id"));
+      layeredResourceDef.setResourceId(attributeDict.get("id"));
 
       notifyProcessed(layeredResourceDef);
     }
@@ -139,8 +141,8 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       checkAttributesForElement(elementName, attributeDict, _itemAttributes);
 
       MBItemDefinition itemDefinition = new MBItemDefinition();
-      itemDefinition.setResource((String) attributeDict.get("resource"));
-      itemDefinition.setState((String) attributeDict.get("state"));
+      itemDefinition.setResource(attributeDict.get("resource"));
+      itemDefinition.setState(attributeDict.get("state"));
 
       notifyProcessed(itemDefinition);
     }
