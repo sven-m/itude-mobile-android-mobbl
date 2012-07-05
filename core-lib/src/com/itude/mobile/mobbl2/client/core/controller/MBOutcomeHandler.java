@@ -243,6 +243,7 @@ public class MBOutcomeHandler extends Handler
           final MBPageDefinition pageDef = metadataService.getDefinitionForPageName(outcomeDef.getAction(), false);
           if (pageDef != null)
           {
+            Log.d(Constants.APPLICATION_NAME, "Going to page " + pageDef.getName());
             /*CH: Exception pages prepare in the background. Android has trouble if the
             activity indicator is shown. Somehow this problem does not occur when preparing 
             a normal page*/

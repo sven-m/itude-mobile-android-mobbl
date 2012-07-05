@@ -440,8 +440,9 @@ public class MBFieldViewBuilder extends MBViewBuilder
       MBDomainValidatorDefinition domDef = field.getDomain().getDomainValidators().get(i);
       adapter.add(MBLocalizationService.getInstance().getTextForKey(domDef.getTitle()));
 
-      if ((fieldValue != null && domDef.getValue() != null && fieldValue.equals(domDef.getValue()))
-          || (field.getValueIfNil() != null && domDef.getValue() != null && field.getValueIfNil().equals(domDef.getValue())))
+      String domDefValue = domDef.getValue();
+      if ((fieldValue != null && fieldValue.equals(domDefValue))
+          || (fieldValue == null && field.getValueIfNil() != null && field.getValueIfNil().equals(domDefValue)))
       {
         selected = i;
       }
