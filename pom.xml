@@ -151,7 +151,7 @@
     <properties>
         <xml.obfuscator.version>0.1</xml.obfuscator.version>
         <core.lib.version>${project.version}</core.lib.version>
-        <android.version>4.0.3</android.version>
+        <android.version>4.1</android.version>
     </properties>
     
 </project>
