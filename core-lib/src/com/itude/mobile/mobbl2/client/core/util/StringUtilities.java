@@ -270,27 +270,23 @@ public final class StringUtilities
       return null;
     }
 
-    stringToFormat.trim();
-    int numberStart = -1;
-    String prefix = null;
-
-    if (stringToFormat.indexOf(" ") > -1)
-    {
-      numberStart = stringToFormat.indexOf(" ");
-    }
-    else if (stringToFormat.indexOf("$") > -1 || stringToFormat.indexOf("€") > -1)
+    int numberStart = stringToFormat.indexOf(" ");
+    if (numberStart != -1 && (stringToFormat.indexOf("$") > -1 || stringToFormat.indexOf("€") > -1))
     {
       numberStart = Math.max(stringToFormat.indexOf("$"), stringToFormat.indexOf("€"));
     }
 
     if (numberStart > -1)
     {
-      prefix = stringToFormat.substring(0, numberStart + 1);
+      String prefix = stringToFormat.substring(0, numberStart + 1);
       stringToFormat = stringToFormat.substring(numberStart + 1, stringToFormat.length());
+      return prefix + formatPriceWithTwoDecimals(Double.parseDouble(stringToFormat));
     }
+    return formatPriceWithTwoDecimals(Double.parseDouble(stringToFormat));
+  }
 
-    String result = null;
-
+  public static String formatPriceWithTwoDecimals(double toFormat)
+  {
     DecimalFormat formatter = new DecimalFormat();
     formatter.setDecimalFormatSymbols(new DecimalFormatSymbols(getDefaultFormattingLocale()));
     formatter.setMinimumIntegerDigits(1);
@@ -300,13 +296,7 @@ public final class StringUtilities
     formatter.setGroupingUsed(true);
     formatter.setGroupingSize(3);
 
-    result = formatter.format(Double.parseDouble(stringToFormat));
-
-    if (numberStart > -1)
-    {
-      return prefix + result;
-    }
-    return result;
+    return formatter.format(toFormat);
   }
 
   // returns a string formatted as a price with three decimals assuming the receiver is a float string read from XML
@@ -344,11 +334,22 @@ public final class StringUtilities
     return result;
   }
 
-  // returns a string formatted as a percentage with two decimals assuming the receiver is a float string read from XML
-  // the receiver's value should be "as displayed", eg for 30%, the receiver should be 30, not 0.3
+  /**
+   * returns a string formatted as a percentage with two decimals assuming the receiver is a float string read from XML
+   * the receiver's value should be "as displayed", eg for 30%, the receiver should be 30, not 0.3 
+   */
   public static String formatPercentageWithTwoDecimals(String stringToFormat)
   {
     return formatPriceWithTwoDecimals(stringToFormat) + "%";
+  }
+  
+  /**
+   * returns a string formatted as a percentage with two decimals assuming the receiver is a float string read from XML
+   * the receiver's value should be "as displayed", eg for 30%, the receiver should be 30, not 0.3 
+   */
+  public static String formatPercentageWithTwoDecimals(double doubleToFormat)
+  {
+    return formatPriceWithTwoDecimals(doubleToFormat) + "%";
   }
 
   public static String md5(String stringToHash)
