@@ -102,10 +102,16 @@ public class MBViewManager extends ActivityGroup
 
     MBApplicationController.getInstance().stopOutcomeHandler();
 
+    super.onStop();
+  }
+
+  @Override
+  protected void onDestroy()
+  {
     // Our application is closing so after this point our ApplicationState should return that the application is not started.
     MBApplicationController.getInstance().setApplicationState(ApplicationState.NOTSTARTED);
 
-    super.onStop();
+    super.onDestroy();
   }
 
   @Override
