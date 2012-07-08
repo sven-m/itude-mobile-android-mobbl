@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainValidatorDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
+import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentDiff;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
@@ -498,6 +499,9 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
     final Context context = MBApplicationController.getInstance().getBaseContext();
 
+    final MBDocument doc = field.getDocument();
+    final String path = field.getPath();
+
     //label
     LinearLayout labelLayout = new LinearLayout(context);
     labelLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
@@ -516,9 +520,16 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
     getStyleHandler().styleDatePickerValue(value, field);
 
-    if (StringUtilities.isNotBlank(field.getValueIfNil()))
+    String nillValue = field.getValueIfNil();
+    if (StringUtilities.isNotBlank(nillValue))
     {
       value.setText(field.getValueIfNil());
+    }
+
+    String dateString = doc.getValueForPath(path);
+    if (StringUtilities.isNotBlank(dateString))
+    {
+      value.setText(dateString);
     }
 
     String source = field.getSource();
