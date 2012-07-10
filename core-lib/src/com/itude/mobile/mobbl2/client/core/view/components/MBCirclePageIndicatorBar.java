@@ -3,6 +3,7 @@ package com.itude.mobile.mobbl2.client.core.view.components;
 import android.content.Context;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,6 +21,11 @@ public class MBCirclePageIndicatorBar extends MBAbstractPageIndicator
   public MBCirclePageIndicatorBar(Context context)
   {
     super(context);
+  }
+
+  public MBCirclePageIndicatorBar(Context context, AttributeSet attributes)
+  {
+    super(context, attributes);
   }
 
   @Override

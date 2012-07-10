@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -11,15 +12,27 @@ import android.widget.LinearLayout;
 public abstract class MBAbstractPageIndicator extends LinearLayout
 {
 
-  private List<View>      _indicators;
-  private int             _indicatorCount;
-  private final ViewGroup _indicatorContainer;
-  private int             _activeIndicator;
+  private List<View> _indicators;
+  private int        _indicatorCount;
+  private ViewGroup  _indicatorContainer;
+  private int        _activeIndicator;
 
   public MBAbstractPageIndicator(Context context)
   {
     super(context);
 
+    init();
+  }
+
+  public MBAbstractPageIndicator(Context context, AttributeSet attributes)
+  {
+    super(context, attributes);
+
+    init();
+  }
+
+  protected void init()
+  {
     _indicatorContainer = setupIndicatorContainer();
     addView(_indicatorContainer);
     _activeIndicator = 0;
