@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.view.builders;
 
 import android.R;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -220,7 +221,15 @@ public class MBStyleHandler
   {
   }
 
+  public void styleSectionHeader(LinearLayout header, MBPanel sectionPanel)
+  {
+  }
+
   public void styleSectionHeaderText(TextView title)
+  {
+  }
+
+  public void styleSectionHeaderText(TextView title, MBPanel sectionPanel)
   {
   }
 
@@ -511,6 +520,7 @@ public class MBStyleHandler
   {
   }
 
+  @SuppressLint("NewApi")
   public void styleActionBar(ActionBar actionBar)
   {
   }

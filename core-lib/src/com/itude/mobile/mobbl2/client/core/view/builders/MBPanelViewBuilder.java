@@ -255,10 +255,12 @@ public class MBPanelViewBuilder extends MBViewBuilder
       title.setText(panel.getTitle());
 
       getStyleHandler().styleSectionHeaderText(title);
+      getStyleHandler().styleSectionHeaderText(title, panel);
 
       header.addView(title);
 
       getStyleHandler().styleSectionHeader(header);
+      getStyleHandler().styleSectionHeader(header, panel);
 
       panelView.addView(header);
     }
