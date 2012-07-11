@@ -112,8 +112,6 @@ public class MBFieldViewBuilder extends MBViewBuilder
     }
 
     ImageView image = new ImageView(MBApplicationController.getInstance().getBaseContext());
-    image.setOnClickListener(field);
-    image.setOnKeyListener(field);
 
     Drawable drawable = null;
     if (StringUtilities.isNotBlank(source))
@@ -664,24 +662,30 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
   private View buildWebView(MBField field)
   {
-    Context context = MBApplicationController.getInstance().getBaseContext();
-
-    String url = MBResourceService.getInstance().getUrlById(field.getSource());
-
-    WebView webView = new WebView(context);
+    WebView webView = new WebView(MBApplicationController.getInstance().getViewManager());
     webView.setScrollContainer(false);
+
     webView.setClickable(false);
-    webView.setOnTouchListener(new OnTouchListener()
+
+    if (StringUtilities.isNotBlank(field.getSource()))
     {
-      @Override
-      public boolean onTouch(View v, MotionEvent event)
+      webView.setOnTouchListener(new OnTouchListener()
       {
-        return true;
-      }
-    });
+        @Override
+        public boolean onTouch(View v, MotionEvent event)
+        {
+          return true;
+        }
+      });
 
-    webView.loadUrl(url);
+      String url = MBResourceService.getInstance().getUrlById(field.getSource());
+      webView.loadUrl(url);
+    }
+    else
+    {
+      webView.loadDataWithBaseURL(null, field.getValuesForDisplay(), null, "UTF-8", null);
 
+    }
     getStyleHandler().styleWebView(webView, field);
 
     return webView;
