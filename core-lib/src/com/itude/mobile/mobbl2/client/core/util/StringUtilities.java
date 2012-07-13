@@ -342,7 +342,7 @@ public final class StringUtilities
   {
     return formatPriceWithTwoDecimals(stringToFormat) + "%";
   }
-  
+
   /**
    * returns a string formatted as a percentage with two decimals assuming the receiver is a float string read from XML
    * the receiver's value should be "as displayed", eg for 30%, the receiver should be 30, not 0.3 
@@ -649,6 +649,51 @@ public final class StringUtilities
       character = iterator.next();
     }
     return escapedHtml.toString();
+  }
+
+  /**
+   * Gets the String that is nested in between two Strings.
+   * Only the first match is returned.
+   *
+   * A <code>null</code> input String returns <code>null</code>.
+   * A <code>null</code> open/close returns <code>null</code> (no match).
+   * An empty ("") open and close returns an empty string.
+   *
+   * <pre>
+   * StringUtils.substringBetween("w[ie]be", "[", "]") = "ie"
+   * StringUtils.substringBetween(null, *, *)          = null
+   * StringUtils.substringBetween(*, null, *)          = null
+   * StringUtils.substringBetween(*, *, null)          = null
+   * StringUtils.substringBetween("", "", "")          = ""
+   * StringUtils.substringBetween("", "", "]")         = null
+   * StringUtils.substringBetween("", "[", "]")        = null
+   * StringUtils.substringBetween("wiebe", "", "")     = ""
+   * StringUtils.substringBetween("wiebe", "w", "e")   = "ieb"
+   * StringUtils.substringBetween("wiebewiebe", "w", "w")   = "ieb"
+   * </pre>
+   *
+   * @param str  the String containing the substring, may be null
+   * @param open  the String before the substring, may be null
+   * @param close  the String after the substring, may be null
+   * @return the substring, <code>null</code> if no match
+   * @since 2.0
+   */
+  public static String substringBetween(String str, String open, String close)
+  {
+    if (str == null || open == null || close == null)
+    {
+      return null;
+    }
+    int start = str.indexOf(open);
+    if (start != -1)
+    {
+      int end = str.indexOf(close, start + open.length());
+      if (end != -1)
+      {
+        return str.substring(start + open.length(), end);
+      }
+    }
+    return null;
   }
 
 }
