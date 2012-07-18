@@ -35,7 +35,7 @@ public class MBViewManagerFactory
       catch (ClassNotFoundException e)
       {
         Log.e(Constants.APPLICATION_NAME, "Error initializing MBPhoneViewManager");
-        // Failed to load MBTabletViewManager, so return the default
+        // Failed to load MBPhoneViewManager, so return the default
       }
     }
     return MBViewManager.class;

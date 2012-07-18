@@ -692,7 +692,7 @@ public class MBField extends MBComponent
   // OnItemSelectedListener Methods
   public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
   {
-    if (!getDomain().getDomainValidators().isEmpty())
+    if (getDomain() != null && !getDomain().getDomainValidators().isEmpty())
     {
       String value = getDomain().getDomainValidators().get(position).getValue();
       setValue(value);
@@ -815,5 +815,4 @@ public class MBField extends MBComponent
 
     return value;
   }
-
 }

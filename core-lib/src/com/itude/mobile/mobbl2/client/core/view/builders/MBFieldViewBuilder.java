@@ -425,8 +425,6 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
     Spinner dropdownList = new Spinner(context);
     dropdownList.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1));
-    dropdownList.setOnItemSelectedListener(field);
-    dropdownList.setOnKeyListener(field);
 
     getStyleHandler().styleSpinner(dropdownList);
 
@@ -449,16 +447,19 @@ public class MBFieldViewBuilder extends MBViewBuilder
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
     String fieldValue = field.getValue();
-    for (int i = 0; i < field.getDomain().getDomainValidators().size(); i++)
+    if (field.getDomain() != null)
     {
-      MBDomainValidatorDefinition domDef = field.getDomain().getDomainValidators().get(i);
-      adapter.add(MBLocalizationService.getInstance().getTextForKey(domDef.getTitle()));
-
-      String domDefValue = domDef.getValue();
-      if ((fieldValue != null && fieldValue.equals(domDefValue))
-          || (fieldValue == null && field.getValueIfNil() != null && field.getValueIfNil().equals(domDefValue)))
+      for (int i = 0; i < field.getDomain().getDomainValidators().size(); i++)
       {
-        selected = i;
+        MBDomainValidatorDefinition domDef = field.getDomain().getDomainValidators().get(i);
+        adapter.add(MBLocalizationService.getInstance().getTextForKey(domDef.getTitle()));
+
+        String domDefValue = domDef.getValue();
+        if ((fieldValue != null && fieldValue.equals(domDefValue))
+            || (fieldValue == null && field.getValueIfNil() != null && field.getValueIfNil().equals(domDefValue)))
+        {
+          selected = i;
+        }
       }
     }
 
@@ -468,6 +469,9 @@ public class MBFieldViewBuilder extends MBViewBuilder
     {
       dropdownList.setSelection(selected);
     }
+
+    dropdownList.setOnItemSelectedListener(field);
+    dropdownList.setOnKeyListener(field);
 
     if (field.getLabel() != null && field.getLabel().length() > 0)
     {

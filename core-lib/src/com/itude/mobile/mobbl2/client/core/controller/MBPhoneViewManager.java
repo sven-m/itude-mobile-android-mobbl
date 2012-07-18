@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import android.R;
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Context;
@@ -41,6 +42,7 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBSpinnerAdapter;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
 
+@TargetApi(11)
 public class MBPhoneViewManager extends MBViewManager
 {
 
