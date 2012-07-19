@@ -29,6 +29,7 @@ import android.widget.FrameLayout;
 import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPathException;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController.ApplicationState;
@@ -170,7 +171,10 @@ public class MBViewManager extends ActivityGroup
   @Override
   public boolean onMenuItemSelected(int featureId, MenuItem item)
   {
-    if (!getLocalActivityManager().getCurrentActivity().onMenuItemSelected(featureId, item)) activateDialogWithID(item.getItemId());
+    if (!getLocalActivityManager().getCurrentActivity().onMenuItemSelected(featureId, item))
+    {
+      activateOrCreateDialogWithID(item.getItemId());
+    }
     return super.onMenuItemSelected(featureId, item);
   }
 
@@ -260,6 +264,53 @@ public class MBViewManager extends ActivityGroup
   }
 
   /////////////////////////////////////////////////////
+
+  // Activate a dialog based on the hashed Name
+  public void activateOrCreateDialogWithID(int itemId)
+  {
+    for (MBDialogDefinition dialogDefinition : MBMetadataService.getInstance().getDialogs())
+    {
+      if (itemId == dialogDefinition.getName().hashCode())
+      {
+        if (!getActiveDialog().getName().equals(dialogDefinition.getName()))
+        {
+          boolean activated = activateDialogWithName(dialogDefinition.getName());
+          if (!activated)
+          {
+            if (dialogDefinition.isGroup())
+            {
+              MBDialogGroupDefinition dialogGroupDefinition = (MBDialogGroupDefinition) dialogDefinition;
+              for (MBDialogDefinition childDef : dialogGroupDefinition.getChildren())
+              {
+                createDialodWithID(childDef);
+              }
+            }
+            else
+            {
+              createDialodWithID(dialogDefinition);
+            }
+          }
+        }
+        else
+        {
+          getActiveDialog().clearAllViews();
+        }
+      }
+    }
+  }
+
+  protected void createDialodWithID(MBDialogDefinition dialogDefinition)
+  {
+    if (StringUtilities.isNotBlank(dialogDefinition.getAction()))
+    {
+      MBOutcome oc = new MBOutcome();
+      oc.setOutcomeName(dialogDefinition.getAction());
+      oc.setDialogName(dialogDefinition.getName());
+      oc.setNoBackgroundProcessing(true);
+      oc.setTransferDocument(false);
+      MBApplicationController.getInstance().getOutcomeHandler().handleOutcomeSynchronously(oc, false);
+    }
+  }
 
   // Activate a dialog based on the hashed Name
   public void activateDialogWithID(int itemId)
@@ -547,12 +598,15 @@ public class MBViewManager extends ActivityGroup
     return (MBDialogController) getLocalActivityManager().getActivity(dialogName);
   }
 
-  public void activateDialogWithName(String dialogName)
+  public boolean activateDialogWithName(String dialogName)
   {
+
+    boolean activated = false;
     Log.d(Constants.APPLICATION_NAME, "MBViewManager.activateDialogWithName: dialogName=" + dialogName);
 
     if (dialogName != null)
     {
+
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
       if (dialogDefinition.getParent() != null)
       {
@@ -560,15 +614,13 @@ public class MBViewManager extends ActivityGroup
         dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
       }
 
-      if ("TRUE".equals(dialogDefinition.getAddToNavbar()) && !_sortedDialogNames.contains(dialogName))
-      {
-        _sortedDialogNames.add(dialogName);
-      }
+      addSortedDialogName(dialogName, dialogDefinition);
 
       MBDialogController dialogController = getDialogWithName(dialogName);
       // skip if the DialogController is already activated or not created yet.
       if (dialogController != null && dialogController != this.getLocalActivityManager().getCurrentActivity())
       {
+        activated = true;
         String previousDialogName = ((MBDialogController) getLocalActivityManager().getCurrentActivity()).getName();
 
         if (!CollectionUtilities.isEqualCollection(getViewControllers(dialogName), getViewControllers(previousDialogName)))
@@ -609,6 +661,8 @@ public class MBViewManager extends ActivityGroup
         }
       }
     }
+
+    return activated;
   }
 
   public void endDialog(String dialogName, boolean keepPosition)
@@ -727,6 +781,29 @@ public class MBViewManager extends ActivityGroup
   public ArrayList<String> getSortedDialogNames()
   {
     return _sortedDialogNames;
+  }
+
+  public void addSortedDialogName(String dialogName, MBDialogDefinition dialogDefinition)
+  {
+    if ("TRUE".equals(dialogDefinition.getAddToNavbar()) && !_sortedDialogNames.contains(dialogName))
+    {
+      _sortedDialogNames.add(dialogName);
+    }
+  }
+
+  public void addSortedDialogName(String dialogName)
+  {
+    MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+    if (dialogDefinition.getParent() != null)
+    {
+      dialogName = dialogDefinition.getParent();
+      dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+    }
+
+    if ("TRUE".equals(dialogDefinition.getAddToNavbar()) && !_sortedDialogNames.contains(dialogName))
+    {
+      _sortedDialogNames.add(dialogName);
+    }
   }
 
   @Override

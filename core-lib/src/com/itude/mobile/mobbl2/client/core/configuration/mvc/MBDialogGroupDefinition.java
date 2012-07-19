@@ -53,9 +53,15 @@ public class MBDialogGroupDefinition extends MBDialogDefinition
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<DialogGroup name='").append(getName()).append('\'')
-        .append(getAttributeAsXml("mode", getMode())).append(getAttributeAsXml("title", getTitle()))
-        .append(getAttributeAsXml("titlePortrait", getTitlePortrait())).append(getAttributeAsXml("icon", getIcon())).append(">\n");
+    StringUtilities.appendIndentString(appendToMe, level)//
+        .append("<DialogGroup name='")//
+        .append(getName())//
+        .append('\'')//
+        .append(getAttributeAsXml("mode", getMode()))//
+        .append(getAttributeAsXml("title", getTitle()))//
+        .append(getAttributeAsXml("titlePortrait", getTitlePortrait()))//
+        .append(getAttributeAsXml("icon", getIcon()))//
+        .append(">\n");
 
     for (MBDialogDefinition dialog : _children)
     {
@@ -71,4 +77,11 @@ public class MBDialogGroupDefinition extends MBDialogDefinition
   {
     return _children;
   }
+
+  @Override
+  public boolean isGroup()
+  {
+    return true;
+  }
+
 }

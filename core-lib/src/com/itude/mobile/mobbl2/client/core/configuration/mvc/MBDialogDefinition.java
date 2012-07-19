@@ -13,12 +13,22 @@ public class MBDialogDefinition extends MBDefinition
   private String _parent;
   private String _addToNavbar;
   private String _domain;
+  private String _action;
 
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    return StringUtilities.appendIndentString(appendToMe, level).append("<Dialog name='").append(getName()).append('\'')
-        .append(getAttributeAsXml("mode", _mode)).append(getAttributeAsXml("title", _title)).append(getAttributeAsXml("titlePortrait", _titlePortrait)).append(getAttributeAsXml("icon", _icon))
-        .append(getAttributeAsXml("addToNavbar", _addToNavbar)).append(getAttributeAsXml("domain", getDomain())).append("/>\n");
+    return StringUtilities.appendIndentString(appendToMe, level)//
+        .append("<Dialog name='")//
+        .append(getName())//
+        .append('\'')//
+        .append(getAttributeAsXml("mode", _mode))//
+        .append(getAttributeAsXml("title", _title))//
+        .append(getAttributeAsXml("titlePortrait", _titlePortrait))//
+        .append(getAttributeAsXml("icon", _icon))//
+        .append(getAttributeAsXml("addToNavbar", _addToNavbar))//
+        .append(getAttributeAsXml("domain", _domain))//
+        .append(getAttributeAsXml("action", _action))//
+        .append("/>\n");
   }
 
   public void validateDefinition()
@@ -100,5 +110,19 @@ public class MBDialogDefinition extends MBDefinition
     return _domain;
   }
 
+  public void setAction(String action)
+  {
+    _action = action;
+  }
+
+  public String getAction()
+  {
+    return _action;
+  }
+
+  public boolean isGroup()
+  {
+    return false;
+  }
 
 }

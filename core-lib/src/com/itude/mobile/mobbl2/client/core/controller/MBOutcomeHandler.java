@@ -150,10 +150,18 @@ public class MBOutcomeHandler extends Handler
         {
 
           // Update a possible switch of dialog/display mode set by the outcome definition
-          if (outcomeDef.getDialog() != null && MBApplicationController.getInstance().getModalPageID() == null) outcomeToProcess
-              .setDialogName(resolveDialogName(outcomeDef.getDialog()));
-          if (outcomeDef.getDisplayMode() != null) outcomeToProcess.setDisplayMode(outcomeDef.getDisplayMode());
-          if (outcomeToProcess.getOriginDialogName() == null) outcomeToProcess.setOriginDialogName(outcomeToProcess.getDialogName());
+          if (outcomeDef.getDialog() != null && MBApplicationController.getInstance().getModalPageID() == null)
+          {
+            outcomeToProcess.setDialogName(resolveDialogName(outcomeDef.getDialog()));
+          }
+          if (outcomeDef.getDisplayMode() != null)
+          {
+            outcomeToProcess.setDisplayMode(outcomeDef.getDisplayMode());
+          }
+          if (outcomeToProcess.getOriginDialogName() == null)
+          {
+            outcomeToProcess.setOriginDialogName(outcomeToProcess.getDialogName());
+          }
 
           if (outcomeToProcess.getDialogName() != null) dialogs.add(outcomeToProcess.getDialogName());
 
@@ -306,7 +314,7 @@ public class MBOutcomeHandler extends Handler
     String activeDialogName = MBApplicationController.getInstance().activeDialogName();
     MBDialogDefinition activeDialogDef = MBMetadataService.getInstance().getDefinitionForDialogName(activeDialogName);
 
-    if (activeDialogDef instanceof MBDialogGroupDefinition)
+    if (activeDialogDef.isGroup())
     {
       MBDialogGroupDefinition activeDialogGroupDef = (MBDialogGroupDefinition) activeDialogDef;
       List<MBDialogDefinition> children = activeDialogGroupDef.getChildren();

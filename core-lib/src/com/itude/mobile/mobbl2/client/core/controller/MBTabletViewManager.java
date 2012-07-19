@@ -275,9 +275,9 @@ public class MBTabletViewManager extends MBViewManager
   }
 
   @Override
-  public void activateDialogWithName(String dialogName)
+  public boolean activateDialogWithName(String dialogName)
   {
-    super.activateDialogWithName(dialogName);
+    boolean activated = super.activateDialogWithName(dialogName);
 
     if (dialogName != null)
     {
@@ -297,6 +297,7 @@ public class MBTabletViewManager extends MBViewManager
         }
       }
     }
+    return activated;
   }
 
   @Override

@@ -39,10 +39,10 @@ public class MBDialogController extends FragmentActivity
   private String                     _dialogMode;
   private Object                     _rootController;
   private boolean                    _temporary;
-  private final List<Integer>        _sortedDialogIds               = new ArrayList<Integer>();
-  private final Map<String, Integer> _dialogIds                     = new HashMap<String, Integer>();
-  private final Map<String, String>  _childDialogModes              = new HashMap<String, String>();
-  private boolean                    _clearDialog                   = false;
+  private final List<Integer>        _sortedDialogIds  = new ArrayList<Integer>();
+  private final Map<String, Integer> _dialogIds        = new HashMap<String, Integer>();
+  private final Map<String, String>  _childDialogModes = new HashMap<String, String>();
+  private boolean                    _clearDialog      = false;
 
   // Android lifecycle methods
 
@@ -74,7 +74,7 @@ public class MBDialogController extends FragmentActivity
       setIconName(dialogDefinition.getIcon());
       setDialogMode(dialogDefinition.getMode());
       setTitle(MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
-      if (dialogDefinition instanceof MBDialogGroupDefinition)
+      if (dialogDefinition.isGroup())
       {
         List<MBDialogDefinition> children = ((MBDialogGroupDefinition) dialogDefinition).getChildren();
         for (MBDialogDefinition dialogDef : children)
