@@ -48,7 +48,8 @@ public interface Constants
 
   public static final String C_FIELD_MATRIXCELL                            = "MATRIX-CELL";
   public static final String C_FIELD_WEB                                   = "WEB";
-  public static String       C_FIELD_DATE                                  = "DATE";
+  public static String       C_FIELD_DATE                                  = "DATESELECTOR";
+  public static String       C_FIELD_TIME                                  = "TIMESELECTOR";
 
   // field styles
   public static String       C_FIELD_STYLE_MATRIXCOLUMN                    = "MATRIX-COLUMN";

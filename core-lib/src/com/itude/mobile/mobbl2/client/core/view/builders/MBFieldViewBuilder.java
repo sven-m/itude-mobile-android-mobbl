@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.view.builders;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
@@ -28,6 +29,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainValidatorDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
@@ -68,7 +70,8 @@ public class MBFieldViewBuilder extends MBViewBuilder
     else if (Constants.C_FIELD_MATRIXCELL.equals(field.getType())) view = buildMatrixCell(field);
     else if (Constants.C_FIELD_TEXT.equals(field.getType())) view = buildTextView(field);
     else if (Constants.C_FIELD_WEB.equals(field.getType())) view = buildWebView(field);
-    else if (Constants.C_FIELD_DATE.equals(field.getType())) view = buildDatePicker(field);
+    else if (Constants.C_FIELD_DATE.equals(field.getType())) view = buildDateOrTimeView(field, Constants.C_FIELD_DATE);
+    else if (Constants.C_FIELD_TIME.equals(field.getType())) view = buildDateOrTimeView(field, Constants.C_FIELD_TIME);
     else
     {
       Log.w(Constants.APPLICATION_NAME, "MBFieldViewBuilder.buildFieldView(): Failed to build unsupported view type " + field.getType());
@@ -495,47 +498,58 @@ public class MBFieldViewBuilder extends MBViewBuilder
     return dropdownList;
   }
 
-  private View buildDatePicker(final MBField field)
+  private View buildDateOrTimeView(final MBField field, final String type)
   {
-    final MBDateField df = new MBDateField();
-
     final Context context = MBApplicationController.getInstance().getBaseContext();
+
+    final MBStyleHandler styleHandler = getStyleHandler();
 
     final MBDocument doc = field.getDocument();
     final String path = field.getPath();
 
-    //label
-    LinearLayout labelLayout = new LinearLayout(context);
-    labelLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-    labelLayout.setOrientation(LinearLayout.HORIZONTAL);
+    final MBDateField df = new MBDateField();
 
+    // Create our container which will fill the whole width
+    LinearLayout container = new LinearLayout(context);
+    container.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+    container.setGravity(Gravity.CENTER_VERTICAL);
+
+    // Add our label (if one exists)
     TextView label = buildTextViewWithValue(field.getLabel());
     label.setGravity(Gravity.CENTER_VERTICAL);
-    label.setText(field.getLabel());
     label.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
 
-    getStyleHandler().styleLabel(label, field);
+    styleHandler.styleLabel(label, field);
 
     final TextView value = new TextView(context);
     value.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
     value.setGravity(Gravity.CENTER_VERTICAL);
 
-    getStyleHandler().styleDatePickerValue(value, field);
+    // Find out if we have previously set a time
+    String dateTimeString = doc.getValueForPath(path);
+    String valueLabelText = "";
 
     String nillValue = field.getValueIfNil();
     if (StringUtilities.isNotBlank(nillValue))
     {
-      value.setText(field.getValueIfNil());
+      valueLabelText = field.getValueIfNil();
     }
 
-    String dateString = doc.getValueForPath(path);
-    if (StringUtilities.isNotBlank(dateString))
+    if (StringUtilities.isNotBlank(dateTimeString))
     {
-      value.setText(dateString);
+      df.setTime(dateTimeString);
+      valueLabelText = DateUtilities.dateToString(df.getCalender().getTime(), field.getFormatMask());
     }
+
+    if (StringUtilities.isNotBlank(valueLabelText))
+    {
+      value.setText(valueLabelText);
+    }
+
+    styleHandler.styleDateOrTimeSelectorValue(value, field);
 
     String source = field.getSource();
-    if (source != null)
+    if (StringUtilities.isNotBlank(source))
     {
       Drawable drawable = MBResourceService.getInstance().getImageByID(source);
       value.setBackgroundDrawable(drawable);
@@ -547,28 +561,61 @@ public class MBFieldViewBuilder extends MBViewBuilder
       public void onClick(View v)
       {
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(MBViewManager.getInstance().getActiveDialog(),
-            new DatePickerDialog.OnDateSetListener()
+        if (Constants.C_FIELD_TIME.equals(type))
+        {
+          // Time
+          final TimePickerDialog.OnTimeSetListener listener = new TimePickerDialog.OnTimeSetListener()
+          {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute)
             {
-              @Override
-              public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
-              {
-                df.setDate(year, monthOfYear, dayOfMonth);
+              df.setTime(hourOfDay, minute);
 
-                String formatedDate = DateUtilities.dateToString(df.getCalender().getTime(), field.getFormatMask());
+              field.setValue(DateUtilities.dateToString(df.getCalender().getTime()));
 
-                field.setValue(formatedDate);
-                value.setText(formatedDate);
-              }
-            }, df.getYear(), df.getMonth(), df.getDay());
-        datePickerDialog.show();
+              // Update our label
+              value.setText(DateUtilities.dateToString(df.getCalender().getTime(), field.getFormatMask()));
+            }
+          };
+          TimePickerDialog timePickerDialog = new TimePickerDialog(MBViewManager.getInstance().getActiveDialog(), listener, df
+              .getHourOfDay(), df.getMinute(), true);
+
+          timePickerDialog.setTitle(field.getLabel());
+          styleHandler.styleTimePickerDialog(timePickerDialog, field);
+
+          timePickerDialog.show();
+        }
+        else
+        {
+          final DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener()
+          {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
+            {
+              df.setDate(year, monthOfYear, dayOfMonth);
+
+              field.setValue(DateUtilities.dateToString(df.getCalender().getTime()));
+
+              // Update our label
+              value.setText(DateUtilities.dateToString(df.getCalender().getTime(), field.getFormatMask()));
+
+            }
+          };
+
+          DatePickerDialog datePickerDialog = new DatePickerDialog(MBViewManager.getInstance().getActiveDialog(), listener, df.getYear(),
+              df.getMonth(), df.getDay());
+          datePickerDialog.setTitle(field.getLabel());
+          styleHandler.styleDatePickerDialog(datePickerDialog, field);
+
+          datePickerDialog.show();
+        }
       }
     });
 
-    labelLayout.addView(label);
-    labelLayout.addView(value);
+    container.addView(label);
+    container.addView(value);
 
-    return labelLayout;
+    return container;
   }
 
   public View buildCheckBox(MBField field)

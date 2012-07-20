@@ -3,6 +3,8 @@ package com.itude.mobile.mobbl2.client.core.view.builders;
 import android.R;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
@@ -52,7 +54,7 @@ public class MBStyleHandler
     if (field != null) alignLabel(view, field.getAlignment());
   }
 
-  public void styleDatePickerValue(TextView view, MBField field)
+  public void styleDateOrTimeSelectorValue(TextView view, MBField field)
   {
     styleLabel(view, field);
   }
@@ -623,6 +625,14 @@ public class MBStyleHandler
   }
 
   public void styleMatrixRowDescription(TextView label, MBField field)
+  {
+  }
+
+  public void styleTimePickerDialog(TimePickerDialog timePickerDialog, MBField field)
+  {
+  }
+
+  public void styleDatePickerDialog(DatePickerDialog datePickerDialog, MBField field)
   {
   }
 

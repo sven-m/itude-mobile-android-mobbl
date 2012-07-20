@@ -1,10 +1,13 @@
 package com.itude.mobile.mobbl2.client.core.util;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import android.util.Log;
 
 import com.itude.mobile.mobbl2.client.core.util.exceptions.MBDateParsingException;
 
@@ -205,4 +208,31 @@ public final class DateUtilities
       throw new MBDateParsingException("Could not convert long to string with input long: " + time, e);
     }
   }
+
+  public static void setCalanderTime(Calendar calender, String time)
+  {
+    if (StringUtilities.isNotBlank(time))
+    {
+      try
+      {
+        calender.setTime(TLDEFAULTDATEFORMATTER.get().parse(time));
+      }
+      catch (ParseException e)
+      {
+        Log.e(Constants.APPLICATION_NAME, "Couldn't parse date/time value" + time, e);
+      }
+    }
+  }
+
+  public static Calendar createNewCalenderWithTime(String time)
+  {
+    Calendar calender = null;
+    if (StringUtilities.isNotBlank(time))
+    {
+      calender = Calendar.getInstance();
+      setCalanderTime(calender, time);
+    }
+    return calender;
+  }
+
 }
