@@ -142,6 +142,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _panelAttributes.add("path");
       _panelAttributes.add("mode");
       _panelAttributes.add("permissions");
+      _panelAttributes.add("focused");
     }
     if (_forEachAttributes == null)
     {
@@ -420,6 +421,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       panelDef.setPath(attributeDict.get("path"));
       panelDef.setMode(attributeDict.get("mode"));
       panelDef.setPermissions(attributeDict.get("permissions"));
+      panelDef.setFocused(Boolean.parseBoolean(attributeDict.get("focused")));
 
       notifyProcessed(panelDef);
     }

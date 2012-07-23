@@ -32,6 +32,7 @@ import com.itude.mobile.mobbl2.client.core.view.MBComponentContainer;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.components.MBEditableMatrix;
+import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedControlContainer;
 
 public class MBPanelViewBuilder extends MBViewBuilder
 {
@@ -76,6 +77,10 @@ public class MBPanelViewBuilder extends MBViewBuilder
     {
       view = buildEditableMatrix(panel, viewState);
     }
+    else if (Constants.C_SEGMENTEDCONTROL.equals(panelType))
+    {
+      view = buildSegmentedControlPanel(panel, viewState);
+    }
     else
     {
       // Build a non scrolling basic panel
@@ -84,6 +89,19 @@ public class MBPanelViewBuilder extends MBViewBuilder
     getStyleHandler().applyStyle(panel, view, viewState);
     return view;
 
+  }
+
+  private ViewGroup buildSegmentedControlPanel(MBPanel panel, MBViewState viewState)
+  {
+    final Context context = MBApplicationController.getInstance().getBaseContext();
+
+    MBSegmentedControlContainer scc = new MBSegmentedControlContainer(context, panel);
+    scc.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+    scc.setOrientation(LinearLayout.VERTICAL);
+
+    getStyleHandler().styleSegmentedControlContainer(scc, panel);
+
+    return scc;
   }
 
   public ViewGroup buildMatrix(MBPanel panel, MBViewState viewState)

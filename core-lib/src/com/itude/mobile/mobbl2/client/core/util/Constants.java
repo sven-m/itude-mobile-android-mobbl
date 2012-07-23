@@ -24,6 +24,7 @@ public interface Constants
   public static final String C_MATRIXTITLEROW                              = "MATRIX-ROW-TITLE";
   public static final String C_MATRIX                                      = "MATRIX";
   public static final String C_EDITABLEMATRIX                              = "EDITABLEMATRIX";
+  public static final String C_SEGMENTEDCONTROL                            = "SEGMENTEDCONTROL";
 
   // cell types for use in identifiers
   public static final String C_REGULARCELL                                 = "REGULARCELL";

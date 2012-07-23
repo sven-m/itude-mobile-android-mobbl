@@ -24,6 +24,7 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   private String  _path;
   private String  _translatedPath;
   private String  _mode;
+  private boolean _focused;
 
   private boolean _childrenDeletable     = false;
   private boolean _childrenDraggable     = false;
@@ -51,6 +52,7 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     setPath(definition.getPath());
     setMode(definition.getMode());
     parsePermissions(definition.getPermissions());
+    setFocused(definition.isFocused());
 
     if (buildViewStructure)
     {
@@ -179,10 +181,24 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<MBPanel ").append(attributeAsXml("type", _type)).append(" ")
-        .append(attributeAsXml("title", _title)).append(" ").append(attributeAsXml("width", _width)).append(" ")
-        .append(attributeAsXml("height", _height)).append(" ").append(attributeAsXml("outcomeName", getOutcomeName())).append(" ")
-        .append(attributeAsXml("path", getPath())).append(">\n");
+    StringUtilities.appendIndentString(appendToMe, level)//
+        .append("<MBPanel ")//
+        .append(attributeAsXml("type", _type))//
+        .append(" ")//
+        .append(attributeAsXml("title", _title))//
+        .append(" ")//
+        .append(attributeAsXml("width", _width))//
+        .append(" ")//
+        .append(attributeAsXml("height", _height))//
+        .append(" ")//
+        .append(attributeAsXml("outcomeName", getOutcomeName()))//
+        .append(" ")//
+        .append(attributeAsXml("focused", isFocused()))//
+        .append(" ")//
+        .append(attributeAsXml("mode", getMode()))//
+        .append(" ")//
+        .append(attributeAsXml("path", getPath()))//
+        .append(">\n");
 
     childrenAsXmlWithLevel(appendToMe, level + 2);
     return StringUtilities.appendIndentString(appendToMe, level).append("</MBPanel>\n");
@@ -322,6 +338,16 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     _mode = mode;
   }
 
+  public boolean isFocused()
+  {
+    return _focused;
+  }
+
+  private void setFocused(boolean focused)
+  {
+    _focused = focused;
+  }
+
   public void parsePermissions(String permissions)
   {
     if (permissions != null)
@@ -410,6 +436,8 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   }
 
   // android.view.View.OnClickListener method
+
+  @Override
   public void onClick(View v)
   {
     if (MBDevice.getInstance().isTablet())

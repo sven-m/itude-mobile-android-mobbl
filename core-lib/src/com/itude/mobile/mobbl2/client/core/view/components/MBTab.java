@@ -44,7 +44,7 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
   private LinearLayout           _content;
 
   private boolean                _isDropDown             = false;
-  private MBSpinnerAdapter       _adapter                = null;
+  private MBTabSpinnerAdapter       _adapter                = null;
   private Drawable               _selectedBackground     = null;
   private ListPopupWindow        _dropDownWindow         = null;
   private OnItemSelectedListener _onItemSelectedListener = null;
@@ -213,7 +213,7 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
     return this;
   }
 
-  public MBTab setAdapter(MBSpinnerAdapter adapter)
+  public MBTab setAdapter(MBTabSpinnerAdapter adapter)
   {
     if (adapter == null)
     {
@@ -228,7 +228,7 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
     return this;
   }
 
-  public MBSpinnerAdapter getAdapter()
+  public MBTabSpinnerAdapter getAdapter()
   {
     return _adapter;
   }

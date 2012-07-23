@@ -38,7 +38,7 @@ import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
-import com.itude.mobile.mobbl2.client.core.view.components.MBSpinnerAdapter;
+import com.itude.mobile.mobbl2.client.core.view.components.MBTabSpinnerAdapter;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
 
@@ -347,17 +347,17 @@ public class MBPhoneViewManager extends MBViewManager
           {
             MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDefinition.getDomain());
 
-            final MBSpinnerAdapter spinnerAdapter = new MBSpinnerAdapter(MBPhoneViewManager.this, R.layout.simple_spinner_dropdown_item);
+            final MBTabSpinnerAdapter tabSpinnerAdapter = new MBTabSpinnerAdapter(MBPhoneViewManager.this, R.layout.simple_spinner_dropdown_item);
 
             for (MBDomainValidatorDefinition domDef : domainDef.getDomainValidators())
             {
-              spinnerAdapter.add(domDef.getTitle());
+              tabSpinnerAdapter.add(domDef.getTitle());
             }
 
             Drawable drawable = MBResourceService.getInstance().getImageByID("tab-spinner-leaf");
 
             MBTab tab = new MBTab(MBPhoneViewManager.this);
-            tab.setAdapter(spinnerAdapter);
+            tab.setAdapter(tabSpinnerAdapter);
             tab.setSelectedBackground(drawable);
             if (dialogDefinition.getIcon() != null)
             {

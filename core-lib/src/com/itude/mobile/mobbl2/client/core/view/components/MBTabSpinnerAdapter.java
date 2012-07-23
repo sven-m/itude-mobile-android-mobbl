@@ -3,11 +3,11 @@ package com.itude.mobile.mobbl2.client.core.view.components;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
-public class MBSpinnerAdapter extends ArrayAdapter<CharSequence>
+public class MBTabSpinnerAdapter extends ArrayAdapter<CharSequence>
 {
   private int _selectedElement = 0;
 
-  public MBSpinnerAdapter(Context context, int textViewResourceId)
+  public MBTabSpinnerAdapter(Context context, int textViewResourceId)
   {
     super(context, textViewResourceId);
   }

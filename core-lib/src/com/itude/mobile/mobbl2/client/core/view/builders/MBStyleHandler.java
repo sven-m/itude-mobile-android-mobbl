@@ -33,8 +33,8 @@ import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.components.MBCirclePageIndicatorBar;
 import com.itude.mobile.mobbl2.client.core.view.components.MBDrawablePageIndicatorBar;
+import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedControlContainer;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedItem;
-import com.itude.mobile.mobbl2.client.core.view.components.MBSpinner;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
 
 public class MBStyleHandler
@@ -537,13 +537,8 @@ public class MBStyleHandler
     view.setTextSize(18);
   }
 
-  public void styleTabSpinner(MBSpinner spinner)
-  {
-  }
-
   public void styleTabSpinnerText(TextView view)
   {
-
   }
 
   public void styleWebView(WebView webView, MBField field)
@@ -633,6 +628,30 @@ public class MBStyleHandler
   }
 
   public void styleDatePickerDialog(DatePickerDialog datePickerDialog, MBField field)
+  {
+  }
+
+  public void styleFirstSegmentedItem(Button item, MBPanel panel)
+  {
+  }
+
+  public void styleLastSegmentedItem(Button item, MBPanel panel)
+  {
+  }
+
+  public void styleCenterSegmentedItem(Button item, MBPanel panel)
+  {
+  }
+
+  public void styleSegmentedControlBar(LinearLayout segmentedControlBar, MBPanel panel)
+  {
+  }
+
+  public void styleSegmentedControlContainer(MBSegmentedControlContainer scc, MBPanel panel)
+  {
+  }
+
+  public void styleSegmentedControlContentContainer(LinearLayout contentContainer, MBPanel segmentedControlPanel)
   {
   }
 

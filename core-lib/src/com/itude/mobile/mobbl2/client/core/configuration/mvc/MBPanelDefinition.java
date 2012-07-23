@@ -21,6 +21,7 @@ public class MBPanelDefinition extends MBConditionalDefinition implements MBStyl
   private String             _path;
   private String             _mode;
   private String             _permissions;
+  private boolean            _focused = false;
 
   public MBPanelDefinition()
   {
@@ -36,10 +37,23 @@ public class MBPanelDefinition extends MBConditionalDefinition implements MBStyl
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<Panel width='").append(_width).append("' height='").append(_height)
-        .append("' type='").append(_type).append("'").append(getAttributeAsXml("title", _title)).append(getAttributeAsXml("mode", _mode))
-        .append(getAttributeAsXml("titlePath", _titlePath)).append(getAttributeAsXml("style", _style))
-        .append(getAttributeAsXml("outcome", _outcomeName)).append(getAttributeAsXml("path", _path)).append(">\n");
+    StringUtilities.appendIndentString(appendToMe, level)//
+        .append("<Panel width='")//
+        .append(_width)//
+        .append("' height='")//
+        .append(_height)//
+        .append("' type='")//
+        .append(_type)//
+        .append("'")//
+        .append(getAttributeAsXml("title", _title))//
+        .append(getAttributeAsXml("mode", _mode))//
+        .append(getAttributeAsXml("titlePath", _titlePath))//
+        .append(getAttributeAsXml("style", _style))//
+        .append(getAttributeAsXml("outcome", _outcomeName))//
+        .append(getAttributeAsXml("path", _path))//
+        .append(getAttributeAsXml("focussed", isFocused()))//
+
+        .append(">\n");
     for (MBDefinition child : _children)
     {
       child.asXmlWithLevel(appendToMe, level + 2);
@@ -161,6 +175,16 @@ public class MBPanelDefinition extends MBConditionalDefinition implements MBStyl
   public void setPermissions(String permissions)
   {
     _permissions = permissions;
+  }
+
+  public void setFocused(boolean focused)
+  {
+    _focused = focused;
+  }
+
+  public boolean isFocused()
+  {
+    return _focused;
   }
 
 }

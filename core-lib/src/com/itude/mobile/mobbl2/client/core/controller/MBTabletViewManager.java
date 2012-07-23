@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import android.R;
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Context;
@@ -42,9 +43,9 @@ import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
-import com.itude.mobile.mobbl2.client.core.view.components.MBSpinnerAdapter;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
+import com.itude.mobile.mobbl2.client.core.view.components.MBTabSpinnerAdapter;
 
 /**
  * @author Coen Houtman
@@ -52,6 +53,7 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
  *  This ViewManager can be used to perform actions that cannot be done on pre-Honeycomb devices.
  *  For example the use of the ActionBar.
  */
+@TargetApi(11)
 public class MBTabletViewManager extends MBViewManager
 {
   private Menu             _menu           = null;
@@ -358,17 +360,18 @@ public class MBTabletViewManager extends MBViewManager
           {
             MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDefinition.getDomain());
 
-            final MBSpinnerAdapter spinnerAdapter = new MBSpinnerAdapter(MBTabletViewManager.this, R.layout.simple_spinner_dropdown_item);
+            final MBTabSpinnerAdapter tabSpinnerAdapter = new MBTabSpinnerAdapter(MBTabletViewManager.this,
+                R.layout.simple_spinner_dropdown_item);
 
             for (MBDomainValidatorDefinition domDef : domainDef.getDomainValidators())
             {
-              spinnerAdapter.add(domDef.getTitle());
+              tabSpinnerAdapter.add(domDef.getTitle());
             }
 
             Drawable drawable = MBResourceService.getInstance().getImageByID("tab-spinner-leaf");
 
             MBTab tab = new MBTab(MBTabletViewManager.this);
-            tab.setAdapter(spinnerAdapter);
+            tab.setAdapter(tabSpinnerAdapter);
             tab.setSelectedBackground(drawable);
             tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
 
