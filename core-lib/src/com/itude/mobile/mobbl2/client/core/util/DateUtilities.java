@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import android.util.Log;
@@ -92,29 +93,41 @@ public final class DateUtilities
 
   public synchronized static Date dateFromXML(String stringToFormat)
   {
-    try
+    Date value = null;
+    if (StringUtilities.isNotBlank(stringToFormat))
     {
-      String dateString = stringToFormat.substring(0, 19);
-      if (dateString != null) return TLDEFAULTDATEFORMATTER.get().parse(dateString);
-      else return null;
+      try
+      {
+        String dateString = stringToFormat.substring(0, 19);
+        if (dateString != null)
+        {
+          value = TLDEFAULTDATEFORMATTER.get().parse(dateString);
+        }
+      }
+      catch (Exception e)
+      {
+        throw new MBDateParsingException("Could not parse date from xml value: " + stringToFormat, e);
+      }
     }
-    catch (Exception e)
-    {
-      throw new MBDateParsingException("Could not parse date from xml value: " + stringToFormat, e);
-    }
+    return value;
   }
 
   public synchronized static Date dateFromString(String stringToFormat, String format)
   {
-    try
+    Date value = null;
+    if (StringUtilities.isNotBlank(stringToFormat))
     {
-      SimpleDateFormat df = new SimpleDateFormat(format);
-      return df.parse(stringToFormat);
+      try
+      {
+        SimpleDateFormat df = new SimpleDateFormat(format);
+        value = df.parse(stringToFormat);
+      }
+      catch (Exception e)
+      {
+        throw new MBDateParsingException("Could not parse date from value: " + stringToFormat, e);
+      }
     }
-    catch (Exception e)
-    {
-      throw new MBDateParsingException("Could not parse date from value: " + stringToFormat, e);
-    }
+    return value;
   }
 
   public synchronized static String getYear(Date date, String format)
@@ -233,6 +246,51 @@ public final class DateUtilities
       setCalanderTime(calender, time);
     }
     return calender;
+  }
+
+  public static int subtractDays(Date date1, Date date2)
+  {
+    GregorianCalendar gc1 = new GregorianCalendar();
+    if (date1 != null)
+    {
+      gc1.setTime(date1);
+    }
+    GregorianCalendar gc2 = new GregorianCalendar();
+    if (date2 != null)
+    {
+      gc2.setTime(date2);
+    }
+
+    int days1 = 0;
+    int days2 = 0;
+    int maxYear = Math.max(gc1.get(Calendar.YEAR), gc2.get(Calendar.YEAR));
+
+    GregorianCalendar gctmp = (GregorianCalendar) gc1.clone();
+    for (int f = gctmp.get(Calendar.YEAR); f < maxYear; f++)
+    {
+      days1 += gctmp.getActualMaximum(Calendar.DAY_OF_YEAR);
+      gctmp.add(Calendar.YEAR, 1);
+    }
+
+    gctmp = (GregorianCalendar) gc2.clone();
+    for (int f = gctmp.get(Calendar.YEAR); f < maxYear; f++)
+    {
+      days2 += gctmp.getActualMaximum(Calendar.DAY_OF_YEAR);
+      gctmp.add(Calendar.YEAR, 1);
+    }
+
+    days1 += gc1.get(Calendar.DAY_OF_YEAR) - 1;
+    days2 += gc2.get(Calendar.DAY_OF_YEAR) - 1;
+
+    return (days2 - days1);
+  }
+
+  public static Date addDays(Date date, int days)
+  {
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(date);
+    cal.add(Calendar.DATE, days);
+    return cal.getTime();
   }
 
 }

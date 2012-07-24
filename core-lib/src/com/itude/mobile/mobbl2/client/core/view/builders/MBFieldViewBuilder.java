@@ -716,8 +716,6 @@ public class MBFieldViewBuilder extends MBViewBuilder
     WebView webView = new WebView(MBApplicationController.getInstance().getViewManager());
     webView.setScrollContainer(false);
 
-    webView.setClickable(false);
-
     if (StringUtilities.isNotBlank(field.getSource()))
     {
       webView.setOnTouchListener(new OnTouchListener()
