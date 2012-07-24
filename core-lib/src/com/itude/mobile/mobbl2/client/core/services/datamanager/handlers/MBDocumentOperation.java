@@ -124,7 +124,15 @@ public class MBDocumentOperation extends MBThread
         doc = docDef.createDocument();
       }
     }
-    doc.setArgumentsUsed(getArguments());
+    
+    /* 
+     * We can't assume that the autocreate boolean is true. 
+     * So after previous if statement our document could still be null 
+     */ 
+    if (doc != null)
+    {
+      doc.setArgumentsUsed(getArguments());
+    }
     Log.d(Constants.APPLICATION_NAME, "Loading of document " + getDocumentName() + " took " + (new Date().getTime() - now) / 1000
                                       + " seconds");
     return doc;
