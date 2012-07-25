@@ -87,7 +87,23 @@ public class MBFieldViewBuilder extends MBViewBuilder
     buttonParams.setMargins(MBScreenUtilities.FIVE, 0, MBScreenUtilities.FIVE, 0);
     Button button = new Button(MBApplicationController.getInstance().getBaseContext());
     button.setLayoutParams(buttonParams);
-    button.setText(field.getLabel());
+
+    String defaultValue = field.getLabel();
+
+    String path = field.getPath();
+    if (StringUtilities.isNotBlank(path))
+    {
+      String fieldValue = field.getValue();
+      if (StringUtilities.isNotBlank(fieldValue))
+      {
+        defaultValue = fieldValue;
+      }
+      else if (StringUtilities.isNotBlank(field.getValueIfNil()))
+      {
+        defaultValue = field.getValueIfNil();
+      }
+    }
+    button.setText(defaultValue);
     button.setOnClickListener(field);
     button.setOnKeyListener(field);
 
