@@ -8,6 +8,7 @@ import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.codec.binary.Hex;
@@ -694,6 +695,13 @@ public final class StringUtilities
       }
     }
     return null;
+  }
+
+  public static boolean checkPattern(String pattern, String value)
+  {
+    Pattern p = Pattern.compile(pattern);
+    Matcher m = p.matcher(value);
+    return m.matches() ? true : false;
   }
 
 }
