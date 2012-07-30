@@ -131,6 +131,10 @@ public class MBFieldViewBuilder extends MBViewBuilder
     }
 
     ImageView image = new ImageView(MBApplicationController.getInstance().getBaseContext());
+    if (StringUtilities.isNotBlank(field.getOutcomeName()))
+    {
+      image.setOnClickListener(field);
+    }
 
     Drawable drawable = null;
     if (StringUtilities.isNotBlank(source))
