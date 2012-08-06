@@ -516,12 +516,15 @@ public class MBElementContainer implements Parcelable
 
   public String substituteExpressions(String expression, String nilMarker, String currentPath)
   {
+    String variableOpenTag = "${";
+    String variableCloseTag = "}";
+
     if (expression == null)
     {
       return null;
     }
 
-    if (!expression.contains("{"))
+    if (!expression.contains(variableOpenTag))
     {
       return expression;
     }
@@ -533,12 +536,15 @@ public class MBElementContainer implements Parcelable
 
     int position = 0;
     int subPartPosition = -1;
-    while ((position = expression.indexOf("${")) > -1)
+
+    while ((position = expression.indexOf(variableOpenTag)) > -1)
     {
       result += expression.substring(0, position);
-      expression = expression.substring(position + 2);
+      expression = expression.substring(position + variableOpenTag.length());
 
-      if ((subPartPosition = expression.indexOf("}")) != -1)
+      subPartPosition = expression.indexOf(variableCloseTag);
+
+      if (subPartPosition != -1)
       {
         subPart = expression.substring(subPartPosition + 1);
 
@@ -550,9 +556,9 @@ public class MBElementContainer implements Parcelable
           singleExpression = currentPath + "/" + singleExpression;
         }
 
-        if (expression.length() > subPartPosition + 2)
+        if (expression.length() > subPartPosition + variableCloseTag.length() + 1)
         {
-          expression = expression.substring(subPartPosition + 2);
+          expression = expression.substring(subPartPosition + variableCloseTag.length());
         }
         else
         {
@@ -671,7 +677,7 @@ public class MBElementContainer implements Parcelable
     for (String key : _elements.keySet())
     {
       List<MBElement> list = _elements.get(key);
-      MBElement[] elements = (MBElement[]) list.toArray(new MBElement[list.size()]);
+      MBElement[] elements = list.toArray(new MBElement[list.size()]);
       elementsBundle.putParcelableArray(key, elements);
     }
 

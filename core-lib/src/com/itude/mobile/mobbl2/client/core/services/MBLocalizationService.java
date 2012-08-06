@@ -66,6 +66,25 @@ public class MBLocalizationService
     return result;
   }
 
+  public String getTextForLanguageCode(String key, String languageCode)
+  {
+    if (getCurrentLanguage().equals(languageCode))
+    {
+      return getTextForKey(key);
+    }
+
+    Map<String, String> keys = getLanguageForCode(languageCode);
+    String text = keys.get(key);
+
+    if (text == null)
+    {
+      Log.w(Constants.APPLICATION_NAME, "No translation defined for key " + key + " using languageCode=" + languageCode);
+      text = key;
+    }
+
+    return text;
+  }
+
   public String getCurrentLanguage()
   {
     return _currentLanguage;

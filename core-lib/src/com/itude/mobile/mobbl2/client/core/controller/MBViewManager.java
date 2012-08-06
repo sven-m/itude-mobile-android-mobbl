@@ -865,6 +865,12 @@ public class MBViewManager extends ActivityGroup
     imm.hideSoftInputFromWindow(triggeringView.getWindowToken(), 0);
   }
 
+  public void showSoftKeyBoard(View triggeringView)
+  {
+    InputMethodManager imm = (InputMethodManager) triggeringView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+  }
+
   public List<MBBasicViewController> getViewControllers(String dialogName)
   {
     Log.d(Constants.APPLICATION_NAME, "MBViewManager.getViewControllers: dialogName=" + dialogName);

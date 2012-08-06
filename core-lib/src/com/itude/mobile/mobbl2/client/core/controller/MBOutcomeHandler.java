@@ -37,7 +37,6 @@ public class MBOutcomeHandler extends Handler
       MBApplicationController.getInstance().finishedInitialOutcomes();
       return;
     }
-
     MBOutcome outcome = msg.getData().getParcelable("outcome");
     boolean throwException = msg.getData().getBoolean("throwException", true);
 

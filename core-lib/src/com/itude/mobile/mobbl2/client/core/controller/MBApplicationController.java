@@ -174,6 +174,30 @@ public class MBApplicationController extends Application
       });
     }
 
+    _viewManager.runOnUiThread(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        MessageQueue myQueue = Looper.myQueue();
+        myQueue.addIdleHandler(new IdleHandler()
+        {
+
+          @Override
+          public boolean queueIdle()
+          {
+            _currentApplicationState = ApplicationState.STARTED;
+            onApplicationStarted();
+            return false;
+          }
+        });
+      }
+    });
+
+  }
+
+  void onApplicationStarted()
+  {
     // Let's see if we want to fire an outcome after the initial ones but before we let the application know it's finished starting
     final String outcomeName = _viewManager.getIntent().getStringExtra(Constants.C_INTENT_POST_INITIALOUTCOMES_OUTCOMENAME);
     if (outcomeName != null)
@@ -188,29 +212,9 @@ public class MBApplicationController extends Application
         }
       });
     }
-
-    _viewManager.runOnUiThread(new Runnable()
-    {
-      @Override
-      public void run()
-      {
-        MessageQueue myQueue = Looper.myQueue();
-        myQueue.addIdleHandler(new IdleHandler()
-        {
-
-          @Override
-          public boolean queueIdle()
-          {
-            _currentApplicationState = ApplicationState.STARTED;
-            return false;
-          }
-        });
-      }
-    });
-
   }
 
-  private String getActiveDialogName()
+  public String getActiveDialogName()
   {
     String result = null;
     if (_viewManager != null)
