@@ -700,7 +700,7 @@ public class MBViewManager extends ActivityGroup
 
   public synchronized void hideActivityIndicator()
   {
-    if (_activityIndicator != null && _activityIndicator.isActive())
+    if (_activityIndicator != null)
     {
       _activityIndicator.dismiss(this);
     }

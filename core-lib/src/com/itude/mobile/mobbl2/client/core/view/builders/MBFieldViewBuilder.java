@@ -333,6 +333,8 @@ public class MBFieldViewBuilder extends MBViewBuilder
     {
       getStyleHandler().styleHint(inputField);
       inputField.setHint(MBLocalizationService.getInstance().getTextForKey(hint));
+      // http://code.google.com/p/android/issues/detail?id=7252
+      inputField.setEllipsize(TruncateAt.END);
     }
 
     inputField.setSingleLine();
