@@ -283,6 +283,11 @@ public class MBDialogController extends FragmentActivity
     {
       String modalPageID = MBApplicationController.getInstance().getModalPageID();
 
+      if (addToBackStack)
+      {
+        transaction.addToBackStack(id);
+      }
+
       if (modalPageID != null && MBApplicationController.getInstance().getOutcomeWhichCausedModal() != null)
       {
         displayMode = MBApplicationController.getInstance().getOutcomeWhichCausedModal().getDisplayMode();
@@ -326,10 +331,7 @@ public class MBDialogController extends FragmentActivity
       {
         getSupportFragmentManager().popBackStack();
       }
-      if (addToBackStack)
-      {
-        transaction.addToBackStack(id);
-      }
+
       transaction.add(fragment, id);
     }
     else
@@ -337,7 +339,6 @@ public class MBDialogController extends FragmentActivity
       if (addToBackStack)
       {
         transaction.addToBackStack(id);
-        transaction.replace(_dialogIds.get(dialogName), fragment);
       }
       else
       {
@@ -345,25 +346,14 @@ public class MBDialogController extends FragmentActivity
         {
           getSupportFragmentManager().popBackStack();
           transaction.addToBackStack(id);
-          transaction.add(_dialogIds.get(dialogName), fragment);
-        }
-        else
-        {
-          transaction.replace(_dialogIds.get(dialogName), fragment);
         }
       }
+      transaction.replace(_dialogIds.get(dialogName), fragment);
     }
 
     // commitAllowingStateLoss makes sure that the transaction is being commit,
     // even when the target activity is stopped. For now, this comes with the price,
     // that the page being displayed will lose its state after a configuration change (e.g. an orientation change)
-    transaction.commitAllowingStateLoss();
-  }
-
-  private void doDeleteFragmenetTransaction(MBBasicViewController fragment)
-  {
-    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-    transaction.remove(fragment);
     transaction.commitAllowingStateLoss();
   }
 
