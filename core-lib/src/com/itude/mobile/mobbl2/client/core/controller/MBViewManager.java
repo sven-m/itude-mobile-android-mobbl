@@ -146,6 +146,26 @@ public class MBViewManager extends ActivityGroup
     {
       MBApplicationController.getInstance().handleSearchRequest(intent);
     }
+
+    final String outcomeName = intent.getStringExtra(Constants.C_INTENT_POST_INITIALOUTCOMES_OUTCOMENAME);
+    if (StringUtilities.isNotBlank(outcomeName))
+    {
+
+      runOnUiThread(new Runnable()
+      {
+
+        @Override
+        public void run()
+        {
+          if (MBApplicationController.getInstance().getOutcomeHandler() == null)
+          {
+            MBApplicationController.getInstance().startOutcomeHandler();
+          }
+          MBApplicationController.getInstance().handleOutcome(new MBOutcome(outcomeName, null));
+        }
+      });
+    }
+
   }
 
   @Override
