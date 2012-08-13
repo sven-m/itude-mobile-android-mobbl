@@ -125,7 +125,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     _isDialogFullscreen = getArguments().getBoolean("fullscreen", false);
     _isDialogCancelable = getArguments().getBoolean("cancelable", false) || _isDialogCancelable;
 
-    if (_isDialogClosable && MBDevice.getInstance().isTablet())
+    if (_isDialogClosable && MBDevice.isTablet())
     {
       ViewGroup view = buildInitialView();
 
@@ -151,7 +151,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
       setCancelable(_isDialogClosable || _isDialogCancelable);
 
       // view is already set in onCreateDialog for closable dialogs
-      if (_isDialogClosable)
+      if (_isDialogClosable && MBDevice.isTablet())
       {
         return super.onCreateView(inflater, container, savedInstanceState);
       }
