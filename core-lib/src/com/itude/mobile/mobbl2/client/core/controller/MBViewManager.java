@@ -142,9 +142,11 @@ public class MBViewManager extends ActivityGroup
     super.onNewIntent(intent);
     setIntent(intent);
 
+    final MBApplicationController appController = MBApplicationController.getInstance();
+
     if (Intent.ACTION_SEARCH.equals(intent.getAction()) || Intent.ACTION_VIEW.equals(intent.getAction()))
     {
-      MBApplicationController.getInstance().handleSearchRequest(intent);
+      appController.handleSearchRequest(intent);
     }
 
     final String outcomeName = intent.getStringExtra(Constants.C_INTENT_POST_INITIALOUTCOMES_OUTCOMENAME);
@@ -157,11 +159,11 @@ public class MBViewManager extends ActivityGroup
         @Override
         public void run()
         {
-          if (MBApplicationController.getInstance().getOutcomeHandler() == null)
+          if (appController.getOutcomeHandler() == null)
           {
-            MBApplicationController.getInstance().startOutcomeHandler();
+            appController.startOutcomeHandler();
           }
-          MBApplicationController.getInstance().handleOutcome(new MBOutcome(outcomeName, null));
+          appController.handleOutcome(new MBOutcome(outcomeName, null));
         }
       });
     }
