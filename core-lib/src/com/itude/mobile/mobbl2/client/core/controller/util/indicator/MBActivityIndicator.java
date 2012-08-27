@@ -31,15 +31,17 @@ public final class MBActivityIndicator implements MBIndicatorI
   @Override
   public void show(final Activity activity)
   {
+
+    if (_queue.getAndIncrement() > 0)
+    {
+      return;
+    }
+
     activity.runOnUiThread(new MBThread()
     {
       @Override
       public void runMethod()
       {
-        if (_queue.getAndIncrement() > 0)
-        {
-          return;
-        }
         _dialog = ProgressDialog.show(activity, MBLocalizationService.getInstance().getTextForKey("title_loading"), MBLocalizationService
             .getInstance().getTextForKey("msg_loading"), true, false);
       }
@@ -49,16 +51,16 @@ public final class MBActivityIndicator implements MBIndicatorI
   @Override
   public void dismiss(final Activity activity)
   {
+    if (_queue.decrementAndGet() > 0)
+    {
+      return;
+    }
 
     activity.runOnUiThread(new MBThread()
     {
       @Override
       public void runMethod()
       {
-        if (_queue.decrementAndGet() > 0)
-        {
-          return;
-        }
         _dialog.dismiss();
         _dialog = null;
       }
