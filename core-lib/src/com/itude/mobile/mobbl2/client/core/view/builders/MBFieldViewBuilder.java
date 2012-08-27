@@ -628,6 +628,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
               df.getMonth(), df.getDay());
           datePickerDialog.setTitle(field.getLabel());
           styleHandler.styleDatePickerDialog(datePickerDialog, field);
+          styleHandler.styleDatePickerDialog(datePickerDialog, value, field);
 
           datePickerDialog.show();
         }

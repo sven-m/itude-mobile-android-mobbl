@@ -655,4 +655,9 @@ public class MBStyleHandler
   {
   }
 
+  // TODO, moet samen gevoegd worden
+  public void styleDatePickerDialog(DatePickerDialog datePickerDialog, TextView view, MBField field)
+  {
+  }
+
 }
