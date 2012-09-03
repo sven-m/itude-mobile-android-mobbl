@@ -56,11 +56,10 @@
 	</dependencies>
 
 	<scm>
-		<connection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-test</connection>
-		<developerConnection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-test</developerConnection>
-		<url>http://svn/repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-test</url>
+		<connection>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git/core-test</connection>
+		<developerConnection>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git/core-test</developerConnection>
+		<url>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git/core-test</url>
 	</scm>
-
 
 	<build>
 		<defaultGoal>install</defaultGoal>

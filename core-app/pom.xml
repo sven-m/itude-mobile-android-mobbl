@@ -61,9 +61,9 @@
 	</dependencies>
 
 	<scm>
-		<connection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-app</connection>
-		<developerConnection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-app</developerConnection>
-		<url>http://svn/repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk/core-app</url>
+		<connection>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git/core-app</connection>
+		<developerConnection>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git/core-app</developerConnection>
+		<url>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git/core-app</url>
 	</scm>
 
 	<build>

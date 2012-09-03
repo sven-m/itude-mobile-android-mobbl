@@ -86,12 +86,12 @@
         </profile>
     </profiles>
    
-    <scm>
-		<connection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk</connection>
-		<developerConnection>scm:svn:http://repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk</developerConnection>
-		<url>http://svn/repo.itude.com/repos/mobbl-client/itude-mobile-android-mobbl/trunk</url>
+   	<scm>
+		<connection>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git</connection>
+		<developerConnection>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git</developerConnection>
+		<url>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git</url>
 	</scm>
-
+	
 	<build>
         <pluginManagement>
             <plugins>
