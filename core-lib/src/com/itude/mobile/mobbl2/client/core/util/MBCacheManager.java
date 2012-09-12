@@ -29,9 +29,25 @@ public final class MBCacheManager
   private final String              _registryFileName   = CACHE_DIR + File.separator + CACHE_REGISTRY_FILE;
   private final String              _ttlsFileName       = CACHE_DIR + File.separator + CACHE_TTL_FILE;
 
+  @SuppressWarnings("unchecked")
   protected void init()
-  { Log.d(Constants.APPLICATION_NAME, "init CacheManager");
-    _ttls = new Hashtable<String, String>();
+  {
+    Log.d(Constants.APPLICATION_NAME, "init CacheManager");
+
+    /* 
+     * AD: When writing our ttls to a file we should also read them. 
+     * Otherwise what will happen when closing and reopening the application is that the _ttls hashtable is empty
+     * even though we've set values in this before closing down the application.
+     * Not reading the _ttls from the file can result in the doGetValueForKey method not finding the ttl value for the given key
+     * Not finding the ttl will disregard any ttl values that belong to the key. 
+     * When disregarding the ttl the document will ALWAYS be loaded from the cache (if available).
+     */
+    _ttls = (Hashtable<String, String>) FileUtil.getInstance().readObjectFromFile(_ttlsFileName);
+    if (_ttls == null)
+    {
+      _ttls = new Hashtable<String, String>();
+    }
+
     _documentTypes = new Hashtable<String, String>();
     _registry = new HashMap<String, String>();
     _temporaryMemoryCache = new HashMap<String, byte[]>();
