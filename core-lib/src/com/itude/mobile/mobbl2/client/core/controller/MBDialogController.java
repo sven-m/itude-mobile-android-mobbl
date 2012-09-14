@@ -475,4 +475,17 @@ public class MBDialogController extends FragmentActivity
       }
     }
   }
+
+  // Back button press handling
+
+  @Override
+  public void onBackPressed()
+  {
+    boolean handled = false;
+    for (MBBasicViewController controller : getAllFragments())
+      if (controller.onBackKeyPressed()) handled = true;
+
+    if (!handled) super.onBackPressed();
+  }
+
 }

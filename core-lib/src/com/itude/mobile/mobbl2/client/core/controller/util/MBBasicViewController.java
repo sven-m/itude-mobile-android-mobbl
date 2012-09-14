@@ -7,10 +7,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnKeyListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,8 +132,24 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
       ViewGroup view = buildInitialView();
 
       // unable to use the holo light theme as pre honeycomb doesn't know AlertDialog.Builder(context, theme) 
-      return new AlertDialog.Builder(getActivity()).setNeutralButton(MBLocalizationService.getInstance().getTextForKey("Close"), this)
-          .setView(view).create();
+      AlertDialog dialog = new AlertDialog.Builder(getActivity())
+          .setNeutralButton(MBLocalizationService.getInstance().getTextForKey("Close"), this).setView(view).create();
+      dialog.setOnKeyListener(new OnKeyListener()
+      {
+
+        @Override
+        public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event)
+        {
+          if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK)
+          {
+            return onBackKeyPressed();
+          }
+
+          return false;
+        }
+      });
+
+      return dialog;
     }
 
     if (_isDialogFullscreen)
@@ -475,5 +493,11 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   public void onClick(DialogInterface arg0, int arg1)
   {
     MBViewManager.getInstance().endModalDialog(MBApplicationController.getInstance().getModalPageID());
+  }
+
+  // Intercepting the back button
+  public boolean onBackKeyPressed()
+  {
+    return false;
   }
 }
