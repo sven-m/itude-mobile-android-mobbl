@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,9 +15,10 @@ import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 public class MBCirclePageIndicatorBar extends MBAbstractPageIndicator
 {
 
-  private final int DEFAULT_CIRCLE_SIZE = MBScreenUtilities.SIX;
-  private int       _inactiveIndicatorColour;
-  private int       _activeIndicatorColour;
+  private int _circleSize = MBScreenUtilities.SIX;
+  private int _padding    = MBScreenUtilities.FIVE;
+  private int _inactiveIndicatorColour;
+  private int _activeIndicatorColour;
 
   public MBCirclePageIndicatorBar(Context context)
   {
@@ -34,6 +36,8 @@ public class MBCirclePageIndicatorBar extends MBAbstractPageIndicator
     LinearLayout circleContainer = new LinearLayout(this.getContext());
     circleContainer.setOrientation(LinearLayout.HORIZONTAL);
     circleContainer.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+    circleContainer.setGravity(Gravity.CENTER_VERTICAL);
+
     removeAllViews();
 
     return circleContainer;
@@ -55,14 +59,14 @@ public class MBCirclePageIndicatorBar extends MBAbstractPageIndicator
   protected View setupActiveIndicatorView()
   {
     ShapeDrawable circle = new ShapeDrawable(new OvalShape());
-    circle.setBounds(0, 0, DEFAULT_CIRCLE_SIZE, DEFAULT_CIRCLE_SIZE);
-    circle.setIntrinsicHeight(DEFAULT_CIRCLE_SIZE);
-    circle.setIntrinsicWidth(DEFAULT_CIRCLE_SIZE);
+    circle.setBounds(0, 0, _circleSize, _circleSize);
+    circle.setIntrinsicHeight(_circleSize);
+    circle.setIntrinsicWidth(_circleSize);
     circle.getPaint().setAntiAlias(true);
     circle.getPaint().setColor(_activeIndicatorColour);
 
     ImageView circleView = new ImageView(this.getContext());
-    circleView.setPadding(MBScreenUtilities.FIVE, 0, MBScreenUtilities.FIVE, 0);
+    circleView.setPadding(_padding, 0, _padding, 0);
     circleView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
     circleView.setImageDrawable(circle);
 
@@ -73,14 +77,14 @@ public class MBCirclePageIndicatorBar extends MBAbstractPageIndicator
   protected View setupInactiveIndicatorView()
   {
     ShapeDrawable circle = new ShapeDrawable(new OvalShape());
-    circle.setBounds(0, 0, DEFAULT_CIRCLE_SIZE, DEFAULT_CIRCLE_SIZE);
-    circle.setIntrinsicHeight(DEFAULT_CIRCLE_SIZE);
-    circle.setIntrinsicWidth(DEFAULT_CIRCLE_SIZE);
+    circle.setBounds(0, 0, _circleSize, _circleSize);
+    circle.setIntrinsicHeight(_circleSize);
+    circle.setIntrinsicWidth(_circleSize);
     circle.getPaint().setAntiAlias(true);
     circle.getPaint().setColor(_inactiveIndicatorColour);
 
     ImageView circleView = new ImageView(this.getContext());
-    circleView.setPadding(MBScreenUtilities.FIVE, 0, MBScreenUtilities.FIVE, 0);
+    circleView.setPadding(_padding, 0, _padding, 0);
     circleView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
     circleView.setImageDrawable(circle);
 
@@ -96,6 +100,18 @@ public class MBCirclePageIndicatorBar extends MBAbstractPageIndicator
   public void setInactiveIndicatorColor(int colour)
   {
     _inactiveIndicatorColour = colour;
+    resetPageIndicator();
+  }
+
+  public void setPadding(int padding)
+  {
+    _padding = padding;
+    resetPageIndicator();
+  }
+
+  public void setCircleSize(int circleSize)
+  {
+    _circleSize = circleSize;
     resetPageIndicator();
   }
 }

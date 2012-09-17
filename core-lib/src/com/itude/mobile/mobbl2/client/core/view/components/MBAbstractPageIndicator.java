@@ -65,8 +65,10 @@ public abstract class MBAbstractPageIndicator extends LinearLayout
   {
     getIndicatorList().clear();
     _indicatorContainer.removeAllViews();
+
     for (int i = 0; i < _indicatorCount; i++)
     {
+
       if (i == _activeIndicator)
       {
         _indicators.add(setupActiveIndicatorView());
