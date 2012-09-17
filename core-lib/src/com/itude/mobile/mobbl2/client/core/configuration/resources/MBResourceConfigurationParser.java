@@ -28,6 +28,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       _resourceAttributes.add("color");
       _resourceAttributes.add("cacheable");
       _resourceAttributes.add("ttl");
+      _resourceAttributes.add("align");
     }
     if (_bundleAttributes == null)
     {
@@ -41,6 +42,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       _statedResourceAttributes = new ArrayList<String>();
       _statedResourceAttributes.add("xmlns");
       _statedResourceAttributes.add("id");
+      _statedResourceAttributes.add("type");
     }
     if (_layeredResourceAttributes == null)
     {
@@ -101,6 +103,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       resourceDef.setUrl(attributeDict.get("url"));
       resourceDef.setColor(attributeDict.get("color"));
       resourceDef.setCacheable(Boolean.parseBoolean(attributeDict.get("cacheable")));
+      resourceDef.setAlign(attributeDict.get("align"));
       if (attributeDict.containsKey("ttl"))
       {
         resourceDef.setTtl(Integer.parseInt(attributeDict.get("ttl")));
@@ -124,6 +127,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
 
       MBStatedResourceDefinition statedResourceDef = new MBStatedResourceDefinition();
       statedResourceDef.setResourceId(attributeDict.get("id"));
+      statedResourceDef.setResourceId(attributeDict.get("type"));
 
       notifyProcessed(statedResourceDef);
     }

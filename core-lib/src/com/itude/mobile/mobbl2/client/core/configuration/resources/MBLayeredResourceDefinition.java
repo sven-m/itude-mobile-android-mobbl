@@ -31,7 +31,7 @@ public class MBLayeredResourceDefinition extends MBAbstractResourceCollectionDef
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<LayeredResource name='").append(getName()).append("' >");
+    StringUtilities.appendIndentString(appendToMe, level).append("<LayeredResource id='").append(getResourceId()).append("' >");
     for (MBItemDefinition item : getItems().values())
     {
       item.asXmlWithLevel(appendToMe, level + 2);

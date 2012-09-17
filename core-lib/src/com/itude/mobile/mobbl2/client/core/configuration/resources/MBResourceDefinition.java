@@ -8,6 +8,7 @@ public class MBResourceDefinition extends MBDefinition
   private String  _resourceId;
   private String  _url;
   private String  _color;
+  private String  _align;
   private boolean _cacheable;
   private int     _ttl;
 
@@ -16,7 +17,7 @@ public class MBResourceDefinition extends MBDefinition
   {
     return StringUtilities.appendIndentString(appendToMe, level).append("<Resource id='").append(getResourceId()).append("' url='")
         .append(getUrl()).append("' cacheable='").append(getCacheable()).append("' ttl='").append(getTtl()).append("' color='")
-        .append(getColor()).append("' />");
+        .append(getColor()).append("' align='").append(getAlign()).append("' />");
   }
 
   public String getResourceId()
@@ -67,6 +68,16 @@ public class MBResourceDefinition extends MBDefinition
   public void setColor(String color)
   {
     _color = color;
+  }
+
+  public String getAlign()
+  {
+    return _align;
+  }
+
+  public void setAlign(String align)
+  {
+    _align = align;
   }
 
 }

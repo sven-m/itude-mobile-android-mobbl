@@ -9,17 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.R;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.util.Log;
 import android.view.Gravity;
 
@@ -36,12 +33,13 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBBundleNotFoundException;
-import com.itude.mobile.mobbl2.client.core.services.exceptions.MBResourceInvalidException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBResourceNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBBundleDefinition;
 import com.itude.mobile.mobbl2.client.core.util.MBCacheManager;
+import com.itude.mobile.mobbl2.client.core.util.resources.MBAbstractStatedResourceBuilder;
+import com.itude.mobile.mobbl2.client.core.util.resources.MBStatedResourceBuilderFactory;
 
 public final class MBResourceService
 {
@@ -130,18 +128,6 @@ public final class MBResourceService
     }
   }
 
-  public int getColorById(String resourceId)
-  {
-    MBResourceDefinition def = getConfig().getResourceWithID(resourceId);
-
-    if (def == null)
-    {
-      throw new MBResourceNotDefinedException("Resource for ID=" + resourceId + " could not be found");
-    }
-
-    return Color.parseColor(def.getColor());
-  }
-
   public ColorStateList getColorStateListById(String resourceId)
   {
     MBResourceDefinition def = getConfig().getResourceWithID(resourceId);
@@ -150,89 +136,7 @@ public final class MBResourceService
       throw new MBResourceNotDefinedException("Resource for ID=" + resourceId + " could not be found");
     }
 
-    // We are assuming a list has been provided
-    if (def instanceof MBStatedResourceDefinition)
-    {
-      Map<String, MBItemDefinition> items = ((MBStatedResourceDefinition) def).getItems();
-
-      final int statedItemCount = items.size();
-      if (statedItemCount == 0)
-      {
-        return null;
-      }
-
-      int[][] states = new int[statedItemCount][];
-      int[] colors = new int[statedItemCount];
-      int counter = 0;
-
-      MBItemDefinition enabled = items.get("enabled");
-      MBItemDefinition selected = items.get("selected");
-      MBItemDefinition pressed = items.get("pressed");
-      MBItemDefinition disabled = items.get("disabled");
-      MBItemDefinition checked = items.get("checked");
-
-      if (pressed != null)
-      {
-        String resource = pressed.getResource();
-        validateItemInStatedResource(resource);
-
-        states[counter] = new int[]{R.attr.state_pressed};
-        colors[counter] = getColorById(resource);
-
-        counter++;
-      }
-
-      if (enabled != null)
-      {
-        String resource = enabled.getResource();
-        validateItemInStatedResource(resource);
-
-        states[counter] = new int[]{R.attr.state_enabled, -R.attr.state_selected};
-        colors[counter] = getColorById(resource);
-
-        counter++;
-      }
-
-      if (disabled != null)
-      {
-        String resource = disabled.getResource();
-        validateItemInStatedResource(resource);
-
-        states[counter] = new int[]{-R.attr.state_enabled};
-        colors[counter] = getColorById(resource);
-
-        counter++;
-      }
-
-      if (selected != null)
-      {
-        String resource = selected.getResource();
-        validateItemInStatedResource(resource);
-
-        states[counter] = new int[]{R.attr.state_selected};
-        colors[counter] = getColorById(resource);
-
-        counter++;
-      }
-      if (checked != null)
-      {
-        String resource = checked.getResource();
-        validateItemInStatedResource(resource);
-
-        states[counter] = new int[]{R.attr.state_checked};
-        colors[counter] = getColorById(resource);
-
-        counter++;
-      }
-
-      return new ColorStateList(states, colors);
-    }
-    else
-    {
-      // No list was provided so we are assuming only one color was provided. 
-      throw new MBResourceInvalidException("Resource for ID=" + resourceId
-                                           + " is not a valid resource for a ColorStateList, define the resource as a StatedResource");
-    }
+    return null;
 
   }
 
@@ -275,7 +179,12 @@ public final class MBResourceService
       try
       {
         int identifier = resources.getIdentifier(imageName, "drawable", baseContext.getPackageName());
-        return resources.getDrawable(identifier);
+        Drawable drawable = resources.getDrawable(identifier);
+        if (drawable instanceof BitmapDrawable)
+        {
+          setBitmapGravity(def.getAlign(), (BitmapDrawable) drawable);
+        }
+        return drawable;
       }
       catch (Exception e)
       {
@@ -306,67 +215,42 @@ public final class MBResourceService
     }
 
     Resources res = MBApplicationController.getInstance().getBaseContext().getResources();
-    return new BitmapDrawable(res, bitmap);
+    BitmapDrawable bitmapDrawable = new BitmapDrawable(res, bitmap);
+    setBitmapGravity(def.getAlign(), bitmapDrawable);
 
+    return bitmapDrawable;
+  }
+
+  private void setBitmapGravity(String align, BitmapDrawable drawable)
+  {
+    if ("LEFT".equals(align))
+    {
+      drawable.setGravity(Gravity.LEFT);
+    }
+    else if ("RIGHT".equals(align))
+    {
+      drawable.setGravity(Gravity.RIGHT);
+    }
+    else if ("TOP".equals(align))
+    {
+      drawable.setGravity(Gravity.TOP);
+    }
+    else if ("BOTTOM".equals(align))
+    {
+      drawable.setGravity(Gravity.BOTTOM);
+    }
+    else if ("CENTER".equals(align))
+    {
+      drawable.setGravity(Gravity.CENTER);
+    }
   }
 
   private Drawable buildStatedImage(MBStatedResourceDefinition def)
   {
-    Map<String, MBItemDefinition> items = def.getItems();
+    String type = def.getType();
+    MBAbstractStatedResourceBuilder builder = MBStatedResourceBuilderFactory.getInstance().getStatedResourceBuilder(type, getConfig());
 
-    if (items.size() == 0)
-    {
-      return null;
-    }
-
-    MBItemDefinition enabled = items.get("enabled");
-    MBItemDefinition selected = items.get("selected");
-    MBItemDefinition pressed = items.get("pressed");
-    MBItemDefinition disabled = items.get("disabled");
-    MBItemDefinition checked = items.get("checked");
-
-    StateListDrawable stateDrawable = new StateListDrawable();
-
-    if (pressed != null)
-    {
-      String resource = pressed.getResource();
-      validateItemInStatedResource(resource);
-      Drawable drawable = getImageByID(resource);
-      stateDrawable.addState(new int[]{R.attr.state_pressed}, drawable);
-    }
-
-    if (enabled != null)
-    {
-      String resource = enabled.getResource();
-      validateItemInStatedResource(resource);
-      Drawable drawable = getImageByID(resource);
-      stateDrawable.addState(new int[]{R.attr.state_enabled, -R.attr.state_selected}, drawable);
-    }
-
-    if (disabled != null)
-    {
-      String resource = disabled.getResource();
-      validateItemInStatedResource(resource);
-      Drawable drawable = getImageByID(resource);
-      stateDrawable.addState(new int[]{-R.attr.state_enabled}, drawable);
-    }
-
-    if (selected != null)
-    {
-      String resource = selected.getResource();
-      validateItemInStatedResource(resource);
-      Drawable drawable = getImageByID(resource);
-      stateDrawable.addState(new int[]{R.attr.state_selected}, drawable);
-    }
-    if (checked != null)
-    {
-      String resource = checked.getResource();
-      validateItemInStatedResource(resource);
-      Drawable drawable = getImageByID(resource);
-      stateDrawable.addState(new int[]{R.attr.state_checked}, drawable);
-    }
-
-    return stateDrawable;
+    return builder.build(def);
   }
 
   private Drawable buildLayeredImage(MBLayeredResourceDefinition def)
@@ -383,30 +267,16 @@ public final class MBResourceService
     for (MBItemDefinition item : items)
     {
       String resource = item.getResource();
-      validateItemInLayeredResource(resource);
+
+      // FIXME: CH: don't know the purpose of this validation
+      //      validateItemInLayeredResource(resource);
 
       Drawable drawable = getImageByID(resource);
-      if (drawable instanceof BitmapDrawable)
-      {
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-        bitmapDrawable.setGravity(Gravity.CENTER);
-        drawable = bitmapDrawable;
-      }
       layers[items.indexOf(item)] = drawable;
     }
 
     LayerDrawable layerDrawable = new LayerDrawable(layers);
     return layerDrawable;
-  }
-
-  private void validateItemInStatedResource(String itemResource) throws MBInvalidItemException
-  {
-    MBResourceDefinition targetResourceDef = getConfig().getResourceWithID(itemResource);
-
-    if (targetResourceDef instanceof MBStatedResourceDefinition)
-    {
-      throw new MBInvalidItemException("A stated resource can not have a stated item");
-    }
   }
 
   private void validateItemInLayeredResource(String itemResource) throws MBInvalidItemException
