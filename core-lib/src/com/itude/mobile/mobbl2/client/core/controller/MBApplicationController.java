@@ -303,7 +303,7 @@ public class MBApplicationController extends Application
         if (!actualType.equals(pageDefinition.getDocumentName()))
         {
           String msg = "Document provided via outcome by action/page=" + causingOutcome.getOriginName()
-                       + " (transferDocument='TRUE') is of type " + actualType + "but must be of type " + pageDefinition.getDocumentName();
+                       + " (transferDocument='TRUE') is of type " + actualType + " but must be of type " + pageDefinition.getDocumentName();
           throw new MBInvalidOutcomeException(msg);
         }
         document = causingOutcome.getDocument();
