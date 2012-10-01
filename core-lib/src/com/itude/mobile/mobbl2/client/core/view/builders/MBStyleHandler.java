@@ -398,14 +398,6 @@ public class MBStyleHandler
   {
   }
 
-  public void styleRowItemLeft(RelativeLayout.LayoutParams params)
-  {
-  }
-
-  public void styleRowItemRight(RelativeLayout.LayoutParams params)
-  {
-  }
-
   public void styleRowButton(View button, RelativeLayout.LayoutParams params)
   {
   }
