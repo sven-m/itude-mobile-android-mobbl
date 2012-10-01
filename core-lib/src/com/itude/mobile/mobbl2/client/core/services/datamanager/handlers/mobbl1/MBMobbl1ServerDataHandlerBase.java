@@ -1,19 +1,20 @@
-package com.itude.mobile.mobbl2.client.core.services.datamanager.handlers;
+package com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.mobbl1;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
-import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
+import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBRESTServiceDataHandler;
 import com.itude.mobile.mobbl2.client.core.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBProperties;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
-public class MBMobbl1ServerDataHandler extends MBRESTServiceDataHandler
+public abstract class MBMobbl1ServerDataHandlerBase extends MBRESTServiceDataHandler
 {
+  private String _dataHandlerType;
 
   //
   //expects an argument Document of type MBMobbl1Request
@@ -61,7 +62,6 @@ public class MBMobbl1ServerDataHandler extends MBRESTServiceDataHandler
     SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     String dateTime = formatter.format(currentDate);
 
-    String messageID = StringUtilities.md5(dateTime + uid + secret);
     //
     sendData.setAttributeValue("http://straysystems.com/xsd/strayclient", "xmlns");
     sendData.setAttributeValue("SendData", "command");
@@ -70,8 +70,15 @@ public class MBMobbl1ServerDataHandler extends MBRESTServiceDataHandler
     sendData.setAttributeValue(uid, "iPhoneUID");
     // TODO iPhoneUID will need to be changed back to uniqueDeviceID --> mobbls.alex.com does not support this yet
     //    sendData.setAttributeValue(UID, "uniqueDeviceID");
-    sendData.setAttributeValue(messageID, "messageID");
-    setDocumentFactoryType(MBDocumentFactory.PARSER_MOBBL1);
+
+    // didn't use StringUtilities on purpose. Although it is unwise to have an empty or space as secret key; why shouldn't it be possible?
+    if (secret != null)
+    {
+      String messageID = StringUtilities.md5(dateTime + uid + secret);
+      sendData.setAttributeValue(messageID, "messageID");
+    }
+
+    super.setDocumentFactoryType(_dataHandlerType);
     return super.doLoadDocument(documentName, mobblDoc);
   }
 
@@ -91,4 +98,8 @@ public class MBMobbl1ServerDataHandler extends MBRESTServiceDataHandler
     parameter.setAttributeValue(value, "value");
   }
 
+  protected void setDataHandlerType(String type)
+  {
+    _dataHandlerType = type;
+  }
 }
