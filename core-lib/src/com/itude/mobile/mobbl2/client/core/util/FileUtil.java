@@ -5,10 +5,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
 import com.itude.mobile.mobbl2.client.core.util.exceptions.MBDataParsingException;
@@ -221,6 +224,31 @@ public final class FileUtil
     }
 
     return success;
+  }
+
+  public String getStringFromRawResource(int rawResourceId)
+  {
+    Resources resources = _context.getResources();
+    InputStream in = resources.openRawResource(rawResourceId);
+
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+    int read;
+    byte[] buffer = new byte[1024];
+    try
+    {
+      while ((read = in.read(buffer, 0, buffer.length)) != -1)
+      {
+        bytes.write(buffer, 0, read);
+      }
+      bytes.flush();
+    }
+    catch (IOException e)
+    {
+      Log.e(Constants.APPLICATION_NAME, e.getMessage(), e);
+    }
+
+    return bytes.toString();
   }
 
 }
