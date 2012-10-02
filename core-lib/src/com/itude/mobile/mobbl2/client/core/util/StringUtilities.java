@@ -387,9 +387,9 @@ public final class StringUtilities
     return defaultFormattingLocale;
   }
 
-  public static Spanned fromHTML(String textToFransform)
+  public static Spanned fromHTML(String textToTransform)
   {
-    return Html.fromHtml(textToFransform);
+    return Html.fromHtml(textToTransform);
   }
 
   public static String stripHTMLTags(String textToStrip)
