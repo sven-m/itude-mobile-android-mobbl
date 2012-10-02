@@ -196,7 +196,7 @@ public class MBApplicationController extends Application
 
   }
 
-  void onApplicationStarted()
+  protected void onApplicationStarted()
   {
     // Let's see if we want to fire an outcome after the initial ones but before we let the application know it's finished starting
     final String outcomeName = _viewManager.getIntent().getStringExtra(Constants.C_INTENT_POST_INITIALOUTCOMES_OUTCOMENAME);
