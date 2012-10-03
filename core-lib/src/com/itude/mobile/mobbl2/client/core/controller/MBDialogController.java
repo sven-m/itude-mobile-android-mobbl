@@ -139,15 +139,17 @@ public class MBDialogController extends ContextWrapper
           .buildDialog(MBDialogType.Split, _sortedDialogIds);
     }
 
+    getActivity().setContentView(_mainContainer);
+
     if (getOutcomeId() != null)
     {
       Log.d(Constants.APPLICATION_NAME, "MBDialogController.onCreate: found outcomeID=" + getOutcomeId());
       MBPage page = MBApplicationController.getInstance().getPage(getOutcomeId());
-      showPage(page, null, getOutcomeId(), page.getDialogName(), false);
+      //showPage(page, null, getOutcomeId(), page.getDialogName(), false);
     }
   }
 
-  ////////////////////////////
+  // //////////////////////////
 
   /**
    * 
@@ -362,9 +364,12 @@ public class MBDialogController extends ContextWrapper
       transaction.replace(_dialogIds.get(dialogName), fragment);
     }
 
-    // commitAllowingStateLoss makes sure that the transaction is being commit,
-    // even when the target activity is stopped. For now, this comes with the price,
-    // that the page being displayed will lose its state after a configuration change (e.g. an orientation change)
+    // commitAllowingStateLoss makes sure that the transaction is being
+    // commit,
+    // even when the target activity is stopped. For now, this comes with
+    // the price,
+    // that the page being displayed will lose its state after a
+    // configuration change (e.g. an orientation change)
     transaction.commitAllowingStateLoss();
   }
 
@@ -375,10 +380,10 @@ public class MBDialogController extends ContextWrapper
 
   /**
    * @param type
-   * @return 
+   * @return
    * @return
    * 
-   * Get a list of fragments of a specific type
+   *         Get a list of fragments of a specific type
    */
   public <T extends MBBasicViewController> List<T> getAllFragments(Class<T> clazz)
   {
@@ -440,15 +445,17 @@ public class MBDialogController extends ContextWrapper
   }
 
   /**
-    * @param id id of the dialog
-    */
+   * @param id
+   *            id of the dialog
+   */
   public void handleOnWindowActivated(MBBasicViewController vc)
   {
     if (vc != null) vc.handleOnWindowActivated();
   }
 
   /**
-   * @param id id of the dialog
+   * @param id
+   *            id of the dialog
    */
   public void handleOnLeavingWindow(MBBasicViewController vc)
   {

@@ -284,7 +284,7 @@ public class MBViewManager extends FragmentActivity
     {
       // Take care of calling this method on earlier versions of
       // the platform where it doesn't exist.
-      getCurrentDialog().onBackPressed();
+      if (getCurrentDialog() != null) getCurrentDialog().onBackPressed();
       return true;
     }
 
