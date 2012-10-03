@@ -61,16 +61,6 @@ public class MBApplicationFactory
     return new MBBasicViewController();
   }
 
-  public Intent createIntent(String dialogName)
-  {
-    MBDialogDefinition dialogDef = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(dialogName);
-
-    Intent dialogIntent = new Intent(MBApplicationController.getInstance().getApplicationContext(), MBDialogController.class);
-    dialogIntent.putExtra("dialogName", dialogDef.getName());
-
-    return dialogIntent;
-  }
-
   public MBEditableMatrixListener getEditableMatrixListener(String panelName)
   {
     return null;

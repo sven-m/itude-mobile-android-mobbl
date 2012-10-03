@@ -254,9 +254,9 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
       controller.removeLastModalPageID();
     }
 
-    if (controller != null && controller.getViewManager() != null && controller.getViewManager().getActiveDialog() != null)
+    if (controller != null && controller.getViewManager() != null && controller.getViewManager().getCurrentDialog() != null)
     {
-      controller.getViewManager().getActiveDialog().handleAllOnWindowActivated();
+      controller.getViewManager().getCurrentDialog ().handleAllOnWindowActivated();
     }
   }
 

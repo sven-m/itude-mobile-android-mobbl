@@ -599,7 +599,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
               value.setText(DateUtilities.dateToString(df.getCalender().getTime(), field.getFormatMask()));
             }
           };
-          TimePickerDialog timePickerDialog = new TimePickerDialog(MBViewManager.getInstance().getActiveDialog(), listener, df
+          TimePickerDialog timePickerDialog = new TimePickerDialog(MBViewManager.getInstance(), listener, df
               .getHourOfDay(), df.getMinute(), true);
 
           timePickerDialog.setTitle(field.getLabel());
@@ -624,7 +624,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
             }
           };
 
-          DatePickerDialog datePickerDialog = new DatePickerDialog(MBViewManager.getInstance().getActiveDialog(), listener, df.getYear(),
+          DatePickerDialog datePickerDialog = new DatePickerDialog(MBViewManager.getInstance(), listener, df.getYear(),
               df.getMonth(), df.getDay());
           datePickerDialog.setTitle(field.getLabel());
           styleHandler.styleDatePickerDialog(datePickerDialog, field);

@@ -5,15 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Window;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
@@ -32,28 +32,44 @@ import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBDialogViewBuilder.MBDialogType;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
-public class MBDialogController extends FragmentActivity
+public class MBDialogController extends ContextWrapper
 {
+
   private String                     _name;
   private String                     _iconName;
   private String                     _dialogMode;
+  private String                     _outcomeId;
   private Object                     _rootController;
   private boolean                    _temporary;
   private final List<Integer>        _sortedDialogIds  = new ArrayList<Integer>();
   private final Map<String, Integer> _dialogIds        = new HashMap<String, Integer>();
   private final Map<String, String>  _childDialogModes = new HashMap<String, String>();
   private boolean                    _clearDialog      = false;
+  private View                       _mainContainer;
 
-  // Android lifecycle methods
-
-  @Override
-  protected void onCreate(Bundle savedInstanceState)
+  public MBDialogController(Context base)
   {
-    super.onCreate(savedInstanceState);
+    super(base);
+  }
+
+  public void init(String dialog, String outcomeId)
+  {
+    setName(dialog);
+    setOutcomeId(outcomeId);
     if (controllerInit())
     {
       viewInit();
     }
+  }
+
+  public void finish()
+  {
+
+  }
+
+  private MBViewManager getActivity()
+  {
+    return MBViewManager.getInstance();
   }
 
   /**
@@ -61,18 +77,13 @@ public class MBDialogController extends FragmentActivity
    */
   private boolean controllerInit()
   {
-    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
-    Intent intent = getIntent();
-    String dialogName = intent.getStringExtra("dialogName");
-
-    if (dialogName != null)
+    if (getName() != null)
     {
-      setName(dialogName);
-      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(getName());
       setIconName(dialogDefinition.getIcon());
       setDialogMode(dialogDefinition.getMode());
-      setTitle(MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
+      getActivity().setTitle(MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
       if (dialogDefinition.isGroup())
       {
         List<MBDialogDefinition> children = ((MBDialogGroupDefinition) dialogDefinition).getChildren();
@@ -114,40 +125,26 @@ public class MBDialogController extends FragmentActivity
 
   private void viewInit()
   {
-    RelativeLayout mainContainer = null;
 
     // handle as a single dialog
     if (_dialogIds.size() == 1)
     {
-      mainContainer = (RelativeLayout) MBViewBuilderFactory.getInstance().getDialogViewBuilder()
+      _mainContainer = (RelativeLayout) MBViewBuilderFactory.getInstance().getDialogViewBuilder()
           .buildDialog(MBDialogType.Single, _sortedDialogIds);
     }
     // handle as a group of dialogs
     else if (_dialogIds.size() > 1)
     {
-      mainContainer = (RelativeLayout) MBViewBuilderFactory.getInstance().getDialogViewBuilder()
+      _mainContainer = (RelativeLayout) MBViewBuilderFactory.getInstance().getDialogViewBuilder()
           .buildDialog(MBDialogType.Split, _sortedDialogIds);
     }
 
-    setContentView(mainContainer);
-
-    String outcomeID = getIntent().getStringExtra("outcomeID");
-    if (outcomeID != null)
+    if (getOutcomeId() != null)
     {
-      Log.d(Constants.APPLICATION_NAME, "MBDialogController.onCreate: found outcomeID=" + outcomeID);
-      MBPage page = MBApplicationController.getInstance().getPage(outcomeID);
-      showPage(page, null, outcomeID, page.getDialogName(), false);
+      Log.d(Constants.APPLICATION_NAME, "MBDialogController.onCreate: found outcomeID=" + getOutcomeId());
+      MBPage page = MBApplicationController.getInstance().getPage(getOutcomeId());
+      showPage(page, null, getOutcomeId(), page.getDialogName(), false);
     }
-  }
-
-  @Override
-  public void onWindowFocusChanged(boolean hasFocus)
-  {
-    if (hasFocus)
-    {
-      getParent().setTitle(getTitle());
-    }
-    super.onWindowFocusChanged(hasFocus);
   }
 
   ////////////////////////////
@@ -167,6 +164,11 @@ public class MBDialogController extends FragmentActivity
     }
   }
 
+  private FragmentManager getSupportFragmentManager()
+  {
+    return getActivity().getSupportFragmentManager();
+  }
+
   private void doClearAllViews()
   {
     _clearDialog = false;
@@ -174,7 +176,7 @@ public class MBDialogController extends FragmentActivity
 
     if (fragmentManager.getBackStackEntryCount() > 0)
     {
-      runOnUiThread(new Runnable()
+      getActivity().runOnUiThread(new Runnable()
       {
         @Override
         public void run()
@@ -183,7 +185,6 @@ public class MBDialogController extends FragmentActivity
         }
       });
     }
-
   }
 
   public void popView()
@@ -236,6 +237,16 @@ public class MBDialogController extends FragmentActivity
   public void setDialogMode(String dialogMode)
   {
     _dialogMode = dialogMode;
+  }
+
+  private String getOutcomeId()
+  {
+    return _outcomeId;
+  }
+
+  private void setOutcomeId(String outcomeId)
+  {
+    _outcomeId = outcomeId;
   }
 
   public Object getRootController()
@@ -477,15 +488,18 @@ public class MBDialogController extends FragmentActivity
   }
 
   // Back button press handling
-
-  @Override
-  public void onBackPressed()
+  public boolean onBackPressed()
   {
     boolean handled = false;
     for (MBBasicViewController controller : getAllFragments())
       if (controller.onBackKeyPressed()) handled = true;
 
-    if (!handled) super.onBackPressed();
+    return handled;
+  }
+
+  public View getMainContainer()
+  {
+    return _mainContainer;
   }
 
 }
