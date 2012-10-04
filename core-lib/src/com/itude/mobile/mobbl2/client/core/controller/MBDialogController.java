@@ -13,6 +13,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -46,6 +48,7 @@ public class MBDialogController extends ContextWrapper
   private final Map<String, String>  _childDialogModes = new HashMap<String, String>();
   private boolean                    _clearDialog      = false;
   private View                       _mainContainer;
+  private boolean                    _shown            = false;
 
   public MBDialogController(Context base)
   {
@@ -64,7 +67,7 @@ public class MBDialogController extends ContextWrapper
 
   public void finish()
   {
-
+    getActivity().finishFromChild(this);
   }
 
   private MBViewManager getActivity()
@@ -141,13 +144,24 @@ public class MBDialogController extends ContextWrapper
 
     if (getOutcomeId() != null)
     {
-      Log.d(Constants.APPLICATION_NAME, "MBDialogController.onCreate: found outcomeID=" + getOutcomeId());
+      /*Log.d(Constants.APPLICATION_NAME, "MBDialogController.onCreate: found outcomeID=" + getOutcomeId());
       MBPage page = MBApplicationController.getInstance().getPage(getOutcomeId());
-      showPage(page, null, getOutcomeId(), page.getDialogName(), false);
+      showPage(page, null, getOutcomeId(), page.getDialogName(), false);*/
     }
   }
 
   ////////////////////////////
+
+  public void activate()
+  {
+    getActivity().setContentView(_mainContainer);
+    if (!_shown && getOutcomeId() != null)
+    {
+      MBPage page = MBApplicationController.getInstance().getPage(getOutcomeId());
+      showPage(page, null, getOutcomeId(), page.getDialogName(), false);
+      _shown = true;
+    }
+  }
 
   /**
    * 
@@ -487,6 +501,11 @@ public class MBDialogController extends ContextWrapper
     }
   }
 
+  public View getMainContainer()
+  {
+    return _mainContainer;
+  }
+
   // Back button press handling
   public boolean onBackPressed()
   {
@@ -494,12 +513,24 @@ public class MBDialogController extends ContextWrapper
     for (MBBasicViewController controller : getAllFragments())
       if (controller.onBackKeyPressed()) handled = true;
 
-    return handled;
+    if (!handled) popView();
+
+    return true;
   }
 
-  public View getMainContainer()
+  public boolean onMenuItemSelected(int featureId, MenuItem item)
   {
-    return _mainContainer;
+    return false;
+  }
+
+  public boolean onSearchRequested()
+  {
+    return false;
+  }
+
+  public boolean dispatchTouchEvent(MotionEvent ev)
+  {
+    return false;
   }
 
 }

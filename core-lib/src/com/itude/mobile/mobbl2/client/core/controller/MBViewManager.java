@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -22,6 +21,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
 import android.view.Window;
@@ -201,31 +201,6 @@ public class MBViewManager extends FragmentActivity
     return true;
   }
 
-  @Override
-  public boolean onMenuItemSelected(int featureId, MenuItem item)
-  {
-    if (!super.onMenuItemSelected(featureId, item))
-    {
-      activateOrCreateDialogWithID(item.getItemId());
-
-    }
-    return true;
-  }
-
-  public boolean onMenuKeyDown(int keyCode, KeyEvent event, View callingView)
-  {
-    boolean onKeyDown = super.onKeyDown(keyCode, event);
-
-    if (!onKeyDown)
-    {
-      hideSoftKeyBoard(callingView);
-      this.openOptionsMenu();
-      return true;
-    }
-
-    return false;
-  }
-
   public void finishFromChild(MBDialogController childController)
   {
     MBDialogDefinition firstDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
@@ -277,6 +252,8 @@ public class MBViewManager extends FragmentActivity
 
   }
 
+  ///// Event handling /////
+
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event)
   {
@@ -284,11 +261,64 @@ public class MBViewManager extends FragmentActivity
     {
       // Take care of calling this method on earlier versions of
       // the platform where it doesn't exist.
-      getCurrentDialog().onBackPressed();
+      onBackPressed();
       return true;
     }
 
     return super.onKeyDown(keyCode, event);
+  }
+
+  @Override
+  public void onBackPressed()
+  {
+    if (!getCurrentDialog().onBackPressed())
+    {
+      super.onBackPressed();
+
+    }
+  }
+
+  @Override
+  public boolean onMenuItemSelected(int featureId, MenuItem item)
+  {
+    boolean handled = false;
+    if (getCurrentDialog() != null) handled = getCurrentDialog().onMenuItemSelected(featureId, item);
+    if (!handled && !super.onMenuItemSelected(featureId, item))
+    {
+      activateOrCreateDialogWithID(item.getItemId());
+
+    }
+    return true;
+  }
+
+  public boolean onMenuKeyDown(int keyCode, KeyEvent event, View callingView)
+  {
+    boolean onKeyDown = super.onKeyDown(keyCode, event);
+
+    if (!onKeyDown)
+    {
+      hideSoftKeyBoard(callingView);
+      this.openOptionsMenu();
+      return true;
+    }
+
+    return false;
+  }
+
+  @Override
+  public boolean onSearchRequested()
+  {
+    if (getCurrentDialog() != null) return getCurrentDialog().onSearchRequested();
+    else return false;
+  }
+
+  @Override
+  public boolean dispatchTouchEvent(MotionEvent ev)
+  {
+    boolean handled = false;
+    if (getCurrentDialog() != null) handled = getCurrentDialog().dispatchTouchEvent(ev);
+    if (!handled) return super.dispatchTouchEvent(ev);
+    return handled;
   }
 
   /////////////////////////////////////////////////////
@@ -312,6 +342,7 @@ public class MBViewManager extends FragmentActivity
               {
                 createDialodWithID(childDef);
               }
+              
             }
             else
             {
@@ -621,10 +652,25 @@ public class MBViewManager extends FragmentActivity
 
   private MBDialogController startDialog(String dialogName, String outcomeId)
   {
-    MBDialogController result = new MBDialogController(this);
-    result.init(dialogName, outcomeId);
-    _controllerMap.put(dialogName, result);
-    return result;
+    MBDialogController controller = _controllerMap.get(dialogName);
+    if (controller == null)
+    {
+      controller = new MBDialogController(this);
+      controller.init(dialogName, outcomeId);
+      _controllerMap.put(dialogName, controller);
+    }
+
+    return controller;
+  }
+
+  private MBDialogController activateDialog(String dialogName)
+  {
+    MBDialogController controller = startDialog(dialogName, null);
+
+    controller.activate();
+    _currentDialog = dialogName;
+    return controller;
+
   }
 
   private MBDialogController getDialogWithName(String dialogName)
@@ -668,7 +714,7 @@ public class MBViewManager extends FragmentActivity
           }
         }
 
-        MBDialogController dc = startDialog(dialogName, null);
+        MBDialogController dc = activateDialog(dialogName);
 
         final View view = dc.getMainContainer();
         runOnUiThread(new Runnable()
@@ -751,10 +797,9 @@ public class MBViewManager extends FragmentActivity
     else return null;
   }
 
-  @Deprecated
-  public Activity getActiveDialog()
+  public MBDialogController getActiveDialog()
   {
-    return this;
+    return getCurrentDialog();
   }
 
   public void resetView()
