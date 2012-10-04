@@ -12,6 +12,7 @@ import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBServerErrorMe
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
+import com.itude.mobile.mobbl2.client.core.services.datamanager.util.MBRequestUtil;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBFormSubmission implements MBAction
@@ -51,7 +52,7 @@ public class MBFormSubmission implements MBAction
       if (!"outcomeOK".equals(attributeName) && !"outcomeERROR".equals(attributeName))
       {
         String value = rootElement.getValueForAttribute(attributeName);
-        setRequestParameter(value, attributeName, request);
+        MBRequestUtil.setRequestParameter(value, attributeName, request);
       }
     }
     Log.d(Constants.APPLICATION_NAME, "REQUEST = " + request);
@@ -93,13 +94,4 @@ public class MBFormSubmission implements MBAction
   {
     // subclasses should implement this method to perform validation
   }
-
-  void setRequestParameter(String value, String key, MBDocument doc)
-  {
-    MBElement request = doc.getValueForPath("Request[0]");
-    MBElement parameter = request.createElementWithName("Parameter");
-    parameter.setAttributeValue(key, "key");
-    parameter.setAttributeValue(value, "value");
-  }
-
 }

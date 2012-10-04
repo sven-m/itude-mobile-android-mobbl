@@ -90,14 +90,6 @@ public abstract class MBMobbl1ServerDataHandlerBase extends MBRESTServiceDataHan
     return requestDoc;
   }
 
-  public void setRequestParameter(String value, String key, MBDocument doc)
-  {
-    MBElement request = (MBElement) doc.getValueForPath("Request[0]");
-    MBElement parameter = request.createElement("Parameter");
-    parameter.setAttributeValue(key, "key");
-    parameter.setAttributeValue(value, "value");
-  }
-
   protected void setDataHandlerType(String type)
   {
     _dataHandlerType = type;
