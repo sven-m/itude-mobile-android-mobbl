@@ -183,5 +183,4 @@ public class MBDataManagerService
   {
     _registeredHandlers.put(name, handler);
   }
-
 }
