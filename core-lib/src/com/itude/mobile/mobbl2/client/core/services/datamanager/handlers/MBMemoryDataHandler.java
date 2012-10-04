@@ -60,4 +60,16 @@ public class MBMemoryDataHandler extends MBDataHandlerBase
     _dictionary.put(document.getName(), document);
   }
 
+  @Override
+  public MBDocument loadFreshDocument(String documentName)
+  {
+
+    if (_dictionary.containsKey(documentName))
+    {
+      _dictionary.remove(documentName);
+    }
+
+    return loadDocument(documentName);
+  }
+
 }
