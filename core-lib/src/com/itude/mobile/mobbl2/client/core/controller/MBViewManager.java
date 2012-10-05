@@ -82,8 +82,6 @@ public class MBViewManager extends FragmentActivity
   {
     onPreCreate();
 
-    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
     // https://dev.itude.com/jira/browse/BINCKAPPS-1131
     super.onCreate(null);
 
