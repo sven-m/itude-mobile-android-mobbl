@@ -61,6 +61,11 @@ public class MBApplicationFactory
     return new MBBasicViewController();
   }
 
+  public MBDialogController createDialogController()
+  {
+    return new MBDialogController();
+  }
+
   public MBEditableMatrixListener getEditableMatrixListener(String panelName)
   {
     return null;

@@ -342,7 +342,7 @@ public class MBViewManager extends FragmentActivity
               {
                 createDialodWithID(childDef);
               }
-              
+
             }
             else
             {
@@ -655,7 +655,7 @@ public class MBViewManager extends FragmentActivity
     MBDialogController controller = _controllerMap.get(dialogName);
     if (controller == null)
     {
-      controller = new MBDialogController(this);
+      controller = MBApplicationFactory.getInstance().createDialogController();
       controller.init(dialogName, outcomeId);
       _controllerMap.put(dialogName, controller);
     }
@@ -663,10 +663,16 @@ public class MBViewManager extends FragmentActivity
     return controller;
   }
 
+  public void supportInvalidateOptionsMenu()
+  {
+    super.invalidateOptionsMenu();
+  }
+
   private MBDialogController activateDialog(String dialogName)
   {
     MBDialogController controller = startDialog(dialogName, null);
 
+    if (getCurrentDialog() != null) getCurrentDialog().deactivate();
     controller.activate();
     _currentDialog = dialogName;
     return controller;

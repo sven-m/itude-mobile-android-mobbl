@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -11,6 +12,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.BackStackEntry;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MenuItem;
@@ -34,7 +37,7 @@ import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBDialogViewBuilder.MBDialogType;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
-public class MBDialogController extends ContextWrapper
+public class MBDialogController extends ContextWrapper implements OnBackStackChangedListener
 {
 
   private String                     _name;
@@ -50,9 +53,18 @@ public class MBDialogController extends ContextWrapper
   private View                       _mainContainer;
   private boolean                    _shown            = false;
 
-  public MBDialogController(Context base)
+  private static class SavedStackEntry
   {
-    super(base);
+    public String   id;
+    public int      dialogId;
+    public Fragment fragment;
+  }
+
+  private Stack<SavedStackEntry> _stack = new Stack<MBDialogController.SavedStackEntry>();
+
+  public MBDialogController()
+  {
+    super(MBViewManager.getInstance());
   }
 
   public void init(String dialog, String outcomeId)
@@ -161,6 +173,13 @@ public class MBDialogController extends ContextWrapper
       showPage(page, null, getOutcomeId(), page.getDialogName(), false);
       _shown = true;
     }
+    playBackStack();
+
+  }
+
+  public void deactivate()
+  {
+    emptyBackStack();
   }
 
   /**
@@ -298,6 +317,7 @@ public class MBDialogController extends ContextWrapper
     }
 
     MBBasicViewController fragment = MBApplicationFactory.getInstance().createFragment(page.getPageName());
+    fragment.setDialogController(this);
     Bundle args = new Bundle();
     args.putString("id", id);
     fragment.setArguments(args);
@@ -373,7 +393,7 @@ public class MBDialogController extends ContextWrapper
           transaction.addToBackStack(id);
         }
       }
-      transaction.replace(_dialogIds.get(dialogName), fragment);
+      transaction.replace(_dialogIds.get(dialogName), fragment, id);
     }
 
     // commitAllowingStateLoss makes sure that the transaction is being commit,
@@ -531,6 +551,51 @@ public class MBDialogController extends ContextWrapper
   public boolean dispatchTouchEvent(MotionEvent ev)
   {
     return false;
+  }
+
+  @Override
+  public void onBackStackChanged()
+  {
+    int count = getSupportFragmentManager().getBackStackEntryCount();
+
+    _stack.clear();
+    for (; _stack.size() < count;)
+    {
+      SavedStackEntry entry = new SavedStackEntry();
+      BackStackEntry bse = getSupportFragmentManager().getBackStackEntryAt(_stack.size());
+      entry.id = bse.getName();
+
+      entry.fragment = getSupportFragmentManager().findFragmentByTag(entry.id);
+      entry.dialogId = entry.fragment.getId();
+      _stack.push(entry);
+    }
+
+  }
+
+  private void playBackStack()
+  {
+    if (!_stack.isEmpty())
+    {
+      for (SavedStackEntry sse : _stack)
+      {
+        FragmentTransaction fr = getSupportFragmentManager().beginTransaction();
+
+        fr.addToBackStack(sse.id);
+        fr.replace(sse.dialogId, sse.fragment, sse.id);
+        fr.commitAllowingStateLoss();
+      }
+
+    }
+
+    getSupportFragmentManager().addOnBackStackChangedListener(this);
+
+  }
+
+  private void emptyBackStack()
+  {
+    getSupportFragmentManager().removeOnBackStackChangedListener(this);
+    while (!isBackStackEmpty())
+      getSupportFragmentManager().popBackStackImmediate();
   }
 
 }

@@ -23,6 +23,7 @@ import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
+import com.itude.mobile.mobbl2.client.core.controller.MBDialogController;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.controller.util.trace.StrictModeWrapper;
@@ -63,6 +64,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   private boolean             _isDialogCancelable    = false;                   //i.e. back button dismisses dialog when true
   private final List<MBEvent> eventQueue             = new ArrayList<MBEvent>();
   private static boolean      _strictModeAvailable   = false;
+  private MBDialogController  _dialogController;
 
   //use the StrictModeWrapper to see if we are running on Android 2.3 or higher and StrictMode is available
   static
@@ -256,7 +258,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
 
     if (controller != null && controller.getViewManager() != null && controller.getViewManager().getCurrentDialog() != null)
     {
-      controller.getViewManager().getCurrentDialog ().handleAllOnWindowActivated();
+      controller.getViewManager().getCurrentDialog().handleAllOnWindowActivated();
     }
   }
 
@@ -500,4 +502,15 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   {
     return false;
   }
+
+  public void setDialogController(MBDialogController dialog)
+  {
+    _dialogController = dialog;
+  }
+
+  public MBDialogController getDialogController()
+  {
+    return _dialogController;
+  }
+
 }
