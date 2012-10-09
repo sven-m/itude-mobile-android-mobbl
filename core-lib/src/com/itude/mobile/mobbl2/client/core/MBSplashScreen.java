@@ -16,13 +16,12 @@ public class MBSplashScreen extends Activity
   private Thread  _thread  = null;
 
   @Override
-  protected void onCreate(Bundle savedInstanceState)
+  protected void onResume()
   {
-    super.onCreate(savedInstanceState);
+    super.onResume();
 
     _handler = new Handler();
 
-    setView();
     _thread = new Thread()
     {
       @Override
@@ -33,6 +32,15 @@ public class MBSplashScreen extends Activity
     };
     // Keep splashscreen visible for at least 1 second
     _handler.postDelayed(_thread, 1000);
+
+  }
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState)
+  {
+    super.onCreate(savedInstanceState);
+
+    setView();
   }
 
   @Override
