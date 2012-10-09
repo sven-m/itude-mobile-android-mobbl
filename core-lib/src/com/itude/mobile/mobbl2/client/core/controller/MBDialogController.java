@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -37,7 +36,7 @@ import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBDialogViewBuilder.MBDialogType;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
-public class MBDialogController extends ContextWrapper implements OnBackStackChangedListener
+public class MBDialogController extends ContextWrapper
 {
 
   private String                     _name;
@@ -52,15 +51,7 @@ public class MBDialogController extends ContextWrapper implements OnBackStackCha
   private boolean                    _clearDialog      = false;
   private View                       _mainContainer;
   private boolean                    _shown            = false;
-
-  private static class SavedStackEntry
-  {
-    public String   id;
-    public int      dialogId;
-    public Fragment fragment;
-  }
-
-  private Stack<SavedStackEntry> _stack = new Stack<MBDialogController.SavedStackEntry>();
+  private FragmentStack              _fragmentStack;
 
   public MBDialogController()
   {
@@ -69,6 +60,7 @@ public class MBDialogController extends ContextWrapper implements OnBackStackCha
 
   public void init(String dialog, String outcomeId)
   {
+    _fragmentStack = new FragmentStack(getSupportFragmentManager());
     setName(dialog);
     setOutcomeId(outcomeId);
     if (controllerInit())
@@ -173,13 +165,13 @@ public class MBDialogController extends ContextWrapper implements OnBackStackCha
       showPage(page, null, getOutcomeId(), page.getDialogName(), false);
       _shown = true;
     }
-    playBackStack();
+    getFragmentStack().playBackStack();
 
   }
 
   public void deactivate()
   {
-    emptyBackStack();
+    getFragmentStack().emptyBackStack();
   }
 
   /**
@@ -202,6 +194,11 @@ public class MBDialogController extends ContextWrapper implements OnBackStackCha
     return getActivity().getSupportFragmentManager();
   }
 
+  public FragmentStack getFragmentStack()
+  {
+    return _fragmentStack;
+  }
+
   private void doClearAllViews()
   {
     _clearDialog = false;
@@ -222,13 +219,8 @@ public class MBDialogController extends ContextWrapper implements OnBackStackCha
 
   public void popView()
   {
-    if (isBackStackEmpty()) finish();
+    if (getFragmentStack().isBackStackEmpty()) finish();
     else getSupportFragmentManager().popBackStack();
-  }
-
-  public boolean isBackStackEmpty()
-  {
-    return getSupportFragmentManager().getBackStackEntryCount() == 0;
   }
 
   public void endModalPage(String pageName)
@@ -372,7 +364,7 @@ public class MBDialogController extends ContextWrapper implements OnBackStackCha
       }
 
       Fragment dialogFragment = getSupportFragmentManager().findFragmentByTag(modalPageID);
-      if (dialogFragment != null && !isBackStackEmpty())
+      if (dialogFragment != null && !getFragmentStack().isBackStackEmpty())
       {
         getSupportFragmentManager().popBackStack();
       }
@@ -387,7 +379,7 @@ public class MBDialogController extends ContextWrapper implements OnBackStackCha
       }
       else
       {
-        if (!isBackStackEmpty())
+        if (!getFragmentStack().isBackStackEmpty())
         {
           getSupportFragmentManager().popBackStack();
           transaction.addToBackStack(id);
@@ -553,49 +545,79 @@ public class MBDialogController extends ContextWrapper implements OnBackStackCha
     return false;
   }
 
-  @Override
-  public void onBackStackChanged()
+  private static class FragmentStack implements OnBackStackChangedListener
   {
-    int count = getSupportFragmentManager().getBackStackEntryCount();
 
-    _stack.clear();
-    for (; _stack.size() < count;)
+    private final FragmentManager _fragmentManager;
+
+    private static class SavedStackEntry
     {
-      SavedStackEntry entry = new SavedStackEntry();
-      BackStackEntry bse = getSupportFragmentManager().getBackStackEntryAt(_stack.size());
-      entry.id = bse.getName();
-
-      entry.fragment = getSupportFragmentManager().findFragmentByTag(entry.id);
-      entry.dialogId = entry.fragment.getId();
-      _stack.push(entry);
+      public String   id;
+      public int      dialogId;
+      public Fragment fragment;
     }
 
-  }
+    private Stack<SavedStackEntry> _stack = new Stack<SavedStackEntry>();
 
-  private void playBackStack()
-  {
-    if (!_stack.isEmpty())
+    public FragmentStack(FragmentManager manager)
     {
-      for (SavedStackEntry sse : _stack)
-      {
-        FragmentTransaction fr = getSupportFragmentManager().beginTransaction();
+      _fragmentManager = manager;
+    }
 
-        fr.addToBackStack(sse.id);
-        fr.replace(sse.dialogId, sse.fragment, sse.id);
-        fr.commitAllowingStateLoss();
+    public FragmentManager getFragmentManager()
+    {
+      return _fragmentManager;
+    }
+
+    @Override
+    public void onBackStackChanged()
+    {
+      int count = getFragmentManager().getBackStackEntryCount();
+
+      _stack.clear();
+      for (; _stack.size() < count;)
+      {
+        SavedStackEntry entry = new SavedStackEntry();
+        BackStackEntry bse = getFragmentManager().getBackStackEntryAt(_stack.size());
+        entry.id = bse.getName();
+
+        entry.fragment = getFragmentManager().findFragmentByTag(entry.id);
+        entry.dialogId = entry.fragment.getId();
+        _stack.push(entry);
       }
 
     }
 
-    getSupportFragmentManager().addOnBackStackChangedListener(this);
+    private void playBackStack()
+    {
+      if (!_stack.isEmpty())
+      {
+        for (SavedStackEntry sse : _stack)
+        {
+          FragmentTransaction fr = getFragmentManager().beginTransaction();
+
+          fr.addToBackStack(sse.id);
+          fr.replace(sse.dialogId, sse.fragment, sse.id);
+          fr.commitAllowingStateLoss();
+        }
+
+      }
+
+      getFragmentManager().addOnBackStackChangedListener(this);
+
+    }
+
+    private void emptyBackStack()
+    {
+      getFragmentManager().removeOnBackStackChangedListener(this);
+      while (!isBackStackEmpty())
+        getFragmentManager().popBackStackImmediate();
+    }
+
+    public boolean isBackStackEmpty()
+    {
+      return getFragmentManager().getBackStackEntryCount() == 0;
+    }
 
   }
-
-  private void emptyBackStack()
-  {
-    getSupportFragmentManager().removeOnBackStackChangedListener(this);
-    while (!isBackStackEmpty())
-      getSupportFragmentManager().popBackStackImmediate();
-  }
-
 }
