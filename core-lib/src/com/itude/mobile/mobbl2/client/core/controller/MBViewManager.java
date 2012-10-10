@@ -37,6 +37,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvali
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController.ApplicationState;
 import com.itude.mobile.mobbl2.client.core.controller.helpers.MBActivityHelper;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
+import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicatorController;
 import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicatorI;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
@@ -66,8 +67,6 @@ public class MBViewManager extends FragmentActivity
   private Map<String, MBDialogController> _controllerMap;
   private Dialog                          _currentAlert;
   private boolean                         _singlePageMode;
-  private MBIndicatorI                    _indeterminateIndicator;
-  private MBIndicatorI                    _activityIndicator;
   private String                          _currentDialog;
 
   ///////////////////// Android lifecycle methods
@@ -408,16 +407,6 @@ public class MBViewManager extends FragmentActivity
     _singlePageMode = singlePageMode;
   }
 
-  public void setActivityIndicator(MBIndicatorI activityIndicator)
-  {
-    _activityIndicator = activityIndicator;
-  }
-
-  public void setIndeterminateIndicator(MBIndicatorI indeterminateIndicator)
-  {
-    _indeterminateIndicator = indeterminateIndicator;
-  }
-
   public void showPage(MBPage page, String mode)
   {
     showPage(page, mode, true, true);
@@ -756,38 +745,6 @@ public class MBViewManager extends FragmentActivity
   public void popPage(String dialogName)
   {
     getDialogWithName(dialogName).popView();
-  }
-
-  public void showIndeterminateProgressIndicator()
-  {
-    if (_indeterminateIndicator != null)
-    {
-      _indeterminateIndicator.show(this);
-    }
-  }
-
-  public void hideIndeterminateProgressIndicator()
-  {
-    if (_indeterminateIndicator != null)
-    {
-      _indeterminateIndicator.dismiss(this);
-    }
-  }
-
-  public void showActivityIndicator()
-  {
-    if (_activityIndicator != null)
-    {
-      _activityIndicator.show(this);
-    }
-  }
-
-  public synchronized void hideActivityIndicator()
-  {
-    if (_activityIndicator != null)
-    {
-      _activityIndicator.dismiss(this);
-    }
   }
 
   public void makeKeyAndVisible()

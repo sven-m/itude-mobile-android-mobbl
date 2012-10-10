@@ -30,6 +30,9 @@ import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBInvalidOutcom
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBActivityIndicator;
 import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndeterminateProgressIndicator;
+import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicator;
+import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicatorController;
+import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicator.Type;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
@@ -128,8 +131,9 @@ public class MBApplicationController extends Application
     _viewManager = MBViewManager.getInstance();
 
     _viewManager.setSinglePageMode((MBMetadataService.getInstance().getDialogs().size() <= 1));
-    _viewManager.setActivityIndicator(MBActivityIndicator.getInstance());
-    _viewManager.setIndeterminateIndicator(MBIndeterminateProgressIndicator.getInstance());
+    
+    MBIndicatorController.getInstance().setActivityIndicator(MBActivityIndicator.getInstance());
+    MBIndicatorController.getInstance().setIndeterminateIndicator(MBIndeterminateProgressIndicator.getInstance());
 
     fireInitialOutcomes();
   }
@@ -251,32 +255,6 @@ public class MBApplicationController extends Application
     _outcomeHandler.sendMessage(msg);
   }
 
-  public void showIndicatorForOutcome(MBOutcome outcome)
-  {
-    String indicator = outcome.getIndicator();
-    if (indicator == null || "ACTIVITY".equals(indicator))
-    {
-      _viewManager.showActivityIndicator();
-    }
-    else if ("PROGRESS".equals(indicator))
-    {
-      _viewManager.showIndeterminateProgressIndicator();
-    }
-  }
-
-  public void hideIndicatorForOutcome(MBOutcome outcome)
-  {
-    String indicator = outcome.getIndicator();
-    if (indicator == null || "ACTIVITY".equals(indicator))
-    {
-      _viewManager.hideActivityIndicator();
-    }
-    else if ("PROGRESS".equals(indicator))
-    {
-      _viewManager.hideIndeterminateProgressIndicator();
-    }
-  }
-
   ////////////// PAGE HANDLING
 
   public Object[] preparePageInBackground(MBOutcome causingOutcome, String pageName, String selectPageInDialog, Boolean backStackEnabled)
@@ -377,7 +355,6 @@ public class MBApplicationController extends Application
           _viewManager.showPage(page, displayMode, doSelect, backStackEnabled);
         }
       });
-      hideIndicatorForOutcome(causingOutcome);
     }
     catch (Exception e)
     {
@@ -403,7 +380,6 @@ public class MBApplicationController extends Application
 
       MBOutcome actionOutcome = action.execute(causingOutcome.getDocument(), causingOutcome.getPath());
 
-      hideIndicatorForOutcome(causingOutcome);
       if (actionOutcome == null)
       {
         Log.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action "
@@ -576,12 +552,6 @@ public class MBApplicationController extends Application
     MBDataManagerService.getInstance().storeDocument(exceptionDocument);
 
     MBMetadataService metadataService = MBMetadataService.getInstance();
-
-    // We are not sure at this moment if the activity indicator is shown. But to be sure; try to hide it.
-    // This might mess up the count of the activity indicators if more than one page is being constructed in the background;
-    // however most of the times this will work out; so:
-    //    _viewManager.hideActivityIndicatorForDialog(outcome.getDialogName());
-    _viewManager.hideActivityIndicator();
 
     // See if there is an outcome defined for this particular exception
     ArrayList<MBOutcomeDefinition> outcomeDefinitions = (ArrayList<MBOutcomeDefinition>) metadataService
