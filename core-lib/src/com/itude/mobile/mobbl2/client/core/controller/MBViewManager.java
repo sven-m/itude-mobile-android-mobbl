@@ -645,6 +645,12 @@ public class MBViewManager extends FragmentActivity
       _controllerMap.put(dialogName, controller);
     }
 
+    if (_currentDialog == null)
+    {
+      controller.activate();
+      _currentDialog = dialogName;
+    }
+
     return controller;
   }
 
@@ -714,16 +720,6 @@ public class MBViewManager extends FragmentActivity
         }
 
         MBDialogController dc = activateDialog(dialogName);
-
-        final View view = dc.getMainContainer();
-        runOnUiThread(new Runnable()
-        {
-          @Override
-          public void run()
-          {
-            setContentView(view);
-          }
-        });
 
         if (getViewControllers(dialogName).size() > 0)
         {

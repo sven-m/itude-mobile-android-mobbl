@@ -492,8 +492,12 @@ public class MBDialogController extends ContextWrapper
       for (int i = 0; i < _sortedDialogIds.size() - 1; i++)
       {
         Fragment fragment = getSupportFragmentManager().findFragmentById(_sortedDialogIds.get(i));
-        FrameLayout fragmentContainer = (FrameLayout) fragment.getView().getParent();
-        fragmentContainer.getLayoutParams().width = MBScreenUtilities.getWidthPixelsForPercentage(33);
+        // if the fragment didn't load correctly (e.g. a network error occurred), we don't want to crash the app
+        if (fragment != null)
+        {
+          FrameLayout fragmentContainer = (FrameLayout) fragment.getView().getParent();
+          fragmentContainer.getLayoutParams().width = MBScreenUtilities.getWidthPixelsForPercentage(33);
+        }
       }
     }
 
