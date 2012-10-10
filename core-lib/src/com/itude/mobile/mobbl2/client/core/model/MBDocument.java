@@ -218,7 +218,9 @@ public class MBDocument extends MBElementContainer
           }
         }
       }
-      StringUtilities.appendIndentString(appendToMe, level).append("</").append(_definition.getName()).append(">\n");
+
+      StringUtilities.appendIndentString(appendToMe, level).append("</")
+          .append((_definition.getRootElement() == null) ? _definition.getName() : _definition.getRootElement()).append(">\n");
     }
 
     return appendToMe;
