@@ -500,6 +500,7 @@ public class MBTabletViewManager extends MBViewManager
         @Override
         public void runMethod()
         {
+          //item.setIcon(null);
           item.setActionView(frameLayout);
           getRotationImage().getAnimation().startNow();
         }

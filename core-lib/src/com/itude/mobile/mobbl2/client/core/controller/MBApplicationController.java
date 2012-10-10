@@ -28,11 +28,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBInvalidOutcomeException;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
-import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBActivityIndicator;
-import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndeterminateProgressIndicator;
-import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicator;
-import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicatorController;
-import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicator.Type;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
@@ -131,9 +126,6 @@ public class MBApplicationController extends Application
     _viewManager = MBViewManager.getInstance();
 
     _viewManager.setSinglePageMode((MBMetadataService.getInstance().getDialogs().size() <= 1));
-    
-    MBIndicatorController.getInstance().setActivityIndicator(MBActivityIndicator.getInstance());
-    MBIndicatorController.getInstance().setIndeterminateIndicator(MBIndeterminateProgressIndicator.getInstance());
 
     fireInitialOutcomes();
   }
@@ -148,7 +140,7 @@ public class MBApplicationController extends Application
 
     _suppressPageSelection = true;
     _backStackEnabled = false;
-    handleOutcome(initialOutcome);
+    handleOutcomeSynchronously(initialOutcome);
 
     _outcomeHandler.sendEmptyMessage(Constants.C_MESSAGE_INITIAL_OUTCOMES_FINISHED);
   }
@@ -257,7 +249,7 @@ public class MBApplicationController extends Application
 
   ////////////// PAGE HANDLING
 
-  public Object[] preparePageInBackground(MBOutcome causingOutcome, String pageName, String selectPageInDialog, Boolean backStackEnabled)
+  public Object[] preparePage(MBOutcome causingOutcome, String pageName, String selectPageInDialog, Boolean backStackEnabled)
   {
     Object[] result = null;
     try
@@ -366,7 +358,7 @@ public class MBApplicationController extends Application
 
   ////////ACTION HANDLING
 
-  public void performActionInBackground(MBOutcome causingOutcome, MBActionDefinition actionDef)
+  public void performAction(MBOutcome causingOutcome, MBActionDefinition actionDef)
   {
     try
     {

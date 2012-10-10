@@ -37,8 +37,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvali
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController.ApplicationState;
 import com.itude.mobile.mobbl2.client.core.controller.helpers.MBActivityHelper;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
-import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicatorController;
-import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicatorI;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
@@ -652,7 +650,15 @@ public class MBViewManager extends FragmentActivity
 
   public void supportInvalidateOptionsMenu()
   {
-    super.invalidateOptionsMenu();
+    runOnUiThread(new Runnable()
+    {
+
+      @Override
+      public void run()
+      {
+        MBViewManager.super.invalidateOptionsMenu();
+      }
+    });
   }
 
   private MBDialogController activateDialog(String dialogName)

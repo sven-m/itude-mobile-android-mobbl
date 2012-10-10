@@ -59,6 +59,7 @@ public class MBOutcomeHandler extends Handler
 
   public void handleOutcomeSynchronously(MBOutcome outcome, boolean throwException)
   {
+    outcome.setNoBackgroundProcessing(true);
     if (throwException)
     {
       try
@@ -78,7 +79,7 @@ public class MBOutcomeHandler extends Handler
     /*CH: Exception pages prepare in the background. Android has trouble if the
     activity indicator is shown. Somehow this problem does not occur when preparing 
     a normal page*/
-    if (!"exception".equals(outcome.getOutcomeName())) return MBIndicator.show(Type.none);
+    if ("exception".equals(outcome.getOutcomeName())) return MBIndicator.show(Type.none);
 
     String indicator = outcome.getIndicator();
     if (indicator == null || "ACTIVITY".equals(indicator))
@@ -272,7 +273,7 @@ public class MBOutcomeHandler extends Handler
 
     if (outcomeToProcess.getNoBackgroundProcessing())
     {
-      applicationController.preparePageInBackground(new MBOutcome(outcomeToProcess), pageDef.getName(), selectPageInDialog,
+      applicationController.preparePage(new MBOutcome(outcomeToProcess), pageDef.getName(), selectPageInDialog,
                                                     applicationController.getBackStackEnabled());
     }
     else
@@ -287,20 +288,13 @@ public class MBOutcomeHandler extends Handler
         @Override
         public void runMethod()
         {
-          try
-          {
-            MBPreparePageInBackgroundRunner runner = new MBPreparePageInBackgroundRunner();
-            runner.setController(applicationController);
-            runner.setOutcome(new MBOutcome(outcomeToProcess));
-            runner.setPageName(pageDef.getName());
-            runner.setSelectPageInDialog(getStringParameter("selectPageInDialog"));
-            runner.setBackStackEnabled(applicationController.getBackStackEnabled());
-            runner.execute(new Object[0]);
-          }
-          finally
-          {
-            indicator.release();
-          }
+          MBPreparePageInBackgroundRunner runner = new MBPreparePageInBackgroundRunner(indicator);
+          runner.setController(applicationController);
+          runner.setOutcome(new MBOutcome(outcomeToProcess));
+          runner.setPageName(pageDef.getName());
+          runner.setSelectPageInDialog(getStringParameter("selectPageInDialog"));
+          runner.setBackStackEnabled(applicationController.getBackStackEnabled());
+          runner.execute(new Object[0]);
         }
       };
       MBViewManager.getInstance().runOnUiThread(runnable);
@@ -315,7 +309,7 @@ public class MBOutcomeHandler extends Handler
 
     if (outcomeToProcess.getNoBackgroundProcessing())
     {
-      applicationController.performActionInBackground(new MBOutcome(outcomeToProcess), actionDef);
+      applicationController.performAction(new MBOutcome(outcomeToProcess), actionDef);
     }
     else
     {
@@ -326,19 +320,12 @@ public class MBOutcomeHandler extends Handler
         @Override
         public void run()
         {
-          try
-          {
-            MBPerformActionInBackgroundRunner runner = new MBPerformActionInBackgroundRunner();
+          MBPerformActionInBackgroundRunner runner = new MBPerformActionInBackgroundRunner(indicator);
 
-            runner.setController(applicationController);
-            runner.setOutcome(new MBOutcome(outcomeToProcess));
-            runner.setActionDefinition(actionDef);
-            runner.execute(new Object[0]);
-          }
-          finally
-          {
-            indicator.release();
-          }
+          runner.setController(applicationController);
+          runner.setOutcome(new MBOutcome(outcomeToProcess));
+          runner.setActionDefinition(actionDef);
+          runner.execute(new Object[0]);
         }
       });
     }

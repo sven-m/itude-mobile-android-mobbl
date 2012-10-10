@@ -12,27 +12,27 @@ public class MBIndicatorController
     return _instance;
   }
 
-  private MBIndicatorI _activityIndicator;
-  private MBIndicatorI _indeterminateIndicator;
+  private MBCountingIndicator _activityIndicator      = new MBActivityIndicator();
+  private MBCountingIndicator _indeterminateIndicator = new MBIndeterminateProgressIndicator();
 
-  public void setActivityIndicator(MBIndicatorI activityIndicator)
+  public void setActivityIndicator(MBCountingIndicator activityIndicator)
   {
     _activityIndicator = activityIndicator;
   }
 
-  public void setIndeterminateIndicator(MBIndicatorI indeterminateIndicator)
+  public void setIndeterminateIndicator(MBCountingIndicator indeterminateIndicator)
   {
     _indeterminateIndicator = indeterminateIndicator;
   }
 
   void showIndeterminateProgressIndicator()
   {
-    if (_indeterminateIndicator != null) _indeterminateIndicator.show(getActivity());
+    if (_indeterminateIndicator != null) _indeterminateIndicator.increaseCount(getActivity());
   }
 
   void hideIndeterminateProgressIndicator()
   {
-    if (_indeterminateIndicator != null) _indeterminateIndicator.dismiss(getActivity());
+    if (_indeterminateIndicator != null) _indeterminateIndicator.decreaseCount(getActivity());
   }
 
   private MBViewManager getActivity()
@@ -42,12 +42,12 @@ public class MBIndicatorController
 
   void showActivityIndicator()
   {
-    if (_activityIndicator != null) _activityIndicator.show(getActivity());
+    if (_activityIndicator != null) _activityIndicator.increaseCount(getActivity());
   }
 
   void hideActivityIndicator()
   {
-    if (_activityIndicator != null) _activityIndicator.dismiss(getActivity());
+    if (_activityIndicator != null) _activityIndicator.decreaseCount(getActivity());
   }
 
 }
