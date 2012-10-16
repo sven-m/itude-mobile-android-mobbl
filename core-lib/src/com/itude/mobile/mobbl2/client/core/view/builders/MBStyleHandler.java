@@ -656,4 +656,8 @@ public class MBStyleHandler
   {
   }
 
+  public void styleImageButton(ImageButton button, MBField field)
+  {
+  }
+
 }

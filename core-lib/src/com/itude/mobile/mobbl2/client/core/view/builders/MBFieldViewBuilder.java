@@ -170,6 +170,8 @@ public class MBFieldViewBuilder extends MBViewBuilder
     Drawable drawable = MBResourceService.getInstance().getImageByID(source);
     button.setBackgroundDrawable(drawable);
 
+    getStyleHandler().styleImageButton(button, field);
+
     return button;
   }
 
