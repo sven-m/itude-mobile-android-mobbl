@@ -505,6 +505,8 @@ public class MBFieldViewBuilder extends MBViewBuilder
       LinearLayout labelLayout = new LinearLayout(context);
       labelLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
       labelLayout.setOrientation(LinearLayout.HORIZONTAL);
+      labelLayout.setGravity(Gravity.CENTER_VERTICAL);
+      getStyleHandler().styleLabelContainer(labelLayout, field);
 
       TextView label = buildTextViewWithValue(field.getLabel());
       label.setText(field.getLabel());

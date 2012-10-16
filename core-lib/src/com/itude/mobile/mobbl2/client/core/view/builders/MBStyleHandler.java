@@ -652,4 +652,8 @@ public class MBStyleHandler
   {
   }
 
+  public void styleLabelContainer(LinearLayout labelLayout, MBField field)
+  {
+  }
+
 }
