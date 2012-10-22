@@ -30,7 +30,8 @@ public final class MBCacheManager
   private final String              _ttlsFileName       = CACHE_DIR + File.separator + CACHE_TTL_FILE;
 
   protected void init()
-  { Log.d(Constants.APPLICATION_NAME, "init CacheManager");
+  {
+    Log.d(Constants.APPLICATION_NAME, "init CacheManager");
     _ttls = new Hashtable<String, String>();
     _documentTypes = new Hashtable<String, String>();
     _registry = new HashMap<String, String>();
@@ -41,23 +42,28 @@ public final class MBCacheManager
   {
     init();
 
-    @SuppressWarnings("unchecked")
     Hashtable<String, String> combined = (Hashtable<String, String>) FileUtil.getInstance().readObjectFromFile(_registryFileName);
-    if (combined == null)
+
+    if (combined != null)
     {
-      combined = new Hashtable<String, String>();
+      for (String key : combined.keySet())
+      {
+        String value = combined.get(key);
+        String[] split = value.split(":");
+
+        _registry.put(key, split[0]);
+        if (split.length > 1)
+        {
+          _documentTypes.put(key, split[1]);
+        }
+      }
     }
 
-    for (String key : combined.keySet())
-    {
-      String value = combined.get(key);
-      String[] split = value.split(":");
+    Hashtable<String, String> ttlFromFile = (Hashtable<String, String>) FileUtil.getInstance().readObjectFromFile(_ttlsFileName);
 
-      _registry.put(key, split[0]);
-      if (split.length > 1)
-      {
-        _documentTypes.put(key, split[1]);
-      }
+    if (ttlFromFile != null)
+    {
+      _ttls = ttlFromFile;
     }
   }
 
