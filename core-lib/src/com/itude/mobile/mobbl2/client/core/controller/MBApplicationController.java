@@ -36,6 +36,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowChangeType;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBNoDocumentException;
+import com.itude.mobile.mobbl2.client.core.util.AssertUtil;
 import com.itude.mobile.mobbl2.client.core.util.CollectionUtilities;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.DataUtil;
@@ -360,14 +361,15 @@ public class MBApplicationController extends Application
 
   public void performAction(MBOutcome causingOutcome, MBActionDefinition actionDef)
   {
+    AssertUtil.notNull("causingOutcome", causingOutcome);
+    AssertUtil.notNull("actionDef", actionDef);
     try
     {
 
       MBAction action = _applicationFactory.createAction(actionDef.getClassName());
       if (action == null)
       {
-        Log.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action "
-                                          + actionDef.getName() + " (outcome == null); no further procesing.");
+        throw new MBException ("No action found for " + actionDef.getClassName ());
       }
 
       MBOutcome actionOutcome = action.execute(causingOutcome.getDocument(), causingOutcome.getPath());
@@ -375,7 +377,7 @@ public class MBApplicationController extends Application
       if (actionOutcome == null)
       {
         Log.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action "
-                                          + actionDef.getName() + " (outcome == null); no further procesing.");
+                                          + actionDef.getName() + " (outcome == null); no further procesing.");        
       }
       else
       {
