@@ -10,11 +10,11 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
-public class MBRow extends MBComponentContainer
+public class MBForEachItem extends MBComponentContainer
 {
   private int _index;
 
-  public MBRow(MBDefinition definition, MBDocument document, MBComponentContainer parent)
+  public MBForEachItem(MBDefinition definition, MBDocument document, MBComponentContainer parent)
   {
     super(definition, document, parent);
   }
@@ -40,7 +40,7 @@ public class MBRow extends MBComponentContainer
   @Override
   public ViewGroup buildViewWithMaxBounds(MBViewState viewState)
   {
-    return MBViewBuilderFactory.getInstance().getRowViewBuilder().buildRowView(this, viewState);
+    return MBViewBuilderFactory.getInstance().getForEachItemViewBuilder().buildForEachItemView(this, viewState);
   }
 
   @Override
@@ -81,9 +81,9 @@ public class MBRow extends MBComponentContainer
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<MBRow index=").append(_index).append(">\n");
+    StringUtilities.appendIndentString(appendToMe, level).append("<MBForEachItem index=").append(_index).append(">\n");
     childrenAsXmlWithLevel(appendToMe, level + 2);
-    return StringUtilities.appendIndentString(appendToMe, level).append("</MBRow>\n");
+    return StringUtilities.appendIndentString(appendToMe, level).append("</MBForEachItem>\n");
   }
 
   @Override
