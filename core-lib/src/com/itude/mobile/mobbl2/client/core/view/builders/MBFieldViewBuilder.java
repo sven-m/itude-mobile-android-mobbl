@@ -520,7 +520,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
     return dropdownList;
   }
 
-  private View buildDateOrTimeView(final MBField field, final String type)
+  public View buildDateOrTimeView(final MBField field, final String type)
   {
     final Context context = MBApplicationController.getInstance().getBaseContext();
 
