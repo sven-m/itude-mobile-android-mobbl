@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.itude.poms</groupId>
 		<artifactId>itude-jenkins</artifactId>
-		<version>1.5</version>
+		<version>1.6</version>
 	</parent>
 	<groupId>com.itude.mobile.android.mobbl</groupId>
 	<artifactId>mobbl-core</artifactId>
@@ -149,7 +149,7 @@
     </build>
     
     <properties>
-        <xml.obfuscator.version>0.1</xml.obfuscator.version>
+        <xml.obfuscator.version>0.0.2.0</xml.obfuscator.version>
         <core.lib.version>${project.version}</core.lib.version>
         <android.version>4.1</android.version>
     </properties>
