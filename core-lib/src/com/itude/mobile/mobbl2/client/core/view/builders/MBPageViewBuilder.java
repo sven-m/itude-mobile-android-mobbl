@@ -1,7 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.view.builders;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -45,8 +44,6 @@ public class MBPageViewBuilder extends MBViewBuilder
       headerContainer.addView(header);
 
       main.addView(headerContainer);
-
-      addDivider(context, main);
     }
 
     buildChildren(page.getChildren(), view, viewState);
@@ -68,15 +65,6 @@ public class MBPageViewBuilder extends MBViewBuilder
     // End of page content
 
     return main;
-  }
-
-  private void addDivider(Context context, LinearLayout main)
-  {
-    LinearLayout divider = new LinearLayout(context);
-    divider.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, 1));
-    divider.setBackgroundColor(Color.DKGRAY);
-
-    main.addView(divider);
   }
 
   public ViewGroup buildPageViewWithoutContent(MBPage page, MBViewManager.MBViewState viewState)
@@ -102,8 +90,6 @@ public class MBPageViewBuilder extends MBViewBuilder
       headerContainer.addView(header);
 
       main.addView(headerContainer);
-
-      addDivider(context, main);
     }
 
     // Add linearlayout to scrollview
