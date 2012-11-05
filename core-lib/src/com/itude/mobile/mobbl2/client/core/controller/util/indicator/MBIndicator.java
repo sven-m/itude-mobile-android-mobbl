@@ -1,5 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.controller.util.indicator;
 
+import android.app.Activity;
+
 import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 
@@ -10,13 +12,22 @@ public class MBIndicator
     none, indeterminate, activity
   };
 
-  private final Type _type;
-  private boolean    _active;
+  private final Type     _type;
+  private boolean        _active;
+  private final Activity _activity;
 
   protected MBIndicator(Type type)
   {
     _type = type;
     _active = true;
+    _activity = MBViewManager.getInstance();
+  }
+
+  protected MBIndicator(Activity activity, Type type)
+  {
+    _type = type;
+    _active = true;
+    _activity = activity;
   }
 
   private void showIndicator()
@@ -24,10 +35,10 @@ public class MBIndicator
     switch (_type)
     {
       case indeterminate :
-        MBIndicatorController.getInstance().showIndeterminateProgressIndicator();
+        MBIndicatorController.getInstance().showIndeterminateProgressIndicator(_activity);
         break;
       case activity :
-        MBIndicatorController.getInstance().showActivityIndicator();
+        MBIndicatorController.getInstance().showActivityIndicator(_activity);
         break;
       case none :
         break;
@@ -39,10 +50,10 @@ public class MBIndicator
     switch (_type)
     {
       case indeterminate :
-        MBIndicatorController.getInstance().hideIndeterminateProgressIndicator();
+        MBIndicatorController.getInstance().hideIndeterminateProgressIndicator(_activity);
         break;
       case activity :
-        MBIndicatorController.getInstance().hideActivityIndicator();
+        MBIndicatorController.getInstance().hideActivityIndicator(_activity);
         break;
       case none :
         break;
@@ -55,6 +66,18 @@ public class MBIndicator
     if (!_active) throw new MBException("Trying to release already released MBIndicator");
     _active = false;
     hideIndicator();
+  }
+
+  /**
+   * @deprecated Only exists to support applications that don't cleanly use the framework, like Actum. Don't use this in any new application! 
+   */
+  @Deprecated
+  public static MBIndicator show(Activity activity, Type type)
+  {
+    MBIndicator indicator = new MBIndicator(activity, type);
+    indicator.showIndicator();
+    return indicator;
+
   }
 
   public static MBIndicator show(Type type)

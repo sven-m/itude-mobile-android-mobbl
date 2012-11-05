@@ -1,5 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.controller.util.indicator;
 
+import android.app.Activity;
+
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 
 public class MBIndicatorController
@@ -25,29 +27,24 @@ public class MBIndicatorController
     _indeterminateIndicator = indeterminateIndicator;
   }
 
-  void showIndeterminateProgressIndicator()
+  void showIndeterminateProgressIndicator(Activity activity)
   {
-    if (_indeterminateIndicator != null) _indeterminateIndicator.increaseCount(getActivity());
+    if (_indeterminateIndicator != null) _indeterminateIndicator.increaseCount(activity);
   }
 
-  void hideIndeterminateProgressIndicator()
+  void hideIndeterminateProgressIndicator(Activity activity)
   {
-    if (_indeterminateIndicator != null) _indeterminateIndicator.decreaseCount(getActivity());
+    if (_indeterminateIndicator != null) _indeterminateIndicator.decreaseCount(activity);
+  }
+  
+  void showActivityIndicator(Activity activity)
+  {
+    if (_activityIndicator != null) _activityIndicator.increaseCount(activity);
   }
 
-  private MBViewManager getActivity()
+  void hideActivityIndicator(Activity activity)
   {
-    return MBViewManager.getInstance();
-  }
-
-  void showActivityIndicator()
-  {
-    if (_activityIndicator != null) _activityIndicator.increaseCount(getActivity());
-  }
-
-  void hideActivityIndicator()
-  {
-    if (_activityIndicator != null) _activityIndicator.decreaseCount(getActivity());
+    if (_activityIndicator != null) _activityIndicator.decreaseCount(activity);
   }
 
 }
