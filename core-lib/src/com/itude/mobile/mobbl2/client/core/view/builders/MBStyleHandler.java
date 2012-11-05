@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -33,6 +34,8 @@ import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.components.MBCirclePageIndicatorBar;
 import com.itude.mobile.mobbl2.client.core.view.components.MBDrawablePageIndicatorBar;
+import com.itude.mobile.mobbl2.client.core.view.components.MBHeader;
+import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedControlBar;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedControlContainer;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedItem;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
@@ -639,7 +642,27 @@ public class MBStyleHandler
   {
   }
 
+  public void styleFirstSegmentedItem(Button item, String style)
+  {
+    item.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1));
+  }
+
+  public void styleLastSegmentedItem(Button item, String style)
+  {
+    item.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1));
+  }
+
+  public void styleCenterSegmentedItem(Button item, String style)
+  {
+    item.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1));
+
+  }
+
   public void styleSegmentedControlBar(LinearLayout segmentedControlBar, MBPanel panel)
+  {
+  }
+
+  public void styleSegmentedControlBar(MBSegmentedControlBar segmentedControlBar, String style)
   {
   }
 
@@ -661,6 +684,18 @@ public class MBStyleHandler
   }
 
   public void styleImageButton(ImageButton button, MBField field)
+  {
+  }
+
+  public void styleDialogCloseButton(Button closeButton)
+  {
+  }
+
+  public void styleDialogCloseButtonWrapper(RelativeLayout wrapper)
+  {
+  }
+
+  public void styleDialogHeader(MBHeader dialogHeader)
   {
   }
 

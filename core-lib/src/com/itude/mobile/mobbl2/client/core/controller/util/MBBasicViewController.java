@@ -11,15 +11,18 @@ import android.content.DialogInterface.OnKeyListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
@@ -35,11 +38,13 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.MBProperties;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
+import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.util.ViewUtilities;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBPanelViewBuilder;
+import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl2.client.core.view.components.MBHeader;
 
@@ -54,6 +59,7 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBHeader;
  */
 public class MBBasicViewController extends DialogFragment implements MBEventListener, MBWindowChangedEventListener, OnClickListener
 {
+
   private ViewGroup           _contentView;
   private MBPage              _page;
   private ScrollView          _mainScrollView        = null;
@@ -133,9 +139,18 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     {
       ViewGroup view = buildInitialView();
 
+      /*
+       * Add this view and a close button to a wrapper view that will be used as the content view of our AlertDialog
+       */
+
       // unable to use the holo light theme as pre honeycomb doesn't know AlertDialog.Builder(context, theme) 
-      AlertDialog dialog = new AlertDialog.Builder(getActivity())
-          .setNeutralButton(MBLocalizationService.getInstance().getTextForKey("Close"), this).setView(view).create();
+      AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+      AlertDialog dialog = adb.create();
+
+      View content = addCloseButtonToClosableDialogView(view, dialog);
+
+      adb.setView(content);
+
       dialog.setOnKeyListener(new OnKeyListener()
       {
 
@@ -160,6 +175,55 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     }
 
     return super.onCreateDialog(savedInstanceState);
+  }
+
+  public View addCloseButtonToClosableDialogView(View dialogView, final AlertDialog dialogToCloseOnclick)
+  {
+    MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
+
+    FragmentActivity context = getActivity();
+    RelativeLayout wrapper = new RelativeLayout(context);
+    styleHandler.styleDialogCloseButtonWrapper(wrapper);
+
+    /*
+     * First add the close button so we can position our content above the button
+     */
+    RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+    buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+    Button closeButton = new Button(context);
+    closeButton.setLayoutParams(buttonParams);
+    closeButton.setText(MBLocalizationService.getInstance().getTextForKey("Close"));
+    closeButton.setId(UniqueIntegerGenerator.getId());
+    styleHandler.styleDialogCloseButton(closeButton);
+    closeButton.setOnClickListener(new View.OnClickListener()
+    {
+
+      @Override
+      public void onClick(View v)
+      {
+        dialogToCloseOnclick.dismiss();
+      }
+    });
+
+    wrapper.addView(closeButton);
+
+    LayoutParams prevDialogViewParams = dialogView.getLayoutParams();
+    int width = LayoutParams.FILL_PARENT;
+    int height = LayoutParams.FILL_PARENT;
+
+    if (prevDialogViewParams != null)
+    {
+      width = prevDialogViewParams.width;
+      height = prevDialogViewParams.height;
+    }
+
+    RelativeLayout.LayoutParams dialogViewParams = new RelativeLayout.LayoutParams(width, height);
+    dialogViewParams.addRule(RelativeLayout.ABOVE, closeButton.getId());
+    dialogView.setLayoutParams(dialogViewParams);
+    wrapper.addView(dialogView);
+
+    return wrapper;
   }
 
   @Override
