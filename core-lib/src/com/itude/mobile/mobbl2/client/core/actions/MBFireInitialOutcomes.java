@@ -52,7 +52,11 @@ public class MBFireInitialOutcomes implements MBAction
           MBApplicationController.getInstance().handleOutcome(oc);
         }
       }
-      MBViewManager.getInstance().addSortedDialogName(dialog);
+
+      if (StringUtilities.isNotBlank(dialog))
+      {
+        MBViewManager.getInstance().addSortedDialogName(dialog);
+      }
     }
 
     return null;
