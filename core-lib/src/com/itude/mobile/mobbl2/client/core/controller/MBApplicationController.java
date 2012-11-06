@@ -317,6 +317,7 @@ public class MBApplicationController extends Application
       MBViewState viewState = _viewManager.getCurrentViewState();
 
       if ("MODAL".equals(displayMode) //
+          || "MODALWITHCLOSEBUTTON".equals(displayMode) //
           || "MODALFORMSHEET".equals(displayMode) //
           || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode) //
           || "MODALPAGESHEET".equals(displayMode) //
@@ -369,7 +370,7 @@ public class MBApplicationController extends Application
       MBAction action = _applicationFactory.createAction(actionDef.getClassName());
       if (action == null)
       {
-        throw new MBException ("No action found for " + actionDef.getClassName ());
+        throw new MBException("No action found for " + actionDef.getClassName());
       }
 
       MBOutcome actionOutcome = action.execute(causingOutcome.getDocument(), causingOutcome.getPath());
@@ -377,7 +378,7 @@ public class MBApplicationController extends Application
       if (actionOutcome == null)
       {
         Log.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action "
-                                          + actionDef.getName() + " (outcome == null); no further procesing.");        
+                                          + actionDef.getName() + " (outcome == null); no further procesing.");
       }
       else
       {
