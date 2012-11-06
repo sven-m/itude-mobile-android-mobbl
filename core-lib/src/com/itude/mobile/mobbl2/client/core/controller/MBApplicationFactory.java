@@ -161,16 +161,16 @@ public class MBApplicationFactory
 
     protected ControllerMappings(Registry registry)
     {
-      if (registry != null) {
+      if (registry != null)
+      {
         _controllers = Collections.unmodifiableMap(registry.controllers);
         _defaultController = registry.defaultController;
       }
-      else {
+      else
+      {
         _controllers = Collections.emptyMap();
-        _defaultController = MBBasicViewController.class;ff
+        _defaultController = MBBasicViewController.class;
       }
-
-      
     }
 
     MBBasicViewController createController(String pageName)
