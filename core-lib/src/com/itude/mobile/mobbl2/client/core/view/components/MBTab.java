@@ -2,6 +2,7 @@ package com.itude.mobile.mobbl2.client.core.view.components;
 
 import java.util.List;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -31,6 +32,7 @@ import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl2.client.core.view.listeners.MBTabListenerI;
 
+@TargetApi(11)
 public class MBTab extends RelativeLayout implements OnClickListener, OnItemClickListener, OnItemSelectedListener
 {
   private int                    _tabId;

@@ -403,14 +403,14 @@ public class MBComponent
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends MBRow> T getRow(int index)
+  public <T extends MBForEachItem> T getRow(int index)
   {
-    ArrayList<Object> result = getDescendantsOfKind(MBRow.class);
+    ArrayList<Object> result = getDescendantsOfKind(MBForEachItem.class);
 
     for (Object row : result)
     {
 
-      if (((MBRow) row).getIndex() == index)
+      if (((MBForEachItem) row).getIndex() == index)
       {
         return (T) row;
       }

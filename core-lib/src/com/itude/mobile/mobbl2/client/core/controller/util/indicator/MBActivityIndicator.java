@@ -1,75 +1,34 @@
 package com.itude.mobile.mobbl2.client.core.controller.util.indicator;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
-import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 
-public final class MBActivityIndicator implements MBIndicatorI
+public final class MBActivityIndicator extends MBCountingIndicator
 {
-  private static MBActivityIndicator _instance;
 
-  private ProgressDialog             _dialog = null;
-  private AtomicInteger              _queue  = new AtomicInteger(0);
+  private ProgressDialog _dialog = null;
 
-  private MBActivityIndicator()
+  MBActivityIndicator()
   {
-  }
 
-  public static MBActivityIndicator getInstance()
-  {
-    if (_instance == null)
-    {
-      _instance = new MBActivityIndicator();
-    }
-    return _instance;
   }
 
   @Override
-  public void show(final Activity activity)
+  protected void show(final Activity activity)
   {
 
-    if (_queue.getAndIncrement() > 0)
-    {
-      return;
-    }
-
-    activity.runOnUiThread(new MBThread()
-    {
-      @Override
-      public void runMethod()
-      {
-        _dialog = ProgressDialog.show(activity, MBLocalizationService.getInstance().getTextForKey("title_loading"), MBLocalizationService
-            .getInstance().getTextForKey("msg_loading"), true, false);
-      }
-    });
+    _dialog = ProgressDialog.show(activity, MBLocalizationService.getInstance().getTextForKey("title_loading"), MBLocalizationService
+        .getInstance().getTextForKey("msg_loading"), true, false);
   }
 
   @Override
-  public void dismiss(final Activity activity)
+  protected void dismiss(final Activity activity)
   {
-    if (_queue.decrementAndGet() > 0)
-    {
-      return;
-    }
 
-    activity.runOnUiThread(new MBThread()
-    {
-      @Override
-      public void runMethod()
-      {
-        _dialog.dismiss();
-        _dialog = null;
-      }
-    });
+    _dialog.dismiss();
+    _dialog = null;
   }
 
-  @Override
-  public boolean isActive()
-  {
-    return _queue.get() > 0;
-  }
 }

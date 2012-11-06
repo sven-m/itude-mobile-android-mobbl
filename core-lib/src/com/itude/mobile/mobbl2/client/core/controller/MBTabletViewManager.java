@@ -10,6 +10,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -399,6 +400,7 @@ public class MBTabletViewManager extends MBViewManager
         }
         actionBar.setCustomView(tabBar, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
             ActionBar.LayoutParams.MATCH_PARENT, Gravity.LEFT));
+
       }
 
       private void setTabText(MBDialogDefinition dialogDefinition, MBTab tab, MBTabBar tabBar)
@@ -451,8 +453,9 @@ public class MBTabletViewManager extends MBViewManager
         if (tabBar != null)
         {
           selectedTab = tabBar.indexOfSelectedTab();
-        }
 
+          if (tabBar.getSelectedTab() != null) tabBar.getSelectedTab().setSelected(false);
+        }
         invalidateOptionsMenu();
         // throw away current MBActionBar and create a new one
         getActionBar().setCustomView(null);
@@ -500,6 +503,7 @@ public class MBTabletViewManager extends MBViewManager
         @Override
         public void runMethod()
         {
+          //item.setIcon(null);
           item.setActionView(frameLayout);
           getRotationImage().getAnimation().startNow();
         }
@@ -571,6 +575,22 @@ public class MBTabletViewManager extends MBViewManager
     refreshActionBar();
 
     super.onConfigurationChanged(newConfig);
+
+    // Android 3.2 (perhaps other versions, but not 3.0) destroys the styling of the home icon in the action bar
+    // when an onConfigurationChanged is triggered. When the main thread is about here, the handling of
+    // that onConfigurationChanged should be in the message queue. This places a new message at the end of
+    // the queue that changes the home icon back, which is therefore handled after the onConfigurationChanged message
+    // that ruins it.
+    final View homeIcon = findViewById(R.id.home);
+    if (homeIcon != null) new Handler().post(new Runnable()
+    {
+
+      @Override
+      public void run()
+      {
+        MBViewBuilderFactory.getInstance().getStyleHandler().styleHomeIcon(homeIcon);
+      }
+    });
 
   }
 }

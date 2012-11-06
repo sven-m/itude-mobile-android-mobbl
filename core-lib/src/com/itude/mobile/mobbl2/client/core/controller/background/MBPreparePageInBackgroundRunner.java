@@ -2,15 +2,22 @@ package com.itude.mobile.mobbl2.client.core.controller.background;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
+import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicator;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 
 public class MBPreparePageInBackgroundRunner extends MBApplicationControllerBackgroundRunner
 {
+  final MBIndicator _indicator;
+  MBOutcome         _outcome            = null;
+  String            _selectPageInDialog = null;
+  String            _pageName           = null;
+  boolean           _backStackEnabled   = true;
 
-  MBOutcome _outcome            = null;
-  String    _selectPageInDialog = null;
-  String    _pageName           = null;
-  boolean   _backStackEnabled   = true;
+  public MBPreparePageInBackgroundRunner(MBIndicator indicator)
+  {
+    _indicator = indicator;
+
+  }
 
   public void setOutcome(MBOutcome mbOutcome)
   {
@@ -35,8 +42,15 @@ public class MBPreparePageInBackgroundRunner extends MBApplicationControllerBack
   @Override
   protected Object[] doInBackground(Object[]... params)
   {
-    Object[] result = getController().preparePageInBackground(_outcome, _pageName, _selectPageInDialog, _backStackEnabled);
-    return result;
+    try
+    {
+      Object[] result = getController().preparePage(_outcome, _pageName, _selectPageInDialog, _backStackEnabled);
+      return result;
+    }
+    finally
+    {
+      _indicator.release();
+    }
   }
 
   @Override
