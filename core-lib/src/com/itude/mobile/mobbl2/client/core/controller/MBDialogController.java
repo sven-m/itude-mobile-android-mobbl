@@ -74,6 +74,16 @@ public class MBDialogController extends ContextWrapper
     getActivity().finishFromChild(this);
   }
 
+  void shutdown()
+  {
+    onShutdown();
+  }
+
+  protected void onShutdown()
+  {
+    // hook to be called when the application is shutting down
+  }
+
   private MBViewManager getActivity()
   {
     return MBViewManager.getInstance();

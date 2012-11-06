@@ -117,6 +117,10 @@ public class MBViewManager extends FragmentActivity
   {
     // Our application is closing so after this point our ApplicationState should return that the application is not started.
     MBApplicationController.getInstance().setApplicationState(ApplicationState.NOTSTARTED);
+    
+    // signal the DialogControllers that we are closing down
+    for (MBDialogController controller: _controllerMap.values())
+      controller.shutdown();
 
     super.onDestroy();
   }
