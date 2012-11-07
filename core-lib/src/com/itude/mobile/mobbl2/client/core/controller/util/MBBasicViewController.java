@@ -458,23 +458,6 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     replaceMainScrollViewContent(newContent);
   }
 
-  public void fillMainScrollViewContentFromPanelInBackground(final MBPanel panel)
-  {
-    Thread backgroundThread = new Thread()
-    {
-
-      @Override
-      public void run()
-      {
-        Log.d(Constants.APPLICATION_NAME, "MBBasicViewController.fillMainScrollViewContentFromPanelInBackground");
-        fillMainScrollViewContentFromPanel(panel);
-      }
-
-    };
-    backgroundThread.start();
-
-  }
-
   public void setMainScrollViewContent(View scrollViewContent)
   {
     _mainScrollViewContent = scrollViewContent;

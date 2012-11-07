@@ -282,8 +282,8 @@ public class MBComponent
     }
 
     Object value = getDocument().getValueForPath(variableName);
-    if (value instanceof String) return (String) value;
-    else if (value != null) return value.toString();
+
+    if (value != null) return value.toString();
 
     return null;
   }
@@ -379,7 +379,7 @@ public class MBComponent
   {
     List<MBPanel> result = getChildrenOfKind(MBPanel.class);
 
-    for (MBPanel panel: result)
+    for (MBPanel panel : result)
     {
       if (panel.getType().equals(type))
       {
