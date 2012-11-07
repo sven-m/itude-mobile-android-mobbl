@@ -1,8 +1,5 @@
 package com.itude.mobile.mobbl2.client.core.view.builders;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.view.ViewGroup;
 
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
@@ -21,42 +18,22 @@ import com.itude.mobile.mobbl2.client.core.view.builders.panel.SegmentedControlP
 public class MBPanelViewBuilder extends MBViewBuilder
 {
 
-  public static interface Builder
-  {
-    public ViewGroup buildPanel(MBPanel panel, MBViewManager.MBViewState viewState, BuildState buildState);
-  }
-  
-  public static class BuildState {
-    private int _matrixRowNumber;
-    
-    public void resetMatrixRow() {
-      _matrixRowNumber = 0;
-    }
-    
-    public void increaseMatrixRow () {
-      _matrixRowNumber++;
-    }
-    
-    public int getMatrixRow () {
-      return _matrixRowNumber;
-    }
-  }
-
-  private Map<String, Builder> _builders;
-  private BuildState _buildState;
+  private MBBuilderRegistry<MBPanel, Builder> _builders;
+  private BuildState                          _buildState;
 
   private void registerBuilders()
   {
-    Map<String, Builder> builders = new HashMap<String, Builder>();
-    builders.put(Constants.C_PLAIN, new PlainPanelBuilder());
-    builders.put(Constants.C_LIST, new ListPanelBuilder());
-    builders.put(Constants.C_SECTION, new SectionPanelBuilder());
-    builders.put(Constants.C_ROW, new RowPanelBuilder());
-    builders.put(Constants.C_MATRIX, new MatrixPanelBuilder());
-    builders.put(Constants.C_MATRIXHEADER, new MatrixHeaderBuilder());
-    builders.put(Constants.C_MATRIXROW, new MatrixRowPanelBuilder());
-    builders.put(Constants.C_EDITABLEMATRIX, new EditableMatrixPanelBuilder());
-    builders.put(Constants.C_SEGMENTEDCONTROL, new SegmentedControlPanelBuilder());
+    MBBuilderRegistry<MBPanel, Builder> builders = new MBBuilderRegistry<MBPanel, MBPanelViewBuilder.Builder>();
+    builders.registerBuilder(Constants.C_PLAIN, new PlainPanelBuilder());
+    builders.registerBuilder(Constants.C_LIST, new ListPanelBuilder());
+    builders.registerBuilder(Constants.C_SECTION, new SectionPanelBuilder());
+    builders.registerBuilder(Constants.C_ROW, new RowPanelBuilder());
+    builders.registerBuilder(Constants.C_MATRIX, new MatrixPanelBuilder());
+    builders.registerBuilder(Constants.C_MATRIXHEADER, new MatrixHeaderBuilder());
+    builders.registerBuilder(Constants.C_MATRIXROW, new MatrixRowPanelBuilder());
+    builders.registerBuilder(Constants.C_EDITABLEMATRIX, new EditableMatrixPanelBuilder());
+    builders.registerBuilder(Constants.C_SEGMENTEDCONTROL, new SegmentedControlPanelBuilder());
+    builders.registerBuilder(null, new PlainPanelBuilder());
     _builders = builders;
   }
 
@@ -68,8 +45,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
   public ViewGroup buildPanelView(MBPanel panel, MBViewManager.MBViewState viewState)
   {
-    Builder builder = getBuilderForType(panel.getType());
-    if (builder == null) builder = getBuilderForType(Constants.C_PLAIN);
+    Builder builder = getBuilder(panel.getType(), panel.getStyle());
 
     ViewGroup view = builder.buildPanel(panel, viewState, _buildState);
 
@@ -78,9 +54,46 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
   }
 
-  public Builder getBuilderForType(String type)
+  public Builder getBuilder(String type, String style)
   {
-    return _builders.get(type);
+    return _builders.getBuilder(type, style);
+  }
+
+  public void registerBuilder(String type, Builder builder)
+  {
+    _builders.registerBuilder(type, builder);
+  }
+
+  public void registerBuilder(String type, String style, Builder builder)
+  {
+    _builders.registerBuilder(type, style, builder);
+  }
+
+  /////////////////////
+
+  public static interface Builder
+  {
+    public ViewGroup buildPanel(MBPanel panel, MBViewManager.MBViewState viewState, BuildState buildState);
+  }
+
+  public static class BuildState
+  {
+    private int _matrixRowNumber;
+
+    public void resetMatrixRow()
+    {
+      _matrixRowNumber = 0;
+    }
+
+    public void increaseMatrixRow()
+    {
+      _matrixRowNumber++;
+    }
+
+    public int getMatrixRow()
+    {
+      return _matrixRowNumber;
+    }
   }
 
 }

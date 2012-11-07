@@ -35,7 +35,7 @@ public class EditableMatrixPanelBuilder extends MBViewBuilder implements Builder
     // An EditableMatrix without any permissions equals a default Matrix
     if (!panel.isChildrenDeletable() && !panel.isChildrenDraggable() && !panel.isChildrenSelectable() && !panel.isChildrenLongClickable())
     {
-      Builder matrixBuilder = MBViewBuilderFactory.getInstance().getPanelViewBuilder().getBuilderForType(Constants.C_MATRIX);
+      Builder matrixBuilder = MBViewBuilderFactory.getInstance().getPanelViewBuilder().getBuilder(Constants.C_MATRIX, panel.getStyle());
       return matrixBuilder.buildPanel(panel, viewState, buildState);
     }
 
