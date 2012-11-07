@@ -17,7 +17,7 @@ import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 public class MBForEach extends MBComponentContainer
 {
   private ArrayList<MBForEachItem> _rows; // arrayofMBRows
-  private String           _value;
+  private String                   _value;
 
   public MBForEach(MBForEachDefinition definition, MBDocument document, MBComponentContainer parent)
   {
@@ -113,14 +113,15 @@ public class MBForEach extends MBComponentContainer
   }
 
   //This method is overridden because we (may) have to the children of the rows too
+  @SuppressWarnings("unchecked")
   @Override
-  public ArrayList<Object> getDescendantsOfKind(Class<?> clazz)
+  public <T extends MBComponent> ArrayList<T> getDescendantsOfKind(Class<T> clazz)
   {
 
-    ArrayList<Object> result = super.getDescendantsOfKind(clazz);
+    ArrayList<T> result = super.getDescendantsOfKind(clazz);
     for (MBForEachItem child : _rows)
     {
-      if (clazz.isInstance(child)) result.add(child);
+      if (clazz.isInstance(child)) result.add((T) child);
       result.addAll(child.getDescendantsOfKind(clazz));
     }
     return result;
@@ -141,8 +142,7 @@ public class MBForEach extends MBComponentContainer
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<MBForEach ").append(this.attributeAsXml("value", _value))
-        .append(">\n");
+    StringUtilities.appendIndentString(appendToMe, level).append("<MBForEach ").append(this.attributeAsXml("value", _value)).append(">\n");
 
     MBForEachDefinition def = (MBForEachDefinition) getDefinition();
     for (MBVariableDefinition var : def.getVariables().values())

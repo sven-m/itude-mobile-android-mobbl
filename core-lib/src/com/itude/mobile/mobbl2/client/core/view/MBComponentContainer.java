@@ -86,15 +86,15 @@ public class MBComponentContainer extends MBComponent
   }
 
   @Override
-  public ArrayList<Object> getDescendantsOfKind(Class<?> clazz)
+  public <T extends MBComponent> ArrayList<T> getDescendantsOfKind(Class<T> clazz)
   {
-    ArrayList<Object> result = new ArrayList<Object>();
+    ArrayList<T> result = new ArrayList<T>();
     for (MBComponent child : _children)
     {
 
       if (clazz.isInstance(child))
       {
-        result.add(child);
+        result.add((T)child);
       }
 
       result.addAll(child.getDescendantsOfKind(clazz));

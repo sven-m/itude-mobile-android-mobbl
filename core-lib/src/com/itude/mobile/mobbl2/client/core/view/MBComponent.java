@@ -308,10 +308,10 @@ public class MBComponent
   {
   }
 
-  public ArrayList<Object> getDescendantsOfKind(Class<?> clazz)
+  public <T extends MBComponent> ArrayList<T> getDescendantsOfKind(Class<T> clazz)
   {
     // This method is overridden by the various subclasses; if this could be an abstract method it would be
-    return new ArrayList<Object>();
+    return new ArrayList<T>();
   }
 
   // TODO method has a selector, needs implementation
@@ -335,9 +335,9 @@ public class MBComponent
 
   // TODO filterSet Method should be implemented
 
-  public Object getFirstDescendantOfKind(Class<?> clazz)
+  public <T extends MBComponent> T getFirstDescendantOfKind(Class<T> clazz)
   {
-    List<Object> result = getDescendantsOfKind(clazz);
+    List<T> result = getDescendantsOfKind(clazz);
 
     if (result.size() == 0)
     {
@@ -350,6 +350,22 @@ public class MBComponent
   // TODO method has a selector, needs implementation
   public Object getFirstDescendantOfKind(Class<?> clazz, Object selector, Object value)
   {
+    return null;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T extends MBComponent> T getFirstDescendantOfKindWithName(Class<T> clazz, String name)
+  {
+    ArrayList<T> result = getDescendantsOfKind(clazz);
+
+    for (MBComponent component : result)
+    {
+      if (name.equals(component.getName()))
+      {
+        return (T) component;
+      }
+    }
+
     return null;
   }
 
@@ -405,12 +421,12 @@ public class MBComponent
   @SuppressWarnings("unchecked")
   public <T extends MBForEachItem> T getRow(int index)
   {
-    ArrayList<Object> result = getDescendantsOfKind(MBForEachItem.class);
+    List<MBForEachItem> result = getDescendantsOfKind(MBForEachItem.class);
 
-    for (Object row : result)
+    for (MBForEachItem row : result)
     {
 
-      if (((MBForEachItem) row).getIndex() == index)
+      if (row.getIndex() == index)
       {
         return (T) row;
       }
