@@ -115,10 +115,10 @@ public class MBForEach extends MBComponentContainer
   //This method is overridden because we (may) have to the children of the rows too
   @SuppressWarnings("unchecked")
   @Override
-  public <T extends MBComponent> ArrayList<T> getDescendantsOfKind(Class<T> clazz)
+  public <T extends MBComponent> List<T> getDescendantsOfKind(Class<T> clazz)
   {
 
-    ArrayList<T> result = super.getDescendantsOfKind(clazz);
+    List<T> result = super.getDescendantsOfKind(clazz);
     for (MBForEachItem child : _rows)
     {
       if (clazz.isInstance(child)) result.add((T) child);
@@ -128,13 +128,14 @@ public class MBForEach extends MBComponentContainer
   }
 
   //This method is overridden because we (may) have to the children of the rows too
+  @SuppressWarnings("unchecked")
   @Override
-  public ArrayList<MBComponent> getChildrenOfKind(Class<?> clazz)
+  public <T extends MBComponent> List<T> getChildrenOfKind(Class<T> clazz)
   {
-    ArrayList<MBComponent> result = super.getChildrenOfKind(clazz);
-    for (MBComponent child : _rows)
+    List<T> result = super.getChildrenOfKind(clazz);
+    for (MBForEachItem child : _rows)
     {
-      if (clazz.isInstance(child)) result.add(child);
+      if (clazz.isInstance(child)) result.add((T)child);
     }
     return result;
   }

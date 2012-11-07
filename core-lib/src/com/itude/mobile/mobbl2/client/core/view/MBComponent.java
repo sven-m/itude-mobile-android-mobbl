@@ -308,32 +308,17 @@ public class MBComponent
   {
   }
 
-  public <T extends MBComponent> ArrayList<T> getDescendantsOfKind(Class<T> clazz)
+  public <T extends MBComponent> List<T> getDescendantsOfKind(Class<T> clazz)
   {
     // This method is overridden by the various subclasses; if this could be an abstract method it would be
     return new ArrayList<T>();
   }
 
-  // TODO method has a selector, needs implementation
-  public ArrayList<?> getDescendantsOfKind(Class<?> clazz, Object selector, Object value)
-  {
-
-    return null;
-  }
-
-  public ArrayList<MBComponent> getChildrenOfKind(Class<?> clazz)
+  public <T extends MBComponent> List<T> getChildrenOfKind(Class<T> clazz)
   {
     // This method is overridden by the various subclasses; if this could be an abstract method it would be
-    return new ArrayList<MBComponent>();
+    return new ArrayList<T>();
   }
-
-  //TODO method has a selector, needs implementation
-  public ArrayList<?> getChildrenOfKind(Class<?> clazz, Object selector, Object value)
-  {
-    return null;
-  }
-
-  // TODO filterSet Method should be implemented
 
   public <T extends MBComponent> T getFirstDescendantOfKind(Class<T> clazz)
   {
@@ -347,16 +332,10 @@ public class MBComponent
     return result.get(0);
   }
 
-  // TODO method has a selector, needs implementation
-  public Object getFirstDescendantOfKind(Class<?> clazz, Object selector, Object value)
-  {
-    return null;
-  }
-
   @SuppressWarnings("unchecked")
   public <T extends MBComponent> T getFirstDescendantOfKindWithName(Class<T> clazz, String name)
   {
-    ArrayList<T> result = getDescendantsOfKind(clazz);
+    List<T> result = getDescendantsOfKind(clazz);
 
     for (MBComponent component : result)
     {
@@ -369,9 +348,9 @@ public class MBComponent
     return null;
   }
 
-  public MBComponent getFirstChildOfKind(Class<?> clazz)
+  public <T extends MBComponent> T getFirstChildOfKind(Class<T> clazz)
   {
-    ArrayList<MBComponent> result = getChildrenOfKind(clazz);
+    List<T> result = getChildrenOfKind(clazz);
 
     if (result.size() == 0)
     {
@@ -381,12 +360,11 @@ public class MBComponent
     return result.get(0);
   }
 
-  @SuppressWarnings("unchecked")
-  public <T extends MBComponent> T getFirstChildOfKindWithName(Class<?> clazz, String name)
+  public <T extends MBComponent> T getFirstChildOfKindWithName(Class<T> clazz, String name)
   {
-    ArrayList<MBComponent> result = getChildrenOfKind(clazz);
+    List<T> result = getChildrenOfKind(clazz);
 
-    for (MBComponent component : result)
+    for (T component : result)
     {
       if (name.equals(component.getName()))
       {
@@ -399,22 +377,16 @@ public class MBComponent
 
   public MBPanel getFirstChildOfPanelWithType(String type)
   {
-    ArrayList<MBComponent> result = getChildrenOfKind(MBPanel.class);
+    List<MBPanel> result = getChildrenOfKind(MBPanel.class);
 
-    for (MBComponent component : result)
+    for (MBPanel panel: result)
     {
-      if (((MBPanel) component).getType().equals(type))
+      if (panel.getType().equals(type))
       {
-        return (MBPanel) component;
+        return panel;
       }
     }
 
-    return null;
-  }
-
-  // TODO Method has a selector, needs implementation
-  public Object getFirstChildOfKind(Class<?> clazz, Object selector, Object value)
-  {
     return null;
   }
 

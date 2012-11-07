@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.view;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
@@ -44,15 +45,16 @@ public class MBComponentContainer extends MBComponent
     }
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public ArrayList<MBComponent> getChildrenOfKind(Class<?> clazz)
+  public <T extends MBComponent> List<T> getChildrenOfKind(Class<T> clazz)
   {
-    ArrayList<MBComponent> result = new ArrayList<MBComponent>();
+    List<T> result = new ArrayList<T>();
     for (MBComponent child : _children)
     {
       if (clazz.isInstance(child))
       {
-        result.add(child);
+        result.add((T)child);
       }
     }
 
@@ -85,8 +87,9 @@ public class MBComponentContainer extends MBComponent
     return null;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public <T extends MBComponent> ArrayList<T> getDescendantsOfKind(Class<T> clazz)
+  public <T extends MBComponent> List<T> getDescendantsOfKind(Class<T> clazz)
   {
     ArrayList<T> result = new ArrayList<T>();
     for (MBComponent child : _children)
