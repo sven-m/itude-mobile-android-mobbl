@@ -398,6 +398,10 @@ public class MBStyleHandler
   {
   }
 
+  public void styleRow(ViewGroup rowPanel, String style)
+  {
+  }
+
   public void styleRowButton(View button, RelativeLayout.LayoutParams params)
   {
   }
