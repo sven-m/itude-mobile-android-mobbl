@@ -9,7 +9,7 @@ import android.widget.RelativeLayout;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationFactory;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
-import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
+import com.itude.mobile.mobbl2.client.core.view.builders.panel.EditableMatrixPanelBuilder;
 import com.itude.mobile.mobbl2.client.core.view.helpers.MBEditableMatrixListener;
 
 public class MBEditableMatrix extends LinearLayout
@@ -111,8 +111,8 @@ public class MBEditableMatrix extends LinearLayout
       getCurrentContentView().removeAllViews();
     }
 
-    MBViewBuilderFactory.getInstance().getPanelViewBuilder()
-        .buildChildrenForEditableMatrix(matrixPanel.getChildren(), getCurrentContentView(), matrixPanel.getPage().getCurrentViewState());
+    // TODO: ugly
+    EditableMatrixPanelBuilder.buildChildrenForEditableMatrix(matrixPanel.getChildren(), getCurrentContentView(), matrixPanel.getPage().getCurrentViewState());
 
     connectMatrixListener();
   }

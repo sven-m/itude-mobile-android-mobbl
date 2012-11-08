@@ -282,8 +282,8 @@ public class MBComponent
     }
 
     Object value = getDocument().getValueForPath(variableName);
-    if (value instanceof String) return (String) value;
-    else if (value != null) return value.toString();
+
+    if (value != null) return value.toString();
 
     return null;
   }
@@ -308,54 +308,21 @@ public class MBComponent
   {
   }
 
-  public ArrayList<Object> getDescendantsOfKind(Class<?> clazz)
+  public <T extends MBComponent> List<T> getDescendantsOfKind(Class<T> clazz)
   {
     // This method is overridden by the various subclasses; if this could be an abstract method it would be
-    return new ArrayList<Object>();
+    return new ArrayList<T>();
   }
 
-  // TODO method has a selector, needs implementation
-  public ArrayList<?> getDescendantsOfKind(Class<?> clazz, Object selector, Object value)
-  {
-
-    return null;
-  }
-
-  public ArrayList<MBComponent> getChildrenOfKind(Class<?> clazz)
+  public <T extends MBComponent> List<T> getChildrenOfKind(Class<T> clazz)
   {
     // This method is overridden by the various subclasses; if this could be an abstract method it would be
-    return new ArrayList<MBComponent>();
+    return new ArrayList<T>();
   }
 
-  //TODO method has a selector, needs implementation
-  public ArrayList<?> getChildrenOfKind(Class<?> clazz, Object selector, Object value)
+  public <T extends MBComponent> T getFirstDescendantOfKind(Class<T> clazz)
   {
-    return null;
-  }
-
-  // TODO filterSet Method should be implemented
-
-  public Object getFirstDescendantOfKind(Class<?> clazz)
-  {
-    List<Object> result = getDescendantsOfKind(clazz);
-
-    if (result.size() == 0)
-    {
-      return null;
-    }
-
-    return result.get(0);
-  }
-
-  // TODO method has a selector, needs implementation
-  public Object getFirstDescendantOfKind(Class<?> clazz, Object selector, Object value)
-  {
-    return null;
-  }
-
-  public MBComponent getFirstChildOfKind(Class<?> clazz)
-  {
-    ArrayList<MBComponent> result = getChildrenOfKind(clazz);
+    List<T> result = getDescendantsOfKind(clazz);
 
     if (result.size() == 0)
     {
@@ -366,9 +333,9 @@ public class MBComponent
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends MBComponent> T getFirstChildOfKindWithName(Class<?> clazz, String name)
+  public <T extends MBComponent> T getFirstDescendantOfKindWithName(Class<T> clazz, String name)
   {
-    ArrayList<MBComponent> result = getChildrenOfKind(clazz);
+    List<T> result = getDescendantsOfKind(clazz);
 
     for (MBComponent component : result)
     {
@@ -381,36 +348,57 @@ public class MBComponent
     return null;
   }
 
-  public MBPanel getFirstChildOfPanelWithType(String type)
+  public <T extends MBComponent> T getFirstChildOfKind(Class<T> clazz)
   {
-    ArrayList<MBComponent> result = getChildrenOfKind(MBPanel.class);
+    List<T> result = getChildrenOfKind(clazz);
 
-    for (MBComponent component : result)
+    if (result.size() == 0)
     {
-      if (((MBPanel) component).getType().equals(type))
+      return null;
+    }
+
+    return result.get(0);
+  }
+
+  public <T extends MBComponent> T getFirstChildOfKindWithName(Class<T> clazz, String name)
+  {
+    List<T> result = getChildrenOfKind(clazz);
+
+    for (T component : result)
+    {
+      if (name.equals(component.getName()))
       {
-        return (MBPanel) component;
+        return (T) component;
       }
     }
 
     return null;
   }
 
-  // TODO Method has a selector, needs implementation
-  public Object getFirstChildOfKind(Class<?> clazz, Object selector, Object value)
+  public MBPanel getFirstChildOfPanelWithType(String type)
   {
+    List<MBPanel> result = getChildrenOfKind(MBPanel.class);
+
+    for (MBPanel panel : result)
+    {
+      if (panel.getType().equals(type))
+      {
+        return panel;
+      }
+    }
+
     return null;
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends MBRow> T getRow(int index)
+  public <T extends MBForEachItem> T getRow(int index)
   {
-    ArrayList<Object> result = getDescendantsOfKind(MBRow.class);
+    List<MBForEachItem> result = getDescendantsOfKind(MBForEachItem.class);
 
-    for (Object row : result)
+    for (MBForEachItem row : result)
     {
 
-      if (((MBRow) row).getIndex() == index)
+      if (row.getIndex() == index)
       {
         return (T) row;
       }

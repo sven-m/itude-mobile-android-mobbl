@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.configuration.MBConfigurationParser;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition.MBPageType;
@@ -218,6 +219,8 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
     }
 
     MBConfigurationDefinition conf = (MBConfigurationDefinition) super.parseData(data, documentName);
+
+    if (conf == null) throw new MBException("Could not open configuration file " + documentName);
 
     if (conf.getDefinitionForDocumentName(MBConfigurationDefinition.DOC_SYSTEM_EXCEPTION) == null)
     {

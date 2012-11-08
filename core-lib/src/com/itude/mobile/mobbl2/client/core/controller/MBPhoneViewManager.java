@@ -38,9 +38,9 @@ import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
-import com.itude.mobile.mobbl2.client.core.view.components.MBTabSpinnerAdapter;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
 import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
+import com.itude.mobile.mobbl2.client.core.view.components.MBTabSpinnerAdapter;
 
 @TargetApi(11)
 public class MBPhoneViewManager extends MBViewManager

@@ -16,8 +16,8 @@ import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 public class MBForEach extends MBComponentContainer
 {
-  private ArrayList<MBRow> _rows; // arrayofMBRows
-  private String           _value;
+  private ArrayList<MBForEachItem> _rows; // arrayofMBRows
+  private String                   _value;
 
   public MBForEach(MBForEachDefinition definition, MBDocument document, MBComponentContainer parent)
   {
@@ -25,7 +25,7 @@ public class MBForEach extends MBComponentContainer
 
     setValue(definition.getValue());
 
-    _rows = new ArrayList<MBRow>();
+    _rows = new ArrayList<MBForEachItem>();
 
     MBForEachDefinition def = (MBForEachDefinition) getDefinition();
     if (!def.isPreConditionValid(document, parent.getAbsoluteDataPath()))
@@ -48,21 +48,21 @@ public class MBForEach extends MBComponentContainer
         for (int i = 0; i < ((List<?>) pathResult).size(); i++)
         {
 
-          MBRow row = new MBRow(getDefinition(), getDocument(), this);
-          addRow(row);
+          MBForEachItem item = new MBForEachItem(getDefinition(), getDocument(), this);
+          addItem(item);
 
           for (MBDefinition childDef : (ArrayList<MBDefinition>) def.getChildren())
           {
-            if (childDef.isPreConditionValid(document, row.getAbsoluteDataPath()))
+            if (childDef.isPreConditionValid(document, item.getAbsoluteDataPath()))
             {
-              row.addChild(MBComponentFactory.getComponentFromDefinition(childDef, document, row));
+              item.addChild(MBComponentFactory.getComponentFromDefinition(childDef, document, item));
             }
           }
         }
         if (definition.getSuppressRowComponent())
         {
           // Prune the rows and ourselves
-          for (MBRow row : _rows)
+          for (MBForEachItem row : _rows)
           {
             for (MBComponent child : row.getChildren())
             {
@@ -79,12 +79,12 @@ public class MBForEach extends MBComponentContainer
 
   }
 
-  public ArrayList<MBRow> getRows()
+  public ArrayList<MBForEachItem> getRows()
   {
     return _rows;
   }
 
-  public void setRows(ArrayList<MBRow> rows)
+  public void setRows(ArrayList<MBForEachItem> rows)
   {
     _rows = rows;
   }
@@ -99,7 +99,7 @@ public class MBForEach extends MBComponentContainer
     _value = value;
   }
 
-  public void addRow(MBRow row)
+  private void addItem(MBForEachItem row)
   {
     row.setParent(this);
     row.setIndex(_rows.size());
@@ -113,27 +113,29 @@ public class MBForEach extends MBComponentContainer
   }
 
   //This method is overridden because we (may) have to the children of the rows too
+  @SuppressWarnings("unchecked")
   @Override
-  public ArrayList<Object> getDescendantsOfKind(Class<?> clazz)
+  public <T extends MBComponent> List<T> getDescendantsOfKind(Class<T> clazz)
   {
 
-    ArrayList<Object> result = super.getDescendantsOfKind(clazz);
-    for (MBRow child : _rows)
+    List<T> result = super.getDescendantsOfKind(clazz);
+    for (MBForEachItem child : _rows)
     {
-      if (clazz.isInstance(child)) result.add(child);
+      if (clazz.isInstance(child)) result.add((T) child);
       result.addAll(child.getDescendantsOfKind(clazz));
     }
     return result;
   }
 
   //This method is overridden because we (may) have to the children of the rows too
+  @SuppressWarnings("unchecked")
   @Override
-  public ArrayList<MBComponent> getChildrenOfKind(Class<?> clazz)
+  public <T extends MBComponent> List<T> getChildrenOfKind(Class<T> clazz)
   {
-    ArrayList<MBComponent> result = super.getChildrenOfKind(clazz);
-    for (MBComponent child : _rows)
+    List<T> result = super.getChildrenOfKind(clazz);
+    for (MBForEachItem child : _rows)
     {
-      if (clazz.isInstance(child)) result.add(child);
+      if (clazz.isInstance(child)) result.add((T)child);
     }
     return result;
   }
@@ -141,13 +143,12 @@ public class MBForEach extends MBComponentContainer
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<MBForEach ").append(this.attributeAsXml("value", _value))
-        .append(">\n");
+    StringUtilities.appendIndentString(appendToMe, level).append("<MBForEach ").append(this.attributeAsXml("value", _value)).append(">\n");
 
     MBForEachDefinition def = (MBForEachDefinition) getDefinition();
     for (MBVariableDefinition var : def.getVariables().values())
       var.asXmlWithLevel(appendToMe, level + 2);
-    for (MBRow child : _rows)
+    for (MBForEachItem child : _rows)
       child.asXmlWithLevel(appendToMe, level + 2);
 
     childrenAsXmlWithLevel(appendToMe, level + 2);

@@ -170,6 +170,8 @@ public class MBFieldViewBuilder extends MBViewBuilder
     Drawable drawable = MBResourceService.getInstance().getImageByID(source);
     button.setBackgroundDrawable(drawable);
 
+    getStyleHandler().styleImageButton(button, field);
+
     return button;
   }
 
@@ -505,6 +507,8 @@ public class MBFieldViewBuilder extends MBViewBuilder
       LinearLayout labelLayout = new LinearLayout(context);
       labelLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
       labelLayout.setOrientation(LinearLayout.HORIZONTAL);
+      labelLayout.setGravity(Gravity.CENTER_VERTICAL);
+      getStyleHandler().styleLabelContainer(labelLayout, field);
 
       TextView label = buildTextViewWithValue(field.getLabel());
       label.setText(field.getLabel());
@@ -599,7 +603,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
               value.setText(DateUtilities.dateToString(df.getCalender().getTime(), field.getFormatMask()));
             }
           };
-          TimePickerDialog timePickerDialog = new TimePickerDialog(MBViewManager.getInstance().getActiveDialog(), listener, df
+          TimePickerDialog timePickerDialog = new TimePickerDialog(MBViewManager.getInstance(), listener, df
               .getHourOfDay(), df.getMinute(), true);
 
           timePickerDialog.setTitle(field.getLabel());
@@ -624,7 +628,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
             }
           };
 
-          DatePickerDialog datePickerDialog = new DatePickerDialog(MBViewManager.getInstance().getActiveDialog(), listener, df.getYear(),
+          DatePickerDialog datePickerDialog = new DatePickerDialog(MBViewManager.getInstance(), listener, df.getYear(),
               df.getMonth(), df.getDay());
           datePickerDialog.setTitle(field.getLabel());
           styleHandler.styleDatePickerDialog(datePickerDialog, field);
