@@ -3,6 +3,7 @@ package com.itude.mobile.mobbl2.client.core.controller.util.indicator;
 import android.app.Activity;
 
 import com.itude.mobile.mobbl2.client.core.MBException;
+import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 
 public class MBIndicator
 {
