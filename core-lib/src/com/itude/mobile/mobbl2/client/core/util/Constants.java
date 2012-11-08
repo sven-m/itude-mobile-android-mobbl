@@ -23,7 +23,6 @@ public interface Constants
   public static final String C_MATRIXROW                                   = "MATRIX-ROW";
   public static final String C_MATRIXTITLEROW                              = "MATRIX-ROW-TITLE";
   public static final String C_MATRIX                                      = "MATRIX";
-  public static final String C_EDITABLEMATRIX                              = "EDITABLEMATRIX";
   public static final String C_SEGMENTEDCONTROL                            = "SEGMENTEDCONTROL";
 
   // cell types for use in identifiers
@@ -101,24 +100,6 @@ public interface Constants
   public static final String C_BUTTON_REFRESH                              = "BUTTON-REFRESH";
   public static final String C_BUTTON_FULLSCREEN                           = "BUTTON-FULLSCREEN";
   public static final String C_ICON_TRANSPARENT                            = "ICON-transparent";
-
-  // EditableMatrix 
-  public static final String C_EDITABLEMATRIX_EDITBUTTON                   = "EDITABLEMATRIX-EDITBUTTON";
-  public static final String C_EDITABLEMATRIX_LEFTBUTTONSCONTAINER         = "EDITABLEMATRIX-LEFTBUTTONSCONTAINER";
-  public static final String C_EDITABLEMATRIX_CHECKBOX                     = "EDITABLEMATRIX-CHECKBOX";
-  public static final String C_EDITABLEMATRIX_DELETEBUTTON                 = "EDITABLEMATRIX-DELETEBUTTON";
-  public static final String C_EDITABLEMATRIX_DRAGBUTTON                   = "EDITABLEMATRIX-DRAGBUTTON";
-  public static final String C_EDITABLEMATRIX_RIGHTBUTTONSCONTAINER        = "EDITABLEMATRIX-RIGHTBUTTONSCONTAINER";
-  public static final String C_EDITABLEMATRIX_UPBUTTON                     = "EDITABLEMATRIX-UPBUTTON";
-  public static final String C_EDITABLEMATRIX_DOWNBUTTON                   = "EDITABLEMATRIX-DOWNBUTTON";
-  public static final String C_EDITABLEMATRIX_MODE_EDITONLY                = "EDITONLY";
-  public static final String C_EDITABLEMATRIX_MODE_EDIT                    = "EDIT";
-  public static final String C_EDITABLEMATRIX_MODE_VIEW                    = "VIEW";
-  public static final String C_EDITABLEMATRIX_PERMISSION_DELETE            = "DELETABLE";
-  public static final String C_EDITABLEMATRIX_PERMISSION_DRAGGABLE         = "DRAGGABLE";
-  public static final String C_EDITABLEMATRIX_PERMISSION_SELECTABLE        = "SELECTABLE";
-  public static final String C_EDITABLEMATRIX_PERMISSION_CLICKABLE         = "CLICKABLE";
-  public static final String C_EDITABLEMATRIX_PERMISSION_LONGCLICKABLE     = "LONGCLICKABLE";
 
   // Properties
   public static final String C_PROPERTY_INDEVELOPMENT                      = "inDevelopment";

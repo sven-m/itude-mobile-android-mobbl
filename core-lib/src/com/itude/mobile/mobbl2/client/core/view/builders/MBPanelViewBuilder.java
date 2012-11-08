@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
-import com.itude.mobile.mobbl2.client.core.view.builders.panel.EditableMatrixPanelBuilder;
 import com.itude.mobile.mobbl2.client.core.view.builders.panel.ListPanelBuilder;
 import com.itude.mobile.mobbl2.client.core.view.builders.panel.MatrixHeaderBuilder;
 import com.itude.mobile.mobbl2.client.core.view.builders.panel.MatrixPanelBuilder;
@@ -31,7 +30,6 @@ public class MBPanelViewBuilder extends MBViewBuilder
     builders.registerBuilder(Constants.C_MATRIX, new MatrixPanelBuilder());
     builders.registerBuilder(Constants.C_MATRIXHEADER, new MatrixHeaderBuilder());
     builders.registerBuilder(Constants.C_MATRIXROW, new MatrixRowPanelBuilder());
-    builders.registerBuilder(Constants.C_EDITABLEMATRIX, new EditableMatrixPanelBuilder());
     builders.registerBuilder(Constants.C_SEGMENTEDCONTROL, new SegmentedControlPanelBuilder());
     builders.registerBuilder(null, new PlainPanelBuilder());
     _builders = builders;

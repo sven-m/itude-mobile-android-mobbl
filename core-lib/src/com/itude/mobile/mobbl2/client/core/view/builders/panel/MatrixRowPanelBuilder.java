@@ -1,15 +1,11 @@
 package com.itude.mobile.mobbl2.client.core.view.builders.panel;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -32,29 +28,14 @@ import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 // TODO: this class is idiotic; refactor
 public class MatrixRowPanelBuilder extends MBViewBuilder implements Builder
 {
-  
+
   @Override
   public ViewGroup buildPanel(MBPanel panel, MBViewState viewState, BuildState buildState)
   {
-buildState.increaseMatrixRow()
-;
-
-    if (panel.getParent() != null && panel.getParent() instanceof MBPanel)
-    {
-      // Determine whether to build a default matrix row panel or a matrix row panel in edit mode
-      MBPanel parent = (MBPanel) panel.getParent();
-      if (parent.getType().equals(Constants.C_EDITABLEMATRIX)
-          && parent.getMode() != null
-          && (parent.getMode().equals(Constants.C_EDITABLEMATRIX_MODE_EDIT) || parent.getMode()
-              .equals(Constants.C_EDITABLEMATRIX_MODE_EDITONLY)))
-      {
-        return buildEditableMatrixRowPanel(panel, buildState);
-      }
-    }
+    buildState.increaseMatrixRow();
 
     return buildReadOnlyMatrixRowPanel(panel, buildState);
   }
-  
 
   private ViewGroup buildReadOnlyMatrixRowPanel(MBPanel panel, BuildState buildState)
   {
@@ -67,6 +48,7 @@ buildState.increaseMatrixRow()
     // the parent of all widgets in this row
     RelativeLayout rowPanel = new RelativeLayout(context);
     rowPanel.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    rowPanel.setTag(Constants.C_MATRIXROW);
 
     ArrayList<MBComponent> children = panel.getChildren();
     ArrayList<MBComponent> matrixRowLabels = new ArrayList<MBComponent>();
@@ -154,8 +136,6 @@ buildState.increaseMatrixRow()
     return rowPanel;
   }
 
-  
-
   private int buildMatrixRowPanelLabels(MBPanel panel, ViewGroup rowPanel, ArrayList<MBComponent> matrixRowLabels, int currentId)
   {
     // Row with labels
@@ -187,7 +167,6 @@ buildState.increaseMatrixRow()
     return currentId;
   }
 
-
   private int buildMatrixRowPanelHeader(MBPanel panel, ViewGroup rowPanel, ArrayList<MBComponent> matrixRowTitles, int currentId)
   {
 
@@ -216,169 +195,6 @@ buildState.increaseMatrixRow()
 
     return currentId;
   }
-
-  
-
-  private ViewGroup buildEditableMatrixRowPanel(MBPanel panel, BuildState buildState)
-  {
-    Context context = MBApplicationController.getInstance().getBaseContext();
-    MBStyleHandler styleHandler = getStyleHandler();
-
-    RelativeLayout borderWrapper = new RelativeLayout(context);
-    borderWrapper.setTag(Constants.C_MATRIXROW);
-    borderWrapper.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-
-    RelativeLayout.LayoutParams relativeContainerParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-        LayoutParams.WRAP_CONTENT);
-    relativeContainerParams.addRule(RelativeLayout.CENTER_VERTICAL);
-    RelativeLayout relativeContainer = new RelativeLayout(context);
-    relativeContainer.setLayoutParams(relativeContainerParams);
-    relativeContainer.setId(UniqueIntegerGenerator.getId());
-
-    // Add deletebutton or checkbutton to container in relativelayout
-    // Row content will be on the right side of one of these widgets
-    RelativeLayout.LayoutParams leftButtonContainerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-        RelativeLayout.LayoutParams.WRAP_CONTENT);
-    leftButtonContainerParams.addRule(RelativeLayout.CENTER_VERTICAL);
-    LinearLayout leftButtonContainer = new LinearLayout(context);
-    leftButtonContainer.setId(UniqueIntegerGenerator.getId());
-    leftButtonContainer.setOrientation(LinearLayout.HORIZONTAL);
-    leftButtonContainer.setLayoutParams(leftButtonContainerParams);
-    leftButtonContainer.setTag(Constants.C_EDITABLEMATRIX_LEFTBUTTONSCONTAINER);
-
-    if (((MBPanel) panel.getParent()).isChildrenSelectable())
-    {
-      CheckBox checkBox = new CheckBox(context);
-      checkBox.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-      checkBox.setTag(Constants.C_EDITABLEMATRIX_CHECKBOX);
-      leftButtonContainer.addView(checkBox);
-    }
-    if (((MBPanel) panel.getParent()).isChildrenDeletable())
-    {
-      Button deleteButton = new Button(context);
-      deleteButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-      deleteButton.setTag(Constants.C_EDITABLEMATRIX_DELETEBUTTON);
-      leftButtonContainer.addView(deleteButton);
-      styleHandler.styleButtonWithName(deleteButton, Constants.C_EDITABLEMATRIX_DELETEBUTTON);
-    }
-
-    relativeContainer.addView(leftButtonContainer);
-    //
-
-    // Add draggable buttons to container in relativelayout if draggable is allowed
-    // Row content will be on the right side of one of these widgets
-
-    RelativeLayout.LayoutParams rightButtonContainerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-        RelativeLayout.LayoutParams.WRAP_CONTENT);
-    rightButtonContainerParams.addRule(RelativeLayout.CENTER_VERTICAL);
-    rightButtonContainerParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-    LinearLayout rightButtonContainer = new LinearLayout(context);
-    rightButtonContainer.setId(UniqueIntegerGenerator.getId());
-    rightButtonContainer.setOrientation(LinearLayout.HORIZONTAL);
-    rightButtonContainer.setLayoutParams(rightButtonContainerParams);
-    rightButtonContainer.setTag(Constants.C_EDITABLEMATRIX_RIGHTBUTTONSCONTAINER);
-
-    if (((MBPanel) panel.getParent()).isChildrenDraggable())
-    {
-
-      ImageButton upButton = new ImageButton(context);
-      upButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-      upButton.setTag(Constants.C_EDITABLEMATRIX_UPBUTTON);
-      rightButtonContainer.addView(upButton);
-      styleHandler.styleImageButtonWithName(upButton, Constants.C_EDITABLEMATRIX_UPBUTTON);
-
-      ImageButton downButton = new ImageButton(context);
-      downButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-      downButton.setTag(Constants.C_EDITABLEMATRIX_DOWNBUTTON);
-      rightButtonContainer.addView(downButton);
-      styleHandler.styleImageButtonWithName(downButton, Constants.C_EDITABLEMATRIX_DOWNBUTTON);
-    }
-
-    relativeContainer.addView(rightButtonContainer);
-    //
-
-    // Row panel
-    RelativeLayout.LayoutParams rowPanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
-        RelativeLayout.LayoutParams.FILL_PARENT);
-    rowPanelParams.addRule(RelativeLayout.RIGHT_OF, leftButtonContainer.getId());
-    rowPanelParams.addRule(RelativeLayout.LEFT_OF, rightButtonContainer.getId());
-    rowPanelParams.addRule(RelativeLayout.CENTER_VERTICAL);
-    LinearLayout rowPanel = new LinearLayout(context);
-    rowPanel.setId(UniqueIntegerGenerator.getId());
-    rowPanel.setLayoutParams(rowPanelParams);
-    rowPanel.setOrientation(LinearLayout.VERTICAL);
-
-    ArrayList<MBComponent> children = panel.getChildren();
-    ArrayList<MBComponent> matrixRowLabels = new ArrayList<MBComponent>();
-    ArrayList<MBComponent> matrixRowTitles = new ArrayList<MBComponent>();
-
-    for (Iterator<MBComponent> iterator = children.iterator(); iterator.hasNext();)
-    {
-      MBComponent mbComponent = iterator.next();
-      if (mbComponent instanceof MBField)
-      {
-        MBField field = (MBField) mbComponent;
-        if (Constants.C_FIELD_MATRIXTITLE.equals(field.getType()))
-        {
-          matrixRowTitles.add(mbComponent);
-        }
-        else
-        {
-          matrixRowLabels.add(mbComponent);
-        }
-      }
-      else
-      {
-        matrixRowLabels.add(mbComponent);
-      }
-    }
-
-    int currentId = -1;
-
-    //Header
-    if (!matrixRowTitles.isEmpty())
-    {
-      currentId = buildMatrixRowPanelHeader(panel, rowPanel, matrixRowTitles, currentId);
-    }
-
-    // Row with labels
-    if (!matrixRowLabels.isEmpty())
-    {
-      buildMatrixRowPanelLabels(panel, rowPanel, matrixRowLabels, currentId);
-    }
-
-    relativeContainer.addView(rowPanel);
-    //
-
-    boolean isClickable = false;
-    if (((MBPanel) panel.getParent()).isChildrenClickable())
-    {
-      isClickable = true;
-
-      borderWrapper.setClickable(true);
-      borderWrapper.setFocusable(true);
-    }
-
-    borderWrapper.addView(relativeContainer);
-
-    String rowStyle;
-    if (panel.getStyle() != null)
-    {
-      rowStyle = panel.getStyle();
-    }
-    else if (matrixRowTitles.size() > 0 && matrixRowLabels.size() > 0)
-    {
-      rowStyle = Constants.C_STYLE_DOUBLE_LINED_MATRIX_ROW;
-    }
-    else
-    {
-      rowStyle = Constants.C_STYLE_SINGLE_LINED_MATRIX_ROW;
-    }
-
-    styleHandler.styleMatrixRowPanel(panel, borderWrapper, isClickable, rowStyle, buildState.getMatrixRow());
-    return borderWrapper;
-  }
-
 
   static void buildMatrixRowPanelChildren(ArrayList<MBComponent> matrixRowLabels, ViewGroup parent, boolean buildingHeaderPanelChildren)
   {
@@ -424,6 +240,5 @@ buildState.increaseMatrixRow()
     }
 
   }
-
 
 }

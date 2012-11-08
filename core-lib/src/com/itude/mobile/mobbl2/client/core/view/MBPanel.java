@@ -26,12 +26,6 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   private String  _mode;
   private boolean _focused;
 
-  private boolean _childrenDeletable     = false;
-  private boolean _childrenDraggable     = false;
-  private boolean _childrenSelectable    = false;
-  private boolean _childrenClickable     = false;
-  private boolean _childrenLongClickable = false;
-
   private String  _diffableMarkerPath    = null;
   private String  _diffablePrimaryPath   = null;
   private boolean _diffableMaster        = false;
@@ -51,7 +45,6 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     setOutcomeName(substituteExpressions(definition.getOutcomeName()));
     setPath(definition.getPath());
     setMode(definition.getMode());
-    parsePermissions(definition.getPermissions());
     setFocused(definition.isFocused());
 
     if (buildViewStructure)
@@ -92,7 +85,7 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
         MBPanel parent = getFirstParentPanelWithType(Constants.C_MATRIX);
         if (parent == null)
         {
-          parent = getFirstParentPanelWithType(Constants.C_EDITABLEMATRIX);
+       //   parent = getFirstParentPanelWithType(Constants.C_EDITABLEMATRIX);
         }
         parent.setDiffableMaster(true);
         if (getDiffableMarkerPath() != null)
@@ -346,63 +339,6 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   private void setFocused(boolean focused)
   {
     _focused = focused;
-  }
-
-  public void parsePermissions(String permissions)
-  {
-    if (permissions != null)
-    {
-      String[] permissionList = permissions.split("\\|");
-      for (String permission : permissionList)
-      {
-        if (permission.equals(Constants.C_EDITABLEMATRIX_PERMISSION_DELETE))
-        {
-          _childrenDeletable = true;
-        }
-        else if (permission.equals(Constants.C_EDITABLEMATRIX_PERMISSION_DRAGGABLE))
-        {
-          _childrenDraggable = true;
-        }
-        else if (permission.equals(Constants.C_EDITABLEMATRIX_PERMISSION_SELECTABLE))
-        {
-          _childrenSelectable = true;
-        }
-        else if (permission.equals(Constants.C_EDITABLEMATRIX_PERMISSION_CLICKABLE))
-        {
-          _childrenClickable = true;
-        }
-        else if (permission.equals(Constants.C_EDITABLEMATRIX_PERMISSION_LONGCLICKABLE))
-        {
-          _childrenLongClickable = true;
-        }
-      }
-    }
-
-  }
-
-  public boolean isChildrenDeletable()
-  {
-    return _childrenDeletable;
-  }
-
-  public boolean isChildrenDraggable()
-  {
-    return _childrenDraggable;
-  }
-
-  public boolean isChildrenSelectable()
-  {
-    return _childrenSelectable;
-  }
-
-  public boolean isChildrenClickable()
-  {
-    return _childrenClickable;
-  }
-
-  public boolean isChildrenLongClickable()
-  {
-    return _childrenLongClickable;
   }
 
   public void setDiffableMaster(boolean diffableMaster)

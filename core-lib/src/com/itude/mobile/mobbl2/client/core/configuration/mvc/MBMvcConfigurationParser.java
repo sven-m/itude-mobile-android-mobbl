@@ -423,7 +423,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       panelDef.setOutcomeName(attributeDict.get("outcome"));
       panelDef.setPath(attributeDict.get("path"));
       panelDef.setMode(attributeDict.get("mode"));
-      panelDef.setPermissions(attributeDict.get("permissions"));
       panelDef.setFocused(Boolean.parseBoolean(attributeDict.get("focused")));
 
       notifyProcessed(panelDef);

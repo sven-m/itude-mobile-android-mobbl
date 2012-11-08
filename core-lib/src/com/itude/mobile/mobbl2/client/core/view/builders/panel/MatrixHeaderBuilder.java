@@ -8,14 +8,12 @@ import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
-import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.view.MBComponent;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
@@ -24,7 +22,6 @@ import com.itude.mobile.mobbl2.client.core.view.builders.MBPanelViewBuilder.Buil
 import com.itude.mobile.mobbl2.client.core.view.builders.MBPanelViewBuilder.Builder;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilder;
-import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 public class MatrixHeaderBuilder extends MBViewBuilder implements Builder
 {
@@ -103,39 +100,6 @@ public class MatrixHeaderBuilder extends MBViewBuilder implements Builder
 
       buildChildrenForMatrixHeader(matrixTitles, headerLabel);
 
-      if (panel.getParent() instanceof MBPanel && ((MBPanel) panel.getParent()).getType().equals(Constants.C_EDITABLEMATRIX))
-      {
-        MBPanel parent = (MBPanel) panel.getParent();
-
-        // Only show button if not in editonly mode
-        if (!parent.getMode().equals(Constants.C_EDITABLEMATRIX_MODE_EDITONLY))
-        {
-          RelativeLayout.LayoutParams editModeButtonParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-              RelativeLayout.LayoutParams.WRAP_CONTENT);
-          editModeButtonParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-
-          Button editModeButton = new Button(context);
-          editModeButton.setLayoutParams(editModeButtonParams);
-          editModeButton.setTag(Constants.C_EDITABLEMATRIX_EDITBUTTON);
-          String modeText;
-          if (parent.getMode().equals(Constants.C_EDITABLEMATRIX_MODE_EDIT))
-          {
-            // When in editing mode show "Save" button
-            modeText = MBLocalizationService.getInstance().getTextForKey("Gereed");
-          }
-          else
-          {
-            // When not editing mode show "Edit" button
-            modeText = MBLocalizationService.getInstance().getTextForKey("Wijzig");
-          }
-          editModeButton.setText(modeText);
-          editModeButton.setGravity(Gravity.CENTER_VERTICAL);
-          headerLabel.addView(editModeButton);
-
-          MBViewBuilderFactory.getInstance().getStyleHandler().styleEditableMatrixModeButton(editModeButton);
-
-        }
-      }
       headerPanel.addView(headerLabel);
     }
 

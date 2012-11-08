@@ -20,7 +20,6 @@ public class MBPanelDefinition extends MBConditionalDefinition implements MBStyl
   private String             _outcomeName;
   private String             _path;
   private String             _mode;
-  private String             _permissions;
   private boolean            _focused = false;
 
   public MBPanelDefinition()
@@ -165,16 +164,6 @@ public class MBPanelDefinition extends MBConditionalDefinition implements MBStyl
   public void setMode(String mode)
   {
     _mode = mode;
-  }
-
-  public String getPermissions()
-  {
-    return _permissions;
-  }
-
-  public void setPermissions(String permissions)
-  {
-    _permissions = permissions;
   }
 
   public void setFocused(boolean focused)

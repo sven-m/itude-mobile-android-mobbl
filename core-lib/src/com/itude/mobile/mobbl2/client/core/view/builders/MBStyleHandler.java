@@ -114,14 +114,6 @@ public class MBStyleHandler
    */
   public void styleButtonWithName(Button view, String style)
   {
-    if (Constants.C_EDITABLEMATRIX_DELETEBUTTON.equals(style))
-    {
-      view.setBackgroundDrawable(getStatedButtonBackground("button-delete-normal", "button-delete-pressed", "button-delete-disabled"));
-    }
-    else if (Constants.C_EDITABLEMATRIX_DRAGBUTTON.equals(style))
-    {
-      view.setBackgroundDrawable(MBResourceService.getInstance().getImageByID("button-drag"));
-    }
   }
 
   public void styleButtonHeight(Button view, String style)

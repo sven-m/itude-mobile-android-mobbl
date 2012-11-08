@@ -10,7 +10,6 @@ import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBResultListener;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
-import com.itude.mobile.mobbl2.client.core.view.helpers.MBEditableMatrixListener;
 
 /*
  * Factory class for Pages and Actions.
@@ -67,11 +66,6 @@ public class MBApplicationFactory
   public MBDialogController createDialogController()
   {
     return new MBDialogController();
-  }
-
-  public MBEditableMatrixListener getEditableMatrixListener(String panelName)
-  {
-    return null;
   }
 
   protected ActionMappings.Registry getActionRegistry()
