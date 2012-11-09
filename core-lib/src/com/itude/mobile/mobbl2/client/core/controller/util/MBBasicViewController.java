@@ -209,8 +209,8 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     wrapper.addView(closeButton);
 
     LayoutParams prevDialogViewParams = dialogView.getLayoutParams();
-    int width = LayoutParams.FILL_PARENT;
-    int height = LayoutParams.FILL_PARENT;
+    int width = LayoutParams.MATCH_PARENT;
+    int height = LayoutParams.MATCH_PARENT;
 
     if (prevDialogViewParams != null)
     {
@@ -292,7 +292,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
       if (_isDialogFullscreen)
       {
         Window window = getDialog().getWindow();
-        window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
       }
     }

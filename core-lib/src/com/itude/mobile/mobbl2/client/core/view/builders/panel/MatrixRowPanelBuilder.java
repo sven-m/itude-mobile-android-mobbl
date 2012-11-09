@@ -47,7 +47,7 @@ public class MatrixRowPanelBuilder extends MBViewBuilder implements Builder
 
     // the parent of all widgets in this row
     RelativeLayout rowPanel = new RelativeLayout(context);
-    rowPanel.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    rowPanel.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     rowPanel.setTag(Constants.C_MATRIXROW);
 
     ArrayList<MBComponent> children = panel.getChildren();
@@ -85,7 +85,7 @@ public class MatrixRowPanelBuilder extends MBViewBuilder implements Builder
     // -1: nothing added yet (so use rowPanel as parent)
     int currentId = -1;
 
-    RelativeLayout.LayoutParams linearContainerParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+    RelativeLayout.LayoutParams linearContainerParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     linearContainerParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
     LinearLayout linearContainer = new LinearLayout(context);
@@ -143,7 +143,7 @@ public class MatrixRowPanelBuilder extends MBViewBuilder implements Builder
     {
       return currentId;
     }
-    RelativeLayout.LayoutParams rowParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
+    RelativeLayout.LayoutParams rowParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
         RelativeLayout.LayoutParams.WRAP_CONTENT);
     if (currentId != -1)
     {
@@ -216,7 +216,7 @@ public class MatrixRowPanelBuilder extends MBViewBuilder implements Builder
       // If header items are added we need to change their layout parameters to stretch the whole width of the header
       if (buildingHeaderPanelChildren)
       {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1);
         childView.setLayoutParams(params);
         styleHandler.styleMatrixHeaderRowChild(childView, (MBField) child, needsToProcessFirstLabel);
       }

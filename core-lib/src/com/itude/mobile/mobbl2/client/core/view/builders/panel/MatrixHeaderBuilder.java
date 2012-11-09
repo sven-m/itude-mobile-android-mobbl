@@ -80,7 +80,7 @@ public class MatrixHeaderBuilder extends MBViewBuilder implements Builder
     {
       // use the stylehandler for the divider to let the header
       // act as a top divider
-      headerPanel.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, 1));
+      headerPanel.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 1));
       styleHandler.styleDivider(headerPanel);
       return headerPanel;
     }
@@ -93,7 +93,7 @@ public class MatrixHeaderBuilder extends MBViewBuilder implements Builder
     if (!matrixTitles.isEmpty())
     {
       RelativeLayout headerLabel = new RelativeLayout(context);
-      headerLabel.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
+      headerLabel.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
           RelativeLayout.LayoutParams.WRAP_CONTENT));
       headerLabel.setTag(Constants.C_MATRIXTITLEROW);
       styleHandler.styleMatrixHeaderTitleRow(panel, headerLabel);
