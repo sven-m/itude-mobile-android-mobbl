@@ -40,7 +40,7 @@ public class MBSlidableViewFlipper extends ViewGroup
 
     _touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
 
-    this.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.FILL_PARENT));
+    this.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
   }
 
   public void setViewFlipListener(MBViewFlipListener listener)

@@ -18,7 +18,7 @@ public class TextFieldBuilder extends MBBaseFieldBuilder
 
     // Title TextView
     TextView returnView = buildTextViewWithValue(value, TextType.html);
-    returnView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+    returnView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     returnView.setEllipsize(null);
 
     if (field.getAlignment() != null)

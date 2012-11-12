@@ -26,7 +26,7 @@ public class DropdownListFieldBuilder extends MBBaseFieldBuilder
     int selected = -1;
 
     Spinner dropdownList = new Spinner(context);
-    dropdownList.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1));
+    dropdownList.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1));
 
     getStyleHandler().styleSpinner(dropdownList);
 
@@ -77,17 +77,17 @@ public class DropdownListFieldBuilder extends MBBaseFieldBuilder
 
     if (field.getLabel() != null && field.getLabel().length() > 0)
     {
-      dropdownList.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
+      dropdownList.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 50));
 
       LinearLayout labelLayout = new LinearLayout(context);
-      labelLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+      labelLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
       labelLayout.setOrientation(LinearLayout.HORIZONTAL);
       labelLayout.setGravity(Gravity.CENTER_VERTICAL);
       getStyleHandler().styleLabelContainer(labelLayout, field);
 
       TextView label = buildTextViewWithValue(field.getLabel());
       label.setText(field.getLabel());
-      label.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
+      label.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 50));
       getStyleHandler().styleLabel(label, field);
 
       labelLayout.addView(label);

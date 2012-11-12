@@ -52,7 +52,6 @@ public class MBField extends MBComponent
   private String                _label;
   private String[]              _labelAttrs;
   private String                _source;
-  private String                _type;
   private String                _dataType;
   private String                _formatMask;
   private String                _alignment;
@@ -244,10 +243,6 @@ public class MBField extends MBComponent
     _source = source;
   }
 
-  public void setType(String type)
-  {
-    _type = type;
-  }
 
   public String getDataType()
   {

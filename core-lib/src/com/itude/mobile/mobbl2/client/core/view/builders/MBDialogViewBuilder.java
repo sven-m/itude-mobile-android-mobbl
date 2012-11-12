@@ -63,7 +63,7 @@ public class MBDialogViewBuilder
     if (_sortedDialogIds != null && !_sortedDialogIds.isEmpty())
     {
       FrameLayout fragmentContainer = new FrameLayout(container.getContext());
-      fragmentContainer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+      fragmentContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
       fragmentContainer.setId(_sortedDialogIds.get(0));
 
       MBStyleHandler styleHandler = getStyleHandler();
@@ -86,7 +86,7 @@ public class MBDialogViewBuilder
       fragmentContainer.setId(_sortedDialogIds.get(i));
 
       RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-          MBScreenUtilities.getWidthPixelsForPercentage(LEFT_FRAGMENT_WIDTH_PERCENTAGE), RelativeLayout.LayoutParams.FILL_PARENT);
+          MBScreenUtilities.getWidthPixelsForPercentage(LEFT_FRAGMENT_WIDTH_PERCENTAGE), RelativeLayout.LayoutParams.MATCH_PARENT);
 
       // position fragment containers next to each other
       if (i == 0)
@@ -118,7 +118,7 @@ public class MBDialogViewBuilder
   protected RelativeLayout buildContainer()
   {
     RelativeLayout mainContainer = new RelativeLayout(MBApplicationController.getInstance().getBaseContext());
-    mainContainer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+    mainContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
     return mainContainer;
   }

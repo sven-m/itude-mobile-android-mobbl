@@ -269,58 +269,6 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     }
   }
 
-  @Override
-  public int getLeftInset()
-  {
-    if (getType().equals("LIST") || getType().equals("MATRIX"))
-    {
-      return 10;
-    }
-    else
-    {
-      return super.getLeftInset();
-    }
-  }
-
-  @Override
-  public int getBottomInset()
-  {
-    if (getType().equals("LIST") || getType().equals("MATRIX"))
-    {
-      return 10;
-    }
-    else
-    {
-      return super.getBottomInset();
-    }
-  }
-
-  @Override
-  public int getRightInset()
-  {
-    if (getType().equals("LIST") || getType().equals("MATRIX"))
-    {
-      return 10;
-    }
-    else
-    {
-      return super.getRightInset();
-    }
-  }
-
-  @Override
-  public int getTopInset()
-  {
-    if (getType().equals("LIST") || getType().equals("MATRIX"))
-    {
-      return 0;
-    }
-    else
-    {
-      return super.getTopInset();
-    }
-  }
-
   public String getMode()
   {
     return _mode;

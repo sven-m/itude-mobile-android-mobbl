@@ -42,7 +42,7 @@ public class InputFieldBuilder extends MBBaseFieldBuilder
     inputField.setOnKeyListener(field);
     getStyleHandler().styleInputfieldBackgroundWithName(inputField, null);
 
-    inputField.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1));
+    inputField.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1));
     String defaultValue = "";
     if (field.getPath() != null)
     {
@@ -118,15 +118,15 @@ public class InputFieldBuilder extends MBBaseFieldBuilder
 
     if (field.getLabel() != null && field.getLabel().length() > 0)
     {
-      inputField.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
+      inputField.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 50));
 
       LinearLayout labelLayout = new LinearLayout(context);
-      labelLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+      labelLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
       labelLayout.setOrientation(LinearLayout.HORIZONTAL);
 
       TextView label = buildTextViewWithValue(field.getLabel());
       getStyleHandler().styleLabel(label, field);
-      label.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
+      label.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 50));
 
       labelLayout.addView(label);
       labelLayout.addView(inputField);

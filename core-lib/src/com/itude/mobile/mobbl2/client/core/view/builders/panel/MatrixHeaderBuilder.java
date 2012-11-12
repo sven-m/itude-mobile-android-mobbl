@@ -33,9 +33,9 @@ public class MatrixHeaderBuilder extends MBViewBuilder implements Builder
 
     RelativeLayout headerPanelContainer = new RelativeLayout(context);
     headerPanelContainer.setTag(Constants.C_MATRIXHEADER_CONTAINER);
-    headerPanelContainer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+    headerPanelContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
-    RelativeLayout.LayoutParams headerPanelParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+    RelativeLayout.LayoutParams headerPanelParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     headerPanelParams.addRule(RelativeLayout.CENTER_VERTICAL);
     LinearLayout headerPanel = new LinearLayout(context);
     headerPanel.setTag(Constants.C_MATRIXHEADER);
@@ -80,7 +80,7 @@ public class MatrixHeaderBuilder extends MBViewBuilder implements Builder
     {
       // use the stylehandler for the divider to let the header
       // act as a top divider
-      headerPanel.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, 1));
+      headerPanel.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 1));
       styleHandler.styleDivider(headerPanel);
       return headerPanel;
     }
@@ -93,7 +93,7 @@ public class MatrixHeaderBuilder extends MBViewBuilder implements Builder
     if (!matrixTitles.isEmpty())
     {
       RelativeLayout headerLabel = new RelativeLayout(context);
-      headerLabel.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
+      headerLabel.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
           RelativeLayout.LayoutParams.WRAP_CONTENT));
       headerLabel.setTag(Constants.C_MATRIXTITLEROW);
       styleHandler.styleMatrixHeaderTitleRow(panel, headerLabel);
@@ -107,7 +107,7 @@ public class MatrixHeaderBuilder extends MBViewBuilder implements Builder
     if (!matrixLabels.isEmpty())
     {
       LinearLayout headerRow = new LinearLayout(context);
-      headerRow.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+      headerRow.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
       headerRow.setOrientation(LinearLayout.HORIZONTAL);
       headerRow.setGravity(Gravity.CENTER_VERTICAL);
 
