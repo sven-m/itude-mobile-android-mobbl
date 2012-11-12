@@ -36,7 +36,8 @@ public class MBComponent
     // Not all definitions have a style attribute; if they do set it
     if (MBStylableDefinition.class.isAssignableFrom(definition.getClass()))
     {
-      setStyle(((MBStylableDefinition) definition).getStyle());
+      String style = ((MBStylableDefinition) definition).getStyle();
+      setStyle(substituteExpressions(style));
     }
 
     _viewData = null;
