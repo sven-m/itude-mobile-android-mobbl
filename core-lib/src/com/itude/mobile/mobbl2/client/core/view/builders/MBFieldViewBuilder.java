@@ -10,6 +10,7 @@ import com.itude.mobile.mobbl2.client.core.view.builders.field.CheckboxFieldBuil
 import com.itude.mobile.mobbl2.client.core.view.builders.field.DateFieldBuilder;
 import com.itude.mobile.mobbl2.client.core.view.builders.field.DropdownListFieldBuilder;
 import com.itude.mobile.mobbl2.client.core.view.builders.field.ImageButtonFieldBuilder;
+import com.itude.mobile.mobbl2.client.core.view.builders.field.ImageFieldBuilder;
 import com.itude.mobile.mobbl2.client.core.view.builders.field.InputFieldBuilder;
 import com.itude.mobile.mobbl2.client.core.view.builders.field.LabelFieldBuilder;
 import com.itude.mobile.mobbl2.client.core.view.builders.field.MatrixCellFieldBuilder;
@@ -37,6 +38,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
     _builders.registerBuilder(Constants.C_FIELD_INPUT, new InputFieldBuilder());
     _builders.registerBuilder(Constants.C_FIELD_PASSWORD, new PasswordFieldBuilder());
     _builders.registerBuilder(Constants.C_FIELD_BUTTON, new ButtonFieldBuilder());
+    _builders.registerBuilder(Constants.C_FIELD_IMAGE, new ImageFieldBuilder());
     _builders.registerBuilder(Constants.C_FIELD_IMAGEBUTTON, new ImageButtonFieldBuilder());
     _builders.registerBuilder(Constants.C_FIELD_LABEL, new LabelFieldBuilder());
     _builders.registerBuilder(Constants.C_FIELD_SUBLABEL, new SublabelFieldBuilder());

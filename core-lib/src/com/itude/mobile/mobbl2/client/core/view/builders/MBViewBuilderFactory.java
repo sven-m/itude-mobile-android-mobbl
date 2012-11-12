@@ -47,11 +47,6 @@ public class MBViewBuilderFactory
     return _panelViewBuilder;
   }
 
-  public void setPanelViewBuilder(MBPanelViewBuilder panelViewBuilder)
-  {
-    _panelViewBuilder = panelViewBuilder;
-  }
-
   public MBPageViewBuilder getPageViewBuilder()
   {
     return _pageViewBuilder;
@@ -85,11 +80,6 @@ public class MBViewBuilderFactory
   public MBFieldViewBuilder getFieldViewBuilder()
   {
     return _fieldViewBuilder;
-  }
-
-  public void setFieldViewBuilder(MBFieldViewBuilder fieldViewBuilder)
-  {
-    _fieldViewBuilder = fieldViewBuilder;
   }
 
   public MBStyleHandler getStyleHandler()

@@ -33,7 +33,10 @@ public class MBBuilderRegistry<T extends MBComponent, S>
   {
     AssertUtil.notNull("builder", builder);
 
-    _builders.add(new Filter<S>(builder, type, style));
+    
+    Filter<S> filter = new Filter<S>(builder, type, style);
+    _builders.remove(filter);
+    _builders.add(filter);
     _searchOptimizer = null;
   }
 
@@ -43,7 +46,8 @@ public class MBBuilderRegistry<T extends MBComponent, S>
 
     Map<String, S> styleMap = _searchOptimizer.get(type);
     if (styleMap == null) styleMap = _searchOptimizer.get(null);
-    if (styleMap == null) throw new MBException("No builder found for type " + type + " and style " + style);
+    if (styleMap == null) 
+      throw new MBException("No builder found for type " + type + " and style " + style);
 
     S builder = styleMap.get(style);
     if (builder == null) builder = styleMap.get(null);
