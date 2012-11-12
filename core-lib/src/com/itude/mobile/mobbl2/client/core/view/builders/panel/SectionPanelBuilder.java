@@ -31,7 +31,7 @@ public class SectionPanelBuilder extends MBViewBuilder implements Builder
         hasTitle = true;
 
         LinearLayout header = new LinearLayout(context);
-        header.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        header.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
         header.setOrientation(LinearLayout.VERTICAL);
 
         TextView title = new TextView(header.getContext());

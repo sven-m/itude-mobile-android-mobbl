@@ -62,7 +62,7 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
     MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
     styleHandler.styleTab(this);
 
-    setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.FILL_PARENT));
 
     RelativeLayout.LayoutParams leftSpacerParams = new RelativeLayout.LayoutParams(0, 0);
     leftSpacerParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);

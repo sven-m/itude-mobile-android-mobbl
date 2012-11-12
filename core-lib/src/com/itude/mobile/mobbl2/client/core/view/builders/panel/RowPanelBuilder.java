@@ -35,7 +35,7 @@ public class RowPanelBuilder extends MBViewBuilder implements Builder
     HashMap<String, Object> childIds = new HashMap<String, Object>();
 
     RelativeLayout rowPanel = new RelativeLayout(context);
-    rowPanel.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+    rowPanel.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
     rowPanel.setTag(childIds);
 
     // Content view
@@ -82,7 +82,7 @@ public class RowPanelBuilder extends MBViewBuilder implements Builder
 
       int childID = UniqueIntegerGenerator.getId();
 
-      RelativeLayout.LayoutParams childParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+      RelativeLayout.LayoutParams childParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
           RelativeLayout.LayoutParams.WRAP_CONTENT);
       childParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
@@ -90,7 +90,7 @@ public class RowPanelBuilder extends MBViewBuilder implements Builder
       {
         if (nonButtonLayout == null)
         {
-          RelativeLayout.LayoutParams nonButtonLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+          RelativeLayout.LayoutParams nonButtonLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
               RelativeLayout.LayoutParams.WRAP_CONTENT);
           nonButtonLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
           nonButtonLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -106,7 +106,7 @@ public class RowPanelBuilder extends MBViewBuilder implements Builder
         if (isFieldWithType(child, Constants.C_FIELD_LABEL) && !processingLabel)
         {
           processingLabel = true;
-          LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1);
+          LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);
           labelLayout = new LinearLayout(context);
           labelLayout.setLayoutParams(params);
           labelLayout.setOrientation(LinearLayout.VERTICAL);
@@ -123,7 +123,7 @@ public class RowPanelBuilder extends MBViewBuilder implements Builder
         }
         else
         {
-          LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+          LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
               LinearLayout.LayoutParams.WRAP_CONTENT, 1);
           childView.setLayoutParams(params);
           nonButtonLayout.addView(childView);

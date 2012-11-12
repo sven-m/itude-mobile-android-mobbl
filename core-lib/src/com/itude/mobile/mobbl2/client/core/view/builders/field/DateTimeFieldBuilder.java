@@ -34,18 +34,18 @@ public abstract class DateTimeFieldBuilder extends MBBaseFieldBuilder
 
     // Create our container which will fill the whole width
     LinearLayout container = new LinearLayout(context);
-    container.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+    container.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
     container.setGravity(Gravity.CENTER_VERTICAL);
 
     // Add our label (if one exists)
     TextView label = buildTextViewWithValue(field.getLabel());
     label.setGravity(Gravity.CENTER_VERTICAL);
-    label.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 50));
+    label.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
 
     styleHandler.styleLabel(label, field);
 
     final TextView value = new TextView(context);
-    value.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 50));
+    value.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 50));
     value.setGravity(Gravity.CENTER_VERTICAL);
 
     // Find out if we have previously set a time

@@ -48,7 +48,7 @@ public class MBSegmentedControlContainer extends LinearLayout
 
       // Add all subchildren to a container that will be our content
       LinearLayout subChildContainer = new LinearLayout(context);
-      subChildContainer.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+      subChildContainer.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
       subChildContainer.setOrientation(LinearLayout.VERTICAL);
       for (MBComponent subChild : childPanel.getChildren())
       {
@@ -68,7 +68,7 @@ public class MBSegmentedControlContainer extends LinearLayout
      * Items done. Time to create our content container
      */
     _contentContainer = new LinearLayout(context);
-    _contentContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+    _contentContainer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
     _styleHandler.styleSegmentedControlContentContainer(_contentContainer, segmentedControlPanel);
     addView(_contentContainer);
 
@@ -96,7 +96,7 @@ public class MBSegmentedControlContainer extends LinearLayout
   private Button createSegmentedControlItem(MBPanel panel, Context context, final int itemIndex, int count)
   {
     Button item = new Button(context);
-    item.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1));
+    item.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1));
     item.setText(MBLocalizationService.getInstance().getTextForKey(panel.getTitle()));
     item.setOnClickListener(new OnClickListener()
     {
@@ -131,7 +131,7 @@ public class MBSegmentedControlContainer extends LinearLayout
   private LinearLayout createSegmentedControlBar(MBPanel panel, Context context)
   {
     LinearLayout segmentedControlBar = new LinearLayout(context);
-    segmentedControlBar.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+    segmentedControlBar.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 
     // TODO add stylehandler method
     _styleHandler.styleSegmentedControlBar(segmentedControlBar, panel);

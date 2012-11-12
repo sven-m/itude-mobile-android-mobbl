@@ -385,8 +385,8 @@ public class MBPhoneViewManager extends MBViewManager
             tabBar.addTab(tab);
           }
         }
-        actionBar.setCustomView(tabBar, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
-            ActionBar.LayoutParams.MATCH_PARENT, Gravity.LEFT));
+        actionBar.setCustomView(tabBar, new ActionBar.LayoutParams(ActionBar.LayoutParams.FILL_PARENT,
+            ActionBar.LayoutParams.FILL_PARENT, Gravity.LEFT));
       }
 
       private void setTabText(MBDialogDefinition dialogDefinition, MBTab tab, MBTabBar tabBar)
