@@ -25,7 +25,7 @@ public class ButtonFieldBuilder extends MBBaseFieldBuilder
     String defaultValue = field.getLabel();
 
     String path = field.getPath();
-    if (StringUtilities.isNotBlank(path))
+    if (StringUtilities.isBlank(defaultValue) && StringUtilities.isNotBlank(path))
     {
       String fieldValue = field.getValue();
       if (StringUtilities.isNotBlank(fieldValue))
