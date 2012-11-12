@@ -22,7 +22,7 @@ public class SegmentedControlPanelBuilder extends MBViewBuilder implements Build
     final Context context = MBApplicationController.getInstance().getBaseContext();
 
     MBSegmentedControlContainer scc = new MBSegmentedControlContainer(context, panel);
-    scc.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+    scc.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
     scc.setOrientation(LinearLayout.VERTICAL);
 
     getStyleHandler().styleSegmentedControlContainer(scc, panel);

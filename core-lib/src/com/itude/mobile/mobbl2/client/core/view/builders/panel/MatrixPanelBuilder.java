@@ -19,7 +19,7 @@ public class MatrixPanelBuilder extends MBViewBuilder implements Builder
     buildState.resetMatrixRow();
     
     LinearLayout result = new LinearLayout(MBApplicationController.getInstance().getBaseContext());
-    result.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+    result.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
     result.setOrientation(LinearLayout.VERTICAL);
     buildChildren(panel.getChildren(), result, viewState);
 

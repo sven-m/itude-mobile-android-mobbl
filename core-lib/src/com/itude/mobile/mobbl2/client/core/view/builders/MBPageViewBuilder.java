@@ -21,7 +21,7 @@ public class MBPageViewBuilder extends MBViewBuilder
     MBStyleHandler styleHandler = getStyleHandler();
 
     LinearLayout main = new LinearLayout(context);
-    main.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+    main.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
     main.setOrientation(LinearLayout.VERTICAL);
 
     LinearLayout view = new LinearLayout(context);
@@ -34,7 +34,7 @@ public class MBPageViewBuilder extends MBViewBuilder
     {
       LinearLayout headerContainer = new LinearLayout(view.getContext());
       headerContainer.setOrientation(LinearLayout.VERTICAL);
-      headerContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+      headerContainer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 
       MBHeader header = new MBHeader(headerContainer.getContext());
       header.setTag(Constants.C_PAGE_CONTENT_HEADER_VIEW);
@@ -73,14 +73,14 @@ public class MBPageViewBuilder extends MBViewBuilder
     MBStyleHandler styleHandler = getStyleHandler();
 
     LinearLayout main = new LinearLayout(context);
-    main.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+    main.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
     main.setOrientation(LinearLayout.VERTICAL);
 
     if (page.getTitle() != null)
     {
       LinearLayout headerContainer = new LinearLayout(context);
       headerContainer.setOrientation(LinearLayout.VERTICAL);
-      headerContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+      headerContainer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 
       MBHeader header = new MBHeader(headerContainer.getContext());
       header.setTag(Constants.C_PAGE_CONTENT_HEADER_VIEW);
