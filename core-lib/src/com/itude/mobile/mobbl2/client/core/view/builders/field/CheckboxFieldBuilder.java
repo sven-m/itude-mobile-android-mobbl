@@ -38,7 +38,7 @@ public class CheckboxFieldBuilder extends MBBaseFieldBuilder
     getStyleHandler().styleCheckBox(checkBox);
 
     RelativeLayout container = new RelativeLayout(context);
-    RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
+    RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
         RelativeLayout.LayoutParams.WRAP_CONTENT);
     container.setLayoutParams(rlParams);
     container.setOnClickListener(new View.OnClickListener()
@@ -57,7 +57,7 @@ public class CheckboxFieldBuilder extends MBBaseFieldBuilder
       cbParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
       checkBox.setLayoutParams(cbParams);
 
-      RelativeLayout.LayoutParams labelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
+      RelativeLayout.LayoutParams labelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
           RelativeLayout.LayoutParams.WRAP_CONTENT);
       labelParams.addRule(RelativeLayout.LEFT_OF, checkBox.getId());
       labelParams.addRule(RelativeLayout.CENTER_VERTICAL);

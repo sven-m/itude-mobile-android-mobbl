@@ -84,7 +84,7 @@ public class MBViewManager extends FragmentActivity
     super.onCreate(null);
 
     FrameLayout container = new FrameLayout(this);
-    LayoutParams layout = new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+    LayoutParams layout = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     setContentView(container, layout);
 
     _dialogControllers = new ArrayList<String>();

@@ -22,7 +22,7 @@ public class MatrixCellFieldBuilder extends MBBaseFieldBuilder
 
     // Title TextView
     TextView label = buildTextViewWithValue(value);
-    label.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1));
+    label.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1));
     label.setSingleLine();
 
     // default styling
