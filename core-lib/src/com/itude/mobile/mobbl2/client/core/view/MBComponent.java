@@ -18,12 +18,7 @@ public class MBComponent
   private MBDefinition         _definition;
   private MBComponentContainer _parent;
   private String               _style;
-  private Map<String, Object>  _viewData;
   private boolean              _markedForDestruction;
-  private int                  _leftInset;
-  private int                  _rightInset;
-  private int                  _topInset;
-  private int                  _bottomInset;
   private MBDocument           _document;
   private View                 _view;
 
@@ -39,8 +34,6 @@ public class MBComponent
       String style = ((MBStylableDefinition) definition).getStyle();
       setStyle(substituteExpressions(style));
     }
-
-    _viewData = null;
   }
 
   public MBDefinition getDefinition()
@@ -86,46 +79,6 @@ public class MBComponent
   public void setMarkedForDestruction(boolean markedForDestruction)
   {
     _markedForDestruction = markedForDestruction;
-  }
-
-  public int getLeftInset()
-  {
-    return _leftInset;
-  }
-
-  public void setLeftInset(int leftInset)
-  {
-    _leftInset = leftInset;
-  }
-
-  public int getRightInset()
-  {
-    return _rightInset;
-  }
-
-  public void setRightInset(int rightInset)
-  {
-    _rightInset = rightInset;
-  }
-
-  public int getTopInset()
-  {
-    return _topInset;
-  }
-
-  public void setTopInset(int topInset)
-  {
-    _topInset = topInset;
-  }
-
-  public int getBottomInset()
-  {
-    return _bottomInset;
-  }
-
-  public void setBottomInset(int bottomInset)
-  {
-    _bottomInset = bottomInset;
   }
 
   public View buildViewWithMaxBounds(MBViewManager.MBViewState viewState)
@@ -258,21 +211,6 @@ public class MBComponent
     {
       return null;
     }
-  }
-
-  public void setViewData(Object value, String key)
-  {
-    if (_viewData == null)
-    {
-      _viewData = new HashMap<String, Object>();
-    }
-
-    _viewData.put(key, value);
-  }
-
-  public Object getViewData(String key)
-  {
-    return _viewData.get(key);
   }
 
   public String evaluateExpression(String variableName)

@@ -6,6 +6,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentDiff;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 import com.itude.mobile.mobbl2.client.core.util.MathUtilities;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
@@ -28,7 +29,7 @@ public class MatrixCellFieldBuilder extends MBBaseFieldBuilder
     getStyleHandler().styleMatrixCell(field, label);
 
     MBPanel parent = (MBPanel) field.getFirstParentOfKind(MBPanel.class);
-    if (parent != null && !parent.isDiffableMaster()) parent = parent.getFirstParentPanelWithType("MATRIX");
+    if (parent != null && !parent.isDiffableMaster()) parent = parent.getFirstParentPanelWithType(Constants.C_MATRIX);
     if (parent != null && !parent.isDiffableMaster()) parent = null;
 
     MBDocumentDiff documentDiff = field.getPage().getDocumentDiff();
