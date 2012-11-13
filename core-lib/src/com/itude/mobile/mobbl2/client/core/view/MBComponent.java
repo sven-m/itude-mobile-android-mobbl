@@ -1,9 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.view;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.view.View;
 
