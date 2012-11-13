@@ -27,6 +27,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefiniti
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBFieldDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPathException;
+import com.itude.mobile.mobbl2.client.core.controller.MBApplicationFactory;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
@@ -135,6 +136,8 @@ public class MBField extends MBComponent
     }
 
     checkForDiffable();
+    
+    MBApplicationFactory.getInstance().getPageConstructor().onConstructedField(this);
   }
 
   private void checkForDiffable()
