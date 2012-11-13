@@ -2,8 +2,11 @@ package com.itude.mobile.mobbl2.client.core.view;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import android.text.Editable;
@@ -57,13 +60,10 @@ public class MBField extends MBComponent
   private String                _alignment;
   private String                _valueIfNil;
   private boolean               _hidden;
-  private boolean               _required;
   private int                   _width;
   private int                   _height;
-  private String                _custom1;
-  private String                _custom2;
-  private String                _custom3;
   private String                _hint;
+  private Map<String, String>   _custom;
 
   private String                _cachedValue    = null;
   private boolean               _cachedValueSet = false;
@@ -124,11 +124,15 @@ public class MBField extends MBComponent
     setFormatMask(substituteExpressions(fieldDef.getFormatMask()));
     setAlignment(substituteExpressions(fieldDef.getAlignment()));
     setHidden(Boolean.parseBoolean(substituteExpressions(fieldDef.getHidden())));
-    setRequired(Boolean.parseBoolean(substituteExpressions(fieldDef.getRequired())));
-    setCustom1(substituteExpressions(fieldDef.getCustom1()));
-    setCustom2(substituteExpressions(fieldDef.getCustom2()));
-    setCustom3(substituteExpressions(fieldDef.getCustom3()));
     setHint(substituteExpressions(fieldDef.getHint()));
+
+    if (fieldDef.getCustom().isEmpty()) _custom = Collections.emptyMap();
+    else
+    {
+      _custom = new HashMap<String, String>();
+      for (Map.Entry<String, String> custom : fieldDef.getCustom().entrySet())
+        _custom.put(custom.getKey(), substituteExpressions(custom.getValue()));
+    }
 
     checkForDiffable();
   }
@@ -243,7 +247,6 @@ public class MBField extends MBComponent
     _source = source;
   }
 
-
   public String getDataType()
   {
     String result = _dataType;
@@ -312,44 +315,24 @@ public class MBField extends MBComponent
     _hidden = hidden;
   }
 
-  public boolean getRequired()
+  public String getCustom(String attribute)
   {
-    return _required;
-  }
-
-  public void setRequired(boolean required)
-  {
-    _required = required;
+    return _custom.get(attribute);
   }
 
   public String getCustom1()
   {
-    return _custom1;
-  }
-
-  public void setCustom1(String custom1)
-  {
-    _custom1 = custom1;
+    return getCustom("custom1");
   }
 
   public String getCustom2()
   {
-    return _custom2;
-  }
-
-  public void setCustom2(String custom2)
-  {
-    _custom2 = custom2;
+    return getCustom("custom2");
   }
 
   public String getCustom3()
   {
-    return _custom3;
-  }
-
-  public void setCustom3(String custom3)
-  {
-    _custom3 = custom3;
+    return getCustom("custom3");
   }
 
   public String getHint()
@@ -628,7 +611,6 @@ public class MBField extends MBComponent
   {
     try
     {
-      String required = getRequired() ? "TRUE" : "FALSE";
 
       StringUtilities.appendIndentString(appendToMe, level).append("<MBField ").append(attributeAsXml("value", getValue())).append(" ")
           .append(attributeAsXml("path", getAbsoluteDataPath())).append(" ").append(attributeAsXml("style", getStyle())).append(" ")
@@ -636,8 +618,8 @@ public class MBField extends MBComponent
           .append(attributeAsXml("dataType", getDataType())).append(" ").append(attributeAsXml("outcomeName", getOutcomeName()))
           .append(" ").append(attributeAsXml("formatMask", getFormatMask())).append(" ")
           .append(attributeAsXml("alignment", getAlignment())).append(" ").append(attributeAsXml("valueIfNil", getValueIfNil()))
-          .append(" ").append(attributeAsXml("required", required)).append(" width='").append(getWidth()).append("' height='")
-          .append(getHeight()).append(" hint='").append(getHint()).append("'/>\n");
+          .append(" ").append(" width='").append(getWidth()).append("' height='").append(getHeight()).append(" hint='").append(getHint())
+          .append("'/>\n");
     }
     catch (Exception e)
     {

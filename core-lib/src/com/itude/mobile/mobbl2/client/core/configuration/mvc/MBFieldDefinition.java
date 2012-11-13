@@ -1,31 +1,31 @@
 package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
+import java.util.Collections;
+import java.util.Map;
+
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.MBConditionalDefinition;
 import com.itude.mobile.mobbl2.client.core.view.MBStylableDefinition;
 
 public class MBFieldDefinition extends MBConditionalDefinition implements MBStylableDefinition
 {
-  private String _label;
-  private String _labelAttrs;
-  private String _source;
-  private String _path;
-  private String _style;
-  private String _displayType;
-  private String _dataType;
-  private String _text;
-  private String _outcomeName;
-  private String _width;
-  private String _height;
-  private String _formatMask;
-  private String _alignment;
-  private String _valueIfNil;
-  private String _hidden;
-  private String _custom1;
-  private String _custom2;
-  private String _custom3;
-  private String _required;
-  private String _hint;
+  private String              _label;
+  private String              _labelAttrs;
+  private String              _source;
+  private String              _path;
+  private String              _style;
+  private String              _displayType;
+  private String              _dataType;
+  private String              _text;
+  private String              _outcomeName;
+  private String              _width;
+  private String              _height;
+  private String              _formatMask;
+  private String              _alignment;
+  private String              _valueIfNil;
+  private String              _hidden;
+  private String              _hint;
+  private Map<String, String> _custom = Collections.emptyMap();
 
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
@@ -42,8 +42,10 @@ public class MBFieldDefinition extends MBConditionalDefinition implements MBStyl
         .append(getAttributeAsXml("dataType", _dataType)).append(getAttributeAsXml("outcome", _outcomeName))
         .append(getAttributeAsXml("formatMask", _formatMask)).append(getAttributeAsXml("alignment", _alignment))
         .append(getAttributeAsXml("valueIfNil", _valueIfNil)).append(getAttributeAsXml("width", _width))
-        .append(getAttributeAsXml("height", _height)).append(getAttributeAsXml("hidden", _hidden))
-        .append(getAttributeAsXml("required", _required)).append(getAttributeAsXml("hint", _hint));
+        .append(getAttributeAsXml("height", _height)).append(getAttributeAsXml("hidden", _hidden)).append(getAttributeAsXml("hint", _hint));
+
+    for (Map.Entry<String, String> custom : _custom.entrySet())
+      appendToMe.append(getAttributeAsXml(custom.getKey(), custom.getValue()));
 
     if (bodyText != null)
     {
@@ -147,16 +149,6 @@ public class MBFieldDefinition extends MBConditionalDefinition implements MBStyl
     _dataType = dataType;
   }
 
-  public String getRequired()
-  {
-    return _required;
-  }
-
-  public void setRequired(String required)
-  {
-    _required = required;
-  }
-
   public String getWidth()
   {
     return _width;
@@ -217,36 +209,6 @@ public class MBFieldDefinition extends MBConditionalDefinition implements MBStyl
     _hidden = hidden;
   }
 
-  public String getCustom1()
-  {
-    return _custom1;
-  }
-
-  public void setCustom1(String custom1)
-  {
-    _custom1 = custom1;
-  }
-
-  public String getCustom2()
-  {
-    return _custom2;
-  }
-
-  public void setCustom2(String custom2)
-  {
-    _custom2 = custom2;
-  }
-
-  public String getCustom3()
-  {
-    return _custom3;
-  }
-
-  public void setCustom3(String custom3)
-  {
-    _custom3 = custom3;
-  }
-
   public String getHint()
   {
     return _hint;
@@ -255,6 +217,16 @@ public class MBFieldDefinition extends MBConditionalDefinition implements MBStyl
   public void setHint(String hint)
   {
     _hint = hint;
+  }
+
+  public Map<String, String> getCustom()
+  {
+    return _custom;
+  }
+
+  public void setCustom(Map<String, String> custom)
+  {
+    _custom = custom;
   }
 
 }

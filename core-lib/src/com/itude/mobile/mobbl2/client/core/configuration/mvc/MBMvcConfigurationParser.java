@@ -2,6 +2,7 @@ package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -142,7 +143,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _panelAttributes.add("outcome");
       _panelAttributes.add("path");
       _panelAttributes.add("mode");
-      _panelAttributes.add("permissions");
       _panelAttributes.add("focused");
     }
     if (_forEachAttributes == null)
@@ -172,7 +172,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _fieldAttributes.add("path");
       _fieldAttributes.add("type");
       _fieldAttributes.add("dataType");
-      _fieldAttributes.add("required");
       _fieldAttributes.add("outcome");
       _fieldAttributes.add("style");
       _fieldAttributes.add("width");
@@ -182,9 +181,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _fieldAttributes.add("valueIfNil");
       _fieldAttributes.add("hidden");
       _fieldAttributes.add("preCondition");
-      _fieldAttributes.add("custom1");
-      _fieldAttributes.add("custom2");
-      _fieldAttributes.add("custom3");
       _fieldAttributes.add("hint");
     }
     if (_domainAttributes == null)
@@ -450,8 +446,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
     }
     else if (elementName.equals("Field"))
     {
-      checkAttributesForElement(elementName, attributeDict, _fieldAttributes);
-
       MBFieldDefinition fieldDef = new MBFieldDefinition();
       fieldDef.setName(attributeDict.get("name"));
       fieldDef.setLabel(attributeDict.get("label"));
@@ -461,7 +455,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       fieldDef.setDisplayType(attributeDict.get("type"));
       fieldDef.setDataType(attributeDict.get("dataType"));
       fieldDef.setStyle(attributeDict.get("style"));
-      fieldDef.setRequired(attributeDict.get("required"));
       fieldDef.setOutcomeName(attributeDict.get("outcome"));
       fieldDef.setWidth(attributeDict.get("width"));
       fieldDef.setHeight(attributeDict.get("height"));
@@ -470,10 +463,8 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       fieldDef.setValueIfNil(attributeDict.get("valueIfNil"));
       fieldDef.setHidden(attributeDict.get("hidden"));
       fieldDef.setPreCondition(attributeDict.get("preCondition"));
-      fieldDef.setCustom1(attributeDict.get("custom1"));
-      fieldDef.setCustom2(attributeDict.get("custom2"));
-      fieldDef.setCustom3(attributeDict.get("custom3"));
       fieldDef.setHint(attributeDict.get("hint"));
+      fieldDef.setCustom(extractCustomAttributes(attributeDict, _fieldAttributes));
 
       notifyProcessed(fieldDef);
     }
@@ -531,6 +522,15 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
     }
 
     return true;
+  }
+
+  private Map<String, String> extractCustomAttributes(Map<String, String> attributes, List<String> predefinedAttributes)
+  {
+    Map<String, String> custom = new HashMap<String, String>(attributes);
+    for (String attribute : predefinedAttributes)
+      custom.remove(attribute);
+
+    return custom;
   }
 
   @Override
