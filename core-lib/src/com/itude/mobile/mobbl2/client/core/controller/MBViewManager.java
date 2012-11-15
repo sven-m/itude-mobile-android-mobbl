@@ -29,6 +29,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 
+import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
@@ -267,7 +268,8 @@ public class MBViewManager extends FragmentActivity
     else
     {
       // Pass this onKeyDown event trough to the underlying fragments
-      return getActiveDialog().onKeyDown(keyCode, event);
+      if (!getActiveDialog().onKeyDown(keyCode, event)) return super.onKeyDown(keyCode, event);
+      else return true;
     }
 
   }
@@ -665,15 +667,7 @@ public class MBViewManager extends FragmentActivity
 
   public void supportInvalidateOptionsMenu()
   {
-    runOnUiThread(new Runnable()
-    {
-
-      @Override
-      public void run()
-      {
-        MBViewManager.super.invalidateOptionsMenu();
-      }
-    });
+    ActivityCompatHoneycomb.invalidateOptionsMenu(this);
   }
 
   private MBDialogController activateDialog(String dialogName)
