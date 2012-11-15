@@ -4,7 +4,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.view.MBForEach;
 
 public class MBForEachViewBuilder extends MBViewBuilder

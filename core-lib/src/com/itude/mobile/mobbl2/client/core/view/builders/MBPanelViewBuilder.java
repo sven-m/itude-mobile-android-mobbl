@@ -2,7 +2,6 @@ package com.itude.mobile.mobbl2.client.core.view.builders;
 
 import android.view.ViewGroup;
 
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.builders.panel.ListPanelBuilder;

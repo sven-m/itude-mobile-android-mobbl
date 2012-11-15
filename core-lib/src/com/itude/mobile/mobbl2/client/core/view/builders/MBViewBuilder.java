@@ -5,7 +5,6 @@ import java.util.List;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.view.MBComponent;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 
