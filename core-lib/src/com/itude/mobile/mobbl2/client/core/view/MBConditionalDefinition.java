@@ -6,6 +6,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNotBooleanException;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 
 public class MBConditionalDefinition extends MBDefinition
 {
@@ -38,9 +39,8 @@ public class MBConditionalDefinition extends MBDefinition
       return false;
     }
 
-    result = result.toUpperCase();
-    if ("1".equals(result) || "YES".equals(result) || "TRUE".equals(result)) return true;
-    if ("0".equals(result) || "NO".equals(result) || "FALSE".equals(result)) return false;
+    Boolean parsed = MBParseUtil.strictBooleanValue(result);
+    if (parsed != null) return parsed;
 
     String msg = "Expression preCondition=" + _preCondition + " is not boolean (" + result + ")";
     throw new MBExpressionNotBooleanException(msg);

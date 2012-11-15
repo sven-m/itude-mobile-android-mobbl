@@ -2,8 +2,12 @@ package com.itude.mobile.mobbl2.client.core.util;
 
 import android.util.Log;
 
-public class MBParseUtil
+public final class MBParseUtil
 {
+  private MBParseUtil()
+  {
+  }
+
   public static Float floatValueDutch(String stringToConvert)
   {
     // if we have a comma, replace with a dot
@@ -50,10 +54,21 @@ public class MBParseUtil
 
   public static boolean booleanValue(String bool)
   {
-    if (StringUtilities.isEmpty(bool)) return false;
+    Boolean parsed = strictBooleanValue(bool);
+    if (parsed == null) return false;
+    return parsed;
+  }
+
+  public static Boolean strictBooleanValue(String bool)
+  {
+    if (StringUtilities.isEmpty(bool)) return null;
     // you should only use C_TRUE; the rest is there for legacy purposes
-    if (bool.equalsIgnoreCase(Constants.C_TRUE) || bool.equalsIgnoreCase("true") || bool.equalsIgnoreCase("yes")) return true;
-    else return false;
+    if (bool.equalsIgnoreCase(Constants.C_TRUE) || bool.equals("1") || bool.equals("1.0") || bool.equalsIgnoreCase("true")
+        || bool.equalsIgnoreCase("yes")) return true;
+    else if (bool.equalsIgnoreCase(Constants.C_FALSE) || bool.equals("0") || bool.equals("0.0") || bool.equalsIgnoreCase("false")
+             || bool.equalsIgnoreCase("no")) return false;
+    else return null;
 
   }
+
 }

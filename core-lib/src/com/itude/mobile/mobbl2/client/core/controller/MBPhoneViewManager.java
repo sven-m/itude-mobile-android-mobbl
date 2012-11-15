@@ -33,6 +33,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
@@ -273,7 +274,7 @@ public class MBPhoneViewManager extends MBViewManager
         dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
       }
 
-      if (!"TRUE".equals(dialogDefinition.getAddToNavbar()))
+      if (!dialogDefinition.isAddToNavbar())
       {
         MBTabBar tabBar = getTabBar();
         if (tabBar != null)
@@ -347,7 +348,8 @@ public class MBPhoneViewManager extends MBViewManager
           {
             MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDefinition.getDomain());
 
-            final MBTabSpinnerAdapter tabSpinnerAdapter = new MBTabSpinnerAdapter(MBPhoneViewManager.this, R.layout.simple_spinner_dropdown_item);
+            final MBTabSpinnerAdapter tabSpinnerAdapter = new MBTabSpinnerAdapter(MBPhoneViewManager.this,
+                R.layout.simple_spinner_dropdown_item);
 
             for (MBDomainValidatorDefinition domDef : domainDef.getDomainValidators())
             {
@@ -473,14 +475,8 @@ public class MBPhoneViewManager extends MBViewManager
     MBDocument doc = MBDataManagerService.getInstance().loadDocument(MBConfigurationDefinition.DOC_SYSTEM_EMPTY);
 
     String result = doc.evaluateExpression(def.getPreCondition());
-    if ("1".equals(result) || "YES".equalsIgnoreCase(result) || "TRUE".equalsIgnoreCase(result))
-    {
-      return true;
-    }
-    if ("0".equals(result) || "NO".equalsIgnoreCase(result) || "FALSE".equalsIgnoreCase(result))
-    {
-      return false;
-    }
+    Boolean bool = MBParseUtil.strictBooleanValue(result);
+    if (bool != null) return bool;
     String msg = "Expression of tool with name=" + def.getName() + " precondition=" + def.getPreCondition() + " is not boolean (result="
                  + result + ")";
     throw new MBExpressionNotBooleanException(msg);

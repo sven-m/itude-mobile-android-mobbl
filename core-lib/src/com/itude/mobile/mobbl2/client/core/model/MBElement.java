@@ -14,6 +14,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBCannotAssignException;
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBInvalidAttributeNameException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBElement extends MBElementContainer
@@ -92,6 +93,11 @@ public class MBElement extends MBElementContainer
       validateAttribute(attributeName);
     }
     return rtrn;
+  }
+
+  public boolean getBooleanForAttribute(String attributeName)
+  {
+    return MBParseUtil.booleanValue(getValueForAttribute(attributeName));
   }
 
   public String getValueForKey(String key)

@@ -12,6 +12,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition.MBPageType;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPageTypeException;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
+import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 
 public class MBMvcConfigurationParser extends MBConfigurationParser
 {
@@ -328,7 +329,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       dialogDef.setTitle(attributeDict.get("title"));
       dialogDef.setMode(attributeDict.get("mode"));
       dialogDef.setIcon(attributeDict.get("icon"));
-      dialogDef.setAddToNavbar(attributeDict.get("addToNavbar"));
+      dialogDef.setAddToNavbar(MBParseUtil.booleanValue(attributeDict.get("addToNavbar")));
       dialogDef.setDomain(attributeDict.get("domain"));
       dialogDef.setAction(attributeDict.get("action"));
 
@@ -348,7 +349,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       dialogDef.setTitlePortrait(attributeDict.get("titlePortrait"));
       dialogDef.setMode(attributeDict.get("mode"));
       dialogDef.setIcon(attributeDict.get("icon"));
-      dialogDef.setAddToNavbar(attributeDict.get("addToNavbar"));
+      dialogDef.setAddToNavbar(MBParseUtil.booleanValue(attributeDict.get("addToNavbar")));
       dialogDef.setDomain(attributeDict.get("domain"));
 
       notifyProcessed(dialogDef);

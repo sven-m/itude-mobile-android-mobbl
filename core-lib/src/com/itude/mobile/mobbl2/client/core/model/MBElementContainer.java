@@ -24,6 +24,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.MBScriptService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDynamicAttributeComparator;
+import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.TwinResult;
 
@@ -263,6 +264,11 @@ public class MBElementContainer implements Parcelable
     _elements = elements;
   }
 
+  public boolean getBooleanForPath(String path)
+  {
+    return MBParseUtil.booleanValue((String) getValueForPath(path));
+  }
+
   public <T> T getValueForPath(String path)
   {
     return (T) getValueForPath(path, null);
@@ -316,6 +322,11 @@ public class MBElementContainer implements Parcelable
     }
 
     return (T) getValueForPathComponents(pathComponents, path, true, translatedPathComponents);
+  }
+
+  public void setValue(boolean value, String path)
+  {
+    setValue(value ? Constants.C_TRUE : Constants.C_FALSE, path);
   }
 
   public void setValue(String value, String path)

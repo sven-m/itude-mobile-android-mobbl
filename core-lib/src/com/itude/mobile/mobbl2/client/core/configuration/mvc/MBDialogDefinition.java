@@ -11,7 +11,7 @@ public class MBDialogDefinition extends MBDefinition
   private String _mode;
   private String _icon;
   private String _parent;
-  private String _addToNavbar;
+  private boolean _addToNavbar;
   private String _domain;
   private String _action;
 
@@ -90,12 +90,12 @@ public class MBDialogDefinition extends MBDefinition
     _parent = parent;
   }
 
-  public String getAddToNavbar()
+  public boolean isAddToNavbar()
   {
     return _addToNavbar;
   }
 
-  public void setAddToNavbar(String addToNavbar)
+  public void setAddToNavbar(boolean addToNavbar)
   {
     _addToNavbar = addToNavbar;
   }

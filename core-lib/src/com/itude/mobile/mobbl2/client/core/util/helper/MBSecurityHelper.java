@@ -30,7 +30,7 @@ public final class MBSecurityHelper implements MBSecurityInterface
   public void logOutIfCheckNotSelected()
   {
     MBDocument sessionDoc = MBSession.getInstance().getDocument();
-    if (sessionDoc!=null && "true".equals(sessionDoc.getValueForPath("Session[0]/@loggedIn")))
+    if (sessionDoc != null && sessionDoc.getBooleanForPath("Session[0]/@loggedIn"))
     {
       MBSession.getInstance().logOff();
     }

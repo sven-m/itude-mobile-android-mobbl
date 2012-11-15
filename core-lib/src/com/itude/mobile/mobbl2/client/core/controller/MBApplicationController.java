@@ -156,7 +156,7 @@ public class MBApplicationController extends Application
     _backStackEnabled = true;
 
     final MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
-    boolean isInNavbar = "TRUE".equalsIgnoreCase(homeDialogDefinition.getAddToNavbar());
+    boolean isInNavbar = homeDialogDefinition.isAddToNavbar();
     MBViewManager.getInstance().invalidateActionBar(isInNavbar);
 
     if (!isInNavbar || MBDevice.getInstance().isPhone())
@@ -647,11 +647,11 @@ public class MBApplicationController extends Application
   public void handleSearchRequest(Intent searchIntent)
   {
     final String query;
-    final String isProgressive;
+    final boolean isProgressive;
 
     query = searchIntent.getStringExtra(SearchManager.QUERY);
 
-    isProgressive = Intent.ACTION_SEARCH.equals(searchIntent.getAction()) ? "FALSE" : "TRUE";
+    isProgressive = !Intent.ACTION_SEARCH.equals(searchIntent.getAction());
 
     String searchPath = "";
 

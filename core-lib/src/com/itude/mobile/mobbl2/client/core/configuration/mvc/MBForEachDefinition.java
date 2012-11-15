@@ -28,7 +28,7 @@ public class MBForEachDefinition extends MBConditionalDefinition
     StringUtilities.appendIndentString(appendToMe, level).//
     append("<MBForEach ").//
     append(getAttributeAsXml("value", _value)).//
-    append(getAttributeAsXml("suppressRowComponent", _suppressRowComponent ? "TRUE" : "FALSE")).//
+    append(getAttributeAsXml("suppressRowComponent", _suppressRowComponent)).//
     append(">\n");
 
     for (MBVariableDefinition var : _variables.values())

@@ -86,8 +86,8 @@ public interface Constants
   public static final String C_LOCALE_CODE_ITALIAN                         = "it_IT";
   public static final String C_LANGUAGE_ENGLISH                            = "en";
 
-  public static final String C_TRUE                                        = "1";
-  public static final String C_FALSE                                       = "0";
+  public static final String C_TRUE                                        = "true";
+  public static final String C_FALSE                                       = "false";
 
   public static final String C_PAGE_CONTENT_VIEW                           = "PAGE-CONTENT-VIEW";
   public static final String C_PAGE_CONTENT_HEADER_VIEW                    = "PAGE-CONTENT-HEADER-VIEW";

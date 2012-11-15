@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
+import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 
@@ -17,11 +18,11 @@ public class CheckboxFieldBuilder extends MBBaseFieldBuilder
   @Override
   public View buildField(MBField field)
   {
-    String value = field.getValue();
-    String valueIfNil = field.getValueIfNil();
+    Boolean value = MBParseUtil.strictBooleanValue(field.getUntranslatedValue());
+    boolean valueIfNil = MBParseUtil.booleanValue(field.getUntranslatedValueIfNil());
     boolean checked = false;
 
-    if ((value != null && value.equalsIgnoreCase("TRUE")) || (valueIfNil != null && valueIfNil.equalsIgnoreCase("TRUE")))
+    if ((value != null && value) || (value == null && valueIfNil))
     {
       checked = true;
     }

@@ -46,7 +46,7 @@ public class MBField extends MBComponent
       TextWatcher,
       OnKeyListener
 {
-  private static final Pattern  NUMBERPATTERN   = Pattern.compile("\\[[0-9]+\\]");
+  private static final Pattern  NUMBERPATTERN            = Pattern.compile("\\[[0-9]+\\]");
 
   private MBAttributeDefinition _attributeDefinition;
   private boolean               _domainDetermined;
@@ -65,8 +65,9 @@ public class MBField extends MBComponent
   private String                _hint;
   private Map<String, String>   _custom;
 
-  private String                _cachedValue    = null;
-  private boolean               _cachedValueSet = false;
+  private String                _cachedValue             = null;
+  private String                _cachedUntranslatedValue = null;
+  private boolean               _cachedValueSet          = false;
 
   public MBField(MBDefinition definition, MBDocument document, MBComponentContainer parent)
   {
@@ -254,6 +255,12 @@ public class MBField extends MBComponent
     _alignment = alignment;
   }
 
+  
+  public String getUntranslatedValueIfNil()
+  {
+    return _valueIfNil;
+  }
+
   public String getValueIfNil()
   {
     return MBLocalizationService.getInstance().getTextForKey(_valueIfNil);
@@ -300,29 +307,47 @@ public class MBField extends MBComponent
    * Try not to call it repeatedly, but cache the value.
    * @see #getValuesForDisplay()
    */
-  public String getValue()
+  public String getValue()  
   {
-    if (_cachedValueSet)
-    {
-      return _cachedValue;
-    }
-    String result = null;
+    calculateValueIfNeeded();
+    return _cachedValue;
+  }
 
-    if (getDocument() != null)
-    {
-      Object value = getDocument().getValueForPath(getAbsoluteDataPath());
-      if (value instanceof String) result = (String) value;
-      else if (value != null) result = value.toString();
+  public String getUntranslatedValue()
+  {
+    calculateValueIfNeeded();
+    return _cachedUntranslatedValue;
+  }
 
-      // don't use the getter here!
-      if (_dataType == null)
+  private void calculateValueIfNeeded()
+  {
+    if (!_cachedValueSet)
+    {
+      String result = null;
+
+      if (getDocument() != null)
       {
-        result = MBLocalizationService.getInstance().getTextForKey(result);
+        Object value = getDocument().getValueForPath(getAbsoluteDataPath());
+        if (value instanceof String) result = (String) value;
+        else if (value != null) result = value.toString();
+
+        _cachedUntranslatedValue = result;
+        // don't use the getter here!
+        if (_dataType == null)
+        {
+          result = MBLocalizationService.getInstance().getTextForKey(result);
+        }
       }
+      _cachedValue = result;
+      _cachedValueSet = true;
+
     }
-    _cachedValue = result;
-    _cachedValueSet = true;
-    return result;
+
+  }
+
+  public void setValue(boolean value)
+  {
+    setValue(value ? Constants.C_TRUE : Constants.C_FALSE);
   }
 
   public void setValue(String value)
@@ -588,11 +613,11 @@ public class MBField extends MBComponent
 
       if (tb.isChecked())
       {
-        setValue("true");
+        setValue(true);
       }
       else
       {
-        setValue("false");
+        setValue(false);
       }
     }
     else
@@ -621,11 +646,11 @@ public class MBField extends MBComponent
   {
     if (isChecked)
     {
-      setValue("true");
+      setValue(true);
     }
     else
     {
-      setValue("false");
+      setValue(false);
     }
   }
 

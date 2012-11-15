@@ -806,7 +806,7 @@ public class MBViewManager extends FragmentActivity
 
   public void addSortedDialogName(String dialogName, MBDialogDefinition dialogDefinition)
   {
-    if ("TRUE".equals(dialogDefinition.getAddToNavbar()) && !_sortedDialogNames.contains(dialogName))
+    if (dialogDefinition.isAddToNavbar() && !_sortedDialogNames.contains(dialogName))
     {
       _sortedDialogNames.add(dialogName);
     }
@@ -821,7 +821,7 @@ public class MBViewManager extends FragmentActivity
       dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
     }
 
-    if ("TRUE".equals(dialogDefinition.getAddToNavbar()) && !_sortedDialogNames.contains(dialogName))
+    if (dialogDefinition.isAddToNavbar() && !_sortedDialogNames.contains(dialogName))
     {
       _sortedDialogNames.add(dialogName);
     }

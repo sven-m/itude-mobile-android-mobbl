@@ -2522,7 +2522,7 @@
 					</Panel>
 				</Panel>
 				<Panel
-					preCondition="'${/EXT-GebruikersRekeningenGetResult[0]/@hasTradingAccount}'=='FALSE'"
+					preCondition="!${/EXT-GebruikersRekeningenGetResult[0]/@hasTradingAccount}"
 					type="SECTION" title="U heeft geen beleggingsrekening">
 					<Panel type="ROW">
 						<Field type="TEXT"

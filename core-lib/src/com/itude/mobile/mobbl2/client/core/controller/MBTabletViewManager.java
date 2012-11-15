@@ -3,7 +3,6 @@ package com.itude.mobile.mobbl2.client.core.controller;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import android.R;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.SearchManager;
@@ -39,6 +38,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
@@ -291,7 +291,7 @@ public class MBTabletViewManager extends MBViewManager
         dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
       }
 
-      if (!"TRUE".equals(dialogDefinition.getAddToNavbar()))
+      if (!dialogDefinition.isAddToNavbar())
       {
         MBTabBar tabBar = getTabBar();
         if (tabBar != null)
@@ -339,7 +339,7 @@ public class MBTabletViewManager extends MBViewManager
         MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
 
         //fix the Home icon padding
-        View homeIcon = findViewById(R.id.home);
+        View homeIcon = findViewById(android.R.id.home);
         if (homeIcon != null)
         {
           styleHandler.styleHomeIcon(homeIcon);
@@ -362,7 +362,7 @@ public class MBTabletViewManager extends MBViewManager
             MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDefinition.getDomain());
 
             final MBTabSpinnerAdapter tabSpinnerAdapter = new MBTabSpinnerAdapter(MBTabletViewManager.this,
-                R.layout.simple_spinner_dropdown_item);
+                android.R.layout.simple_spinner_dropdown_item);
 
             for (MBDomainValidatorDefinition domDef : domainDef.getDomainValidators())
             {
@@ -557,14 +557,8 @@ public class MBTabletViewManager extends MBViewManager
     MBDocument doc = MBDataManagerService.getInstance().loadDocument(MBConfigurationDefinition.DOC_SYSTEM_EMPTY);
 
     String result = doc.evaluateExpression(def.getPreCondition());
-    if ("1".equals(result) || "YES".equalsIgnoreCase(result) || "TRUE".equalsIgnoreCase(result))
-    {
-      return true;
-    }
-    if ("0".equals(result) || "NO".equalsIgnoreCase(result) || "FALSE".equalsIgnoreCase(result))
-    {
-      return false;
-    }
+    Boolean bool = MBParseUtil.strictBooleanValue(result);
+    if (bool != null) return bool;
     String msg = "Expression of tool with name=" + def.getName() + " precondition=" + def.getPreCondition() + " is not boolean (result="
                  + result + ")";
     throw new MBExpressionNotBooleanException(msg);
@@ -582,7 +576,7 @@ public class MBTabletViewManager extends MBViewManager
     // that onConfigurationChanged should be in the message queue. This places a new message at the end of
     // the queue that changes the home icon back, which is therefore handled after the onConfigurationChanged message
     // that ruins it.
-    final View homeIcon = findViewById(R.id.home);
+    final View homeIcon = findViewById(android.R.id.home);
     if (homeIcon != null) new Handler().post(new Runnable()
     {
 

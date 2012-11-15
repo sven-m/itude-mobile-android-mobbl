@@ -8,6 +8,7 @@ import android.view.View;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBComponent
 
@@ -102,12 +103,12 @@ public class MBComponent
 
     if (expression.equalsIgnoreCase("YES"))
     {
-      return "TRUE";
+      return Constants.C_TRUE;
     }
 
     if (expression.equalsIgnoreCase("NO"))
     {
-      return "FALSE";
+      return Constants.C_FALSE;
     }
 
     if (expression.indexOf('{') < 0)

@@ -255,8 +255,8 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 
     boolean allowAnyCertificate = false;
 
-    String inDevelopment = MBProperties.getInstance().getValueForProperty(Constants.C_PROPERTY_INDEVELOPMENT);
-    if ("true".equals(inDevelopment))
+    boolean inDevelopment = MBProperties.getInstance().getBooleanProperty(Constants.C_PROPERTY_INDEVELOPMENT);
+    if (inDevelopment)
     {
       try
       {

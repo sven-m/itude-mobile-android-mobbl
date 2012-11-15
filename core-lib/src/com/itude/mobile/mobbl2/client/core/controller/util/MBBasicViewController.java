@@ -92,8 +92,8 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   {
     if (_strictModeAvailable)
     {
-      String enableStrictMode = MBProperties.getInstance().getValueForProperty(Constants.C_PROPERTY_STRICTMODE);
-      if ("true".equals(enableStrictMode))
+      boolean enableStrictMode = MBProperties.getInstance().getBooleanProperty(Constants.C_PROPERTY_STRICTMODE);
+      if (enableStrictMode)
       {
         StrictModeWrapper.enableDefaults();
       }
