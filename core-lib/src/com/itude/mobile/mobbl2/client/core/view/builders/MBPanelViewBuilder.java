@@ -41,13 +41,13 @@ public class MBPanelViewBuilder extends MBViewBuilder
     _buildState = new BuildState();
   }
 
-  public ViewGroup buildPanelView(MBPanel panel, MBViewManager.MBViewState viewState)
+  public ViewGroup buildPanelView(MBPanel panel)
   {
     Builder builder = getBuilder(panel.getType(), panel.getStyle());
 
-    ViewGroup view = builder.buildPanel(panel, viewState, _buildState);
+    ViewGroup view = builder.buildPanel(panel, _buildState);
 
-    getStyleHandler().applyStyle(panel, view, viewState);
+    getStyleHandler().applyStyle(panel, view);
     return view;
 
   }
@@ -71,7 +71,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
   public static interface Builder
   {
-    public ViewGroup buildPanel(MBPanel panel, MBViewManager.MBViewState viewState, BuildState buildState);
+    public ViewGroup buildPanel(MBPanel panel, BuildState buildState);
   }
 
   public static class BuildState

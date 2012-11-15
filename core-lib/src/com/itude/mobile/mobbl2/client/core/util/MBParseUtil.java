@@ -47,4 +47,13 @@ public class MBParseUtil
 
     return returnValue;
   }
+
+  public static boolean booleanValue(String bool)
+  {
+    if (StringUtilities.isEmpty(bool)) return false;
+    // you should only use C_TRUE; the rest is there for legacy purposes
+    if (bool.equalsIgnoreCase(Constants.C_TRUE) || bool.equalsIgnoreCase("true") || bool.equalsIgnoreCase("yes")) return true;
+    else return false;
+
+  }
 }

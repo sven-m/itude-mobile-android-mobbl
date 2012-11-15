@@ -38,9 +38,9 @@ public class MBForEachItem extends MBComponentContainer
   }
 
   @Override
-  public ViewGroup buildViewWithMaxBounds(MBViewState viewState)
+  public ViewGroup buildView()
   {
-    return MBViewBuilderFactory.getInstance().getForEachItemViewBuilder().buildForEachItemView(this, viewState);
+    return MBViewBuilderFactory.getInstance().getForEachItemViewBuilder().buildForEachItemView(this);
   }
 
   @Override

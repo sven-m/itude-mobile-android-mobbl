@@ -12,31 +12,26 @@ import com.itude.mobile.mobbl2.client.core.view.MBField;
 public class MBViewBuilder
 {
 
-  public void buildChildren(List<? extends MBComponent> children, ViewGroup view, MBViewManager.MBViewState viewState)
+  protected void buildChildren(List<? extends MBComponent> children, ViewGroup view)
   {
     for (MBComponent child : children)
     {
       getStyleHandler().applyInsetsForComponent(child);
 
-      View childView = child.buildViewWithMaxBounds(viewState);
+      View childView = child.buildView();
       if (childView == null) continue;
 
       view.addView(childView);
     }
   }
 
-  public static boolean isComponentOfType(MBComponent child, String type)
-  {
-    return child instanceof MBField && ((MBField) child).getType() != null && ((MBField) child).getType().equals(type);
-  }
-
-  public MBStyleHandler getStyleHandler()
+  protected MBStyleHandler getStyleHandler()
   {
     return MBViewBuilderFactory.getInstance().getStyleHandler();
   }
   
 
-  public boolean isFieldWithType(MBComponent child, String type)
+  protected boolean isFieldWithType(MBComponent child, String type)
   {
     return child instanceof MBField && ((MBField) child).getType() != null && ((MBField) child).getType().equals(type);
   }

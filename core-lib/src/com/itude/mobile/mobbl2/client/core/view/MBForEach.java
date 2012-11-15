@@ -107,9 +107,9 @@ public class MBForEach extends MBComponentContainer
   }
 
   @Override
-  public ViewGroup buildViewWithMaxBounds(MBViewState viewState)
+  public ViewGroup buildView()
   {
-    return MBViewBuilderFactory.getInstance().getForEachViewBuilder().buildForEachView(this, viewState);
+    return MBViewBuilderFactory.getInstance().getForEachViewBuilder().buildForEachView(this);
   }
 
   //This method is overridden because we (may) have to the children of the rows too

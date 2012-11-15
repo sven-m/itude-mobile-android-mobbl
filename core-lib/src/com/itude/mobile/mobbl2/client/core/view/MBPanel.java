@@ -27,9 +27,9 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   private String  _mode;
   private boolean _focused;
 
-  private String  _diffableMarkerPath    = null;
-  private String  _diffablePrimaryPath   = null;
-  private boolean _diffableMaster        = false;
+  private String  _diffableMarkerPath  = null;
+  private String  _diffablePrimaryPath = null;
+  private boolean _diffableMaster      = false;
 
   public MBPanel(MBPanelDefinition definition, MBDocument document, MBComponentContainer parent)
   {
@@ -51,9 +51,8 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     if (buildViewStructure)
     {
       buildChildren(definition, document, parent);
-      MBApplicationFactory.getInstance().getPageConstructor().onConstructedPanel(this);      
+      MBApplicationFactory.getInstance().getPageConstructor().onConstructedPanel(this);
     }
-    
 
   }
 
@@ -74,13 +73,13 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     }
   }
 
-
+  @Override
   public String getType()
   {
     return _type;
   }
 
-  public void setType(String type)
+  private void setType(String type)
   {
     _type = type;
   }
@@ -136,9 +135,9 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   }
 
   @Override
-  public ViewGroup buildViewWithMaxBounds(MBViewState viewState)
+  public ViewGroup buildView()
   {
-    return MBViewBuilderFactory.getInstance().getPanelViewBuilder().buildPanelView(this, viewState);
+    return MBViewBuilderFactory.getInstance().getPanelViewBuilder().buildPanelView(this);
   }
 
   @Override

@@ -14,7 +14,6 @@ import com.itude.mobile.mobbl2.client.core.services.MBResultListener;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
-import com.itude.mobile.mobbl2.client.core.view.listeners.MBMatrixConstructionListener;
 import com.itude.mobile.mobbl2.client.core.view.listeners.MBPageConstructionListener;
 
 /*
@@ -34,9 +33,6 @@ public class MBApplicationFactory
     _actions = new ActionMappings(getActionRegistry());
     _controllers = new ControllerMappings(getControllerRegistry());
     _pageConstructor = new PageConstructor();
-    
-    // TODO: temporary, until moved to Binck
-    _pageConstructor.addListener(new MBMatrixConstructionListener());
   }
 
   public static MBApplicationFactory getInstance()

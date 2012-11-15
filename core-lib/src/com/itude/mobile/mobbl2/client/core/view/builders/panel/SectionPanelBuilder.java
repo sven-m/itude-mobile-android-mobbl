@@ -7,17 +7,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBPanelViewBuilder.BuildState;
-import com.itude.mobile.mobbl2.client.core.view.builders.MBPanelViewBuilder.Builder;
-import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilder;
 
-public class SectionPanelBuilder extends MBViewBuilder implements Builder
+public class SectionPanelBuilder extends MBBasePanelBuilder
 {
 
   @Override
-  public ViewGroup buildPanel(MBPanel panel, MBViewState viewState, BuildState buildState)
+  public ViewGroup buildPanel(MBPanel panel,  BuildState buildState)
   {
       boolean hasTitle = false;
       Context context = MBApplicationController.getInstance().getBaseContext();
@@ -48,7 +45,7 @@ public class SectionPanelBuilder extends MBViewBuilder implements Builder
         panelView.addView(header);
       }
 
-      buildChildren(panel.getChildren(), panelView, null);
+      buildChildren(panel.getChildren(), panelView);
 
       getStyleHandler().styleSectionContainer(panelView, hasTitle);
       getStyleHandler().styleSectionContainer(panelView, hasTitle, panel);

@@ -517,7 +517,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   public void fillMainScrollViewContentFromPanel(final MBPanel panel)
   {
     MBPanelViewBuilder pnvb = MBViewBuilderFactory.getInstance().getPanelViewBuilder();
-    View newContent = pnvb.buildPanelView(panel, null);
+    View newContent = pnvb.buildPanelView(panel);
     setMainScrollViewContent(newContent);
     replaceMainScrollViewContent(newContent);
   }

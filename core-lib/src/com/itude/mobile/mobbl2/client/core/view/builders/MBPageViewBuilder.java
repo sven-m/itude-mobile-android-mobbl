@@ -46,9 +46,9 @@ public class MBPageViewBuilder extends MBViewBuilder
       main.addView(headerContainer);
     }
 
-    buildChildren(page.getChildren(), view, viewState);
+    buildChildren(page.getChildren(), view);
 
-    styleHandler.applyStyle(page, view, viewState);
+    styleHandler.applyStyle(page, view);
 
     // Add linearlayout to scrollview
     ScrollView scrollView = new ScrollView(context);
