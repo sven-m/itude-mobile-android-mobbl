@@ -269,6 +269,11 @@ public final class MBDevice
     return _isBigDevice;
   }
 
+  public boolean hasNativeActionBarSupport()
+  {
+    return Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1;
+  }
+  
   public boolean isPhone()
   {
     return DEVICE_NORMAL.equals(isBigDeviceType()) && (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB);

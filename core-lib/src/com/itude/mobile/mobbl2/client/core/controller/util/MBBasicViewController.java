@@ -550,6 +550,11 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     return false;
   }
 
+  public boolean onKeyDown(int keyCode, KeyEvent event)
+  {
+    return false;
+  }
+
   public void setDialogController(MBDialogController dialog)
   {
     _dialogController = dialog;
