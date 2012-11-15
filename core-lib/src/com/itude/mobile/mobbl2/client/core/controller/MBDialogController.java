@@ -52,6 +52,7 @@ public class MBDialogController extends ContextWrapper
   private View                       _mainContainer;
   private boolean                    _shown            = false;
   private FragmentStack              _fragmentStack;
+  private String _title;
 
   public MBDialogController()
   {
@@ -100,7 +101,8 @@ public class MBDialogController extends ContextWrapper
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(getName());
       setIconName(dialogDefinition.getIcon());
       setDialogMode(dialogDefinition.getMode());
-      getActivity().setTitle(MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
+      
+      _title = MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle());
       if (dialogDefinition.isGroup())
       {
         List<MBDialogDefinition> children = ((MBDialogGroupDefinition) dialogDefinition).getChildren();
@@ -174,6 +176,7 @@ public class MBDialogController extends ContextWrapper
       _shown = true;
     }
     getFragmentStack().playBackStack();
+    getActivity().setTitle(_title);
 
   }
 
