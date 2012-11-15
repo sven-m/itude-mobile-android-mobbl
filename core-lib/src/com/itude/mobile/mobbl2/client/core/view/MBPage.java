@@ -408,9 +408,9 @@ public class MBPage extends MBPanel
   }
 
   @Override
-  public ViewGroup buildViewWithMaxBounds(MBViewState viewState)
+  public ViewGroup buildView()
   {
-    return MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(this, viewState);
+    return MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(this, null);
   }
 
   public void handleException(Exception exception)

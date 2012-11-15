@@ -1,7 +1,9 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.itude.mobile.mobbl2.client.core.MBException;
@@ -9,7 +11,10 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBResultListener;
+import com.itude.mobile.mobbl2.client.core.view.MBField;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
+import com.itude.mobile.mobbl2.client.core.view.MBPanel;
+import com.itude.mobile.mobbl2.client.core.view.listeners.MBPageConstructionListener;
 
 /*
  * Factory class for Pages and Actions.
@@ -21,11 +26,13 @@ public class MBApplicationFactory
   private static MBApplicationFactory _instance = null;
   private final ActionMappings        _actions;
   private final ControllerMappings    _controllers;
+  private final PageConstructor       _pageConstructor;
 
   public MBApplicationFactory()
   {
     _actions = new ActionMappings(getActionRegistry());
     _controllers = new ControllerMappings(getControllerRegistry());
+    _pageConstructor = new PageConstructor();
   }
 
   public static MBApplicationFactory getInstance()
@@ -42,10 +49,9 @@ public class MBApplicationFactory
     _instance = factory;
   }
 
-  public MBPage createPage(MBPageDefinition definition, MBDocument document, String rootPath, MBViewManager.MBViewState viewState)
+  public PageConstructor getPageConstructor()
   {
-    MBPage page = new MBPage(definition, document, rootPath, viewState);
-    return page;
+    return _pageConstructor;
   }
 
   public MBAction createAction(String actionClassName)
@@ -61,6 +67,11 @@ public class MBApplicationFactory
   public MBBasicViewController createFragment(String pageName)
   {
     return _controllers.createController(pageName);
+  }
+
+  public final MBPage createPage(MBPageDefinition definition, MBDocument document, String rootPath, MBViewManager.MBViewState viewState)
+  {
+    return getPageConstructor().createPage(definition, document, rootPath, viewState);
   }
 
   public MBDialogController createDialogController()
@@ -183,6 +194,44 @@ public class MBApplicationFactory
 
       else throw new MBException("Controller for page  " + pageName + " not found");
     }
+  }
+
+  public static class PageConstructor implements MBPageConstructionListener
+  {
+
+    private List<MBPageConstructionListener> _constructionListeners;
+
+    public PageConstructor()
+    {
+      _constructionListeners = new ArrayList<MBPageConstructionListener>();
+    }
+
+    public void addListener(MBPageConstructionListener listener)
+    {
+      _constructionListeners.add(listener);
+    }
+
+    @Override
+    public void onConstructedField(MBField field)
+    {
+
+      for (MBPageConstructionListener listener : _constructionListeners)
+        listener.onConstructedField(field);
+    }
+
+    @Override
+    public void onConstructedPanel(MBPanel panel)
+    {
+      for (MBPageConstructionListener listener : _constructionListeners)
+        listener.onConstructedPanel(panel);
+    }
+
+    public MBPage createPage(MBPageDefinition definition, MBDocument document, String rootPath, MBViewManager.MBViewState viewState)
+    {
+      MBPage page = new MBPage(definition, document, rootPath, viewState);
+      return page;
+    }
+
   }
 
 }

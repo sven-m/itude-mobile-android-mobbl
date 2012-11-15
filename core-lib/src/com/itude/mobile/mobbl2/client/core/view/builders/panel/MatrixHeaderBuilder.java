@@ -2,7 +2,6 @@ package com.itude.mobile.mobbl2.client.core.view.builders.panel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -13,39 +12,137 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.view.MBComponent;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBPanelViewBuilder.BuildState;
-import com.itude.mobile.mobbl2.client.core.view.builders.MBPanelViewBuilder.Builder;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
-import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilder;
 
-public class MatrixHeaderBuilder extends MBViewBuilder implements Builder
+public class MatrixHeaderBuilder extends MBBasePanelBuilder
 {
 
   @Override
-  public ViewGroup buildPanel(MBPanel panel, MBViewState viewState, BuildState buildState)
+  public ViewGroup buildPanel(MBPanel panel, BuildState buildState)
   {
-     Context context = MBApplicationController.getInstance().getBaseContext();
+    Context context = MBApplicationController.getInstance().getBaseContext();
 
-    RelativeLayout headerPanelContainer = new RelativeLayout(context);
-    headerPanelContainer.setTag(Constants.C_MATRIXHEADER_CONTAINER);
-    headerPanelContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+    RelativeLayout headerPanelContainer = buildContainer(context);
 
+    LinearLayout headerPanel = buildHeader(context);
+
+    ArrayList<MBComponent> matrixLabels = new ArrayList<MBComponent>();
+    ArrayList<MBComponent> matrixTitles = new ArrayList<MBComponent>();
+
+    groupChildren(panel, matrixLabels, matrixTitles);
+
+    final MBStyleHandler styleHandler = getStyleHandler();
+    if (matrixTitles.isEmpty() && matrixLabels.isEmpty())
+    {
+      // use the stylehandler for the divider to let the header
+      // act as a top divider
+      headerPanel.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 1));
+      styleHandler.styleDivider(headerPanel);
+      return headerPanel;
+
+    }
+    styleHandler.styleMatrixHeader(headerPanel);
+
+    buildHeader(panel, headerPanel, matrixTitles);
+
+    buildLabels(panel, headerPanel, matrixLabels);
+
+    headerPanelContainer.addView(headerPanel);
+
+    panel.attachView(headerPanelContainer);
+
+    return headerPanelContainer;
+  }
+
+  private LinearLayout buildHeader(Context context)
+  {
     RelativeLayout.LayoutParams headerPanelParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     headerPanelParams.addRule(RelativeLayout.CENTER_VERTICAL);
     LinearLayout headerPanel = new LinearLayout(context);
     headerPanel.setTag(Constants.C_MATRIXHEADER);
     headerPanel.setLayoutParams(headerPanelParams);
     headerPanel.setOrientation(LinearLayout.VERTICAL);
+    return headerPanel;
+  }
 
+  private RelativeLayout buildContainer(Context context)
+  {
+    RelativeLayout headerPanelContainer = new RelativeLayout(context);
+    headerPanelContainer.setTag(Constants.C_MATRIXHEADER_CONTAINER);
+    headerPanelContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+    return headerPanelContainer;
+  }
+
+  private void buildLabels(MBPanel panel, LinearLayout headerPanel, ArrayList<MBComponent> matrixLabels)
+  {
+    Context context = MBApplicationController.getInstance().getBaseContext();
+
+    // Row with labels
+    if (!matrixLabels.isEmpty())
+    {
+      LinearLayout headerRow = new LinearLayout(context);
+      headerRow.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+      headerRow.setOrientation(LinearLayout.HORIZONTAL);
+      headerRow.setGravity(Gravity.CENTER_VERTICAL);
+
+      getStyleHandler().styleMatrixHeaderLabelRow(headerRow);
+
+      buildChildren(matrixLabels, headerRow, new BuildChildrenCallback()
+      {
+
+        @Override
+        public void onConstructChild(MBComponent child, View view)
+        {
+          LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1);
+          view.setLayoutParams(params);
+          getStyleHandler().styleMatrixHeaderRowChild(view, (MBField) child, false);
+        }
+      });
+
+      getStyleHandler().alignMatrixRow(panel, headerRow);
+      headerPanel.addView(headerRow);
+    }
+  }
+
+  private void buildHeader(MBPanel panel, LinearLayout headerPanel, ArrayList<MBComponent> matrixTitles)
+  {
+    Context context = MBApplicationController.getInstance().getBaseContext();
+    //Header
+    if (!matrixTitles.isEmpty())
+    {
+      RelativeLayout headerLabel = new RelativeLayout(context);
+      headerLabel.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+          RelativeLayout.LayoutParams.WRAP_CONTENT));
+      headerLabel.setTag(Constants.C_MATRIXTITLEROW);
+      getStyleHandler().styleMatrixHeaderTitleRow(panel, headerLabel);
+
+      buildChildren(matrixTitles, headerLabel, new BuildChildrenCallback()
+      {
+
+        @Override
+        public void onConstructChild(MBComponent child, View view)
+        {
+
+          RelativeLayout.LayoutParams childViewParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+              LayoutParams.WRAP_CONTENT);
+          childViewParams.addRule(RelativeLayout.CENTER_VERTICAL);
+          view.setLayoutParams(childViewParams);
+
+        }
+      });
+
+      headerPanel.addView(headerLabel);
+    }
+  }
+
+  private void groupChildren(MBPanel panel, ArrayList<MBComponent> matrixLabels, ArrayList<MBComponent> matrixTitles)
+  {
     ArrayList<MBComponent> children = panel.getChildren();
-    ArrayList<MBComponent> matrixLabels = new ArrayList<MBComponent>();
-    ArrayList<MBComponent> matrixTitles = new ArrayList<MBComponent>();
-
     for (Iterator<MBComponent> iterator = children.iterator(); iterator.hasNext();)
     {
       MBComponent mbComponent = iterator.next();
@@ -74,71 +171,6 @@ public class MatrixHeaderBuilder extends MBViewBuilder implements Builder
         matrixLabels.add(mbComponent);
       }
     }
-
-    MBStyleHandler styleHandler = getStyleHandler();
-    if (matrixTitles.isEmpty() && matrixLabels.isEmpty())
-    {
-      // use the stylehandler for the divider to let the header
-      // act as a top divider
-      headerPanel.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 1));
-      styleHandler.styleDivider(headerPanel);
-      return headerPanel;
-    }
-    else
-    {
-      styleHandler.styleMatrixHeader(headerPanel);
-    }
-
-    //Header
-    if (!matrixTitles.isEmpty())
-    {
-      RelativeLayout headerLabel = new RelativeLayout(context);
-      headerLabel.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-          RelativeLayout.LayoutParams.WRAP_CONTENT));
-      headerLabel.setTag(Constants.C_MATRIXTITLEROW);
-      styleHandler.styleMatrixHeaderTitleRow(panel, headerLabel);
-
-      buildChildrenForMatrixHeader(matrixTitles, headerLabel);
-
-      headerPanel.addView(headerLabel);
-    }
-
-    // Row with labels
-    if (!matrixLabels.isEmpty())
-    {
-      LinearLayout headerRow = new LinearLayout(context);
-      headerRow.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-      headerRow.setOrientation(LinearLayout.HORIZONTAL);
-      headerRow.setGravity(Gravity.CENTER_VERTICAL);
-
-      styleHandler.styleMatrixHeaderLabelRow(headerRow);
-
-      MatrixRowPanelBuilder.buildMatrixRowPanelChildren(matrixLabels, headerRow, true);
-      headerPanel.addView(headerRow);
-    }
-
-    headerPanelContainer.addView(headerPanel);
-
-    panel.attachView(headerPanelContainer);
-
-    return headerPanelContainer;
   }
-  
-
-  private void buildChildrenForMatrixHeader(List<? extends MBComponent> children, ViewGroup parent)
-  {
-    for (MBComponent child : children)
-    {
-      View childView = child.buildViewWithMaxBounds(null);
-      if (childView == null) continue;
-
-      RelativeLayout.LayoutParams childViewParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-      childViewParams.addRule(RelativeLayout.CENTER_VERTICAL);
-      childView.setLayoutParams(childViewParams);
-
-      parent.addView(childView);
-    }
-  }
-
 
 }

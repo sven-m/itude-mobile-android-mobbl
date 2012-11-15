@@ -27,8 +27,8 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefiniti
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBFieldDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPathException;
+import com.itude.mobile.mobbl2.client.core.controller.MBApplicationFactory;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
@@ -67,11 +67,6 @@ public class MBField extends MBComponent
 
   private String                _cachedValue    = null;
   private boolean               _cachedValueSet = false;
-
-  // diffable
-  private boolean               _diffableMarker;
-  private boolean               _diffablePrimary;
-  private boolean               _diffableSecondary;
 
   public MBField(MBDefinition definition, MBDocument document, MBComponentContainer parent)
   {
@@ -134,47 +129,11 @@ public class MBField extends MBComponent
         _custom.put(custom.getKey(), substituteExpressions(custom.getValue()));
     }
 
-    checkForDiffable();
-  }
-
-  private void checkForDiffable()
-  {
-    // skip this method if invalid parent (structure)
-    if (!Constants.C_FIELD_MATRIXCELL.equals(getType())) return;
-
-    MBPanel parent = (MBPanel) getFirstParentOfKind(MBPanel.class);
-
-    if (_diffableMarker = Constants.C_FIELD_STYLE_DIFFABLE_MARKER.equals(getStyle())
-                          || (_diffableMarker = Constants.C_FIELD_STYLE_DIFFABLE_MARKER.equals(getCustom1()))
-                          || (_diffableMarker = Constants.C_FIELD_STYLE_DIFFABLE_MARKER.equals(getCustom2()))
-                          || (_diffableMarker = Constants.C_FIELD_STYLE_DIFFABLE_MARKER.equals(getCustom3())))
-    {
-      String path = getAbsoluteDataPath();
-      if (path != null)
-      {
-        parent.setDiffableMarkerPath(path);
-      }
-    }
-    else if (_diffablePrimary = Constants.C_FIELD_STYLE_DIFFABLE_PRIMARY.equals(getStyle())
-                                || (_diffablePrimary = Constants.C_FIELD_STYLE_DIFFABLE_PRIMARY.equals(getCustom1()))
-                                || (_diffablePrimary = Constants.C_FIELD_STYLE_DIFFABLE_PRIMARY.equals(getCustom2()))
-                                || (_diffablePrimary = Constants.C_FIELD_STYLE_DIFFABLE_PRIMARY.equals(getCustom3())))
-    {
-      String path = getAbsoluteDataPath();
-      if (path != null)
-      {
-        parent.setDiffablePrimaryPath(path);
-      }
-    }
-
-    _diffableSecondary = Constants.C_FIELD_STYLE_DIFFABLE_SECONDARY.equals(getStyle())
-                         || Constants.C_FIELD_STYLE_DIFFABLE_SECONDARY.equals(getCustom1())
-                         || Constants.C_FIELD_STYLE_DIFFABLE_SECONDARY.equals(getCustom2())
-                         || Constants.C_FIELD_STYLE_DIFFABLE_SECONDARY.equals(getCustom3());
+    MBApplicationFactory.getInstance().getPageConstructor().onConstructedField(this);
   }
 
   @Override
-  public View buildViewWithMaxBounds(MBViewState viewState)
+  public View buildView()
   {
     return MBViewBuilderFactory.getInstance().getFieldViewBuilder().buildFieldView(this);
   }
@@ -320,19 +279,10 @@ public class MBField extends MBComponent
     return _custom.get(attribute);
   }
 
-  public String getCustom1()
+  public void setCustom(String attribute, String value)
   {
-    return getCustom("custom1");
-  }
-
-  public String getCustom2()
-  {
-    return getCustom("custom2");
-  }
-
-  public String getCustom3()
-  {
-    return getCustom("custom3");
+    if (_custom.isEmpty()) _custom = new HashMap<String, String>();
+    _custom.put(attribute, value);
   }
 
   public String getHint()
@@ -343,21 +293,6 @@ public class MBField extends MBComponent
   public void setHint(String hint)
   {
     _hint = hint;
-  }
-
-  public boolean isDiffableMarker()
-  {
-    return _diffableMarker;
-  }
-
-  public boolean isDiffablePrimary()
-  {
-    return _diffablePrimary;
-  }
-
-  public boolean isDiffableSecondary()
-  {
-    return _diffableSecondary;
   }
 
   /**
@@ -411,6 +346,7 @@ public class MBField extends MBComponent
     return ((MBFieldDefinition) getDefinition()).getPath();
   }
 
+  @Override
   public String getType()
   {
     return ((MBFieldDefinition) getDefinition()).getDisplayType();

@@ -3617,7 +3617,7 @@
 							<Field
 								path="${EXTKoersenFutureSheetGetReplyFuturesFuture}/@${elementNaam}/@text()"
 								type="MATRIX-CELL" dataType="${type}" width="${width}"
-								formatMask="${formatMask}" custom1="${diffType}" style="${diffType}" />
+								formatMask="${formatMask}" style="${diffType}" />
 
 						</ForEach>
 						<!-- Frank modified the button below with a different outcome -->

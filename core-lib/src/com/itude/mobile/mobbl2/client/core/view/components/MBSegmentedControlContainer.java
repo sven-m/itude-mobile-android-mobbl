@@ -52,7 +52,7 @@ public class MBSegmentedControlContainer extends LinearLayout
       subChildContainer.setOrientation(LinearLayout.VERTICAL);
       for (MBComponent subChild : childPanel.getChildren())
       {
-        View contentView = subChild.buildViewWithMaxBounds(null);
+        View contentView = subChild.buildView();
         subChildContainer.addView(contentView);
       }
       _contentItems.add(subChildContainer);

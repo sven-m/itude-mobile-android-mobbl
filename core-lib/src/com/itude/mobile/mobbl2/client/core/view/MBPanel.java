@@ -6,10 +6,9 @@ import android.view.ViewGroup;
 
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPanelDefinition;
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
+import com.itude.mobile.mobbl2.client.core.controller.MBApplicationFactory;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
-import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
@@ -26,9 +25,9 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   private String  _mode;
   private boolean _focused;
 
-  private String  _diffableMarkerPath    = null;
-  private String  _diffablePrimaryPath   = null;
-  private boolean _diffableMaster        = false;
+  private String  _diffableMarkerPath  = null;
+  private String  _diffablePrimaryPath = null;
+  private boolean _diffableMaster      = false;
 
   public MBPanel(MBPanelDefinition definition, MBDocument document, MBComponentContainer parent)
   {
@@ -50,11 +49,9 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     if (buildViewStructure)
     {
       buildChildren(definition, document, parent);
-      if (Constants.C_MATRIX.equals(_type) || Constants.C_MATRIXROW.equals(_type))
-      {
-        processDiffResponsibility();
-      }
+      MBApplicationFactory.getInstance().getPageConstructor().onConstructedPanel(this);
     }
+
   }
 
   final protected void buildChildren(MBPanelDefinition definition, MBDocument document, MBComponentContainer parent)
@@ -74,43 +71,13 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     }
   }
 
-  private void processDiffResponsibility()
-  {
-    if (getDiffableMarkerPath() == null || getDiffablePrimaryPath() == null)
-    {
-      if (!Constants.C_MATRIX.equals(getType()))
-      {
-        // assume inter-row diffables so make the matrix panel the master and move diffable knowledge to the parent
-        setDiffableMaster(false);
-        MBPanel parent = getFirstParentPanelWithType(Constants.C_MATRIX);
-        if (parent == null)
-        {
-       //   parent = getFirstParentPanelWithType(Constants.C_EDITABLEMATRIX);
-        }
-        parent.setDiffableMaster(true);
-        if (getDiffableMarkerPath() != null)
-        {
-          parent.setDiffableMarkerPath(getDiffableMarkerPath());
-        }
-
-        if (getDiffablePrimaryPath() != null)
-        {
-          parent.setDiffablePrimaryPath(getDiffablePrimaryPath());
-        }
-      }
-    }
-    else
-    {
-      setDiffableMaster(true);
-    }
-  }
-
+  @Override
   public String getType()
   {
     return _type;
   }
 
-  public void setType(String type)
+  private void setType(String type)
   {
     _type = type;
   }
@@ -166,9 +133,9 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   }
 
   @Override
-  public ViewGroup buildViewWithMaxBounds(MBViewState viewState)
+  public ViewGroup buildView()
   {
-    return MBViewBuilderFactory.getInstance().getPanelViewBuilder().buildPanelView(this, viewState);
+    return MBViewBuilderFactory.getInstance().getPanelViewBuilder().buildPanelView(this);
   }
 
   @Override

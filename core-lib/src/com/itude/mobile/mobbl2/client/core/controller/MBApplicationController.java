@@ -331,7 +331,8 @@ public class MBApplicationController extends Application
         viewState = MBViewState.MBViewStateModal;
       }
 
-      final MBPage page = _applicationFactory.createPage(pageDefinition, document, causingOutcome.getPath(), viewState);
+      final MBPage page = _applicationFactory.getPageConstructor()
+          .createPage(pageDefinition, document, causingOutcome.getPath(), viewState);
       page.setController(this);
       page.setDialogName(causingOutcome.getDialogName());
       // Fallback on the lastly selected dialog if there is no dialog set in the outcome:
@@ -538,7 +539,7 @@ public class MBApplicationController extends Application
     exceptionDocument.setValue(outcome.getOutcomeName(), MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_OUTCOME);
     for (StackTraceElement traceElement : exception.getStackTrace())
     {
-      MBElement stackline = exceptionDocument.createElementWithName("/Exception[0]/Stackline");
+      MBElement stackline = exceptionDocument.createElement("/Exception[0]/Stackline");
       String line = traceElement.toString();
       if (line.length() > 52) line = line.substring(0, 52);
       stackline.setAttributeValue(line, "line");

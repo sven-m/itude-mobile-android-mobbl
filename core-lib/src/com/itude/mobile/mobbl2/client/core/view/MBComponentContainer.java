@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.view;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
@@ -54,7 +55,24 @@ public class MBComponentContainer extends MBComponent
     {
       if (clazz.isInstance(child))
       {
-        result.add((T)child);
+        result.add((T) child);
+      }
+    }
+
+    return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T extends MBComponent> List<T> getChildrenOfKindWithType(Class<T> clazz, String... types)
+  {
+    List<T> result = new ArrayList<T>();
+    List<String> typeArray = Arrays.asList(types);
+    for (MBComponent child : _children)
+    {
+      if (clazz.isInstance(child) && typeArray.contains(child.getType()))
+      {
+        result.add((T) child);
       }
     }
 
@@ -97,7 +115,7 @@ public class MBComponentContainer extends MBComponent
 
       if (clazz.isInstance(child))
       {
-        result.add((T)child);
+        result.add((T) child);
       }
 
       result.addAll(child.getDescendantsOfKind(clazz));

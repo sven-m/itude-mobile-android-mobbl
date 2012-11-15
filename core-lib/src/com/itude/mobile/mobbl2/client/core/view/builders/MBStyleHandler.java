@@ -1,5 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.view.builders;
 
+import java.util.List;
+
 import android.R;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -23,7 +25,6 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
@@ -43,11 +44,11 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
 public class MBStyleHandler
 {
 
-  public void applyStyle(MBComponent component, View view, MBViewManager.MBViewState viewState)
+  public void applyStyle(MBComponent component, View view)
   {
-    if (component instanceof MBField) applyStyle(view, (MBField) component, viewState);
-    else if (component instanceof MBPage) applyStyle(view, (MBPage) component, viewState);
-    else if (component instanceof MBPanel) applyStyle(view, (MBPanel) component, viewState);
+    if (component instanceof MBField) applyStyle(view, (MBField) component);
+    else if (component instanceof MBPage) applyStyle(view, (MBPage) component);
+    else if (component instanceof MBPanel) applyStyle(view, (MBPanel) component);
   }
 
   public void styleLabel(TextView view, MBField field)
@@ -275,11 +276,11 @@ public class MBStyleHandler
   // subclass// You should not normally call them; use the generic method
   // above for that- (void) applyStyle:(Object *)view page:(MBPage *)page
   // viewState:(MBViewState)viewState;
-  public void applyStyle(View view, MBPanel panel, MBViewManager.MBViewState viewState)
+  public void applyStyle(View view, MBPanel panel)
   {
   }
 
-  public void applyStyle(View view, MBField field, MBViewManager.MBViewState viewState)
+  public void applyStyle(View view, MBField field)
   {
   }
 
@@ -343,6 +344,18 @@ public class MBStyleHandler
 
   public void styleMatrixRow(MBPanel panel, LinearLayout row)
   {
+    alignMatrixRow(panel, row);
+  }
+
+  public void alignMatrixRow(MBPanel panel, LinearLayout row)
+  {
+    List<MBField> fields = panel.getChildrenOfKindWithType(MBField.class, Constants.C_FIELD_MATRIXCELL, Constants.C_FIELD_MATRIXCELL);
+    for (int idx = 0; idx < fields.size(); ++idx)
+    {
+      MBField field = fields.get(idx);
+      if (idx > 0 && field.getAlignment() == null && field.getAttachedView() instanceof TextView) ((TextView) field.getAttachedView())
+          .setGravity(Gravity.CENTER_HORIZONTAL);
+    }
   }
 
   public void styleMatrixRowPanel(MBPanel panel, RelativeLayout row, boolean isClickable, String style, int rowNumber)

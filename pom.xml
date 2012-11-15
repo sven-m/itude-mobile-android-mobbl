@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.itude.poms</groupId>
 		<artifactId>itude-jenkins</artifactId>
-		<version>1.6</version>
+		<version>1.7</version>
 	</parent>
 	<groupId>com.itude.mobile.android.mobbl</groupId>
 	<artifactId>mobbl-core</artifactId>

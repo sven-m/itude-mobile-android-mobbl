@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 
 public class MBComponent
@@ -79,7 +78,7 @@ public class MBComponent
     _markedForDestruction = markedForDestruction;
   }
 
-  public View buildViewWithMaxBounds(MBViewManager.MBViewState viewState)
+  public View buildView()
   {
     return null;
   }
@@ -257,6 +256,12 @@ public class MBComponent
     return new ArrayList<T>();
   }
 
+  public <T extends MBComponent> List<T> getChildrenOfKindWithType(Class<T> clazz, String... types)
+  {
+    // This method is overridden by the various subclasses; if this could be an abstract method it would be
+    return new ArrayList<T>();
+  }
+
   public <T extends MBComponent> T getFirstDescendantOfKind(Class<T> clazz)
   {
     List<T> result = getDescendantsOfKind(clazz);
@@ -396,6 +401,12 @@ public class MBComponent
   public View getAttachedView()
   {
     return _view;
+  }
+
+  public String getType()
+  {
+    // return something marginally useful; should be overridden by subclasses
+    return this.getClass().getSimpleName();
   }
 
 }
