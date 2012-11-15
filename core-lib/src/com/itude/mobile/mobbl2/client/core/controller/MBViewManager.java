@@ -29,7 +29,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 
-import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
@@ -68,7 +67,7 @@ public class MBViewManager extends FragmentActivity
   private boolean                         _singlePageMode;
   private String                          _activeDialog;
 
-  // /////////////////// Android lifecycle methods
+  ///////////////////// Android lifecycle methods
 
   protected void onPreCreate()
   {
@@ -116,8 +115,7 @@ public class MBViewManager extends FragmentActivity
   @Override
   protected void onDestroy()
   {
-    // Our application is closing so after this point our ApplicationState
-    // should return that the application is not started.
+    // Our application is closing so after this point our ApplicationState should return that the application is not started.
     MBApplicationController.getInstance().setApplicationState(ApplicationState.NOTSTARTED);
 
     // signal the DialogControllers that we are closing down
@@ -144,9 +142,9 @@ public class MBViewManager extends FragmentActivity
     if (currentAlert != null) currentAlert.dismiss();
   }
 
-  // ///////////////////
+  ///////////////////// 
 
-  // /////////////////// Android method
+  ///////////////////// Android method
 
   @Override
   protected void onNewIntent(Intent intent)
@@ -223,7 +221,7 @@ public class MBViewManager extends FragmentActivity
           }
         });
       }
-      setTitle(firstDialogDefinition.getTitle());
+      setTitle(MBLocalizationService.getInstance().getTextForKey(firstDialogDefinition.getTitle()));
     }
     else
     {
@@ -253,7 +251,7 @@ public class MBViewManager extends FragmentActivity
 
   }
 
-  // /// Event handling /////
+  ///// Event handling /////
 
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event)
@@ -263,10 +261,15 @@ public class MBViewManager extends FragmentActivity
       // Take care of calling this method on earlier versions of
       // the platform where it doesn't exist.
       onBackPressed();
+
       return true;
     }
+    else
+    {
+      // Pass this onKeyDown event trough to the underlying fragments
+      return getActiveDialog().onKeyDown(keyCode, event);
+    }
 
-    return super.onKeyDown(keyCode, event);
   }
 
   @Override
@@ -322,7 +325,7 @@ public class MBViewManager extends FragmentActivity
     return handled;
   }
 
-  // ///////////////////////////////////////////////////
+  /////////////////////////////////////////////////////
 
   // Activate a dialog based on the hashed Name
   public void activateOrCreateDialogWithID(int itemId)
@@ -606,14 +609,11 @@ public class MBViewManager extends FragmentActivity
       if (!CollectionUtilities.isEqualCollection(getViewControllers(dialogName), getViewControllers(getActiveDialogName())))
       {
         MBDialogController dialogController = getDialog(getActiveDialogName());
-        // skip if the DialogController is already activated or not
-        // created yet.
+        // skip if the DialogController is already activated or not created yet.
         if (dialogController != null && dialogController != getActiveDialog())
         {
-          // Some Android smartphone devices don't onPause an Activity
-          // when expected.
-          // This is a workaround to make sure that all activities
-          // handle their stuff when leaving.
+          // Some Android smartphone devices don't onPause an Activity when expected. 
+          // This is a workaround to make sure that all activities handle their stuff when leaving.
           dialogController.handleAllOnLeavingWindow();
         }
       }
@@ -629,10 +629,10 @@ public class MBViewManager extends FragmentActivity
 
       //
       MBDialogController dc = startDialog(dialogName, id);
-      // View view = window.getDecorView();
+      //View view = window.getDecorView();
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      setTitle(dialogDefinition.getTitle());
-      // setContentView(view);
+      setTitle(MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
+      //setContentView(view);
 
       MBBasicViewController vc = findViewController(dialogName, id);
 
@@ -665,7 +665,15 @@ public class MBViewManager extends FragmentActivity
 
   public void supportInvalidateOptionsMenu()
   {
-    ActivityCompatHoneycomb.invalidateOptionsMenu(this);
+    runOnUiThread(new Runnable()
+    {
+
+      @Override
+      public void run()
+      {
+        MBViewManager.super.invalidateOptionsMenu();
+      }
+    });
   }
 
   private MBDialogController activateDialog(String dialogName)
@@ -698,8 +706,7 @@ public class MBViewManager extends FragmentActivity
       addSortedDialogName(dialogName, dialogDefinition);
 
       MBDialogController dialogController = getDialog(dialogName);
-      // skip if the DialogController is already activated or not created
-      // yet.
+      // skip if the DialogController is already activated or not created yet.
       if (dialogController != null && dialogController != getActiveDialog())
       {
         activated = true;
@@ -710,10 +717,8 @@ public class MBViewManager extends FragmentActivity
           MBDialogController previousDialogController = getDialog(previousDialogName);
           if (previousDialogController != null)
           {
-            // Some Android smartphone devices don't onPause an
-            // Activity when expected.
-            // This is a workaround to make sure that all activities
-            // handle their stuff when leaving.
+            // Some Android smartphone devices don't onPause an Activity when expected. 
+            // This is a workaround to make sure that all activities handle their stuff when leaving.
             previousDialogController.handleAllOnLeavingWindow();
           }
         }
@@ -827,13 +832,14 @@ public class MBViewManager extends FragmentActivity
     }
   }
 
-  /*
-   * @Override public boolean onSearchRequested() { return
-   * getCurrentDialog().onSearchRequested(); }
-   */
+  /*  @Override
+    public boolean onSearchRequested()
+    {
+      return getCurrentDialog().onSearchRequested();
+    }
+  */
   /**
-   * @param dialogName
-   *            dialogName
+   * @param dialogName dialogName
    */
   public void removeDialog(String dialogName)
   {
@@ -866,8 +872,7 @@ public class MBViewManager extends FragmentActivity
   }
 
   /**
-   * @param dialogName
-   *            dialogName
+   * @param dialogName dialogName
    */
   public void clearDialogFromStack(String dialogName)
   {
@@ -928,9 +933,7 @@ public class MBViewManager extends FragmentActivity
 
   /**
    * Method can be used to manually request an orientation
-   * 
-   * @param orientation
-   *            use {@link ActivityInfo} to set your requested orientation.
+   * @param orientation use {@link ActivityInfo} to set your requested orientation.
    */
   public void setOrientation(int orientation)
   {
@@ -974,8 +977,7 @@ public class MBViewManager extends FragmentActivity
       @Override
       public void run()
       {
-        // Only handle orientationchanges when orientation changed,
-        // obviously
+        // Only handle orientationchanges when orientation changed, obviously
         // Also, tell all Dialogs
         for (MBDialogController dc : getDialogs())
         {
@@ -993,14 +995,14 @@ public class MBViewManager extends FragmentActivity
     for (MBDialogController dc : getDialogs())
     {
 
-      // TODO Duplicaten er nog eens uit halen.
+      //TODO Duplicaten er nog eens uit halen.
       if (dc != null && !dc.getAllFragments().isEmpty()) list.addAll(dc.getAllFragments());
     }
 
     return list;
   }
 
-  // //// Dialog management ////////
+  ////// Dialog management ////////
 
   private Collection<MBDialogController> getDialogs()
   {
@@ -1017,20 +1019,17 @@ public class MBViewManager extends FragmentActivity
     return getDialog(getActiveDialogName());
   }
 
-  // Tablet specific methods. Some methods are implemented also to run on
-  // smartphone.
+  // Tablet specific methods. Some methods are implemented also to run on smartphone.
   // Others are for tablet only.
 
   public void invalidateActionBar(boolean selectFirstTab)
   {
-    // throw new
-    // UnsupportedOperationException("This method is not supported on smartphone");
+    //    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
   public void invalidateActionBar(boolean selectFirstTab, boolean notifyListener)
   {
-    // throw new
-    // UnsupportedOperationException("This method is not supported on smartphone");
+    //    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
   public void showProgressIndicatorInTool()

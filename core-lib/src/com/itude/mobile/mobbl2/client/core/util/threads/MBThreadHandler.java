@@ -2,6 +2,10 @@ package com.itude.mobile.mobbl2.client.core.util.threads;
 
 import java.util.HashSet;
 
+import android.util.Log;
+
+import com.itude.mobile.mobbl2.client.core.util.Constants;
+
 public final class MBThreadHandler
 {
   private HashSet<MBThread>      _runningThreads = null;
@@ -35,6 +39,8 @@ public final class MBThreadHandler
 
   public synchronized void stopAllRunningThreads()
   {
+    Log.d(Constants.APPLICATION_NAME, "Stopping all running threads from MBThreadHandler");
+
     for (MBThread thread : _runningThreads)
     {
       thread.interrupt();

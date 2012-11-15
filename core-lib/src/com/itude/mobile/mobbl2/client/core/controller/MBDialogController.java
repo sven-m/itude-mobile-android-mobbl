@@ -15,11 +15,11 @@ import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
@@ -146,14 +146,12 @@ public class MBDialogController extends ContextWrapper
     // handle as a single dialog
     if (_dialogIds.size() == 1)
     {
-      _mainContainer = (RelativeLayout) MBViewBuilderFactory.getInstance().getDialogViewBuilder()
-          .buildDialog(MBDialogType.Single, _sortedDialogIds);
+      _mainContainer = MBViewBuilderFactory.getInstance().getDialogViewBuilder().buildDialog(MBDialogType.Single, _sortedDialogIds);
     }
     // handle as a group of dialogs
     else if (_dialogIds.size() > 1)
     {
-      _mainContainer = (RelativeLayout) MBViewBuilderFactory.getInstance().getDialogViewBuilder()
-          .buildDialog(MBDialogType.Split, _sortedDialogIds);
+      _mainContainer = MBViewBuilderFactory.getInstance().getDialogViewBuilder().buildDialog(MBDialogType.Split, _sortedDialogIds);
     }
 
     if (getOutcomeId() != null)
@@ -537,11 +535,37 @@ public class MBDialogController extends ContextWrapper
   {
     boolean handled = false;
     for (MBBasicViewController controller : getAllFragments())
-      if (controller.onBackKeyPressed()) handled = true;
+    {
+      if (controller.onBackKeyPressed())
+      {
+        handled = true;
+      }
+    }
 
-    if (!handled) popView();
+    if (!handled)
+    {
+      popView();
+    }
 
     return true;
+  }
+
+  /*
+   * To enable fragments to catch key events we will need to be able to pass it through to them
+   */
+  public boolean onKeyDown(int keyCode, KeyEvent event)
+  {
+
+    boolean handled = false;
+    
+    for (MBBasicViewController controller : getAllFragments())
+    {
+      if(controller.onKeyDown(keyCode, event)) {
+        handled = true;
+      }
+    }
+
+    return handled;
   }
 
   public boolean onMenuItemSelected(int featureId, MenuItem item)
@@ -571,7 +595,7 @@ public class MBDialogController extends ContextWrapper
       public Fragment fragment;
     }
 
-    private Stack<SavedStackEntry> _stack = new Stack<SavedStackEntry>();
+    private final Stack<SavedStackEntry> _stack = new Stack<SavedStackEntry>();
 
     public FragmentStack(FragmentManager manager)
     {
