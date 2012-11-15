@@ -344,6 +344,11 @@ public class MBStyleHandler
 
   public void styleMatrixRow(MBPanel panel, LinearLayout row)
   {
+    alignMatrixRow(panel, row);
+  }
+
+  public void alignMatrixRow(MBPanel panel, LinearLayout row)
+  {
     List<MBField> fields = panel.getChildrenOfKindWithType(MBField.class, Constants.C_FIELD_MATRIXCELL, Constants.C_FIELD_MATRIXCELL);
     for (int idx = 0; idx < fields.size(); ++idx)
     {
