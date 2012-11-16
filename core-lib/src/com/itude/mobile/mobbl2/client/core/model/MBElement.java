@@ -61,6 +61,11 @@ public class MBElement extends MBElementContainer
     }
   }
 
+  public void setAttributeValue(boolean value, String attributeName)
+  {
+    setAttributeValue(value ? Constants.C_TRUE : Constants.C_FALSE, attributeName, true);
+  }
+
   public void setAttributeValue(String value, String attributeName)
   {
     setAttributeValue(value, attributeName, true);

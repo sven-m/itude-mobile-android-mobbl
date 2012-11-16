@@ -3,6 +3,7 @@ package com.itude.mobile.mobbl2.client.core.view.builders;
 import android.view.View;
 
 import com.itude.mobile.mobbl2.client.core.MBException;
+import com.itude.mobile.mobbl2.client.core.util.AssertUtil;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 import com.itude.mobile.mobbl2.client.core.view.builders.field.ButtonFieldBuilder;
@@ -66,7 +67,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
   public View buildFieldView(MBField field)
   {
-
+    AssertUtil.notNull("field", field);
     Builder builder = _builders.getBuilder(field.getType(), field.getStyle());
     if (builder == null) throw new MBException("No field builder found for field " + field);
 
