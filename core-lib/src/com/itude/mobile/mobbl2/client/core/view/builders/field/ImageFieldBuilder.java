@@ -40,12 +40,12 @@ public class ImageFieldBuilder extends MBBaseFieldBuilder
     {
       drawable = MBResourceService.getInstance().getImageByURL(field.getFormattedValue());
     }
-    image.setBackgroundDrawable(drawable);
+    image.setImageDrawable(drawable);
 
     getStyleHandler().styleImage(image);
     getStyleHandler().styleImage(image, field.getStyle());
 
     return image;
- }
+  }
 
 }
