@@ -7,4 +7,6 @@ public interface MBOutcomeListenerProtocol
 
   public void outcomeProduced(MBOutcome outcome);
 
+  public void afterOutcomeHandled(MBOutcome outcome);
+
 }

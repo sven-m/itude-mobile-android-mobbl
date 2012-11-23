@@ -177,8 +177,12 @@ public class MBPage extends MBPanel
     else
     {
       _controller.handleOutcome(outcome);
-
     }
+    for (MBOutcomeListenerProtocol lsnr : _outcomeListeners)
+    {
+      lsnr.afterOutcomeHandled(outcome);
+    }
+
   }
 
   @Override
