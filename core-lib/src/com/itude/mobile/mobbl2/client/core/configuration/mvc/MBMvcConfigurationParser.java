@@ -400,8 +400,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
     }
     else if (elementName.equals("Panel"))
     {
-      checkAttributesForElement(elementName, attributeDict, _panelAttributes);
-
       MBPanelDefinition panelDef = new MBPanelDefinition();
       panelDef.setType(attributeDict.get("type"));
       panelDef.setName(attributeDict.get("name"));
@@ -421,6 +419,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       panelDef.setPath(attributeDict.get("path"));
       panelDef.setMode(attributeDict.get("mode"));
       panelDef.setFocused(Boolean.parseBoolean(attributeDict.get("focused")));
+      panelDef.setCustom(extractCustomAttributes(attributeDict, _panelAttributes));
 
       notifyProcessed(panelDef);
     }

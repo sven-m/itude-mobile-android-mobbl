@@ -2,11 +2,8 @@ package com.itude.mobile.mobbl2.client.core.view;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import android.text.Editable;
@@ -63,7 +60,6 @@ public class MBField extends MBComponent
   private int                   _width;
   private int                   _height;
   private String                _hint;
-  private Map<String, String>   _custom;
 
   private String                _cachedValue             = null;
   private String                _cachedUntranslatedValue = null;
@@ -121,14 +117,6 @@ public class MBField extends MBComponent
     setAlignment(substituteExpressions(fieldDef.getAlignment()));
     setHidden(Boolean.parseBoolean(substituteExpressions(fieldDef.getHidden())));
     setHint(substituteExpressions(fieldDef.getHint()));
-
-    if (fieldDef.getCustom().isEmpty()) _custom = Collections.emptyMap();
-    else
-    {
-      _custom = new HashMap<String, String>();
-      for (Map.Entry<String, String> custom : fieldDef.getCustom().entrySet())
-        _custom.put(custom.getKey(), substituteExpressions(custom.getValue()));
-    }
 
     MBApplicationFactory.getInstance().getPageConstructor().onConstructedField(this);
   }
@@ -255,7 +243,6 @@ public class MBField extends MBComponent
     _alignment = alignment;
   }
 
-  
   public String getUntranslatedValueIfNil()
   {
     return _valueIfNil;
@@ -281,17 +268,6 @@ public class MBField extends MBComponent
     _hidden = hidden;
   }
 
-  public String getCustom(String attribute)
-  {
-    return _custom.get(attribute);
-  }
-
-  public void setCustom(String attribute, String value)
-  {
-    if (_custom.isEmpty()) _custom = new HashMap<String, String>();
-    _custom.put(attribute, value);
-  }
-
   public String getHint()
   {
     return _hint;
@@ -307,7 +283,7 @@ public class MBField extends MBComponent
    * Try not to call it repeatedly, but cache the value.
    * @see #getValuesForDisplay()
    */
-  public String getValue()  
+  public String getValue()
   {
     calculateValueIfNeeded();
     return _cachedValue;
@@ -600,6 +576,7 @@ public class MBField extends MBComponent
   }
 
   // android.view.View.OnClickListener method
+  @Override
   public void onClick(View v)
   {
 
@@ -628,6 +605,7 @@ public class MBField extends MBComponent
   }
 
   // OnItemSelectedListener Methods
+  @Override
   public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
   {
     if (getDomain() != null && !getDomain().getDomainValidators().isEmpty())
@@ -637,11 +615,13 @@ public class MBField extends MBComponent
     }
   }
 
+  @Override
   public void onNothingSelected(AdapterView<?> parent)
   {
   }
 
   //OnCheckedChangeListener Method
+  @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
   {
     if (isChecked)
@@ -654,14 +634,17 @@ public class MBField extends MBComponent
     }
   }
 
+  @Override
   public void afterTextChanged(Editable s)
   {
   }
 
+  @Override
   public void beforeTextChanged(CharSequence s, int start, int count, int after)
   {
   }
 
+  @Override
   public void onTextChanged(CharSequence s, int start, int before, int count)
   {
     String textFieldValue = s.toString();
