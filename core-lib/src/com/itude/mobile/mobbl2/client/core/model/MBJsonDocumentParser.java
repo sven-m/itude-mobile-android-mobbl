@@ -10,6 +10,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefiniti
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBParseErrorException;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBJsonDocumentParser
 {
@@ -87,7 +88,7 @@ public class MBJsonDocumentParser
         {
 
           Object attributeValue = null;
-          JSONObject jsonValue = (JSONObject)p_jsonValue;
+          JSONObject jsonValue = (JSONObject) p_jsonValue;
 
           if (jsonValue.has(attributeDefinition.getName()))
           {
@@ -109,11 +110,11 @@ public class MBJsonDocumentParser
             {
               if ((Boolean) attributeValue)
               {
-                attributeValue = "1";
+                attributeValue = Constants.C_TRUE;
               }
               else
               {
-                attributeValue = "0";
+                attributeValue = Constants.C_FALSE;
               }
 
             }
@@ -143,7 +144,7 @@ public class MBJsonDocumentParser
   {
     if (p_jsonValue instanceof JSONObject)
     {
-      JSONObject jsonValue = (JSONObject)p_jsonValue;
+      JSONObject jsonValue = (JSONObject) p_jsonValue;
       Collection<MBElementDefinition> elements = definition.getChildElements();
 
       for (MBElementDefinition childDefinition : elements)
@@ -193,7 +194,7 @@ public class MBJsonDocumentParser
 
             if (jsonChild instanceof JSONArray)
             {
-              JSONArray arr = (JSONArray)jsonChild;
+              JSONArray arr = (JSONArray) jsonChild;
               for (int i = 0; i < arr.length(); i++)
               {
                 MBElement childElement = childDefinition.createElement();
