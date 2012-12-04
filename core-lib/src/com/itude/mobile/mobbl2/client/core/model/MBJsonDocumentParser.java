@@ -181,6 +181,17 @@ public class MBJsonDocumentParser
               {
                 childElement.setBodyText(Long.toString((Long) jsonChild));
               }
+              if (jsonChild instanceof Boolean)
+              {
+                if ((Boolean) jsonChild)
+                {
+                  childElement.setBodyText(Constants.C_TRUE);
+                }
+                else
+                {
+                  childElement.setBodyText(Constants.C_FALSE);
+                }
+              }
 
               element.addElement(childElement);
             }
