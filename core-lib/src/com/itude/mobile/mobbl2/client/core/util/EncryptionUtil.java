@@ -2,15 +2,12 @@ package com.itude.mobile.mobbl2.client.core.util;
 
 import java.io.UnsupportedEncodingException;
 
-class EncryptionUtil
+public class EncryptionUtil
 {
-
-  static private int keylength = 8;   // keylength for WEP; deprecated
-
-  private byte[]     s;
-  private int        the_i;
-  private int        the_j;
-  private int        next_j    = -666; // not really needed after all
+  private final byte[] s;
+  private int          the_i;
+  private int          the_j;
+  private int          next_j = -666; // not really needed after all
 
   public EncryptionUtil()
   {
@@ -122,21 +119,6 @@ class EncryptionUtil
     else return 256 + b;
   }
 
-  /**
-   * buildkey is for WEP keys only
-   */
-  public static byte[] buildkey(byte[] IV, byte[] shortkey)
-  {
-    byte[] key = new byte[keylength];
-    int ivlen = IV.length;
-    int i = 0;
-    for (i = 0; i < ivlen; i++)
-      key[i] = IV[i];
-    for (i = ivlen; i < keylength; i++)
-      key[i] = shortkey[i - ivlen];
-    return key;
-  }
-
   static public String byte2string(byte b)
   {
     int high = (b >> 4) & 0x0F;
@@ -146,16 +128,6 @@ class EncryptionUtil
     String result = "";
     result += convert.charAt(high);
     result += convert.charAt(low);
-    return result;
-  }
-
-  static public String byte2string(byte[] b)
-  {
-    String result = "";
-    for (int i = 0; i < b.length; i++)
-    {
-      result += byte2string(b[i]);
-    }
     return result;
   }
 
@@ -180,6 +152,14 @@ class EncryptionUtil
       buf[i] = (byte) ((nyb1 * 16) + nyb2);
     }
     return buf;
+  }
+
+  /**
+   * encrypt is for testing; key can be any length
+   */
+  static public byte[] encrypt(String key, String message)
+  {
+    return encrypt(key.getBytes(), message.getBytes());
   }
 
   /**
@@ -210,6 +190,33 @@ class EncryptionUtil
     }
     return encodedString.getBytes();
 
+  }
+
+  static public String byte2string(byte[] b)
+  {
+    String result = "";
+    for (int i = 0; i < b.length; i++)
+    {
+      result += byte2string(b[i]);
+    }
+    return result;
+  }
+
+  static private int keylength = 8; // keylength for WEP; deprecated
+
+  /**
+   * buildkey is for WEP keys only
+   */
+  public static byte[] buildkey(byte[] IV, byte[] shortkey)
+  {
+    byte[] key = new byte[keylength];
+    int ivlen = IV.length;
+    int i = 0;
+    for (i = 0; i < ivlen; i++)
+      key[i] = IV[i];
+    for (i = ivlen; i < keylength; i++)
+      key[i] = shortkey[i - ivlen];
+    return key;
   }
 
 }
