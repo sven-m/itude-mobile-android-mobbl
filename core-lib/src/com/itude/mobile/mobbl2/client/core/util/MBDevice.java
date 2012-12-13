@@ -7,8 +7,6 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
-import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
-
 /**
  * @author Coen Houtman
  * 
@@ -30,6 +28,8 @@ public final class MBDevice
   private String                       _deviceModel                 = null;
 
   private static String                _isBigDevice                 = null;
+
+  private static Context               _context                     = null;
 
   private MBDevice()
   {
@@ -142,8 +142,7 @@ public final class MBDevice
   {
     if (_screenSize == null)
     {
-      Display display = ((WindowManager) MBApplicationController.getInstance().getBaseContext().getSystemService(Context.WINDOW_SERVICE))
-          .getDefaultDisplay();
+      Display display = ((WindowManager) _context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
       int width = display.getWidth();
       int height = display.getHeight();
 
@@ -158,8 +157,7 @@ public final class MBDevice
     if (_screenDensityClassification == null)
     {
       DisplayMetrics metrics = new DisplayMetrics();
-      ((WindowManager) MBApplicationController.getInstance().getBaseContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
-          .getMetrics(metrics);
+      ((WindowManager) _context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(metrics);
 
       switch (metrics.densityDpi)
       {
@@ -188,8 +186,7 @@ public final class MBDevice
     if (_screenDensity == null)
     {
       DisplayMetrics metrics = new DisplayMetrics();
-      ((WindowManager) MBApplicationController.getInstance().getBaseContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
-          .getMetrics(metrics);
+      ((WindowManager) _context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(metrics);
 
       _screenDensity = new TwinResult<Float, Float>(metrics.xdpi, metrics.ydpi);
     }
@@ -201,8 +198,7 @@ public final class MBDevice
   {
     if (_screenType == null)
     {
-      int screenType = MBApplicationController.getInstance().getResources().getConfiguration().screenLayout
-                       & Configuration.SCREENLAYOUT_SIZE_MASK;
+      int screenType = _context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 
       switch (screenType)
       {
@@ -229,21 +225,25 @@ public final class MBDevice
     return _screenType;
   }
 
+  public void setContext(Context context)
+  {
+    _context = context;
+  }
+
   public static String isBigDeviceType()
   {
     if (_isBigDevice == null)
     {
       //Verifies if the Generalized Size of the device is XLARGE to be
       // considered a Tablet
-      boolean xlarge = ((MBApplicationController.getInstance().getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE);
+      boolean xlarge = ((_context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE);
 
       // If XLarge, checks if the Generalized Density is at least MDPI
       // (160dpi)
       if (xlarge)
       {
         DisplayMetrics metrics = new DisplayMetrics();
-        ((WindowManager) MBApplicationController.getInstance().getBaseContext().getSystemService(Context.WINDOW_SERVICE))
-            .getDefaultDisplay().getMetrics(metrics);
+        ((WindowManager) _context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(metrics);
 
         // MDPI=160, DEFAULT=160, DENSITY_HIGH=240, DENSITY_MEDIUM=160,
         // DENSITY_TV=213, DENSITY_XHIGH=320
@@ -273,7 +273,7 @@ public final class MBDevice
   {
     return Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1;
   }
-  
+
   public boolean isPhone()
   {
     return DEVICE_NORMAL.equals(isBigDeviceType()) && (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB);
