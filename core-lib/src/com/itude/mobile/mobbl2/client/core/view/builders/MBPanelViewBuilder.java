@@ -17,7 +17,7 @@ public class MBPanelViewBuilder extends MBViewBuilder
 {
 
   private MBBuilderRegistry<MBPanel, Builder> _builders;
-  private BuildState                          _buildState;
+  private final BuildState                    _buildState;
 
   private void registerBuilders()
   {
@@ -45,10 +45,11 @@ public class MBPanelViewBuilder extends MBViewBuilder
     Builder builder = getBuilder(panel.getType(), panel.getStyle());
 
     ViewGroup view = builder.buildPanel(panel, _buildState);
+    panel.attachView(view);
 
     getStyleHandler().applyStyle(panel, view);
-    return view;
 
+    return view;
   }
 
   public Builder getBuilder(String type, String style)

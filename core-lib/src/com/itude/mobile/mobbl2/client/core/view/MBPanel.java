@@ -24,6 +24,7 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   private String  _translatedPath;
   private String  _mode;
   private boolean _focused;
+  private boolean _scrollable;
 
   private String  _diffableMarkerPath  = null;
   private String  _diffablePrimaryPath = null;
@@ -254,6 +255,17 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   private void setFocused(boolean focused)
   {
     _focused = focused;
+  }
+
+  
+  public boolean isScrollable()
+  {
+    return _scrollable;
+  }
+
+  public void setScrollable(boolean scrollable)
+  {
+    _scrollable = scrollable;
   }
 
   public void setDiffableMaster(boolean diffableMaster)

@@ -109,6 +109,20 @@ public class MBSegmentedControlBar extends LinearLayout
     }
     _itemButtons.get(itemIndex).setSelected(true);
     _selectedIndex = itemIndex;
+
+    if (getMBOnSelectedListener() != null)
+    {
+      getMBOnSelectedListener().onSelected(itemIndex, _itemButtons.size());
+    }
+  }
+
+  public void setTitle(int index, String title)
+  {
+    Button button = _itemButtons.get(index);
+    if (button != null)
+    {
+      button.setText(title);
+    }
   }
 
   public int getSelectedIndex()

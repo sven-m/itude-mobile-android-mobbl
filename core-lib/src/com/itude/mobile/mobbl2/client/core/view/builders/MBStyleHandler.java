@@ -29,6 +29,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
+import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.MBComponent;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
@@ -637,14 +638,17 @@ public class MBStyleHandler
 
   public void styleFirstSegmentedItem(Button item, MBPanel panel)
   {
+    styleFirstSegmentedItem(item, panel.getStyle());
   }
 
   public void styleLastSegmentedItem(Button item, MBPanel panel)
   {
+    styleLastSegmentedItem(item, panel.getStyle());
   }
 
   public void styleCenterSegmentedItem(Button item, MBPanel panel)
   {
+    styleCenterSegmentedItem(item, panel.getStyle());
   }
 
   public void styleFirstSegmentedItem(Button item, String style)
@@ -663,20 +667,37 @@ public class MBStyleHandler
 
   }
 
-  public void styleSegmentedControlBar(LinearLayout segmentedControlBar, MBPanel panel)
+  public void styleSegmentedControlBar(MBSegmentedControlBar segmentedControlBar, MBPanel panel)
   {
+    styleSegmentedControlBar(segmentedControlBar, panel.getStyle());
   }
 
   public void styleSegmentedControlBar(MBSegmentedControlBar segmentedControlBar, String style)
   {
+    segmentedControlBar.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
   }
 
   public void styleSegmentedControlContainer(MBSegmentedControlContainer scc, MBPanel panel)
   {
   }
 
-  public void styleSegmentedControlContentContainer(LinearLayout contentContainer, MBPanel segmentedControlPanel)
+  public void styleSegmentedControlContentContainer(ViewGroup contentContainer, MBPanel segmentedControlPanel)
   {
+  }
+
+  public void styleSegmentedControlLayoutStructure(MBSegmentedControlBar controlBar, View contentContainer)
+  {
+    controlBar.setId(UniqueIntegerGenerator.getId());
+
+    /*
+     * Default we want the controlbar to be above the contentcontainer and the contentcontainer to fill up the height of the screen
+     */
+    RelativeLayout.LayoutParams containerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
+        RelativeLayout.LayoutParams.WRAP_CONTENT);
+    containerParams.addRule(RelativeLayout.BELOW, controlBar.getId());
+    containerParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+    contentContainer.setLayoutParams(containerParams);
   }
 
   // TODO, moet samen gevoegd worden

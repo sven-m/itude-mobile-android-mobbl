@@ -52,11 +52,20 @@ public final class MBParseUtil
     return returnValue;
   }
 
-  public static boolean booleanValue(String bool)
+  public static boolean booleanValue(String bool, boolean returnValueIfNotParsed)
   {
     Boolean parsed = strictBooleanValue(bool);
-    if (parsed == null) return false;
+    if (parsed == null)
+    {
+      return returnValueIfNotParsed;
+    }
+
     return parsed;
+  }
+
+  public static boolean booleanValue(String bool)
+  {
+    return booleanValue(bool, false);
   }
 
   public static Boolean strictBooleanValue(String bool)

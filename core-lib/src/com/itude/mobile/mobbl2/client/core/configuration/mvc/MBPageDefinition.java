@@ -15,6 +15,7 @@ public class MBPageDefinition extends MBPanelDefinition
   private String     _rootPath;
   private MBPageType _pageType;
   private String     _orientationPermissions;
+  private boolean    _scrollable = true;
 
   public String getRootPath()
   {
@@ -73,6 +74,16 @@ public class MBPageDefinition extends MBPanelDefinition
     _orientationPermissions = orientationPermissions;
   }
 
+  public boolean isScrollable()
+  {
+    return _scrollable;
+  }
+
+  public void setScrollable(boolean scrollable)
+  {
+    _scrollable = scrollable;
+  }
+
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
@@ -88,7 +99,7 @@ public class MBPageDefinition extends MBPanelDefinition
     }
     return StringUtilities.appendIndentString(appendToMe, level).append("</Page>\n");
   }
-  
+
   @Override
   public String toString()
   {

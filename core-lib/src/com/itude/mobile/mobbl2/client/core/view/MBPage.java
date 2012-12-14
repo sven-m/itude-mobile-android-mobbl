@@ -42,6 +42,7 @@ public class MBPage extends MBPanel
   private Object                                                 _maxBounds;
   private final MBViewManager.MBViewState                        _viewState;
   private final boolean                                          _allowedAnyOrientation = true;
+  private boolean                                                _scrollable;
   private boolean                                                _allowedPortraitOrientation;
   private boolean                                                _allowedLandscapeOrientation;
   private View                                                   _selectedView;
@@ -61,6 +62,8 @@ public class MBPage extends MBPanel
     setPageType(definition.getPageType());
     setTitle(definition.getTitle());
     parseOrientationPermissions(definition.getOrientationPermissions());
+    setScrollable(definition.isScrollable());
+
     _viewState = viewState;
     _outcomeListeners = new ArrayList<MBOutcomeListenerProtocol>();
     _valueChangedListeners = new Hashtable<String, List<MBValueChangeListenerProtocol>>();
@@ -431,6 +434,18 @@ public class MBPage extends MBPanel
   public void unregisterAllViewControllers()
   {
     setChildViewControllers(null);
+  }
+
+  @Override
+  public boolean isScrollable()
+  {
+    return _scrollable;
+  }
+
+  @Override
+  public void setScrollable(boolean scrollable)
+  {
+    _scrollable = scrollable;
   }
 
   public boolean isAllowedPortraitOrientation()
