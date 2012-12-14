@@ -15,8 +15,10 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBHeader;
 public class MBPageViewBuilder extends MBViewBuilder
 {
 
-  public ViewGroup buildPageView(MBPage page, MBViewManager.MBViewState viewState, boolean buildWithContent, boolean buildWithScrollView)
+  public ViewGroup buildPageView(MBPage page, MBViewManager.MBViewState viewState, boolean buildWithContent)
   {
+    boolean buildWithScrollView = page.isScrollable();
+
     Context context = MBApplicationController.getInstance().getBaseContext();
     MBStyleHandler styleHandler = getStyleHandler();
 
@@ -95,12 +97,12 @@ public class MBPageViewBuilder extends MBViewBuilder
 
   public ViewGroup buildPageView(MBPage page, MBViewManager.MBViewState viewState)
   {
-    return buildPageView(page, viewState, true, page.isScrollable());
+    return buildPageView(page, viewState, true);
   }
 
   public ViewGroup buildPageViewWithoutContent(MBPage page, MBViewManager.MBViewState viewState)
   {
-    return buildPageView(page, viewState, false, page.isScrollable());
+    return buildPageView(page, viewState, false);
   }
 
 }
