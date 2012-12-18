@@ -52,7 +52,7 @@ public class MBDialogController extends ContextWrapper
   private View                       _mainContainer;
   private boolean                    _shown            = false;
   private FragmentStack              _fragmentStack;
-  private String _title;
+  private String                     _title;
 
   public MBDialogController()
   {
@@ -101,7 +101,7 @@ public class MBDialogController extends ContextWrapper
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(getName());
       setIconName(dialogDefinition.getIcon());
       setDialogMode(dialogDefinition.getMode());
-      
+
       _title = MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle());
       if (dialogDefinition.isGroup())
       {
@@ -560,10 +560,11 @@ public class MBDialogController extends ContextWrapper
   {
 
     boolean handled = false;
-    
+
     for (MBBasicViewController controller : getAllFragments())
     {
-      if(controller.onKeyDown(keyCode, event)) {
+      if (controller.onKeyDown(keyCode, event))
+      {
         handled = true;
       }
     }
@@ -635,11 +636,14 @@ public class MBDialogController extends ContextWrapper
       {
         for (SavedStackEntry sse : _stack)
         {
-          FragmentTransaction fr = getFragmentManager().beginTransaction();
+          if (sse.dialogId != 0)
+          {
+            FragmentTransaction fr = getFragmentManager().beginTransaction();
 
-          fr.addToBackStack(sse.id);
-          fr.replace(sse.dialogId, sse.fragment, sse.id);
-          fr.commitAllowingStateLoss();
+            fr.addToBackStack(sse.id);
+            fr.replace(sse.dialogId, sse.fragment, sse.id);
+            fr.commitAllowingStateLoss();
+          }
         }
 
       }
