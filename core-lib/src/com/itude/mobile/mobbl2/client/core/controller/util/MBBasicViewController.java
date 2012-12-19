@@ -22,7 +22,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
@@ -38,7 +38,6 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.MBProperties;
 import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
-import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.util.ViewUtilities;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
@@ -149,7 +148,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
 
       View content = addCloseButtonToClosableDialogView(view, dialog);
 
-      adb.setView(content);
+      dialog.setView(content);
 
       dialog.setOnKeyListener(new OnKeyListener()
       {
@@ -182,19 +181,30 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
 
     FragmentActivity context = getActivity();
-    RelativeLayout wrapper = new RelativeLayout(context);
+    LinearLayout wrapper = new LinearLayout(context);
+    wrapper.setOrientation(LinearLayout.VERTICAL);
+
     styleHandler.styleDialogCloseButtonWrapper(wrapper);
 
-    /*
-     * First add the close button so we can position our content above the button
-     */
-    RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-    buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+    LayoutParams prevDialogViewParams = dialogView.getLayoutParams();
+    int width = LayoutParams.MATCH_PARENT;
+    int height = LayoutParams.MATCH_PARENT;
+
+    if (prevDialogViewParams != null)
+    {
+      width = prevDialogViewParams.width;
+      height = prevDialogViewParams.height;
+    }
+
+    LinearLayout.LayoutParams dialogViewParams = new LinearLayout.LayoutParams(width, height);
+    dialogView.setLayoutParams(dialogViewParams);
+    wrapper.addView(dialogView);
+
+    LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
     Button closeButton = new Button(context);
     closeButton.setLayoutParams(buttonParams);
     closeButton.setText(MBLocalizationService.getInstance().getTextForKey("Close"));
-    closeButton.setId(UniqueIntegerGenerator.getId());
     styleHandler.styleDialogCloseButton(closeButton);
     closeButton.setOnClickListener(new View.OnClickListener()
     {
@@ -207,21 +217,6 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     });
 
     wrapper.addView(closeButton);
-
-    LayoutParams prevDialogViewParams = dialogView.getLayoutParams();
-    int width = LayoutParams.MATCH_PARENT;
-    int height = LayoutParams.MATCH_PARENT;
-
-    if (prevDialogViewParams != null)
-    {
-      width = prevDialogViewParams.width;
-      height = prevDialogViewParams.height;
-    }
-
-    RelativeLayout.LayoutParams dialogViewParams = new RelativeLayout.LayoutParams(width, height);
-    dialogViewParams.addRule(RelativeLayout.ABOVE, closeButton.getId());
-    dialogView.setLayoutParams(dialogViewParams);
-    wrapper.addView(dialogView);
 
     return wrapper;
   }

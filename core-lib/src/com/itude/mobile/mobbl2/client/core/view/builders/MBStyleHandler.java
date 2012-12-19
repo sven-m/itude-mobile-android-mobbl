@@ -717,7 +717,7 @@ public class MBStyleHandler
   {
   }
 
-  public void styleDialogCloseButtonWrapper(RelativeLayout wrapper)
+  public void styleDialogCloseButtonWrapper(View wrapper)
   {
   }
 
