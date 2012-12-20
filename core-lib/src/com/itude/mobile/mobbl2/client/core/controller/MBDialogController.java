@@ -48,7 +48,6 @@ public class MBDialogController extends ContextWrapper
   private final List<Integer>        _sortedDialogIds  = new ArrayList<Integer>();
   private final Map<String, Integer> _dialogIds        = new HashMap<String, Integer>();
   private final Map<String, String>  _childDialogModes = new HashMap<String, String>();
-  private boolean                    _clearDialog      = false;
   private View                       _mainContainer;
   private boolean                    _shown            = false;
   private FragmentStack              _fragmentStack;
@@ -175,14 +174,16 @@ public class MBDialogController extends ContextWrapper
       showPage(page, null, getOutcomeId(), page.getDialogName(), false);
       _shown = true;
     }
+
     getFragmentStack().playBackStack();
+
     getActivity().setTitle(_title);
 
   }
 
   public void deactivate()
   {
-    getFragmentStack().emptyBackStack();
+    getFragmentStack().emptyBackStack(true);
   }
 
   /**
@@ -192,11 +193,11 @@ public class MBDialogController extends ContextWrapper
   {
     if (getName().equals(MBViewManager.getInstance().getActiveDialogName()))
     {
-      doClearAllViews();
+      getFragmentStack().emptyBackStack(false);
     }
     else
     {
-      _clearDialog = true;
+      _fragmentStack = new FragmentStack(getSupportFragmentManager());
     }
   }
 
@@ -208,24 +209,6 @@ public class MBDialogController extends ContextWrapper
   public FragmentStack getFragmentStack()
   {
     return _fragmentStack;
-  }
-
-  private void doClearAllViews()
-  {
-    _clearDialog = false;
-    final FragmentManager fragmentManager = getSupportFragmentManager();
-
-    if (fragmentManager.getBackStackEntryCount() > 0)
-    {
-      getActivity().runOnUiThread(new Runnable()
-      {
-        @Override
-        public void run()
-        {
-          fragmentManager.popBackStackImmediate(fragmentManager.getBackStackEntryAt(0).getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
-      });
-    }
   }
 
   public void popView()
@@ -454,11 +437,6 @@ public class MBDialogController extends ContextWrapper
    */
   public void handleAllOnWindowActivated()
   {
-    if (_clearDialog)
-    {
-      doClearAllViews();
-    }
-
     for (MBBasicViewController controller : getAllFragments())
     {
       handleOnWindowActivated(controller);
@@ -652,11 +630,17 @@ public class MBDialogController extends ContextWrapper
 
     }
 
-    private void emptyBackStack()
+    private void emptyBackStack(boolean deactivate)
     {
-      getFragmentManager().removeOnBackStackChangedListener(this);
+      if (deactivate)
+      {
+        getFragmentManager().removeOnBackStackChangedListener(this);
+      }
+
       while (!isBackStackEmpty())
+      {
         getFragmentManager().popBackStackImmediate();
+      }
     }
 
     public boolean isBackStackEmpty()
