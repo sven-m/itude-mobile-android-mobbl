@@ -2945,7 +2945,7 @@
 			</Panel>
 		</Page>
 		<!-- ***************** -->
-		<Page xmlns="" name="PAGE-page_my_transaction_detail"
+		<Page name="PAGE-page_my_transaction_detail"
 			document="EXT-PortefeuillesGeldrekeningmutatiesDetailGetResponse"
 			title="Mutatie">
 			<Panel type="LIST">
