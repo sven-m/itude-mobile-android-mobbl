@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.itude.mobile.android.mobbl</groupId>
 	<artifactId>mobbl-core</artifactId>
-	<version>3.0.0.9-RND</version>
+	<version>3.0.0.10-RND-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Android Mobbl Core - RnD</name>
 	<description>Android Mobbl Core - RnD</description>
