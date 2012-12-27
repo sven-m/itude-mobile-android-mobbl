@@ -24,6 +24,7 @@ import android.widget.FrameLayout;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
+import com.itude.mobile.mobbl2.client.core.controller.helpers.MBActivityHelper;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
@@ -52,6 +53,7 @@ public class MBDialogController extends ContextWrapper
   private boolean                    _shown            = false;
   private FragmentStack              _fragmentStack;
   private String                     _title;
+  private boolean                    _clearDialog;
 
   public MBDialogController()
   {
@@ -175,6 +177,13 @@ public class MBDialogController extends ContextWrapper
       _shown = true;
     }
 
+    if (_clearDialog)
+    {
+      getFragmentStack().emptyBackStack(false);
+      _fragmentStack = new FragmentStack(getSupportFragmentManager());
+      _clearDialog = false;
+    }
+
     getFragmentStack().playBackStack();
 
     getActivity().setTitle(_title);
@@ -191,13 +200,14 @@ public class MBDialogController extends ContextWrapper
    */
   public void clearAllViews()
   {
-    if (getName().equals(MBViewManager.getInstance().getActiveDialogName()))
+    if (getName().equals(MBViewManager.getInstance().getActiveDialogName())
+        && !MBActivityHelper.isApplicationBroughtToBackground(getActivity()))
     {
       getFragmentStack().emptyBackStack(false);
     }
     else
     {
-      _fragmentStack = new FragmentStack(getSupportFragmentManager());
+      _clearDialog = true;
     }
   }
 
@@ -300,6 +310,10 @@ public class MBDialogController extends ContextWrapper
              || ("SINGLE".equals(_childDialogModes.get(dialogName)) && page.getCurrentViewState() != MBViewState.MBViewStateModal))
     {
       addToBackStack = false;
+    }
+    else if ("REPLACEDIALOG".equals(displayMode) && !getFragmentStack().isBackStackEmpty())
+    {
+      getFragmentStack().emptyBackStack(false);
     }
 
     MBBasicViewController fragment = MBApplicationFactory.getInstance().createFragment(page.getPageName());
@@ -476,7 +490,7 @@ public class MBDialogController extends ContextWrapper
 
   public void handleOrientationChange(Configuration newConfig)
   {
-    if (MBDevice.getInstance().isTablet() && "SPLIT".equals(_dialogMode))
+    if (MBDevice.isTablet() && "SPLIT".equals(_dialogMode))
     {
       for (int i = 0; i < _sortedDialogIds.size() - 1; i++)
       {
@@ -637,10 +651,17 @@ public class MBDialogController extends ContextWrapper
         getFragmentManager().removeOnBackStackChangedListener(this);
       }
 
-      while (!isBackStackEmpty())
+      MBViewManager.getInstance().runOnUiThread(new Runnable()
       {
-        getFragmentManager().popBackStackImmediate();
-      }
+        @Override
+        public void run()
+        {
+          while (!isBackStackEmpty())
+          {
+            getFragmentManager().popBackStackImmediate();
+          }
+        }
+      });
     }
 
     public boolean isBackStackEmpty()

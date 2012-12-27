@@ -68,6 +68,8 @@ public class MBViewManager extends FragmentActivity
   private boolean                         _singlePageMode;
   private String                          _activeDialog;
 
+  private boolean                         _created = false;
+
   ///////////////////// Android lifecycle methods
 
   protected void onPreCreate()
@@ -93,6 +95,20 @@ public class MBViewManager extends FragmentActivity
     _instance = this;
 
     MBApplicationController.getInstance().startController();
+  }
+
+  @Override
+  protected void onResume()
+  {
+    if (!_created)
+    {
+      _created = true;
+    }
+    else
+    {
+      getActiveDialog().activate();
+    }
+    super.onResume();
   }
 
   @Override
@@ -764,7 +780,9 @@ public class MBViewManager extends FragmentActivity
   {
     // Walk trough all dialogControllers
     for (MBDialogController dc : getDialogs())
+    {
       dc.clearAllViews();
+    }
 
   }
 

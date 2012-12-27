@@ -274,7 +274,7 @@ public class MBOutcomeHandler extends Handler
     if (outcomeToProcess.getNoBackgroundProcessing())
     {
       applicationController.preparePage(new MBOutcome(outcomeToProcess), pageDef.getName(), selectPageInDialog,
-                                                    applicationController.getBackStackEnabled());
+                                        applicationController.getBackStackEnabled());
     }
     else
     {
@@ -331,6 +331,21 @@ public class MBOutcomeHandler extends Handler
     }
   }
 
+  /***
+   * In case of:
+   *  1. a splitted dialog; 
+   *  2. a page must always put either left or right; and
+   *  3. that page can be used in multiple dialogs
+   *  
+   *  Instead of defining the specific dialog name, either LEFT or RIGHT can be defined as the target dialog.
+   *  The page will be displayed in either the left or right part of the active dialog.
+   *  
+   *  Example outcome definition:
+   *  <Outcome origin="*" name="OUTCOME-page_winnerslosers_overview" action="PAGE-page_winnerslosers_overview" transferDocument="TRUE" dialog="LEFT"/>
+   *  
+   * @param dialogName
+   * @return the dialog name to place the page in
+   */
   private String resolveDialogName(String dialogName)
   {
     if (!"RIGHT".equals(dialogName) && !"LEFT".equals(dialogName))
