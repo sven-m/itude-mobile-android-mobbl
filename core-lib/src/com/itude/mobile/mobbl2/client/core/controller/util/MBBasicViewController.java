@@ -113,8 +113,10 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
           _isDialogCancelable = true;
         }
 
-        MBPage page = MBApplicationController.getInstance().getPage(outcomeID);
-        setPage(page);
+        if (_page == null)
+        {
+          setPage(MBApplicationController.getInstance().getPage(outcomeID));
+        }
       }
     }
     super.onCreate(savedInstanceState);
@@ -328,7 +330,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     return _page;
   }
 
-  public void setPage(MBPage page)
+  private void setPage(MBPage page)
   {
     _page = page;
     _page.setViewController(this);
