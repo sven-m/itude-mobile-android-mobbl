@@ -86,6 +86,7 @@ public class MBPageViewBuilder extends MBViewBuilder
     }
     else if (buildWithContent && view != null)
     {
+      styleHandler.styleMainScrollbarView(page, view);
       main.addView(view);
     }
 

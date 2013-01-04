@@ -46,14 +46,15 @@ public class MBDialogController extends ContextWrapper
   private String                     _outcomeId;
   private Object                     _rootController;
   private boolean                    _temporary;
-  private final List<Integer>        _sortedDialogIds  = new ArrayList<Integer>();
-  private final Map<String, Integer> _dialogIds        = new HashMap<String, Integer>();
-  private final Map<String, String>  _childDialogModes = new HashMap<String, String>();
+  private final List<Integer>        _sortedDialogIds      = new ArrayList<Integer>();
+  private final Map<String, Integer> _dialogIds            = new HashMap<String, Integer>();
+  private final Map<String, String>  _childDialogModes     = new HashMap<String, String>();
   private View                       _mainContainer;
-  private boolean                    _shown            = false;
+  private boolean                    _shown                = false;
   private FragmentStack              _fragmentStack;
   private String                     _title;
   private boolean                    _clearDialog;
+  private Configuration              _configurationChanged = null;
 
   public MBDialogController()
   {
@@ -187,6 +188,11 @@ public class MBDialogController extends ContextWrapper
     getFragmentStack().playBackStack();
 
     getActivity().setTitle(_title);
+
+    if (_configurationChanged != null)
+    {
+      handleOrientationChange(_configurationChanged);
+    }
 
   }
 
@@ -490,34 +496,44 @@ public class MBDialogController extends ContextWrapper
 
   public void handleOrientationChange(Configuration newConfig)
   {
-    if (MBDevice.isTablet() && "SPLIT".equals(_dialogMode))
+    if (getName().equals(MBViewManager.getInstance().getActiveDialogName()))
     {
-      for (int i = 0; i < _sortedDialogIds.size() - 1; i++)
+      if (MBDevice.isTablet() && "SPLIT".equals(_dialogMode))
       {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(_sortedDialogIds.get(i));
-        // if the fragment didn't load correctly (e.g. a network error occurred), we don't want to crash the app
-        if (fragment != null)
+        for (int i = 0; i < _sortedDialogIds.size() - 1; i++)
         {
-          FrameLayout fragmentContainer = (FrameLayout) fragment.getView().getParent();
-          fragmentContainer.getLayoutParams().width = MBScreenUtilities.getWidthPixelsForPercentage(33);
+          Fragment fragment = getSupportFragmentManager().findFragmentById(_sortedDialogIds.get(i));
+          // if the fragment didn't load correctly (e.g. a network error occurred), we don't want to crash the app
+          if (fragment != null)
+          {
+            FrameLayout fragmentContainer = (FrameLayout) fragment.getView().getParent();
+            fragmentContainer.getLayoutParams().width = MBScreenUtilities.getWidthPixelsForPercentage(33);
+          }
         }
       }
-    }
 
-    for (MBBasicViewController controller : getAllFragments())
-    {
-      controller.handleOrientationChange(newConfig);
-    }
-
-    String modalPageID = MBApplicationController.getInstance().getModalPageID();
-    if (StringUtilities.isNotBlank(modalPageID))
-    {
-      Fragment fragment = getSupportFragmentManager().findFragmentByTag(modalPageID);
-      if (fragment != null && fragment instanceof MBBasicViewController)
+      for (MBBasicViewController controller : getAllFragments())
       {
-        ((MBBasicViewController) fragment).handleOrientationChange(newConfig);
+        controller.handleOrientationChange(newConfig);
       }
+
+      String modalPageID = MBApplicationController.getInstance().getModalPageID();
+      if (StringUtilities.isNotBlank(modalPageID))
+      {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(modalPageID);
+        if (fragment != null && fragment instanceof MBBasicViewController)
+        {
+          ((MBBasicViewController) fragment).handleOrientationChange(newConfig);
+        }
+      }
+
+      _configurationChanged = null;
     }
+    else
+    {
+      _configurationChanged = newConfig;
+    }
+
   }
 
   public View getMainContainer()
@@ -656,9 +672,10 @@ public class MBDialogController extends ContextWrapper
         @Override
         public void run()
         {
-          while (!isBackStackEmpty())
+          if (!isBackStackEmpty())
           {
-            getFragmentManager().popBackStackImmediate();
+            BackStackEntry backStackEntry = getFragmentManager().getBackStackEntryAt(0);
+            getFragmentManager().popBackStackImmediate(backStackEntry.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
           }
         }
       });
