@@ -359,6 +359,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
             MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(view);
 
             fragmentContainer.addView(view);
+            _contentView = view;
           }
           else Log.w(Constants.APPLICATION_NAME, "Failed to refresh view for page " + getPage().getPageName()
                                                  + ", has the activity been created?");
