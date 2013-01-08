@@ -636,21 +636,6 @@ public class MBStyleHandler
   {
   }
 
-  public void styleFirstSegmentedItem(Button item, MBPanel panel)
-  {
-    styleFirstSegmentedItem(item, panel.getStyle());
-  }
-
-  public void styleLastSegmentedItem(Button item, MBPanel panel)
-  {
-    styleLastSegmentedItem(item, panel.getStyle());
-  }
-
-  public void styleCenterSegmentedItem(Button item, MBPanel panel)
-  {
-    styleCenterSegmentedItem(item, panel.getStyle());
-  }
-
   public void styleFirstSegmentedItem(Button item, String style)
   {
     item.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1));
@@ -665,11 +650,6 @@ public class MBStyleHandler
   {
     item.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1));
 
-  }
-
-  public void styleSegmentedControlBar(MBSegmentedControlBar segmentedControlBar, MBPanel panel)
-  {
-    styleSegmentedControlBar(segmentedControlBar, panel.getStyle());
   }
 
   public void styleSegmentedControlBar(MBSegmentedControlBar segmentedControlBar, String style)
