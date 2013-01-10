@@ -482,6 +482,10 @@ public class MBField extends MBComponent
       {
         fieldValue = StringUtilities.formatPriceWithThreeDecimals(fieldValue);
       }
+      else if (!fieldValueSameAsNilValue && getDataType().equals("priceWithFourDecimals"))
+      {
+        fieldValue = StringUtilities.formatNumberWithDecimals(fieldValue, 4);
+      }
       else if (getDataType().equals("volume"))
       {
         fieldValue = StringUtilities.formatVolume(fieldValue);
@@ -490,6 +494,7 @@ public class MBField extends MBComponent
       {
         fieldValue = StringUtilities.formatPercentageWithTwoDecimals(fieldValue);
       }
+
     }
     catch (NumberFormatException nfe)
     {

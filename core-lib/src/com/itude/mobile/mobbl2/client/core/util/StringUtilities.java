@@ -25,22 +25,11 @@ import com.itude.mobile.mobbl2.client.core.util.exceptions.MBInvalidRelativePath
 public final class StringUtilities
 {
 
-  private static Locale                           defaultFormattingLocale;
+  private static Locale            defaultFormattingLocale;
 
-  private static NumberKeyListener                _currencyNumberKeyListener;
+  private static NumberKeyListener _currencyNumberKeyListener;
 
-  public static final String                      EMPTY           = "";
-
-  private static final ThreadLocal<DecimalFormat> TLFORMATTER3DEC = new ThreadLocal<DecimalFormat>()
-                                                                  {
-                                                                    @Override
-                                                                    protected DecimalFormat initialValue()
-                                                                    {
-                                                                      DecimalFormat formatter = new DecimalFormat();
-                                                                      setupFormatter(formatter, 3);
-                                                                      return formatter;
-                                                                    }
-                                                                  };
+  public static final String       EMPTY = "";
 
   private StringUtilities()
   {
@@ -250,12 +239,7 @@ public final class StringUtilities
     String result = null;
 
     DecimalFormat formatter = new DecimalFormat();
-    formatter.setDecimalFormatSymbols(new DecimalFormatSymbols(getDefaultFormattingLocale()));
-    formatter.setMinimumIntegerDigits(1);
-    formatter.setMinimumFractionDigits(numberOfDecimals);
-    formatter.setMaximumFractionDigits(numberOfDecimals);
-    formatter.setGroupingUsed(true);
-    formatter.setGroupingSize(3);
+    setupFormatter(formatter, numberOfDecimals);
 
     result = formatter.format(Double.parseDouble(stringToFormat));
 
@@ -281,21 +265,15 @@ public final class StringUtilities
     {
       String prefix = stringToFormat.substring(0, numberStart + 1);
       stringToFormat = stringToFormat.substring(numberStart + 1, stringToFormat.length());
-      return prefix + formatPriceWithTwoDecimals(Double.parseDouble(stringToFormat));
+      return prefix + formatNumberWithDecimals(stringToFormat, 2);
     }
-    return formatPriceWithTwoDecimals(Double.parseDouble(stringToFormat));
+    return formatNumberWithDecimals(stringToFormat, 2);
   }
 
   public static String formatPriceWithTwoDecimals(double toFormat)
   {
     DecimalFormat formatter = new DecimalFormat();
-    formatter.setDecimalFormatSymbols(new DecimalFormatSymbols(getDefaultFormattingLocale()));
-    formatter.setMinimumIntegerDigits(1);
-    formatter.setMinimumFractionDigits(2);
-    formatter.setMaximumFractionDigits(2);
-
-    formatter.setGroupingUsed(true);
-    formatter.setGroupingSize(3);
+    setupFormatter(formatter, 2);
 
     return formatter.format(toFormat);
   }
@@ -305,11 +283,7 @@ public final class StringUtilities
   // TODO why is this method not doing anything with the currency sign?
   public static String formatPriceWithThreeDecimals(String stringToFormat)
   {
-    if (stringToFormat == null || stringToFormat.length() == 0)
-    {
-      return null;
-    }
-    return TLFORMATTER3DEC.get().format(Double.parseDouble(stringToFormat));
+    return formatNumberWithDecimals(stringToFormat, 3);
   }
 
   // returns a string formatted as a volume with group separators (eg, 131.224.000) assuming the receiver is an int string read from XML
@@ -374,7 +348,6 @@ public final class StringUtilities
   public static void setDefaultFormattingLocale(Locale defaultFormattingLocale)
   {
     StringUtilities.defaultFormattingLocale = defaultFormattingLocale;
-    setupFormatter(TLFORMATTER3DEC.get(), 3);
   }
 
   public static Locale getDefaultFormattingLocale()
@@ -539,6 +512,7 @@ public final class StringUtilities
       _currencyNumberKeyListener = new NumberKeyListener()
       {
 
+        @Override
         public int getInputType()
         {
           return InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
