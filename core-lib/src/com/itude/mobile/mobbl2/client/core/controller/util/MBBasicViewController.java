@@ -126,7 +126,7 @@ public class MBBasicViewController extends DialogFragment
         setPage(page);
 
         MBDocument pageDoc = page.getDocument();
-        if (pageDoc != null)
+        if (page.isReloadOnDocChange() && pageDoc != null)
         {
           MBDataManagerService.getInstance().registerOperationListener(pageDoc.getDocumentName(), this);
         }

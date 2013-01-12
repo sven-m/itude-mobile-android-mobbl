@@ -129,6 +129,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _pageAttributes.add("style");
       _pageAttributes.add("orientationPermissions");
       _pageAttributes.add("scrollable");
+      _pageAttributes.add("reloadOnDocChange");
     }
     if (_panelAttributes == null)
     {
@@ -365,6 +366,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       pageDef.setTitle(attributeDict.get("title"));
       pageDef.setTitlePath(attributeDict.get("titlePath"));
       pageDef.setScrollable(MBParseUtil.booleanValue(attributeDict.get("scrollable"), true));
+      pageDef.setReloadOnDocChange(MBParseUtil.booleanValue(attributeDict.get("reloadOnDocChange"), false));
       if (attributeDict.containsKey("width"))
       {
         pageDef.setWidth(Integer.parseInt(attributeDict.get("width")));
