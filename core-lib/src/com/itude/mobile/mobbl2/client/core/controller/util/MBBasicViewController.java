@@ -79,6 +79,7 @@ public class MBBasicViewController extends DialogFragment
   private final List<MBEvent> eventQueue             = new ArrayList<MBEvent>();
   private static boolean      _strictModeAvailable   = false;
   private MBDialogController  _dialogController;
+  private boolean             _rebuildView;
 
   //use the StrictModeWrapper to see if we are running on Android 2.3 or higher and StrictMode is available
   static
@@ -436,6 +437,11 @@ public class MBBasicViewController extends DialogFragment
       onAfterHandlingEvents();
     }
 
+    if (_rebuildView)
+    {
+      rebuildView(true);
+    }
+
     // Make sure orientation for the page is as expected
     MBViewManager.getInstance().setOrientation(getPage());
   }
@@ -593,6 +599,10 @@ public class MBBasicViewController extends DialogFragment
     if (isVisible())
     {
       rebuildView(true);
+    }
+    else
+    {
+      _rebuildView = true;
     }
   }
 
