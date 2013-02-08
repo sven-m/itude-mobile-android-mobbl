@@ -37,10 +37,15 @@ public final class StringUtilities
 
   private static void setupFormatter(DecimalFormat formatter, int numDec)
   {
+    setupFormatter(formatter, numDec, numDec);
+  }
+
+  private static void setupFormatter(DecimalFormat formatter, int minimalDecimalNumbers, int maximumDecimalNumbers)
+  {
     formatter.setDecimalFormatSymbols(new DecimalFormatSymbols(getDefaultFormattingLocale()));
     formatter.setMinimumIntegerDigits(1);
-    formatter.setMinimumFractionDigits(numDec);
-    formatter.setMaximumFractionDigits(numDec);
+    formatter.setMinimumFractionDigits(minimalDecimalNumbers);
+    formatter.setMaximumFractionDigits(maximumDecimalNumbers);
     formatter.setGroupingUsed(true);
     formatter.setGroupingSize(3);
   }
@@ -226,10 +231,15 @@ public final class StringUtilities
   /***
    * 
    * @param stringToFormat
-   * @param numberOfDecimals can be any number, also negative as the used DecimalFormatter accepts it and makes it 0
+   * @param exactNumberOfDecimals can be any number, also negative as the used DecimalFormatter accepts it and makes it 0
    * @return
    */
-  public static String formatNumberWithDecimals(String stringToFormat, int numberOfDecimals)
+  public static String formatNumberWithDecimals(String stringToFormat, int exactNumberOfDecimals)
+  {
+    return formatNumberWithDecimals(stringToFormat, exactNumberOfDecimals, exactNumberOfDecimals);
+  }
+
+  public static String formatNumberWithDecimals(String stringToFormat, int minimalNumberOfDecimals, int maximumNumberOfDecimals)
   {
     if (stringToFormat == null || stringToFormat.length() == 0)
     {
@@ -239,7 +249,7 @@ public final class StringUtilities
     String result = null;
 
     DecimalFormat formatter = new DecimalFormat();
-    setupFormatter(formatter, numberOfDecimals);
+    setupFormatter(formatter, minimalNumberOfDecimals, maximumNumberOfDecimals);
 
     result = formatter.format(Double.parseDouble(stringToFormat));
 
