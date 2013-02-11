@@ -1,6 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.services;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
@@ -38,7 +38,7 @@ public class MBDataManagerService
   private MBDataManagerService()
   {
     _registeredHandlers = new Hashtable<String, MBDataHandler>();
-    _operationListeners = new HashMap<String, Set<OperationListener>>();
+    _operationListeners = new Hashtable<String, Set<OperationListener>>();
 
     registerDataHandler(new MBFileDataHandler(), DATA_HANDLER_FILE);
     registerDataHandler(new MBSystemDataHandler(), DATA_HANDLER_SYSTEM);
@@ -178,11 +178,16 @@ public class MBDataManagerService
     getHandlerForDocument(documentName).storeDocument(document);
 
     Set<OperationListener> list = _operationListeners.get(documentName);
-    if (list != null)
+
+    // synchronized because we made a synchronized set in method registerOperationListener
+    synchronized (list)
     {
-      for (OperationListener listener : list)
+      if (list != null)
       {
-        listener.onDocumentStored(document);
+        for (OperationListener listener : list)
+        {
+          listener.onDocumentStored(document);
+        }
       }
     }
   }
@@ -204,7 +209,7 @@ public class MBDataManagerService
     Set<OperationListener> list = _operationListeners.get(docName);
     if (list == null)
     {
-      list = new HashSet<MBDataManagerService.OperationListener>();
+      list = Collections.synchronizedSet(new HashSet<MBDataManagerService.OperationListener>());
       _operationListeners.put(docName, list);
     }
 
