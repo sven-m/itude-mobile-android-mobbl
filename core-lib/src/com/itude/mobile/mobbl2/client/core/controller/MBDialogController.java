@@ -146,7 +146,6 @@ public class MBDialogController extends ContextWrapper
 
   private void viewInit()
   {
-
     // handle as a single dialog
     if (_dialogIds.size() == 1)
     {
@@ -171,6 +170,7 @@ public class MBDialogController extends ContextWrapper
   public void activate()
   {
     getActivity().setContentView(_mainContainer);
+
     if (!_shown && getOutcomeId() != null)
     {
       MBPage page = MBApplicationController.getInstance().getPage(getOutcomeId());
@@ -193,7 +193,6 @@ public class MBDialogController extends ContextWrapper
     {
       handleOrientationChange(_configurationChanged);
     }
-
   }
 
   public void deactivate()
@@ -201,9 +200,6 @@ public class MBDialogController extends ContextWrapper
     getFragmentStack().emptyBackStack(true);
   }
 
-  /**
-   * 
-   */
   public void clearAllViews()
   {
     if (getName().equals(MBViewManager.getInstance().getActiveDialogName())
@@ -651,13 +647,16 @@ public class MBDialogController extends ContextWrapper
             fr.addToBackStack(sse.id);
             fr.replace(sse.dialogId, sse.fragment, sse.id);
             fr.commitAllowingStateLoss();
+
           }
+
+          //https://mobiledev.itude.com/jira/browse/MOBBL-621
+          getFragmentManager().executePendingTransactions();
         }
 
       }
 
       getFragmentManager().addOnBackStackChangedListener(this);
-
     }
 
     private void emptyBackStack(boolean deactivate)
