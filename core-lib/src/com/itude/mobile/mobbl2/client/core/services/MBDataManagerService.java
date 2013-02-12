@@ -179,10 +179,10 @@ public class MBDataManagerService
 
     Set<OperationListener> list = _operationListeners.get(documentName);
 
-    // synchronized because we made a synchronized set in method registerOperationListener
-    synchronized (list)
+    if (list != null)
     {
-      if (list != null)
+      // synchronized because we made a synchronized set in method registerOperationListener
+      synchronized (list)
       {
         for (OperationListener listener : list)
         {
