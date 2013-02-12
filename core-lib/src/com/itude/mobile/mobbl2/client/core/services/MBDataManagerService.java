@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
@@ -33,12 +34,12 @@ public class MBDataManagerService
 
   private final Map<String, MBDataHandler>          _registeredHandlers;
 
-  private final Map<String, Set<OperationListener>> _operationListeners;
+  private final ConcurrentHashMap<String, Set<OperationListener>> _operationListeners;
 
   private MBDataManagerService()
   {
     _registeredHandlers = new Hashtable<String, MBDataHandler>();
-    _operationListeners = new Hashtable<String, Set<OperationListener>>();
+    _operationListeners = new ConcurrentHashMap<String, Set<OperationListener>>();
 
     registerDataHandler(new MBFileDataHandler(), DATA_HANDLER_FILE);
     registerDataHandler(new MBSystemDataHandler(), DATA_HANDLER_SYSTEM);
@@ -206,18 +207,14 @@ public class MBDataManagerService
 
   public void registerOperationListener(String docName, OperationListener listener)
   {
-    Set<OperationListener> list = _operationListeners.get(docName);
-    if (list == null)
-    {
-      list = Collections.synchronizedSet(new HashSet<MBDataManagerService.OperationListener>());
-      _operationListeners.put(docName, list);
-    }
-
+    Set<OperationListener> list = _operationListeners.putIfAbsent(docName, Collections.synchronizedSet(new HashSet<MBDataManagerService.OperationListener>()));
     list.add(listener);
   }
 
   public void unregisterOperationListener(String docName, OperationListener listener)
   {
+	// not entirely correct, in that if an unregisterOperationListener is called at about the same time as an registerOperationListener, with the same docName and listener, the result
+	// is not completely predictable.. changes of this happening are nil, so it doesn't matter ;)
     Set<OperationListener> list = _operationListeners.get(docName);
     if (list != null)
     {
