@@ -30,6 +30,9 @@ import com.itude.mobile.mobbl2.client.core.controller.MBDialogController;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.controller.util.trace.StrictModeWrapper;
+import com.itude.mobile.mobbl2.client.core.model.MBDocument;
+import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
+import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService.OperationListener;
 import com.itude.mobile.mobbl2.client.core.services.MBEvent;
 import com.itude.mobile.mobbl2.client.core.services.MBEventListener;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
@@ -56,7 +59,12 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBHeader;
  *  - modal
  *  - fullscreen modal
  */
-public class MBBasicViewController extends DialogFragment implements MBEventListener, MBWindowChangedEventListener, OnClickListener
+public class MBBasicViewController extends DialogFragment
+    implements
+      MBEventListener,
+      MBWindowChangedEventListener,
+      OnClickListener,
+      OperationListener
 {
 
   private ViewGroup           _contentView;
@@ -70,6 +78,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   private final List<MBEvent> eventQueue             = new ArrayList<MBEvent>();
   private static boolean      _strictModeAvailable   = false;
   private MBDialogController  _dialogController;
+  private boolean             _rebuildView;
 
   //use the StrictModeWrapper to see if we are running on Android 2.3 or higher and StrictMode is available
   static
@@ -115,7 +124,14 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
 
         if (_page == null)
         {
-          setPage(MBApplicationController.getInstance().getPage(outcomeID));
+          MBPage page = MBApplicationController.getInstance().getPage(outcomeID);
+          setPage(page);
+
+          MBDocument pageDoc = page.getDocument();
+          if (page.isReloadOnDocChange() && pageDoc != null)
+          {
+            MBDataManagerService.getInstance().registerOperationListener(pageDoc.getDocumentName(), this);
+          }
         }
       }
     }
@@ -138,7 +154,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
 
     if (_isDialogClosable && MBDevice.isTablet())
     {
-      ViewGroup view = buildInitialView();
+      ViewGroup view = buildInitialView(LayoutInflater.from(getActivity()));
 
       /*
        * Add this view and a close button to a wrapper view that will be used as the content view of our AlertDialog
@@ -240,7 +256,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
 
     if (_contentView == null)
     {
-      _contentView = buildInitialView();
+      _contentView = buildInitialView(inflater);
     }
     else
     {
@@ -255,7 +271,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
    * 
    * @return the ViewGroup to display in either a Dialog or a Fragment.
    */
-  protected ViewGroup buildInitialView()
+  protected ViewGroup buildInitialView(LayoutInflater inflater)
   {
     ViewGroup view = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(_page, MBViewState.MBViewStatePlain);
     MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(view);
@@ -323,6 +339,14 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     }
   }
 
+  @Override
+  public void onDestroy()
+  {
+    MBDataManagerService.getInstance().unregisterOperationListener(getPage().getDocument().getDocumentName(), this);
+
+    super.onDestroy();
+  }
+
   ////////////////////////////////////////
 
   public MBPage getPage()
@@ -355,8 +379,7 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
           {
             fragmentContainer.removeAllViews();
 
-            ViewGroup view = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(getPage(), MBViewState.MBViewStatePlain);
-            MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(view);
+            ViewGroup view = buildInitialView(LayoutInflater.from(getActivity()));
 
             fragmentContainer.addView(view);
             _contentView = view;
@@ -411,6 +434,11 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
     if (hasOutstandingEvents())
     {
       onAfterHandlingEvents();
+    }
+
+    if (_rebuildView)
+    {
+      rebuildView(true);
     }
 
     // Make sure orientation for the page is as expected
@@ -561,6 +589,20 @@ public class MBBasicViewController extends DialogFragment implements MBEventList
   public MBDialogController getDialogController()
   {
     return _dialogController;
+  }
+
+  @Override
+  public void onDocumentStored(MBDocument document)
+  {
+    getPage().setDocument(document);
+    if (isVisible())
+    {
+      rebuildView(true);
+    }
+    else
+    {
+      _rebuildView = true;
+    }
   }
 
 }
