@@ -45,6 +45,7 @@ public class MBPage extends MBPanel
   private boolean                                                _scrollable;
   private boolean                                                _allowedPortraitOrientation;
   private boolean                                                _allowedLandscapeOrientation;
+  private boolean                                                _reloadOnDocChange;
   private View                                                   _selectedView;
 
   public MBPage(MBPageDefinition definition, MBDocument document, String rootPath, MBViewState viewState)
@@ -63,6 +64,7 @@ public class MBPage extends MBPanel
     setTitle(definition.getTitle());
     parseOrientationPermissions(definition.getOrientationPermissions());
     setScrollable(definition.isScrollable());
+    setReloadOnDocChange(definition.isReloadOnDocChange());
 
     _viewState = viewState;
     _outcomeListeners = new ArrayList<MBOutcomeListenerProtocol>();
@@ -491,6 +493,16 @@ public class MBPage extends MBPanel
   public void setSelectedView(View selectedView)
   {
     _selectedView = selectedView;
+  }
+
+  public boolean isReloadOnDocChange()
+  {
+    return _reloadOnDocChange;
+  }
+
+  public void setReloadOnDocChange(boolean reloadOnDocChange)
+  {
+    _reloadOnDocChange = reloadOnDocChange;
   }
 
 }

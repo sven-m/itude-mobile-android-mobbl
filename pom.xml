@@ -11,8 +11,8 @@
 	<artifactId>mobbl-core</artifactId>
 	<version>3.0.0.12-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Android Mobbl Core</name>
-	<description>Android Mobbl Core</description>
+	<name>Android Mobbl Core - RnD</name>
+	<description>Android Mobbl Core - RnD</description>
 	<url>http://www.itude.com</url>
 	<inceptionYear>2011</inceptionYear>
 	<developers>

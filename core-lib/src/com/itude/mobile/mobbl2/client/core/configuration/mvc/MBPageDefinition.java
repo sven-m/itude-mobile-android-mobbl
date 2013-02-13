@@ -15,7 +15,8 @@ public class MBPageDefinition extends MBPanelDefinition
   private String     _rootPath;
   private MBPageType _pageType;
   private String     _orientationPermissions;
-  private boolean    _scrollable = true;
+  private boolean    _scrollable        = true;
+  private boolean    _reloadOnDocChange = false;
 
   public String getRootPath()
   {
@@ -82,6 +83,16 @@ public class MBPageDefinition extends MBPanelDefinition
   public void setScrollable(boolean scrollable)
   {
     _scrollable = scrollable;
+  }
+
+  public boolean isReloadOnDocChange()
+  {
+    return _reloadOnDocChange;
+  }
+
+  public void setReloadOnDocChange(boolean reloadOnDocChange)
+  {
+    _reloadOnDocChange = reloadOnDocChange;
   }
 
   @Override

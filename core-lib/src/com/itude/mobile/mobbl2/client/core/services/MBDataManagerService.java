@@ -1,7 +1,11 @@
 package com.itude.mobile.mobbl2.client.core.services;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
@@ -19,20 +23,23 @@ import com.itude.mobile.mobbl2.client.core.services.exceptions.MBNoDataManagerEx
 public class MBDataManagerService
 {
 
-  public static final String               DATA_HANDLER_MEMORY       = "MBMemoryDataHandler";
-  public static final String               DATA_HANDLER_FILE         = "MBFileDataHandler";
-  public static final String               DATA_HANDLER_SYSTEM       = "MBSystemDataHandler";
-  public static final String               DATA_HANDLER_WS_REST      = "MBRESTServiceDataHandler";
-  public static final String               DATA_HANDLER_WS_MOBBL     = "MBMobbl1ServerDataHandler";
-  public static final String               DATA_HANDLER_WS_MOBBL_XML = "MBMobbl1XmlServerDataHandler";
+  public static final String                                      DATA_HANDLER_MEMORY       = "MBMemoryDataHandler";
+  public static final String                                      DATA_HANDLER_FILE         = "MBFileDataHandler";
+  public static final String                                      DATA_HANDLER_SYSTEM       = "MBSystemDataHandler";
+  public static final String                                      DATA_HANDLER_WS_REST      = "MBRESTServiceDataHandler";
+  public static final String                                      DATA_HANDLER_WS_MOBBL     = "MBMobbl1ServerDataHandler";
+  public static final String                                      DATA_HANDLER_WS_MOBBL_XML = "MBMobbl1XmlServerDataHandler";
 
-  private static MBDataManagerService      _instance                 = null;
+  private static MBDataManagerService                             _instance                 = null;
 
-  private final Map<String, MBDataHandler> _registeredHandlers;
+  private final Map<String, MBDataHandler>                        _registeredHandlers;
+
+  private final ConcurrentHashMap<String, Set<OperationListener>> _operationListeners;
 
   private MBDataManagerService()
   {
     _registeredHandlers = new Hashtable<String, MBDataHandler>();
+    _operationListeners = new ConcurrentHashMap<String, Set<OperationListener>>();
 
     registerDataHandler(new MBFileDataHandler(), DATA_HANDLER_FILE);
     registerDataHandler(new MBSystemDataHandler(), DATA_HANDLER_SYSTEM);
@@ -168,8 +175,22 @@ public class MBDataManagerService
 
   public void storeDocument(MBDocument document)
   {
-    getHandlerForDocument(document.getName()).storeDocument(document);
+    String documentName = document.getName();
+    getHandlerForDocument(documentName).storeDocument(document);
 
+    Set<OperationListener> list = _operationListeners.get(documentName);
+
+    if (list != null)
+    {
+      // synchronized because we made a synchronized set in method registerOperationListener
+      synchronized (list)
+      {
+        for (OperationListener listener : list)
+        {
+          listener.onDocumentStored(document);
+        }
+      }
+    }
   }
 
   public void storeDocument(MBDocument document, MBDocumentOperationDelegate delegate, Object resultSelector, Object errorSelector)
@@ -182,5 +203,33 @@ public class MBDataManagerService
   public void registerDataHandler(MBDataHandler handler, String name)
   {
     _registeredHandlers.put(name, handler);
+  }
+
+  public void registerOperationListener(String docName, OperationListener listener)
+  {
+    Set<OperationListener> list = _operationListeners.putIfAbsent(docName, Collections
+        .synchronizedSet(new HashSet<MBDataManagerService.OperationListener>()));
+    if (list == null)
+    {
+      list = _operationListeners.get(docName);
+    }
+
+    list.add(listener);
+  }
+
+  public void unregisterOperationListener(String docName, OperationListener listener)
+  {
+    // not entirely correct, in that if an unregisterOperationListener is called at about the same time as an registerOperationListener, with the same docName and listener, the result
+    // is not completely predictable.. changes of this happening are nil, so it doesn't matter ;)
+    Set<OperationListener> list = _operationListeners.get(docName);
+    if (list != null)
+    {
+      list.remove(listener);
+    }
+  }
+
+  public static interface OperationListener
+  {
+    public void onDocumentStored(MBDocument document);
   }
 }
