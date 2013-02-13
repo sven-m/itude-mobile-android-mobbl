@@ -150,6 +150,11 @@ public class MBViewManager extends FragmentActivity
       stopAlert();
       MBSecurityHelper.getInstance().logOutIfCheckNotSelected();
     }
+
+    // Fix for https://mobiledev.itude.com/jira/browse/BINCKRETAILSLA-541
+    MBDialogController dc = getActiveDialog();
+    dc.removeOnBackStackChangedListenerOfCurrentDialog();
+
     super.onPause();
   }
 

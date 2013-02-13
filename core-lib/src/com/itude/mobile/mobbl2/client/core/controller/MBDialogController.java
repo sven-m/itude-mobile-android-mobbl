@@ -213,6 +213,14 @@ public class MBDialogController extends ContextWrapper
     }
   }
 
+  public void removeOnBackStackChangedListenerOfCurrentDialog()
+  {
+    if (_fragmentStack != null)
+    {
+      _fragmentStack.getFragmentManager().removeOnBackStackChangedListener(_fragmentStack);
+    }
+  }
+
   private FragmentManager getSupportFragmentManager()
   {
     return getActivity().getSupportFragmentManager();
@@ -648,10 +656,10 @@ public class MBDialogController extends ContextWrapper
             fr.replace(sse.dialogId, sse.fragment, sse.id);
             fr.commitAllowingStateLoss();
 
+            //https://mobiledev.itude.com/jira/browse/MOBBL-621
+            getFragmentManager().executePendingTransactions();
           }
 
-          //https://mobiledev.itude.com/jira/browse/MOBBL-621
-          getFragmentManager().executePendingTransactions();
         }
 
       }
