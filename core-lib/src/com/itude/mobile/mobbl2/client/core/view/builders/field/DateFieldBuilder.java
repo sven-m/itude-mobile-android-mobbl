@@ -5,8 +5,8 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.itude.mobile.android.util.DateUtilities;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
-import com.itude.mobile.mobbl2.client.core.util.DateUtilities;
 import com.itude.mobile.mobbl2.client.core.view.MBDateField;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 

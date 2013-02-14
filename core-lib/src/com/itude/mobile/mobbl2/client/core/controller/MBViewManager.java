@@ -29,6 +29,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 
+import com.itude.mobile.android.util.CollectionUtilities;
+import com.itude.mobile.android.util.DeviceUtil;
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
@@ -44,10 +47,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowChangeType;
-import com.itude.mobile.mobbl2.client.core.util.CollectionUtilities;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.MBDevice;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.helper.MBSecurityHelper;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThreadHandler;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
@@ -182,7 +182,7 @@ public class MBViewManager extends FragmentActivity
     }
 
     final String outcomeName = intent.getStringExtra(Constants.C_INTENT_POST_INITIALOUTCOMES_OUTCOMENAME);
-    if (StringUtilities.isNotBlank(outcomeName))
+    if (StringUtil.isNotBlank(outcomeName))
     {
 
       runOnUiThread(new Runnable()
@@ -205,7 +205,7 @@ public class MBViewManager extends FragmentActivity
   @Override
   public boolean onCreateOptionsMenu(Menu menu)
   {
-    if (MBDevice.isTablet() || MBDevice.getInstance().isPhoneV14())
+    if (DeviceUtil.isTablet() || DeviceUtil.getInstance().isPhoneV14())
     {
       return false;
     }
@@ -228,11 +228,11 @@ public class MBViewManager extends FragmentActivity
     final String firstDialog = firstDialogDefinition.getName();
     if (!childController.getName().equals(firstDialog))
     {
-      if (MBDevice.getInstance().isPhone() || MBDevice.getInstance().isPhoneV14())
+      if (DeviceUtil.getInstance().isPhone() || DeviceUtil.getInstance().isPhoneV14())
       {
         activateDialogWithName(firstDialog);
       }
-      else if (MBDevice.getInstance().isTablet())
+      else if (DeviceUtil.getInstance().isTablet())
       {
         runOnUiThread(new Runnable()
         {
@@ -387,7 +387,7 @@ public class MBViewManager extends FragmentActivity
 
   protected void createDialogWithID(MBDialogDefinition dialogDefinition)
   {
-    if (StringUtilities.isNotBlank(dialogDefinition.getAction()))
+    if (StringUtil.isNotBlank(dialogDefinition.getAction()))
     {
       MBOutcome oc = new MBOutcome();
       oc.setOutcomeName(dialogDefinition.getAction());
@@ -538,7 +538,7 @@ public class MBViewManager extends FragmentActivity
   private void buildAlertDialogButtons(AlertDialog.Builder builder, final MBElement element)
   {
     String label = element.getValueForAttribute("label");
-    if (StringUtilities.isNotBlank(label))
+    if (StringUtil.isNotBlank(label))
     {
       if ("neutral".equals(element.getName()))
       {
@@ -548,7 +548,7 @@ public class MBViewManager extends FragmentActivity
           public void onClick(DialogInterface dialog, int which)
           {
             String outcome = element.getValueForAttribute("outcome");
-            if (StringUtilities.isBlank(outcome))
+            if (StringUtil.isBlank(outcome))
             {
               dialog.cancel();
             }
@@ -567,7 +567,7 @@ public class MBViewManager extends FragmentActivity
           public void onClick(DialogInterface dialog, int which)
           {
             String outcome = element.getValueForAttribute("outcome");
-            if (StringUtilities.isBlank(outcome))
+            if (StringUtil.isBlank(outcome))
             {
               dialog.cancel();
             }
@@ -587,7 +587,7 @@ public class MBViewManager extends FragmentActivity
           public void onClick(DialogInterface dialog, int which)
           {
             String outcome = element.getValueForAttribute("outcome");
-            if (StringUtilities.isBlank(outcome))
+            if (StringUtil.isBlank(outcome))
             {
               dialog.cancel();
             }
@@ -745,7 +745,7 @@ public class MBViewManager extends FragmentActivity
           dialogController.handleAllOnWindowActivated();
         }
 
-        if (MBDevice.getInstance().isTablet())
+        if (DeviceUtil.getInstance().isTablet())
         {
           MBTabBar tabBar = getTabBar();
           if (tabBar != null)

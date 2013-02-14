@@ -5,10 +5,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 
 public class ImageFieldBuilder extends MBBaseFieldBuilder
@@ -19,20 +19,20 @@ public class ImageFieldBuilder extends MBBaseFieldBuilder
   {
     String source = field.getSource();
     String path = field.getPath();
-    if (StringUtilities.isBlank(source) && StringUtilities.isBlank(path))
+    if (StringUtil.isBlank(source) && StringUtil.isBlank(path))
     {
       Log.w(Constants.APPLICATION_NAME, "Source or Path is null or empty for field");
       return null;
     }
 
     ImageView image = new ImageView(MBApplicationController.getInstance().getBaseContext());
-    if (StringUtilities.isNotBlank(field.getOutcomeName()))
+    if (StringUtil.isNotBlank(field.getOutcomeName()))
     {
       image.setOnClickListener(field);
     }
 
     Drawable drawable = null;
-    if (StringUtilities.isNotBlank(source))
+    if (StringUtil.isNotBlank(source))
     {
       drawable = MBResourceService.getInstance().getImageByID(source);
     }

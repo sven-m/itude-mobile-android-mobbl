@@ -2,7 +2,7 @@ package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
 import java.util.Map;
 
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.view.MBConditionalDefinition;
 import com.itude.mobile.mobbl2.client.core.view.MBStylableDefinition;
 
@@ -34,7 +34,7 @@ public class MBFieldDefinition extends MBConditionalDefinition implements MBStyl
       bodyText = _text;
     }
 
-    StringUtilities.appendIndentString(appendToMe, level).append("<Field").append(getAttributeAsXml("label", _label))
+    StringUtil.appendIndentString(appendToMe, level).append("<Field").append(getAttributeAsXml("label", _label))
         .append(getAttributeAsXml("labelAttrs", _labelAttrs)).append(getAttributeAsXml("source", _source))
         .append(getAttributeAsXml("path", _path)).append(getAttributeAsXml("type", _displayType))
         .append(getAttributeAsXml("dataType", _dataType)).append(getAttributeAsXml("outcome", _outcomeName))

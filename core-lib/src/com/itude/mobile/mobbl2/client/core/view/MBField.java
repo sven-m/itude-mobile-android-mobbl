@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import android.text.Editable;
@@ -19,6 +20,8 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
+import com.itude.mobile.android.util.DateUtilities;
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
@@ -30,9 +33,7 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.DateUtilities;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 public class MBField extends MBComponent
@@ -444,6 +445,8 @@ public class MBField extends MBComponent
   {
     boolean fieldValueSameAsNilValue = fieldValue.equals(getValueIfNil());
 
+    final Locale locale = MBLocalizationService.getInstance().getLocale();
+
     try
     {
 
@@ -455,7 +458,7 @@ public class MBField extends MBComponent
         // Formats the date depending on the current date. 
         if (getFormatMask().equals("dateOrTimeDependingOnCurrentDate"))
         {
-          fieldValue = DateUtilities.formatDateDependingOnCurrentDate(xmlDate);
+          fieldValue = DateUtilities.formatDateDependingOnCurrentDate(locale, xmlDate);
         }
         else
         {
@@ -468,31 +471,31 @@ public class MBField extends MBComponent
       }
       else if (!fieldValueSameAsNilValue && getDataType().equals("numberWithTwoDecimals"))
       {
-        fieldValue = StringUtilities.formatNumberWithTwoDecimals(fieldValue);
+        fieldValue = StringUtil.formatNumberWithTwoDecimals(locale, fieldValue);
       }
       else if (!fieldValueSameAsNilValue && getDataType().equals("numberWithThreeDecimals"))
       {
-        fieldValue = StringUtilities.formatNumberWithThreeDecimals(fieldValue);
+        fieldValue = StringUtil.formatNumberWithThreeDecimals(locale, fieldValue);
       }
       else if (!fieldValueSameAsNilValue && getDataType().equals("priceWithTwoDecimals"))
       {
-        fieldValue = StringUtilities.formatPriceWithTwoDecimals(fieldValue);
+        fieldValue = StringUtil.formatPriceWithTwoDecimals(locale, fieldValue);
       }
       else if (!fieldValueSameAsNilValue && getDataType().equals("priceWithThreeDecimals"))
       {
-        fieldValue = StringUtilities.formatPriceWithThreeDecimals(fieldValue);
+        fieldValue = StringUtil.formatPriceWithThreeDecimals(locale, fieldValue);
       }
       else if (!fieldValueSameAsNilValue && getDataType().equals("priceWithFourDecimals"))
       {
-        fieldValue = StringUtilities.formatNumberWithDecimals(fieldValue, 4);
+        fieldValue = StringUtil.formatNumberWithDecimals(locale, fieldValue, 4);
       }
       else if (getDataType().equals("volume"))
       {
-        fieldValue = StringUtilities.formatVolume(fieldValue);
+        fieldValue = StringUtil.formatVolume(locale, fieldValue);
       }
       else if (getDataType().equals("percentageWithTwoDecimals"))
       {
-        fieldValue = StringUtilities.formatPercentageWithTwoDecimals(fieldValue);
+        fieldValue = StringUtil.formatPercentageWithTwoDecimals(locale, fieldValue);
       }
 
     }
@@ -554,7 +557,7 @@ public class MBField extends MBComponent
     try
     {
 
-      StringUtilities.appendIndentString(appendToMe, level).append("<MBField ").append(attributeAsXml("value", getValue())).append(" ")
+      StringUtil.appendIndentString(appendToMe, level).append("<MBField ").append(attributeAsXml("value", getValue())).append(" ")
           .append(attributeAsXml("path", getAbsoluteDataPath())).append(" ").append(attributeAsXml("style", getStyle())).append(" ")
           .append(attributeAsXml("label", getLabel())).append(" ").append(attributeAsXml("type", getType())).append(" ")
           .append(attributeAsXml("dataType", getDataType())).append(" ").append(attributeAsXml("outcomeName", getOutcomeName()))
@@ -703,7 +706,7 @@ public class MBField extends MBComponent
     if (_label != null)
     {
       String label = getLabel();
-      if (StringUtilities.isNotBlank(value))
+      if (StringUtil.isNotBlank(value))
       {
         return label + " " + value;
       }
@@ -716,7 +719,7 @@ public class MBField extends MBComponent
 
     // getValue is not a simple getter, so make sure it isn't called
     // unneeded
-    if (StringUtilities.isNotBlank(value))
+    if (StringUtil.isNotBlank(value))
     {
       return value;
     }

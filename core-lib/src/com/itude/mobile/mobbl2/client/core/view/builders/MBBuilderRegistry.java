@@ -5,9 +5,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.itude.mobile.android.util.AssertUtil;
+import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.mobbl2.client.core.MBException;
-import com.itude.mobile.mobbl2.client.core.util.AssertUtil;
-import com.itude.mobile.mobbl2.client.core.util.ComparisonUtil;
 import com.itude.mobile.mobbl2.client.core.view.MBComponent;
 
 public class MBBuilderRegistry<T extends MBComponent, S>

@@ -3,8 +3,8 @@ package com.itude.mobile.mobbl2.client.core.view.builders.panel;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBPanelViewBuilder.BuildState;
 
@@ -23,7 +23,7 @@ public class MatrixPanelBuilder extends MBBasePanelBuilder
 
     getStyleHandler().styleMatrixContainer(panel, result);
 
-    if (StringUtilities.isNotEmpty (panel.getOutcomeName()))
+    if (StringUtil.isNotEmpty (panel.getOutcomeName()))
     {
       result.setOnClickListener(panel);
     }

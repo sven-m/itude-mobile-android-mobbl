@@ -7,9 +7,9 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
-import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 
 public class CheckboxFieldBuilder extends MBBaseFieldBuilder

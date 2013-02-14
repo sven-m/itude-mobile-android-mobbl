@@ -2,8 +2,8 @@ package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
 import java.util.List;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBPageDefinition extends MBPanelDefinition
 {
@@ -98,7 +98,7 @@ public class MBPageDefinition extends MBPanelDefinition
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<Page name='").append(getName()).append("' document='")
+    StringUtil.appendIndentString(appendToMe, level).append("<Page name='").append(getName()).append("' document='")
         .append(_documentName).append("'").append(getAttributeAsXml("title", getTitle())).append(">\n");
 
     List<MBDefinition> children = getChildren();
@@ -108,7 +108,7 @@ public class MBPageDefinition extends MBPanelDefinition
       MBPanelDefinition panelDef = (MBPanelDefinition) children.get(i);
       panelDef.asXmlWithLevel(appendToMe, level + 2);
     }
-    return StringUtilities.appendIndentString(appendToMe, level).append("</Page>\n");
+    return StringUtil.appendIndentString(appendToMe, level).append("</Page>\n");
   }
 
   @Override

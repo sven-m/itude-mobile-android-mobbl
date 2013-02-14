@@ -10,10 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 
 public class InputFieldBuilder extends MBBaseFieldBuilder
@@ -30,7 +30,7 @@ public class InputFieldBuilder extends MBBaseFieldBuilder
     // Default inputfield should be single lined
 
     String hint = field.getHint();
-    if (StringUtilities.isNotBlank(hint))
+    if (StringUtil.isNotBlank(hint))
     {
       getStyleHandler().styleHint(inputField);
       inputField.setHint(MBLocalizationService.getInstance().getTextForKey(hint));
@@ -77,7 +77,7 @@ public class InputFieldBuilder extends MBBaseFieldBuilder
              && (field.getDataType().equals(Constants.C_FIELD_DATATYPE_DOUBLE) || field.getDataType()
                  .equals(Constants.C_FIELD_DATATYPE_FLOAT)))
     {
-      inputField.setKeyListener(StringUtilities.getCurrencyNumberKeyListener());
+      inputField.setKeyListener(StringUtil.getCurrencyNumberKeyListener());
 
       try
       {
@@ -98,7 +98,8 @@ public class InputFieldBuilder extends MBBaseFieldBuilder
 
         if (inputField.getText().toString().length() > 0)
         {
-          String textFieldText = StringUtilities.formatNumberWithOriginalNumberOfDecimals(inputField.getText().toString());
+          String textFieldText = StringUtil.formatNumberWithOriginalNumberOfDecimals(inputField.getText().toString(), MBLocalizationService
+              .getInstance().getLocale());
           inputField.setText(textFieldText);
         }
 
@@ -112,7 +113,6 @@ public class InputFieldBuilder extends MBBaseFieldBuilder
 
     // Add TextChangedListener to EditText so changes will be saved to the document
     inputField.addTextChangedListener(field);
-
 
     getStyleHandler().styleTextfield(inputField, field);
 

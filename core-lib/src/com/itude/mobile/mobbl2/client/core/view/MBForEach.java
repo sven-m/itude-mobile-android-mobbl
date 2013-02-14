@@ -5,12 +5,12 @@ import java.util.List;
 
 import android.view.ViewGroup;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBForEachDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBVariableDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPathException;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 public class MBForEach extends MBComponentContainer
@@ -142,7 +142,7 @@ public class MBForEach extends MBComponentContainer
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<MBForEach ").append(this.attributeAsXml("value", _value)).append(">\n");
+    StringUtil.appendIndentString(appendToMe, level).append("<MBForEach ").append(this.attributeAsXml("value", _value)).append(">\n");
 
     MBForEachDefinition def = (MBForEachDefinition) getDefinition();
     for (MBVariableDefinition var : def.getVariables().values())
@@ -151,7 +151,7 @@ public class MBForEach extends MBComponentContainer
       child.asXmlWithLevel(appendToMe, level + 2);
 
     childrenAsXmlWithLevel(appendToMe, level + 2);
-    return StringUtilities.appendIndentString(appendToMe, level).append("</MBForEach>\n");
+    return StringUtil.appendIndentString(appendToMe, level).append("</MBForEach>\n");
   }
 
   @Override

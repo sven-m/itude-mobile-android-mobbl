@@ -3,10 +3,10 @@ package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBAttributeDefinition extends MBDefinition
 {
@@ -23,7 +23,7 @@ public class MBAttributeDefinition extends MBDefinition
 
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    return StringUtilities.appendIndentString(appendToMe, level).append("<Attribute name='").append(getName()).append("' type='")
+    return StringUtil.appendIndentString(appendToMe, level).append("<Attribute name='").append(getName()).append("' type='")
         .append(_type).append("' required='").append(_required).append("'")
         .append(getAttributeAsXml("defaultValue", _defaultValue)).append("/>\n");
   }

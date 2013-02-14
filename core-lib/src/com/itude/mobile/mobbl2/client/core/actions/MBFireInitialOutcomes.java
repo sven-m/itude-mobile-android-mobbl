@@ -2,6 +2,7 @@ package com.itude.mobile.mobbl2.client.core.actions;
 
 import java.util.List;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.controller.MBAction;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
@@ -9,7 +10,6 @@ import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBFireInitialOutcomes implements MBAction
 {
@@ -34,7 +34,7 @@ public class MBFireInitialOutcomes implements MBAction
     {
       String action = element.getValueForAttribute("action");
       String dialog = element.getValueForAttribute("dialog");
-      if (StringUtilities.isNotBlank(action))
+      if (StringUtil.isNotBlank(action))
       {
         MBOutcome oc = new MBOutcome();
         oc.setOutcomeName(action);
@@ -53,7 +53,7 @@ public class MBFireInitialOutcomes implements MBAction
         }
       }
 
-      if (StringUtilities.isNotBlank(dialog))
+      if (StringUtil.isNotBlank(dialog))
       {
         MBViewManager.getInstance().addSortedDialogName(dialog);
       }

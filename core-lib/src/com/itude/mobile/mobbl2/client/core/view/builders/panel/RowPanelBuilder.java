@@ -11,10 +11,10 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.MBComponent;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBPanelViewBuilder.BuildState;

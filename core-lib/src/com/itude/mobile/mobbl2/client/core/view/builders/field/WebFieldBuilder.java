@@ -5,9 +5,9 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.webkit.WebView;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 
 public class WebFieldBuilder extends MBBaseFieldBuilder
@@ -19,7 +19,7 @@ public class WebFieldBuilder extends MBBaseFieldBuilder
     WebView webView = new WebView(MBApplicationController.getInstance().getViewManager());
     webView.setScrollContainer(false);
 
-    if (StringUtilities.isNotBlank(field.getSource()))
+    if (StringUtil.isNotBlank(field.getSource()))
     {
       webView.setOnTouchListener(new OnTouchListener()
       {

@@ -16,9 +16,11 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import android.util.Log;
 
+import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.exceptions.MBUnknownElementException;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBBundleDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
@@ -31,8 +33,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBFileNo
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBItemDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceDefinition;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.DataUtil;
-import com.itude.mobile.mobbl2.client.core.util.MBBundleDefinition;
 
 public abstract class MBConfigurationParser extends DefaultHandler
 {

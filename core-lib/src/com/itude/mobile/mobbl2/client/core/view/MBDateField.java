@@ -2,8 +2,8 @@ package com.itude.mobile.mobbl2.client.core.view;
 
 import java.util.Calendar;
 
-import com.itude.mobile.mobbl2.client.core.util.DateUtilities;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
+import com.itude.mobile.android.util.DateUtilities;
+import com.itude.mobile.android.util.StringUtil;
 
 public class MBDateField
 {
@@ -82,7 +82,7 @@ public class MBDateField
 
   public void setTime(String dateTimeString)
   {
-    if (StringUtilities.isNotBlank(dateTimeString))
+    if (StringUtil.isNotBlank(dateTimeString))
     {
       DateUtilities.setCalanderTime(_calendar, dateTimeString);
     }

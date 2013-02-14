@@ -5,6 +5,8 @@ import java.util.Map;
 
 import android.util.Log;
 
+import com.itude.mobile.android.util.DataUtil;
+import com.itude.mobile.android.util.exceptions.MBDataParsingException;
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
@@ -12,8 +14,6 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.MBDataHandlerBase;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.DataUtil;
-import com.itude.mobile.mobbl2.client.core.util.exceptions.MBDataParsingException;
 
 public class MBMemoryDataHandler extends MBDataHandlerBase
 {

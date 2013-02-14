@@ -9,13 +9,13 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBCannotAssignException;
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBInvalidAttributeNameException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBElement extends MBElementContainer
 {
@@ -121,7 +121,7 @@ public class MBElement extends MBElementContainer
     String bodyText = getBodyText();
     boolean hasBodyText = (bodyText != null && bodyText.length() > 0);
 
-    StringUtilities.appendIndentString(appendToMe, level).append("<").append(_definition.getName());
+    StringUtil.appendIndentString(appendToMe, level).append("<").append(_definition.getName());
     for (MBAttributeDefinition def : _definition.getAttributes())
     {
       String attrName = def.getName();
@@ -141,7 +141,7 @@ public class MBElement extends MBElementContainer
       appendToMe.append(">");
       if (hasBodyText)
       {
-        appendToMe.append(StringUtilities.escapeHtml(getBodyText()));
+        appendToMe.append(StringUtil.escapeHtml(getBodyText()));
       }
       else
       {
@@ -165,7 +165,7 @@ public class MBElement extends MBElementContainer
       {
         closingLevel = level;
       }
-      StringUtilities.appendIndentString(appendToMe, closingLevel).append("</").append(_definition.getName()).append(">\n");
+      StringUtil.appendIndentString(appendToMe, closingLevel).append("</").append(_definition.getName()).append(">\n");
     }
 
     return appendToMe;

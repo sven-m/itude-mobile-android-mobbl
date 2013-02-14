@@ -23,6 +23,8 @@ import android.graphics.drawable.StateListDrawable;
 import android.util.Log;
 import android.view.Gravity;
 
+import com.itude.mobile.android.util.DataUtil;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBBundleDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBItemDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBLayeredResourceDefinition;
@@ -39,8 +41,6 @@ import com.itude.mobile.mobbl2.client.core.services.exceptions.MBBundleNotFoundE
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBResourceInvalidException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBResourceNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.DataUtil;
-import com.itude.mobile.mobbl2.client.core.util.MBBundleDefinition;
 import com.itude.mobile.mobbl2.client.core.util.MBCacheManager;
 
 public final class MBResourceService

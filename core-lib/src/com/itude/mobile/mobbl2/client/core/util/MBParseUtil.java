@@ -2,6 +2,8 @@ package com.itude.mobile.mobbl2.client.core.util;
 
 import android.util.Log;
 
+import com.itude.mobile.android.util.StringUtil;
+
 public final class MBParseUtil
 {
   private MBParseUtil()
@@ -70,7 +72,7 @@ public final class MBParseUtil
 
   public static Boolean strictBooleanValue(String bool)
   {
-    if (StringUtilities.isEmpty(bool)) return null;
+    if (StringUtil.isEmpty(bool)) return null;
     // you should only use C_TRUE; the rest is there for legacy purposes
     if (bool.equalsIgnoreCase(Constants.C_TRUE) || bool.equals("1") || bool.equals("1.0") || bool.equalsIgnoreCase("true")
         || bool.equalsIgnoreCase("yes")) return true;

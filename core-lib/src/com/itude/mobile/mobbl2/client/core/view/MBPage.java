@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition.MBPageType;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPathException;
@@ -21,7 +22,6 @@ import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentDiff;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 public class MBPage extends MBPanel
@@ -223,7 +223,7 @@ public class MBPage extends MBPanel
     if (path.length() > 0)
     {
       MBPageDefinition pd = (MBPageDefinition) getDefinition();
-      String stripped = StringUtilities.normalizedPath(NUMBERPATTERN.matcher(path).replaceAll(""));
+      String stripped = StringUtil.normalizedPath(NUMBERPATTERN.matcher(path).replaceAll(""));
       if (!stripped.endsWith("/"))
       {
         stripped = stripped + "/";
@@ -288,7 +288,7 @@ public class MBPage extends MBPanel
       path = "/" + path;
     }
 
-    path = StringUtilities.normalizedPath(path);
+    path = StringUtil.normalizedPath(path);
     List<MBValueChangeListenerProtocol> lsnrList = _valueChangedListeners.get(path);
     if (lsnrList == null)
     {
@@ -468,13 +468,13 @@ public class MBPage extends MBPanel
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<MBPage ").append(attributeAsXml("pageName", _pageName)).append(" ")
+    StringUtil.appendIndentString(appendToMe, level).append("<MBPage ").append(attributeAsXml("pageName", _pageName)).append(" ")
         .append(attributeAsXml("rootPath", _rootPath)).append(" ").append(attributeAsXml("dialogName", _dialogName)).append(" ")
         .append(attributeAsXml("document", _document.getDocumentName())).append(">\n");
 
     childrenAsXmlWithLevel(appendToMe, level + 2);
 
-    return StringUtilities.appendIndentString(appendToMe, level).append("</MBPage>\n");
+    return StringUtil.appendIndentString(appendToMe, level).append("</MBPage>\n");
 
   }
 

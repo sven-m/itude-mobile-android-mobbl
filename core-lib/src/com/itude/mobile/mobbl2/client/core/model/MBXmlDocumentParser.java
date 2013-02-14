@@ -16,13 +16,13 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import android.util.Log;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidElementNameException;
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBInvalidDocumentException;
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBParseErrorException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBXmlDocumentParser extends DefaultHandler
 {
@@ -82,7 +82,7 @@ public class MBXmlDocumentParser extends DefaultHandler
 
         if (rootPath != null)
         {
-          List<String> parts = StringUtilities.splitPath(rootPath);
+          List<String> parts = StringUtil.splitPath(rootPath);
           for (String part : parts)
           {
             _pathStack.add(NUMBERPATTERN.matcher(part).replaceAll(""));

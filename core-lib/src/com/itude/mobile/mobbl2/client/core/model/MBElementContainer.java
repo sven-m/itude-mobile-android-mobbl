@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.TwinResult;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition;
@@ -25,8 +27,6 @@ import com.itude.mobile.mobbl2.client.core.services.MBScriptService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDynamicAttributeComparator;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
-import com.itude.mobile.mobbl2.client.core.util.TwinResult;
 
 public class MBElementContainer implements Parcelable
 {
@@ -75,12 +75,12 @@ public class MBElementContainer implements Parcelable
     {
 
       int eqPos = expression.indexOf("=");
-      String attrName = StringUtilities.stripCharacters(expression.substring(0, eqPos), " ");
+      String attrName = StringUtil.stripCharacters(expression.substring(0, eqPos), " ");
       String valueExpression = expression.substring(eqPos + 1);
 
       attrName = substituteExpressions(attrName, attrName, null);
 
-      valueExpression = StringUtilities.stripCharacters(valueExpression, "'\"");
+      valueExpression = StringUtil.stripCharacters(valueExpression, "'\"");
 
       String value = substituteExpressions(valueExpression, valueExpression, null);
 
@@ -167,7 +167,7 @@ public class MBElementContainer implements Parcelable
   protected TwinResult<MBElementContainer, MBElement> doCreateElement(String name)
   {
     Stack<String> pathComponents = new Stack<String>();
-    pathComponents.addAll(StringUtilities.splitPath(name));
+    pathComponents.addAll(StringUtil.splitPath(name));
 
     if (pathComponents.size() > 1)
     {
@@ -281,7 +281,7 @@ public class MBElementContainer implements Parcelable
       return null;
     }
 
-    List<String> pathComponents = StringUtilities.splitPath(path);
+    List<String> pathComponents = StringUtil.splitPath(path);
 
     // If there is a ':' in the name of the first component; we might need a different document than 'self'
     if (pathComponents.size() > 0)
@@ -332,7 +332,7 @@ public class MBElementContainer implements Parcelable
   public void setValue(String value, String path)
   {
     Stack<String> pathComponents = new Stack<String>();
-    pathComponents.addAll(StringUtilities.splitPath(path));
+    pathComponents.addAll(StringUtil.splitPath(path));
 
     String attributeName = new String(pathComponents.lastElement());
     if (attributeName.startsWith("@"))

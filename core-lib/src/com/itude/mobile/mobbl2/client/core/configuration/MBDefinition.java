@@ -10,6 +10,7 @@ import android.os.Parcelable;
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBBundleDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
@@ -23,7 +24,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceDef
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBResultListenerDefinition;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.MBBundleDefinition;
 
 public class MBDefinition implements Parcelable
 {

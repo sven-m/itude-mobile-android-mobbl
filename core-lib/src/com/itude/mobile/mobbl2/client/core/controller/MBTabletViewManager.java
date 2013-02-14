@@ -25,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
+import com.itude.mobile.android.util.ScreenUtil;
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
@@ -39,8 +41,6 @@ import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
-import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
@@ -182,7 +182,7 @@ public class MBTabletViewManager extends MBViewManager
   private int getMenuItemActionFlags(MBToolDefinition def)
   {
     String visibility = def.getVisibility();
-    if (StringUtilities.isBlank(visibility))
+    if (StringUtil.isBlank(visibility))
     {
       Log.w(Constants.APPLICATION_NAME, "No visibility specified for tool " + def.getName() + ": using default show as action if room");
       return MenuItem.SHOW_AS_ACTION_IF_ROOM;
@@ -416,10 +416,10 @@ public class MBTabletViewManager extends MBViewManager
           title = dialogDefinition.getTitle();
         }
 
-        if (StringUtilities.isNotBlank(title))
+        if (StringUtil.isNotBlank(title))
         {
           tab.setText(title);
-          tabBar.setTabPadding(0, 0, MBScreenUtilities.SIXTEEN, 0);
+          tabBar.setTabPadding(0, 0, ScreenUtil.SIXTEEN, 0);
         }
         else
         {
@@ -490,10 +490,10 @@ public class MBTabletViewManager extends MBViewManager
       ImageView rotationImage = getRotationImage();
 
       float imageWidth = rotationImage.getDrawable().getIntrinsicWidth();
-      int framePadding = (int) ((MBScreenUtilities.convertDimensionPixelsToPixels(80) - imageWidth) / 2);
+      int framePadding = (int) ((ScreenUtil.convertDimensionPixelsToPixels(80) - imageWidth) / 2);
 
       final FrameLayout frameLayout = new FrameLayout(this);
-      frameLayout.setLayoutParams(new FrameLayout.LayoutParams(MBScreenUtilities.convertDimensionPixelsToPixels(80),
+      frameLayout.setLayoutParams(new FrameLayout.LayoutParams(ScreenUtil.convertDimensionPixelsToPixels(80),
           LayoutParams.WRAP_CONTENT, Gravity.CENTER));
       frameLayout.setPadding(framePadding, 0, framePadding, 0);
 

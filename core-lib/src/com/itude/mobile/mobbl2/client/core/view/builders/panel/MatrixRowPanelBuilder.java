@@ -11,10 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
+import com.itude.mobile.android.util.ScreenUtil;
+import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
-import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.MBComponent;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
@@ -170,7 +170,7 @@ public class MatrixRowPanelBuilder extends MBBasePanelBuilder
       buildChildren(matrixRowTitles, rowPanel);
       // get the last child added to the rowpanel (this is our one and only label)
       View current = rowPanel.getChildAt(rowPanel.getChildCount() - 1);
-      current.setPadding(MBScreenUtilities.FOUR, MBScreenUtilities.TWO, MBScreenUtilities.FOUR, MBScreenUtilities.TWO);
+      current.setPadding(ScreenUtil.FOUR, ScreenUtil.TWO, ScreenUtil.FOUR, ScreenUtil.TWO);
 
       result = current;
 

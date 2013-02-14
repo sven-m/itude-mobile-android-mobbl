@@ -5,6 +5,8 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.itude.mobile.android.util.DataUtil;
+import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndpointsConfiguration;
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndpointsConfigurationParser;
@@ -24,8 +26,6 @@ import com.itude.mobile.mobbl2.client.core.services.exceptions.MBDomainNotDefine
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBPageNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBToolNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.DataUtil;
-import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 
 public final class MBMetadataService
 {
@@ -41,8 +41,8 @@ public final class MBMetadataService
   private MBMetadataService()
   {
     MBMvcConfigurationParser mvcParser = new MBMvcConfigurationParser();
-    if (_phoneConfigName != null && (MBDevice.getInstance().isPhone() || MBDevice.getInstance().isPhoneV14())) _configName = _phoneConfigName;
-    else if (_tabletConfigName != null && MBDevice.getInstance().isTablet()) _configName = _tabletConfigName;
+    if (_phoneConfigName != null && (DeviceUtil.getInstance().isPhone() || DeviceUtil.getInstance().isPhoneV14())) _configName = _phoneConfigName;
+    else if (_tabletConfigName != null && DeviceUtil.getInstance().isTablet()) _configName = _tabletConfigName;
 
     // Configuration definition
     _cfg = (MBConfigurationDefinition) mvcParser.parseData(DataUtil.getInstance().readFromAssetOrFile(_configName), _configName);

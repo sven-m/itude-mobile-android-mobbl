@@ -1,7 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBOutcomeDefinition extends MBDefinition
 {
@@ -18,7 +18,7 @@ public class MBOutcomeDefinition extends MBDefinition
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
 
-    return StringUtilities.appendIndentString(appendToMe, level).append("<Outcome origin='").append(_origin).append("' name='")
+    return StringUtil.appendIndentString(appendToMe, level).append("<Outcome origin='").append(_origin).append("' name='")
         .append(getName()).append("' action='").append(_action).append("' transferDocument='").append(_transferDocument)
         .append("' persist='").append(_persist).append("' noBackgroundProcessing='").append(_noBackgroundProcessing).append("'")
         .append(getAttributeAsXml("dialog", _dialog)).append(getAttributeAsXml("preCondition", _preCondition))

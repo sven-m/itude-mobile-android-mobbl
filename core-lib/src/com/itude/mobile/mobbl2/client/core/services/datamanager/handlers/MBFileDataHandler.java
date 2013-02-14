@@ -2,6 +2,9 @@ package com.itude.mobile.mobbl2.client.core.services.datamanager.handlers;
 
 import android.util.Log;
 
+import com.itude.mobile.android.util.DataUtil;
+import com.itude.mobile.android.util.FileUtil;
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
@@ -9,9 +12,6 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.MBDataHandlerBase;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.DataUtil;
-import com.itude.mobile.mobbl2.client.core.util.FileUtil;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBFileDataHandler extends MBDataHandlerBase
 {
@@ -37,7 +37,7 @@ public class MBFileDataHandler extends MBDataHandlerBase
     else
     {
       // User XML parser as a default
-      if (StringUtilities.isNotEmpty(parser))
+      if (StringUtil.isNotEmpty(parser))
       {
         return MBDocumentFactory.getInstance().getDocumentWithData(data, parser, docDef);
       }

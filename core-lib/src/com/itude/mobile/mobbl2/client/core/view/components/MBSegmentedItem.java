@@ -7,8 +7,8 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.widget.RadioButton;
 
+import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
-import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 
 public class MBSegmentedItem extends RadioButton
 {
@@ -16,7 +16,7 @@ public class MBSegmentedItem extends RadioButton
   private Paint     _textPaint;
   private String    _text;
   private final int _currentTextColor   = Color.WHITE;
-  private float     _textSize           = MBScreenUtilities.ELEVEN;
+  private float     _textSize           = ScreenUtil.ELEVEN;
   private int       _ascent;
   private String    _defaultBackground  = "button-segmented-normal";
   private String    _selectedBackground = "button-segmented-selected";
@@ -158,7 +158,7 @@ public class MBSegmentedItem extends RadioButton
   @Override
   public void setTextSize(float textSize)
   {
-    _textSize = MBScreenUtilities.convertDimensionPixelsToPixels(textSize);
+    _textSize = ScreenUtil.convertDimensionPixelsToPixels(textSize);
     _textPaint.setTextSize(_textSize);
     requestLayout();
     invalidate();

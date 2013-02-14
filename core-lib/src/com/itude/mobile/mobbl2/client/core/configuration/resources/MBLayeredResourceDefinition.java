@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
+import com.itude.mobile.android.util.StringUtil;
 
 public class MBLayeredResourceDefinition extends MBAbstractResourceCollectionDefinition
 {
@@ -31,12 +31,12 @@ public class MBLayeredResourceDefinition extends MBAbstractResourceCollectionDef
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<LayeredResource name='").append(getName()).append("' >");
+    StringUtil.appendIndentString(appendToMe, level).append("<LayeredResource name='").append(getName()).append("' >");
     for (MBItemDefinition item : getItems().values())
     {
       item.asXmlWithLevel(appendToMe, level + 2);
     }
 
-    return StringUtilities.appendIndentString(appendToMe, level).append("</LayeredResource>");
+    return StringUtil.appendIndentString(appendToMe, level).append("</LayeredResource>");
   }
 }

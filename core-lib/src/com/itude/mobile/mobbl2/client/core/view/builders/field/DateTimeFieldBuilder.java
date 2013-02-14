@@ -8,11 +8,11 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.itude.mobile.android.util.DateUtilities;
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
-import com.itude.mobile.mobbl2.client.core.util.DateUtilities;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.MBDateField;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
@@ -53,18 +53,18 @@ public abstract class DateTimeFieldBuilder extends MBBaseFieldBuilder
     String valueLabelText = "";
 
     String nillValue = field.getValueIfNil();
-    if (StringUtilities.isNotBlank(nillValue))
+    if (StringUtil.isNotBlank(nillValue))
     {
       valueLabelText = field.getValueIfNil();
     }
 
-    if (StringUtilities.isNotBlank(dateTimeString))
+    if (StringUtil.isNotBlank(dateTimeString))
     {
       df.setTime(dateTimeString);
       valueLabelText = DateUtilities.dateToString(df.getCalender().getTime(), field.getFormatMask());
     }
 
-    if (StringUtilities.isNotBlank(valueLabelText))
+    if (StringUtil.isNotBlank(valueLabelText))
     {
       value.setText(valueLabelText);
     }
@@ -72,7 +72,7 @@ public abstract class DateTimeFieldBuilder extends MBBaseFieldBuilder
     styleHandler.styleDateOrTimeSelectorValue(value, field);
 
     String source = field.getSource();
-    if (StringUtilities.isNotBlank(source))
+    if (StringUtil.isNotBlank(source))
     {
       Drawable drawable = MBResourceService.getInstance().getImageByID(source);
       value.setBackgroundDrawable(drawable);

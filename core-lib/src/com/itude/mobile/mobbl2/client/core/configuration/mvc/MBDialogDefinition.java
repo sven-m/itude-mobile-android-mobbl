@@ -1,8 +1,8 @@
 package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidDialogDefinitionException;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBDialogDefinition extends MBDefinition
 {
@@ -17,7 +17,7 @@ public class MBDialogDefinition extends MBDefinition
 
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    return StringUtilities.appendIndentString(appendToMe, level)//
+    return StringUtil.appendIndentString(appendToMe, level)//
         .append("<Dialog name='")//
         .append(getName())//
         .append('\'')//

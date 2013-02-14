@@ -4,13 +4,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import com.itude.mobile.android.util.DeviceUtil;
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPanelDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationFactory;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
-import com.itude.mobile.mobbl2.client.core.util.MBDevice;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 public class MBPanel extends MBComponentContainer implements OnClickListener
@@ -142,7 +142,7 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level)//
+    StringUtil.appendIndentString(appendToMe, level)//
         .append("<MBPanel ")//
         .append(attributeAsXml("type", _type))//
         .append(" ")//
@@ -162,7 +162,7 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
         .append(">\n");
 
     childrenAsXmlWithLevel(appendToMe, level + 2);
-    return StringUtilities.appendIndentString(appendToMe, level).append("</MBPanel>\n");
+    return StringUtil.appendIndentString(appendToMe, level).append("</MBPanel>\n");
   }
 
   @Override
@@ -303,7 +303,7 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   @Override
   public void onClick(View v)
   {
-    if (MBDevice.getInstance().isTablet())
+    if (DeviceUtil.getInstance().isTablet())
     {
       View selectedView = getPage().getSelectedView();
 

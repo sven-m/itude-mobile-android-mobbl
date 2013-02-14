@@ -1,8 +1,8 @@
 package com.itude.mobile.mobbl2.client.core.controller.util.indicator;
 
+import com.itude.mobile.android.util.AssertUtil;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBDocumentOperationDelegate;
-import com.itude.mobile.mobbl2.client.core.util.AssertUtil;
 
 public class MBDocumentOperationDelegateWrapper implements MBDocumentOperationDelegate
 {

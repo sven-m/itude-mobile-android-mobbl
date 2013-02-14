@@ -2,8 +2,8 @@ package com.itude.mobile.mobbl2.client.core.controller;
 
 import android.util.Log;
 
+import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 
 /**
  * @author Coen Houtman
@@ -14,7 +14,7 @@ public class MBViewManagerFactory
 {
   public static Class<? extends MBViewManager> getViewManagerClass()
   {
-    if (MBDevice.getInstance().isTablet())
+    if (DeviceUtil.getInstance().isTablet())
     {
       try
       {
@@ -26,7 +26,7 @@ public class MBViewManagerFactory
         // Failed to load MBTabletViewManager, so return the default
       }
     }
-    else if (MBDevice.getInstance().isPhoneV14())
+    else if (DeviceUtil.getInstance().isPhoneV14())
     {
       try
       {

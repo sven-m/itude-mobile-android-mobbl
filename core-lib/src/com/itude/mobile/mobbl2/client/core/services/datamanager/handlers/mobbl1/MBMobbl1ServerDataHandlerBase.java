@@ -4,13 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.itude.mobile.android.util.DeviceUtil;
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBRESTServiceDataHandler;
-import com.itude.mobile.mobbl2.client.core.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.util.MBProperties;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public abstract class MBMobbl1ServerDataHandlerBase extends MBRESTServiceDataHandler
 {
@@ -71,10 +71,10 @@ public abstract class MBMobbl1ServerDataHandlerBase extends MBRESTServiceDataHan
     // TODO iPhoneUID will need to be changed back to uniqueDeviceID --> mobbls.alex.com does not support this yet
     //    sendData.setAttributeValue(UID, "uniqueDeviceID");
 
-    // didn't use StringUtilities on purpose. Although it is unwise to have an empty or space as secret key; why shouldn't it be possible?
+    // didn't use StringUtil on purpose. Although it is unwise to have an empty or space as secret key; why shouldn't it be possible?
     if (secret != null)
     {
-      String messageID = StringUtilities.md5(dateTime + uid + secret);
+      String messageID = StringUtil.md5(dateTime + uid + secret);
       sendData.setAttributeValue(messageID, "messageID");
     }
 

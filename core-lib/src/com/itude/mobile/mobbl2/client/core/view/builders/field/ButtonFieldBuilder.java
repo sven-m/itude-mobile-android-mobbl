@@ -5,9 +5,9 @@ import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.Button;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 
 public class ButtonFieldBuilder extends MBBaseFieldBuilder
@@ -18,21 +18,21 @@ public class ButtonFieldBuilder extends MBBaseFieldBuilder
 
     MarginLayoutParams buttonParams = new MarginLayoutParams(MarginLayoutParams.WRAP_CONTENT, MarginLayoutParams.WRAP_CONTENT);
 
-    //    buttonParams.setMargins(MBScreenUtilities.FIVE, 0, MBScreenUtilities.FIVE, 0);
+    //    buttonParams.setMargins(ScreenUtil.FIVE, 0, ScreenUtil.FIVE, 0);
     Button button = new Button(MBApplicationController.getInstance().getBaseContext());
     button.setLayoutParams(buttonParams);
 
     String defaultValue = field.getLabel();
 
     String path = field.getPath();
-    if (StringUtilities.isBlank(defaultValue) && StringUtilities.isNotBlank(path))
+    if (StringUtil.isBlank(defaultValue) && StringUtil.isNotBlank(path))
     {
       String fieldValue = field.getValue();
-      if (StringUtilities.isNotBlank(fieldValue))
+      if (StringUtil.isNotBlank(fieldValue))
       {
         defaultValue = fieldValue;
       }
-      else if (StringUtilities.isNotBlank(field.getValueIfNil()))
+      else if (StringUtil.isNotBlank(field.getValueIfNil()))
       {
         defaultValue = field.getValueIfNil();
       }

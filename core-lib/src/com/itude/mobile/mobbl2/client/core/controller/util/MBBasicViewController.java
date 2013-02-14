@@ -25,6 +25,9 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import com.itude.mobile.android.util.DeviceUtil;
+import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.ViewUtilities;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.controller.MBDialogController;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
@@ -38,10 +41,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBEventListener;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangedEventListener;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.MBProperties;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
-import com.itude.mobile.mobbl2.client.core.util.ViewUtilities;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
@@ -113,7 +113,7 @@ public class MBBasicViewController extends DialogFragment
     if (getArguments() != null)
     {
       String outcomeID = getArguments().getString("id");
-      if (StringUtilities.isNotBlank(outcomeID))
+      if (StringUtil.isNotBlank(outcomeID))
       {
         Log.d(Constants.APPLICATION_NAME, "MBBasicViewController.onCreate: found id=" + outcomeID);
 
@@ -152,7 +152,7 @@ public class MBBasicViewController extends DialogFragment
     _isDialogFullscreen = getArguments().getBoolean("fullscreen", false);
     _isDialogCancelable = getArguments().getBoolean("cancelable", false) || _isDialogCancelable;
 
-    if (_isDialogClosable && MBDevice.isTablet())
+    if (_isDialogClosable && DeviceUtil.isTablet())
     {
       ViewGroup view = buildInitialView(LayoutInflater.from(getActivity()));
 
@@ -248,7 +248,7 @@ public class MBBasicViewController extends DialogFragment
       setCancelable(_isDialogClosable || _isDialogCancelable);
 
       // view is already set in onCreateDialog for closable dialogs
-      if (_isDialogClosable && MBDevice.isTablet())
+      if (_isDialogClosable && DeviceUtil.isTablet())
       {
         return super.onCreateView(inflater, container, savedInstanceState);
       }
@@ -297,7 +297,7 @@ public class MBBasicViewController extends DialogFragment
       FrameLayout layout = (FrameLayout) getDialog().findViewById(android.R.id.custom);
       if (layout != null) layout.setPadding(0, 0, 0, 0);
 
-      if (MBDevice.getInstance().isTablet())
+      if (DeviceUtil.getInstance().isTablet())
       {
         styleCloseButton();
       }

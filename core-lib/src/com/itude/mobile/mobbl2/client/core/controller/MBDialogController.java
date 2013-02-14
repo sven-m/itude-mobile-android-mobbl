@@ -21,6 +21,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.itude.mobile.android.util.DeviceUtil;
+import com.itude.mobile.android.util.ScreenUtil;
+import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
@@ -29,10 +33,6 @@ import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.MBDevice;
-import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
-import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBDialogViewBuilder.MBDialogType;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
@@ -502,7 +502,7 @@ public class MBDialogController extends ContextWrapper
   {
     if (getName().equals(MBViewManager.getInstance().getActiveDialogName()))
     {
-      if (MBDevice.isTablet() && "SPLIT".equals(_dialogMode))
+      if (DeviceUtil.isTablet() && "SPLIT".equals(_dialogMode))
       {
         for (int i = 0; i < _sortedDialogIds.size() - 1; i++)
         {
@@ -511,7 +511,7 @@ public class MBDialogController extends ContextWrapper
           if (fragment != null)
           {
             FrameLayout fragmentContainer = (FrameLayout) fragment.getView().getParent();
-            fragmentContainer.getLayoutParams().width = MBScreenUtilities.getWidthPixelsForPercentage(33);
+            fragmentContainer.getLayoutParams().width = ScreenUtil.getWidthPixelsForPercentage(33);
           }
         }
       }
@@ -522,7 +522,7 @@ public class MBDialogController extends ContextWrapper
       }
 
       String modalPageID = MBApplicationController.getInstance().getModalPageID();
-      if (StringUtilities.isNotBlank(modalPageID))
+      if (StringUtil.isNotBlank(modalPageID))
       {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(modalPageID);
         if (fragment != null && fragment instanceof MBBasicViewController)

@@ -8,10 +8,10 @@ import java.util.Map;
 
 import android.util.Log;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.MBIncludableDefinition;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBConfigurationDefinition extends MBDefinition implements MBIncludableDefinition
 {
@@ -95,54 +95,54 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<Configuration>\n")
-        .append(StringUtilities.getIndentStringWithLevel(level + 2)).append("<Model>\n")
-        .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Domains>\n");
+    StringUtil.appendIndentString(appendToMe, level).append("<Configuration>\n")
+        .append(StringUtil.getIndentStringWithLevel(level + 2)).append("<Model>\n")
+        .append(StringUtil.getIndentStringWithLevel(level + 4)).append("<Domains>\n");
     for (MBDomainDefinition domain : _domainTypes.values())
     {
       domain.asXmlWithLevel(appendToMe, level + 6);
     }
-    StringUtilities.appendIndentString(appendToMe, level + 4).append("</Domains>\n")
-        .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Documents>\n");
+    StringUtil.appendIndentString(appendToMe, level + 4).append("</Domains>\n")
+        .append(StringUtil.getIndentStringWithLevel(level + 4)).append("<Documents>\n");
     for (MBDocumentDefinition document : _documentTypes.values())
     {
       document.asXmlWithLevel(appendToMe, level + 6);
     }
-    appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Documents>\n")
-        .append(StringUtilities.getIndentStringWithLevel(level + 2)).append("</Model>\n")
-        .append(StringUtilities.getIndentStringWithLevel(level + 2)).append("<Controller>\n")
-        .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Actions>\n");
+    appendToMe.append(StringUtil.getIndentStringWithLevel(level + 4)).append("</Documents>\n")
+        .append(StringUtil.getIndentStringWithLevel(level + 2)).append("</Model>\n")
+        .append(StringUtil.getIndentStringWithLevel(level + 2)).append("<Controller>\n")
+        .append(StringUtil.getIndentStringWithLevel(level + 4)).append("<Actions>\n");
     for (MBActionDefinition acion : _actionTypes.values())
     {
       acion.asXmlWithLevel(appendToMe, level + 6);
     }
-    appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Actions>\n")
-        .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Wiring>\n");
+    appendToMe.append(StringUtil.getIndentStringWithLevel(level + 4)).append("</Actions>\n")
+        .append(StringUtil.getIndentStringWithLevel(level + 4)).append("<Wiring>\n");
     for (MBOutcomeDefinition outcome : _outcomeTypes)
     {
       outcome.asXmlWithLevel(appendToMe, level + 6);
     }
-    appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Wiring>\n")
-        .append(StringUtilities.getIndentStringWithLevel(level + 2)).append("</Controller>\n")
-        .append(StringUtilities.getIndentStringWithLevel(level + 2)).append("<View>\n")
-        .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Dialogs>\n");
+    appendToMe.append(StringUtil.getIndentStringWithLevel(level + 4)).append("</Wiring>\n")
+        .append(StringUtil.getIndentStringWithLevel(level + 2)).append("</Controller>\n")
+        .append(StringUtil.getIndentStringWithLevel(level + 2)).append("<View>\n")
+        .append(StringUtil.getIndentStringWithLevel(level + 4)).append("<Dialogs>\n");
     for (MBDialogDefinition dialog : _dialogs.values())
     {
       dialog.asXmlWithLevel(appendToMe, level + 6);
     }
-    appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Dialogs>\n")
-        .append(StringUtilities.getIndentStringWithLevel(level + 4)).append("<Toolbar>\n");
+    appendToMe.append(StringUtil.getIndentStringWithLevel(level + 4)).append("</Dialogs>\n")
+        .append(StringUtil.getIndentStringWithLevel(level + 4)).append("<Toolbar>\n");
     for (MBToolDefinition tool : _tools.values())
     {
       tool.asXmlWithLevel(appendToMe, level + 6);
     }
-    appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 4)).append("</Toolbar>\n");
+    appendToMe.append(StringUtil.getIndentStringWithLevel(level + 4)).append("</Toolbar>\n");
     for (MBPageDefinition page : _pageTypes.values())
     {
       page.asXmlWithLevel(appendToMe, level + 4);
     }
-    appendToMe.append(StringUtilities.getIndentStringWithLevel(level + 2)).append("</View>\n")
-        .append(StringUtilities.getIndentStringWithLevel(level)).append("</Configuration>\n");
+    appendToMe.append(StringUtil.getIndentStringWithLevel(level + 2)).append("</View>\n")
+        .append(StringUtil.getIndentStringWithLevel(level)).append("</Configuration>\n");
 
     return appendToMe;
   }

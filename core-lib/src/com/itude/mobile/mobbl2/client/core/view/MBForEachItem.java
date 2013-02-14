@@ -2,11 +2,11 @@ package com.itude.mobile.mobbl2.client.core.view;
 
 import android.view.ViewGroup;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBForEachDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBVariableDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 public class MBForEachItem extends MBComponentContainer
@@ -80,9 +80,9 @@ public class MBForEachItem extends MBComponentContainer
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<MBForEachItem index=").append(_index).append(">\n");
+    StringUtil.appendIndentString(appendToMe, level).append("<MBForEachItem index=").append(_index).append(">\n");
     childrenAsXmlWithLevel(appendToMe, level + 2);
-    return StringUtilities.appendIndentString(appendToMe, level).append("</MBForEachItem>\n");
+    return StringUtil.appendIndentString(appendToMe, level).append("</MBForEachItem>\n");
   }
 
   @Override

@@ -1,10 +1,10 @@
 package com.itude.mobile.mobbl2.client.core.view;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBForEachDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBVariableDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBVariable extends MBComponentContainer
 {
@@ -48,7 +48,7 @@ public class MBVariable extends MBComponentContainer
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level)
+    StringUtil.appendIndentString(appendToMe, level)
                   .append("<MBVariable ")
                   .append(attributeAsXml("name", _name))
                   .append(" ")
@@ -57,7 +57,7 @@ public class MBVariable extends MBComponentContainer
 
     childrenAsXmlWithLevel(appendToMe, level + 2);
     
-    return StringUtilities.appendIndentString(appendToMe, level)
+    return StringUtil.appendIndentString(appendToMe, level)
                         .append("</MBVariable>\n");
   }
 

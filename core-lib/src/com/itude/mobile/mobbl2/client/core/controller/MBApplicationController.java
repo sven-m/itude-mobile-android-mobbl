@@ -19,6 +19,10 @@ import android.os.MessageQueue;
 import android.os.MessageQueue.IdleHandler;
 import android.util.Log;
 
+import com.itude.mobile.android.util.AssertUtil;
+import com.itude.mobile.android.util.CollectionUtilities;
+import com.itude.mobile.android.util.DataUtil;
+import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
@@ -36,12 +40,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowChangeType;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBNoDocumentException;
-import com.itude.mobile.mobbl2.client.core.util.AssertUtil;
-import com.itude.mobile.mobbl2.client.core.util.CollectionUtilities;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.DataUtil;
-import com.itude.mobile.mobbl2.client.core.util.DeviceUtil;
-import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 
@@ -77,7 +76,7 @@ public class MBApplicationController extends Application
     Context context = getBaseContext();
     DataUtil.getInstance().setContext(context);
     DeviceUtil.getInstance().setContext(context);
-    MBDevice.getInstance().setContext(getBaseContext());
+    DeviceUtil.getInstance().setContext(getBaseContext());
     super.onCreate();
     _instance = this;
     _pages = new HashMap<String, MBPage>();
@@ -117,7 +116,7 @@ public class MBApplicationController extends Application
   {
     Log.d(Constants.APPLICATION_NAME, "MBApplicationController.startApplication");
     Log.d(Constants.APPLICATION_NAME, "Device info:\n");
-    Log.d(Constants.APPLICATION_NAME, MBDevice.getInstance().toString());
+    Log.d(Constants.APPLICATION_NAME, DeviceUtil.getInstance().toString());
 
     startOutcomeHandler();
 
@@ -159,7 +158,7 @@ public class MBApplicationController extends Application
     boolean isInNavbar = homeDialogDefinition.isAddToNavbar();
     MBViewManager.getInstance().invalidateActionBar(isInNavbar);
 
-    if (!isInNavbar || MBDevice.getInstance().isPhone())
+    if (!isInNavbar || DeviceUtil.getInstance().isPhone())
     {
       _viewManager.runOnUiThread(new Runnable()
       {
