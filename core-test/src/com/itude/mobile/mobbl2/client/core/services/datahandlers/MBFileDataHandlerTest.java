@@ -4,13 +4,13 @@ import java.util.Date;
 
 import android.test.ApplicationTestCase;
 
+import com.itude.mobile.android.util.DataUtil;
+import com.itude.mobile.android.util.FileUtil;
 import com.itude.mobile.mobbl2.client.core.MBApplicationCore;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
-import com.itude.mobile.mobbl2.client.core.util.DataUtil;
-import com.itude.mobile.mobbl2.client.core.util.FileUtil;
 
 public class MBFileDataHandlerTest extends ApplicationTestCase<MBApplicationCore>
 {

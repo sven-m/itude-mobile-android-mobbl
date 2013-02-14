@@ -5,8 +5,8 @@ import java.util.Iterator;
 
 import android.test.ApplicationTestCase;
 
+import com.itude.mobile.android.util.AssetUtil;
 import com.itude.mobile.mobbl2.client.core.MBApplicationCore;
-import com.itude.mobile.mobbl2.client.core.util.AssetUtil;
 
 public class MBMvcConfigurationParserTest extends ApplicationTestCase<MBApplicationCore>
 {
@@ -206,8 +206,8 @@ public class MBMvcConfigurationParserTest extends ApplicationTestCase<MBApplicat
 
     MBForEachDefinition forEach = (MBForEachDefinition) ((MBPanelDefinition) subPanel.getChildren().get(0)).getChildren().get(0);
     assertNotNull(forEach);
-    assertEquals("/EXT-NieuwsBelangrijkeBerichtenGetResult[0]/Berichten[0]/EXTNieuwsBelangrijkeBerichtenGetReplyBerichtenBericht", forEach
-        .getValue());
+    assertEquals("/EXT-NieuwsBelangrijkeBerichtenGetResult[0]/Berichten[0]/EXTNieuwsBelangrijkeBerichtenGetReplyBerichtenBericht",
+                 forEach.getValue());
 
     MBPanelDefinition forEachSubPanel = (MBPanelDefinition) forEach.getChildren().get(0);
     assertNotNull(forEachSubPanel);

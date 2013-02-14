@@ -2,6 +2,7 @@ package com.itude.mobile.mobbl2.client.core.configuration.resources;
 
 import com.itude.mobile.android.util.StringUtil;
 
+
 public class MBStatedResourceDefinition extends MBAbstractResourceCollectionDefinition
 {
 

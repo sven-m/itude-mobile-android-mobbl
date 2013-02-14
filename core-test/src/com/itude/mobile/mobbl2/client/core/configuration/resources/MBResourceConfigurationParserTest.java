@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import android.test.ApplicationTestCase;
 
+import com.itude.mobile.android.util.AssetUtil;
+import com.itude.mobile.android.util.FileUtil;
 import com.itude.mobile.mobbl2.client.core.MBApplicationCore;
-import com.itude.mobile.mobbl2.client.core.util.AssetUtil;
-import com.itude.mobile.mobbl2.client.core.util.FileUtil;
-import com.itude.mobile.mobbl2.client.core.util.MBBundleDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBBundleDefinition;
 
 public class MBResourceConfigurationParserTest extends ApplicationTestCase<MBApplicationCore>
 {
