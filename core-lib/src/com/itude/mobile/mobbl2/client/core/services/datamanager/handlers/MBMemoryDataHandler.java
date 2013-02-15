@@ -6,7 +6,7 @@ import java.util.Map;
 import android.util.Log;
 
 import com.itude.mobile.android.util.DataUtil;
-import com.itude.mobile.android.util.exceptions.MBDataParsingException;
+import com.itude.mobile.android.util.exceptions.DataParsingException;
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
@@ -38,7 +38,7 @@ public class MBMemoryDataHandler extends MBDataHandlerBase
       {
         data = DataUtil.getInstance().readFromAssetOrFile(fileName);
       }
-      catch (MBDataParsingException e)
+      catch (DataParsingException e)
       {
         Log.d(Constants.APPLICATION_NAME, "Unable to find file " + fileName + " in assets");
       }
