@@ -13,7 +13,6 @@ import android.util.Log;
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.FileUtil;
 import com.itude.mobile.android.util.StringUtil;
-import com.itude.mobile.android.util.cache.MBCacheWriter;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBXmlDocumentParser;
