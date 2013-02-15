@@ -46,6 +46,11 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.itude.mobile.android.util</groupId>
+			<artifactId>android-util-lib</artifactId>
+			<type>apklib</type>
+		</dependency>
 	</dependencies>
 
 	<scm>
