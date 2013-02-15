@@ -41,6 +41,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
+import com.itude.mobile.mobbl2.client.core.util.ScreenConstants;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
@@ -419,7 +420,7 @@ public class MBTabletViewManager extends MBViewManager
         if (StringUtil.isNotBlank(title))
         {
           tab.setText(title);
-          tabBar.setTabPadding(0, 0, ScreenUtil.SIXTEEN, 0);
+          tabBar.setTabPadding(0, 0, ScreenConstants.SIXTEEN, 0);
         }
         else
         {
@@ -490,10 +491,10 @@ public class MBTabletViewManager extends MBViewManager
       ImageView rotationImage = getRotationImage();
 
       float imageWidth = rotationImage.getDrawable().getIntrinsicWidth();
-      int framePadding = (int) ((ScreenUtil.convertDimensionPixelsToPixels(80) - imageWidth) / 2);
+      int framePadding = (int) ((ScreenUtil.convertDimensionPixelsToPixels(getBaseContext(), 80) - imageWidth) / 2);
 
       final FrameLayout frameLayout = new FrameLayout(this);
-      frameLayout.setLayoutParams(new FrameLayout.LayoutParams(ScreenUtil.convertDimensionPixelsToPixels(80),
+      frameLayout.setLayoutParams(new FrameLayout.LayoutParams(ScreenUtil.convertDimensionPixelsToPixels(getBaseContext(), 80),
           LayoutParams.WRAP_CONTENT, Gravity.CENTER));
       frameLayout.setPadding(framePadding, 0, framePadding, 0);
 

@@ -86,7 +86,8 @@ public class MBDialogViewBuilder
       fragmentContainer.setId(_sortedDialogIds.get(i));
 
       RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-          ScreenUtil.getWidthPixelsForPercentage(LEFT_FRAGMENT_WIDTH_PERCENTAGE), RelativeLayout.LayoutParams.MATCH_PARENT);
+          ScreenUtil.getWidthPixelsForPercentage(MBApplicationController.getInstance().getBaseContext(), LEFT_FRAGMENT_WIDTH_PERCENTAGE),
+          RelativeLayout.LayoutParams.MATCH_PARENT);
 
       // position fragment containers next to each other
       if (i == 0)

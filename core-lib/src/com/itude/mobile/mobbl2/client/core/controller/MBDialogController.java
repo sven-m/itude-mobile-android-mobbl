@@ -511,7 +511,7 @@ public class MBDialogController extends ContextWrapper
           if (fragment != null)
           {
             FrameLayout fragmentContainer = (FrameLayout) fragment.getView().getParent();
-            fragmentContainer.getLayoutParams().width = ScreenUtil.getWidthPixelsForPercentage(33);
+            fragmentContainer.getLayoutParams().width = ScreenUtil.getWidthPixelsForPercentage(getBaseContext(), 33);
           }
         }
       }

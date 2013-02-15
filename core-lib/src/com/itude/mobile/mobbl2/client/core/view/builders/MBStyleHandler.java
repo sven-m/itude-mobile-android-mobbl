@@ -25,11 +25,11 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.ScreenConstants;
 import com.itude.mobile.mobbl2.client.core.view.MBComponent;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
@@ -255,12 +255,12 @@ public class MBStyleHandler
 
   public void styleSectionContainer(LinearLayout view, boolean hasTitle)
   {
-    view.setPadding(0, ScreenUtil.SEVEN, 0, 0);
+    view.setPadding(0, ScreenConstants.SEVEN, 0, 0);
   }
 
   public void styleSectionContainer(LinearLayout view, boolean hasTitle, MBPanel panel)
   {
-    view.setPadding(0, ScreenUtil.SEVEN, 0, 0);
+    view.setPadding(0, ScreenConstants.SEVEN, 0, 0);
   }
 
   public Object sizeForTextField(MBField field, Object bounds)
@@ -417,7 +417,7 @@ public class MBStyleHandler
 
   public void styleClickableRow(RelativeLayout view, String style)
   {
-    view.setMinimumHeight(ScreenUtil.FIFTY);
+    view.setMinimumHeight(ScreenConstants.FIFTY);
 
     RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
         RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -426,7 +426,7 @@ public class MBStyleHandler
 
     ImageView arrow = new ImageView(view.getContext());
     arrow.setLayoutParams(arrowParams);
-    arrow.setMinimumWidth(ScreenUtil.FORTY);
+    arrow.setMinimumWidth(ScreenConstants.FORTY);
     arrow.setImageDrawable(MBResourceService.getInstance().getImageByID(Constants.C_ARROW));
 
     if (StringUtil.isNotBlank(style))
@@ -437,7 +437,7 @@ public class MBStyleHandler
         if (siblings > 0)
         {
           View latestChild = view.getChildAt(siblings - 1);
-          latestChild.setPadding(0, 0, ScreenUtil.TWENTYEIGHT, 0);
+          latestChild.setPadding(0, 0, ScreenConstants.TWENTYEIGHT, 0);
         }
       }
     }
@@ -451,7 +451,7 @@ public class MBStyleHandler
 
   public void styleMatrixContainer(MBPanel matrixPanel, LinearLayout view)
   {
-    view.setPadding(0, ScreenUtil.SEVEN, 0, 0);
+    view.setPadding(0, ScreenConstants.SEVEN, 0, 0);
   }
 
   public void styleMainScrollbarView(MBPage page, View scrollableView)
@@ -466,7 +466,7 @@ public class MBStyleHandler
 
   public void styleSegmentedControl(View segmentedControl)
   {
-    segmentedControl.setPadding(0, ScreenUtil.SEVEN, 0, 0);
+    segmentedControl.setPadding(0, ScreenConstants.SEVEN, 0, 0);
   }
 
   public void styleSegmentedItem(MBSegmentedItem item)
@@ -562,12 +562,12 @@ public class MBStyleHandler
         if (alignment.equals(Constants.C_ALIGNMENT_RIGHT))
         {
           childParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-          childParams.setMargins(0, 0, ScreenUtil.FIVE, ScreenUtil.FIVE);
+          childParams.setMargins(0, 0, ScreenConstants.FIVE, ScreenConstants.FIVE);
         }
         else if (alignment.equals(Constants.C_ALIGNMENT_LEFT))
         {
           childParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-          childParams.setMargins(ScreenUtil.FIVE, 0, 0, ScreenUtil.FIVE);
+          childParams.setMargins(ScreenConstants.FIVE, 0, 0, ScreenConstants.FIVE);
         }
         else
         {
@@ -615,7 +615,7 @@ public class MBStyleHandler
   {
     if (notDirectChildOfSection)
     {
-      view.setPadding(0, ScreenUtil.SEVEN, 0, ScreenUtil.SEVEN);
+      view.setPadding(0, ScreenConstants.SEVEN, 0, ScreenConstants.SEVEN);
     }
 
   }

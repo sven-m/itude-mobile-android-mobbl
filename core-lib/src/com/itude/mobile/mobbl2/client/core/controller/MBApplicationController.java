@@ -76,7 +76,6 @@ public class MBApplicationController extends Application
     Context context = getBaseContext();
     DataUtil.getInstance().setContext(context);
     DeviceUtil.getInstance().setContext(context);
-    DeviceUtil.getInstance().setContext(getBaseContext());
     super.onCreate();
     _instance = this;
     _pages = new HashMap<String, MBPage>();
