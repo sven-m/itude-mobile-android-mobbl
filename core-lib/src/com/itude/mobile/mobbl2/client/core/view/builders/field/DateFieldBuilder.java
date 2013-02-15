@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
-import com.itude.mobile.android.util.DateUtilities;
+import com.itude.mobile.android.util.DateUtil;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.view.MBDateField;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
@@ -30,10 +30,10 @@ public class DateFieldBuilder extends DateTimeFieldBuilder
           {
             df.setDate(year, monthOfYear, dayOfMonth);
 
-            field.setValue(DateUtilities.dateToString(df.getCalender().getTime()));
+            field.setValue(DateUtil.dateToString(df.getCalender().getTime()));
 
             // Update our label
-            value.setText(DateUtilities.dateToString(df.getCalender().getTime(), field.getFormatMask()));
+            value.setText(DateUtil.dateToString(df.getCalender().getTime(), field.getFormatMask()));
 
           }
         };

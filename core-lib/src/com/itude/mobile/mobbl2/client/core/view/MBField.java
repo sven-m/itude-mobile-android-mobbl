@@ -20,7 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
-import com.itude.mobile.android.util.DateUtilities;
+import com.itude.mobile.android.util.DateUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefinition;
@@ -458,11 +458,11 @@ public class MBField extends MBComponent
         // Formats the date depending on the current date. 
         if (getFormatMask().equals("dateOrTimeDependingOnCurrentDate"))
         {
-          fieldValue = DateUtilities.formatDateDependingOnCurrentDate(locale, xmlDate);
+          fieldValue = DateUtil.formatDateDependingOnCurrentDate(locale, xmlDate);
         }
         else
         {
-          Date date = DateUtilities.dateFromXML(xmlDate);
+          Date date = DateUtil.dateFromXML(xmlDate);
 
           SimpleDateFormat df = new SimpleDateFormat(getFormatMask());
           fieldValue = df.format(date);

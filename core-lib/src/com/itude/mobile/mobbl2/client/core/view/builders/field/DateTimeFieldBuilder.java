@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.itude.mobile.android.util.DateUtilities;
+import com.itude.mobile.android.util.DateUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
@@ -61,7 +61,7 @@ public abstract class DateTimeFieldBuilder extends MBBaseFieldBuilder
     if (StringUtil.isNotBlank(dateTimeString))
     {
       df.setTime(dateTimeString);
-      valueLabelText = DateUtilities.dateToString(df.getCalender().getTime(), field.getFormatMask());
+      valueLabelText = DateUtil.dateToString(df.getCalender().getTime(), field.getFormatMask());
     }
 
     if (StringUtil.isNotBlank(valueLabelText))
