@@ -70,6 +70,8 @@ public class MBViewManager extends FragmentActivity
 
   private boolean                         _created = false;
 
+  private Boolean                         _hasMenu = null;
+
   ///////////////////// Android lifecycle methods
 
   protected void onPreCreate()
@@ -1076,18 +1078,21 @@ public class MBViewManager extends FragmentActivity
 
   protected boolean hasMenuItems()
   {
-    boolean hasMenu = false;
-    for (final String dialogName : getSortedDialogNames())
+    if (_hasMenu == null)
     {
-      final MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      if (dialogDefinition.isShowAsMenu())
+      _hasMenu = false;
+      for (final String dialogName : getSortedDialogNames())
       {
-        hasMenu = true;
-        break;
+        final MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+        if (dialogDefinition.isShowAsMenu())
+        {
+          _hasMenu = true;
+          break;
+        }
       }
     }
 
-    return hasMenu;
+    return _hasMenu;
   }
 
 }

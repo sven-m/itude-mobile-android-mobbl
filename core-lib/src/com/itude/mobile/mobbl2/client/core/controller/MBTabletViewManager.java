@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -44,10 +45,12 @@ import com.itude.mobile.mobbl2.client.core.util.ScreenConstants;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
+import com.itude.mobile.mobbl2.client.core.view.components.slidingmenu.MBSlidingMenuItem;
 import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTab;
 import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabBar;
 import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabListener;
 import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabSpinnerAdapter;
+import com.itude.mobile.widget.slidingmenu.SlidingMenu;
 
 /**
  * @author Coen Houtman
@@ -60,6 +63,7 @@ public class MBTabletViewManager extends MBViewManager
 {
   private Menu             _menu           = null;
   private MBToolDefinition _refreshToolDef = null;
+  private SlidingMenu      _slidingMenu    = null;
 
   @Override
   protected void onPreCreate()
@@ -265,15 +269,22 @@ public class MBTabletViewManager extends MBViewManager
 
   private void onHomeSelected()
   {
-    MBTabBar tabBar = getTabBar();
-    if (tabBar != null)
+    if (hasMenuItems())
     {
-      resetViewPreservingCurrentDialog();
-      int firstDialog = MBMetadataService.getInstance().getHomeDialogDefinition().getName().hashCode();
-      MBTab selectedTab = tabBar.getSelectedTab();
-      if (selectedTab == null || firstDialog != selectedTab.getTabId())
+      _slidingMenu.toggle(true);
+    }
+    else
+    {
+      MBTabBar tabBar = getTabBar();
+      if (tabBar != null)
       {
-        tabBar.selectTab(firstDialog, true);
+        resetViewPreservingCurrentDialog();
+        int firstDialog = MBMetadataService.getInstance().getHomeDialogDefinition().getName().hashCode();
+        MBTab selectedTab = tabBar.getSelectedTab();
+        if (selectedTab == null || firstDialog != selectedTab.getTabId())
+        {
+          tabBar.selectTab(firstDialog, true);
+        }
       }
     }
   }
@@ -307,6 +318,85 @@ public class MBTabletViewManager extends MBViewManager
   @Override
   public void invalidateSlidingMenu()
   {
+    runOnUiThread(new MBThread()
+    {
+      @Override
+      public void runMethod()
+      {
+        if (hasMenuItems())
+        {
+          _slidingMenu = new SlidingMenu(getBaseContext());
+
+          LinearLayout slidingMenuMainContainer = new LinearLayout(getBaseContext());
+          slidingMenuMainContainer.setOrientation(LinearLayout.VERTICAL);
+
+          _slidingMenu.setMenu(slidingMenuMainContainer);
+          populateSlidingMenuBar();
+
+          _slidingMenu.setBehindWidth(ScreenConstants.TWOHUNDRED);
+          _slidingMenu.attachToActivity(getInstance(), SlidingMenu.SLIDING_WINDOW);
+        }
+      }
+
+    });
+  }
+
+  private void populateSlidingMenuBar()
+  {
+    LinearLayout menu = (LinearLayout) _slidingMenu.getMenu();
+
+    for (final String dialogName : getSortedDialogNames())
+    {
+      final MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+
+      if (dialogDefinition.isShowAsMenu())
+      {
+        MBSlidingMenuItem menuItem = new MBSlidingMenuItem(getBaseContext());
+        if (dialogDefinition.getIcon() != null)
+        {
+          menuItem.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+        }
+
+        setSlidingMenuItemText(dialogDefinition, menuItem);
+
+        menuItem.setOnClickListener(new OnClickListener()
+        {
+          @Override
+          public void onClick(View v)
+          {
+            MBViewManager.getInstance().activateOrCreateDialogWithID(dialogName.hashCode());
+            _slidingMenu.showContent(true);
+
+            MBTabBar tabBar = getTabBar();
+            if (tabBar != null)
+            {
+              tabBar.selectTab(null, true);
+            }
+          }
+        });
+
+        menu.addView(menuItem);
+      }
+    }
+  }
+
+  private void setSlidingMenuItemText(MBDialogDefinition dialogDefinition, MBSlidingMenuItem menuItem)
+  {
+    String title;
+
+    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+    {
+      title = dialogDefinition.getTitlePortrait();
+    }
+    else
+    {
+      title = dialogDefinition.getTitle();
+    }
+
+    if (StringUtil.isNotBlank(title))
+    {
+      menuItem.setText(title);
+    }
   }
 
   @Override
@@ -355,7 +445,13 @@ public class MBTabletViewManager extends MBViewManager
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO);
+
+        int actionBarDisplayOptions = ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO;
+        if (hasMenuItems())
+        {
+          actionBarDisplayOptions |= ActionBar.DISPLAY_HOME_AS_UP;
+        }
+        actionBar.setDisplayOptions(actionBarDisplayOptions);
 
         MBTabBar tabBar = new MBTabBar(MBTabletViewManager.this);
 

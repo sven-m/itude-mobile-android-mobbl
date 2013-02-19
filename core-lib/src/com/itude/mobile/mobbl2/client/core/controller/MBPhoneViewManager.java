@@ -242,26 +242,33 @@ public class MBPhoneViewManager extends MBViewManager
 
   private void onHomeSelected()
   {
-    MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
-
-    MBTabBar tabBar = getTabBar();
-    resetViewPreservingCurrentDialog();
-    int firstDialog = homeDialogDefinition.getName().hashCode();
-    MBTab selectedTab = tabBar.getSelectedTab();
-    if (selectedTab == null || firstDialog != selectedTab.getTabId())
+    if (hasMenuItems())
     {
-      if (tabBar.findTabById(firstDialog) != null)
+      _slidingMenu.toggle(true);
+    }
+    else
+    {
+      MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
+
+      MBTabBar tabBar = getTabBar();
+      resetViewPreservingCurrentDialog();
+      int firstDialog = homeDialogDefinition.getName().hashCode();
+      MBTab selectedTab = tabBar.getSelectedTab();
+      if (selectedTab == null || firstDialog != selectedTab.getTabId())
       {
-        tabBar.selectTab(firstDialog, true);
+        if (tabBar.findTabById(firstDialog) != null)
+        {
+          tabBar.selectTab(firstDialog, true);
+        }
+        else
+        {
+          activateDialogWithName(homeDialogDefinition.getName());
+        }
       }
       else
       {
         activateDialogWithName(homeDialogDefinition.getName());
       }
-    }
-    else
-    {
-      activateDialogWithName(homeDialogDefinition.getName());
     }
   }
 
@@ -304,13 +311,13 @@ public class MBPhoneViewManager extends MBViewManager
         {
           _slidingMenu = new SlidingMenu(getBaseContext());
 
-          LinearLayout ll = new LinearLayout(getBaseContext());
-          ll.setOrientation(LinearLayout.VERTICAL);
+          LinearLayout slidingMenuMainContainer = new LinearLayout(getBaseContext());
+          slidingMenuMainContainer.setOrientation(LinearLayout.VERTICAL);
 
-          populateSlidingMenuBar(ll);
-          _slidingMenu.setMenu(ll);
+          _slidingMenu.setMenu(slidingMenuMainContainer);
+          populateSlidingMenuBar();
 
-          _slidingMenu.setBehindWidth(200);
+          _slidingMenu.setBehindWidth(ScreenConstants.TWOHUNDRED);
           _slidingMenu.attachToActivity(getInstance(), SlidingMenu.SLIDING_WINDOW);
         }
       }
@@ -318,8 +325,10 @@ public class MBPhoneViewManager extends MBViewManager
     });
   }
 
-  protected void populateSlidingMenuBar(LinearLayout menu)
+  private void populateSlidingMenuBar()
   {
+    LinearLayout menu = (LinearLayout) _slidingMenu.getMenu();
+
     for (final String dialogName : getSortedDialogNames())
     {
       final MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
@@ -341,6 +350,12 @@ public class MBPhoneViewManager extends MBViewManager
           {
             MBViewManager.getInstance().activateOrCreateDialogWithID(dialogName.hashCode());
             _slidingMenu.showContent(true);
+
+            MBTabBar tabBar = getTabBar();
+            if (tabBar != null)
+            {
+              tabBar.selectTab(null, true);
+            }
           }
         });
 
@@ -418,7 +433,12 @@ public class MBPhoneViewManager extends MBViewManager
         styleHandler.styleActionBar(actionBar);
 
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO);
+        int actionBarDisplayOptions = ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO;
+        if (hasMenuItems())
+        {
+          actionBarDisplayOptions |= ActionBar.DISPLAY_HOME_AS_UP;
+        }
+        actionBar.setDisplayOptions(actionBarDisplayOptions);
 
         MBTabBar tabBar = new MBTabBar(MBPhoneViewManager.this);
 
