@@ -97,7 +97,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _dialogAttributes.add("title");
       _dialogAttributes.add("mode");
       _dialogAttributes.add("icon");
-      _dialogAttributes.add("addToNavbar");
+      _dialogAttributes.add("showAs");
       _dialogAttributes.add("domain");
       _dialogAttributes.add("action");
     }
@@ -109,7 +109,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _dialogGroupAttributes.add("title");
       _dialogGroupAttributes.add("mode");
       _dialogGroupAttributes.add("icon");
-      _dialogGroupAttributes.add("addToNavbar");
+      _dialogGroupAttributes.add("showAs");
       _dialogGroupAttributes.add("domain");
       _dialogGroupAttributes.add("action");
 
@@ -331,7 +331,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       dialogDef.setTitle(attributeDict.get("title"));
       dialogDef.setMode(attributeDict.get("mode"));
       dialogDef.setIcon(attributeDict.get("icon"));
-      dialogDef.setAddToNavbar(MBParseUtil.booleanValue(attributeDict.get("addToNavbar")));
+      dialogDef.setShowAs(attributeDict.get("showAs"));
       dialogDef.setDomain(attributeDict.get("domain"));
       dialogDef.setAction(attributeDict.get("action"));
 
@@ -351,7 +351,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       dialogDef.setTitlePortrait(attributeDict.get("titlePortrait"));
       dialogDef.setMode(attributeDict.get("mode"));
       dialogDef.setIcon(attributeDict.get("icon"));
-      dialogDef.setAddToNavbar(MBParseUtil.booleanValue(attributeDict.get("addToNavbar")));
+      dialogDef.setShowAs(attributeDict.get("showAs"));
       dialogDef.setDomain(attributeDict.get("domain"));
 
       notifyProcessed(dialogDef);

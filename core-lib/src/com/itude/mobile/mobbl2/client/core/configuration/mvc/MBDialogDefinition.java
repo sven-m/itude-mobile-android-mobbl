@@ -3,6 +3,7 @@ package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidDialogDefinitionException;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBDialogDefinition extends MBDefinition
 {
@@ -11,10 +12,11 @@ public class MBDialogDefinition extends MBDefinition
   private String _mode;
   private String _icon;
   private String _parent;
-  private boolean _addToNavbar;
+  private String _showAs;
   private String _domain;
   private String _action;
 
+  @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
     return StringUtil.appendIndentString(appendToMe, level)//
@@ -25,12 +27,13 @@ public class MBDialogDefinition extends MBDefinition
         .append(getAttributeAsXml("title", _title))//
         .append(getAttributeAsXml("titlePortrait", _titlePortrait))//
         .append(getAttributeAsXml("icon", _icon))//
-        .append(getAttributeAsXml("addToNavbar", _addToNavbar))//
+        .append(getAttributeAsXml("showAs", _showAs))//
         .append(getAttributeAsXml("domain", _domain))//
         .append(getAttributeAsXml("action", _action))//
         .append("/>\n");
   }
 
+  @Override
   public void validateDefinition()
   {
     if (getName() == null)
@@ -90,14 +93,24 @@ public class MBDialogDefinition extends MBDefinition
     _parent = parent;
   }
 
-  public boolean isAddToNavbar()
+  public String getShowAs()
   {
-    return _addToNavbar;
+    return _showAs;
   }
 
-  public void setAddToNavbar(boolean addToNavbar)
+  public void setShowAs(String showAs)
   {
-    _addToNavbar = addToNavbar;
+    _showAs = showAs;
+  }
+
+  public boolean isShowAsTab()
+  {
+    return StringUtil.isNotBlank(_showAs) && Constants.C_SHOW_AS_TAB.equals(_showAs);
+  }
+
+  public boolean isShowAsMenu()
+  {
+    return StringUtil.isNotBlank(_showAs) && Constants.C_SHOW_AS_MENU.equals(_showAs);
   }
 
   public void setDomain(String domain)

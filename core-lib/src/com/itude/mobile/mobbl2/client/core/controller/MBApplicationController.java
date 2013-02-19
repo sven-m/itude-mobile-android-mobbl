@@ -154,11 +154,13 @@ public class MBApplicationController extends Application
     _backStackEnabled = true;
 
     final MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
-    boolean isInNavbar = homeDialogDefinition.isAddToNavbar();
-    MBViewManager.getInstance().invalidateActionBar(isInNavbar);
 
-    if (!isInNavbar || DeviceUtil.getInstance().isPhone())
+    MBViewManager.getInstance().invalidateActionBar(homeDialogDefinition.isShowAsTab());
+    MBViewManager.getInstance().invalidateSlidingMenu();
+
+    if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone())
     {
+
       _viewManager.runOnUiThread(new Runnable()
       {
         @Override

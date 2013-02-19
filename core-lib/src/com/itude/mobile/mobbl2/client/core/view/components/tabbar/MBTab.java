@@ -1,4 +1,4 @@
-package com.itude.mobile.mobbl2.client.core.view.components;
+package com.itude.mobile.mobbl2.client.core.view.components.tabbar;
 
 import java.util.List;
 
@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,7 +33,7 @@ import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl2.client.core.view.listeners.MBTabListenerI;
 
-@TargetApi(11)
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MBTab extends RelativeLayout implements OnClickListener, OnItemClickListener, OnItemSelectedListener
 {
   private int                    _tabId;
@@ -41,12 +42,12 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
   private TextView               _textView               = null;
   private MBTabListenerI         _listener               = null;
 
-  private View                   _leftSpacer;
-  private View                   _rightSpacer;
-  private LinearLayout           _content;
+  private final View             _leftSpacer;
+  private final View             _rightSpacer;
+  private final LinearLayout     _content;
 
   private boolean                _isDropDown             = false;
-  private MBTabSpinnerAdapter       _adapter                = null;
+  private MBTabSpinnerAdapter    _adapter                = null;
   private Drawable               _selectedBackground     = null;
   private ListPopupWindow        _dropDownWindow         = null;
   private OnItemSelectedListener _onItemSelectedListener = null;

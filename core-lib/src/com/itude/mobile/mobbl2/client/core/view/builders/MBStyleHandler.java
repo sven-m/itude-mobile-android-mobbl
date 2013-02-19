@@ -40,7 +40,7 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBHeader;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedControlBar;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedControlContainer;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedItem;
-import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
+import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTab;
 
 public class MBStyleHandler
 {

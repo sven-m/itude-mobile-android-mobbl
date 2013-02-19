@@ -13,6 +13,9 @@ public interface Constants
 
   public static String       C_APPLICATION_ENVIRONMENT                     = "Environment";
 
+  public static String       C_SHOW_AS_TAB                                 = "TAB";
+  public static String       C_SHOW_AS_MENU                                = "MENU";
+
   //container types
   public static final String C_SECTION                                     = "SECTION";
   public static final String C_ROW                                         = "ROW";

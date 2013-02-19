@@ -33,7 +33,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainValidatorDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNotBooleanException;
-import com.itude.mobile.mobbl2.client.core.controller.util.MBTabListener;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
@@ -45,9 +44,10 @@ import com.itude.mobile.mobbl2.client.core.util.ScreenConstants;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
-import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
-import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
-import com.itude.mobile.mobbl2.client.core.view.components.MBTabSpinnerAdapter;
+import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTab;
+import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabBar;
+import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabListener;
+import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabSpinnerAdapter;
 
 /**
  * @author Coen Houtman
@@ -292,7 +292,7 @@ public class MBTabletViewManager extends MBViewManager
         dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
       }
 
-      if (!dialogDefinition.isAddToNavbar())
+      if (StringUtil.isBlank(dialogDefinition.getShowAs()))
       {
         MBTabBar tabBar = getTabBar();
         if (tabBar != null)
@@ -302,6 +302,11 @@ public class MBTabletViewManager extends MBViewManager
       }
     }
     return activated;
+  }
+
+  @Override
+  public void invalidateSlidingMenu()
+  {
   }
 
   @Override
@@ -358,45 +363,48 @@ public class MBTabletViewManager extends MBViewManager
         {
           MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
 
-          if (dialogDefinition.getDomain() != null)
+          if (dialogDefinition.isShowAsTab())
           {
-            MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDefinition.getDomain());
-
-            final MBTabSpinnerAdapter tabSpinnerAdapter = new MBTabSpinnerAdapter(MBTabletViewManager.this,
-                android.R.layout.simple_spinner_dropdown_item);
-
-            for (MBDomainValidatorDefinition domDef : domainDef.getDomainValidators())
+            if (dialogDefinition.getDomain() != null)
             {
-              tabSpinnerAdapter.add(domDef.getTitle());
-            }
+              MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDefinition.getDomain());
 
-            Drawable drawable = MBResourceService.getInstance().getImageByID("tab-spinner-leaf");
+              final MBTabSpinnerAdapter tabSpinnerAdapter = new MBTabSpinnerAdapter(MBTabletViewManager.this,
+                  android.R.layout.simple_spinner_dropdown_item);
 
-            MBTab tab = new MBTab(MBTabletViewManager.this);
-            tab.setAdapter(tabSpinnerAdapter);
-            tab.setSelectedBackground(drawable);
-            tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+              for (MBDomainValidatorDefinition domDef : domainDef.getDomainValidators())
+              {
+                tabSpinnerAdapter.add(domDef.getTitle());
+              }
 
-            setTabText(dialogDefinition, tab, tabBar);
+              Drawable drawable = MBResourceService.getInstance().getImageByID("tab-spinner-leaf");
 
-            tab.setTabId(dialogName.hashCode());
-            tab.setListener(new MBTabListener(dialogName.hashCode()));
-
-            tabBar.addTab(tab);
-          }
-          else
-          {
-            MBTab tab = new MBTab(MBTabletViewManager.this);
-            setTabText(dialogDefinition, tab, tabBar);
-
-            tab.setListener(new MBTabListener(dialogName.hashCode()));
-            tab.setTabId(dialogName.hashCode());
-
-            if (dialogDefinition.getIcon() != null)
-            {
+              MBTab tab = new MBTab(MBTabletViewManager.this);
+              tab.setAdapter(tabSpinnerAdapter);
+              tab.setSelectedBackground(drawable);
               tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+
+              setTabText(dialogDefinition, tab, tabBar);
+
+              tab.setTabId(dialogName.hashCode());
+              tab.setListener(new MBTabListener(dialogName.hashCode()));
+
+              tabBar.addTab(tab);
             }
-            tabBar.addTab(tab);
+            else
+            {
+              MBTab tab = new MBTab(MBTabletViewManager.this);
+              setTabText(dialogDefinition, tab, tabBar);
+
+              tab.setListener(new MBTabListener(dialogName.hashCode()));
+              tab.setTabId(dialogName.hashCode());
+
+              if (dialogDefinition.getIcon() != null)
+              {
+                tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+              }
+              tabBar.addTab(tab);
+            }
           }
         }
         actionBar.setCustomView(tabBar, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
@@ -443,7 +451,7 @@ public class MBTabletViewManager extends MBViewManager
   }
 
   @Override
-  public void invalidateActionBar(final boolean selectFirstTab, final boolean notifyListener)
+  public void invalidateActionBar(final boolean showFirst, final boolean notifyListener)
   {
     runOnUiThread(new MBThread()
     {
@@ -467,7 +475,7 @@ public class MBTabletViewManager extends MBViewManager
         tabBar = getTabBar();
         if (tabBar != null)
         {
-          if (selectFirstTab)
+          if (showFirst)
           {
             MBTab tab = tabBar.getTab(0);
             tabBar.selectTab(tab, notifyListener);

@@ -15,7 +15,9 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
@@ -27,7 +29,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainValidatorDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNotBooleanException;
-import com.itude.mobile.mobbl2.client.core.controller.util.MBTabListener;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
@@ -39,13 +40,17 @@ import com.itude.mobile.mobbl2.client.core.util.ScreenConstants;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
-import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
-import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
-import com.itude.mobile.mobbl2.client.core.view.components.MBTabSpinnerAdapter;
+import com.itude.mobile.mobbl2.client.core.view.components.slidingmenu.MBSlidingMenuItem;
+import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTab;
+import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabBar;
+import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabListener;
+import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabSpinnerAdapter;
+import com.itude.mobile.widget.slidingmenu.SlidingMenu;
 
 @TargetApi(11)
 public class MBPhoneViewManager extends MBViewManager
 {
+  private SlidingMenu _slidingMenu = null;
 
   // Android hooks
   @Override
@@ -274,7 +279,7 @@ public class MBPhoneViewManager extends MBViewManager
         dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
       }
 
-      if (!dialogDefinition.isAddToNavbar())
+      if (StringUtil.isBlank(dialogDefinition.getShowAs()))
       {
         MBTabBar tabBar = getTabBar();
         if (tabBar != null)
@@ -285,6 +290,83 @@ public class MBPhoneViewManager extends MBViewManager
     }
 
     return activated;
+  }
+
+  @Override
+  public void invalidateSlidingMenu()
+  {
+    runOnUiThread(new MBThread()
+    {
+      @Override
+      public void runMethod()
+      {
+        if (hasMenuItems())
+        {
+          _slidingMenu = new SlidingMenu(getBaseContext());
+
+          LinearLayout ll = new LinearLayout(getBaseContext());
+          ll.setOrientation(LinearLayout.VERTICAL);
+
+          populateSlidingMenuBar(ll);
+          _slidingMenu.setMenu(ll);
+
+          _slidingMenu.setBehindWidth(200);
+          _slidingMenu.attachToActivity(getInstance(), SlidingMenu.SLIDING_WINDOW);
+        }
+      }
+
+    });
+  }
+
+  protected void populateSlidingMenuBar(LinearLayout menu)
+  {
+    for (final String dialogName : getSortedDialogNames())
+    {
+      final MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+
+      if (dialogDefinition.isShowAsMenu())
+      {
+        MBSlidingMenuItem menuItem = new MBSlidingMenuItem(getBaseContext());
+        if (dialogDefinition.getIcon() != null)
+        {
+          menuItem.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+        }
+
+        setSlidingMenuItemText(dialogDefinition, menuItem);
+
+        menuItem.setOnClickListener(new OnClickListener()
+        {
+          @Override
+          public void onClick(View v)
+          {
+            MBViewManager.getInstance().activateOrCreateDialogWithID(dialogName.hashCode());
+            _slidingMenu.showContent(true);
+          }
+        });
+
+        menu.addView(menuItem);
+      }
+    }
+
+  }
+
+  private void setSlidingMenuItemText(MBDialogDefinition dialogDefinition, MBSlidingMenuItem menuItem)
+  {
+    String title;
+
+    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+    {
+      title = dialogDefinition.getTitlePortrait();
+    }
+    else
+    {
+      title = dialogDefinition.getTitle();
+    }
+
+    if (StringUtil.isNotBlank(title))
+    {
+      menuItem.setText(title);
+    }
   }
 
   @Override
@@ -344,47 +426,50 @@ public class MBPhoneViewManager extends MBViewManager
         {
           MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
 
-          if (dialogDefinition.getDomain() != null)
+          if (dialogDefinition.isShowAsTab())
           {
-            MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDefinition.getDomain());
-
-            final MBTabSpinnerAdapter tabSpinnerAdapter = new MBTabSpinnerAdapter(MBPhoneViewManager.this,
-                R.layout.simple_spinner_dropdown_item);
-
-            for (MBDomainValidatorDefinition domDef : domainDef.getDomainValidators())
+            if (dialogDefinition.getDomain() != null)
             {
-              tabSpinnerAdapter.add(domDef.getTitle());
+              MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDefinition.getDomain());
+
+              final MBTabSpinnerAdapter tabSpinnerAdapter = new MBTabSpinnerAdapter(MBPhoneViewManager.this,
+                  R.layout.simple_spinner_dropdown_item);
+
+              for (MBDomainValidatorDefinition domDef : domainDef.getDomainValidators())
+              {
+                tabSpinnerAdapter.add(domDef.getTitle());
+              }
+
+              Drawable drawable = MBResourceService.getInstance().getImageByID("tab-spinner-leaf");
+
+              MBTab tab = new MBTab(MBPhoneViewManager.this);
+              tab.setAdapter(tabSpinnerAdapter);
+              tab.setSelectedBackground(drawable);
+              if (dialogDefinition.getIcon() != null)
+              {
+                tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+              }
+              setTabText(dialogDefinition, tab, tabBar);
+
+              tab.setTabId(dialogName.hashCode());
+              tab.setListener(new MBTabListener(dialogName.hashCode()));
+
+              tabBar.addTab(tab);
             }
-
-            Drawable drawable = MBResourceService.getInstance().getImageByID("tab-spinner-leaf");
-
-            MBTab tab = new MBTab(MBPhoneViewManager.this);
-            tab.setAdapter(tabSpinnerAdapter);
-            tab.setSelectedBackground(drawable);
-            if (dialogDefinition.getIcon() != null)
+            else
             {
-              tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+              MBTab tab = new MBTab(MBPhoneViewManager.this);
+              setTabText(dialogDefinition, tab, tabBar);
+
+              tab.setListener(new MBTabListener(dialogName.hashCode()));
+              tab.setTabId(dialogName.hashCode());
+
+              if (dialogDefinition.getIcon() != null)
+              {
+                tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+              }
+              tabBar.addTab(tab);
             }
-            setTabText(dialogDefinition, tab, tabBar);
-
-            tab.setTabId(dialogName.hashCode());
-            tab.setListener(new MBTabListener(dialogName.hashCode()));
-
-            tabBar.addTab(tab);
-          }
-          else
-          {
-            MBTab tab = new MBTab(MBPhoneViewManager.this);
-            setTabText(dialogDefinition, tab, tabBar);
-
-            tab.setListener(new MBTabListener(dialogName.hashCode()));
-            tab.setTabId(dialogName.hashCode());
-
-            if (dialogDefinition.getIcon() != null)
-            {
-              tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
-            }
-            tabBar.addTab(tab);
           }
         }
         actionBar.setCustomView(tabBar, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
@@ -423,12 +508,13 @@ public class MBPhoneViewManager extends MBViewManager
   }
 
   @Override
-  public void invalidateActionBar(boolean selectFirstTab)
+  public void invalidateActionBar(boolean showFirst)
   {
-    invalidateActionBar(selectFirstTab, true);
+    invalidateActionBar(showFirst, true);
   }
 
-  public void invalidateActionBar(final boolean selectFirstTab, final boolean notifyListener)
+  @Override
+  public void invalidateActionBar(final boolean showFirst, final boolean notifyListener)
   {
     runOnUiThread(new MBThread()
     {
@@ -451,7 +537,7 @@ public class MBPhoneViewManager extends MBViewManager
         tabBar = getTabBar();
         if (tabBar != null)
         {
-          if (selectFirstTab)
+          if (showFirst)
           {
             MBTab tab = tabBar.getTab(0);
             tabBar.selectTab(tab, notifyListener);
@@ -490,4 +576,17 @@ public class MBPhoneViewManager extends MBViewManager
     super.onConfigurationChanged(newConfig);
 
   }
+
+  @Override
+  public void setContentView(int id)
+  {
+    setContentView(getLayoutInflater().inflate(id, null));
+  }
+
+  @Override
+  public void setContentView(View v)
+  {
+    setContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+  }
+
 }

@@ -51,7 +51,7 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.helper.MBSecurityHelper;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThreadHandler;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
-import com.itude.mobile.mobbl2.client.core.view.components.MBTabBar;
+import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabBar;
 
 public class MBViewManager extends FragmentActivity
 {
@@ -205,20 +205,17 @@ public class MBViewManager extends FragmentActivity
   @Override
   public boolean onCreateOptionsMenu(Menu menu)
   {
-    if (DeviceUtil.isTablet() || DeviceUtil.getInstance().isPhoneV14())
-    {
-      return false;
-    }
-
     for (String dialogName : getSortedDialogNames())
     {
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      MenuItem menuItem = menu.add(Menu.NONE, dialogName.hashCode(), Menu.NONE,
-                                   MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
-      menuItem.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
-      MenuCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
+      if (dialogDefinition.isShowAsTab())
+      {
+        MenuItem menuItem = menu.add(Menu.NONE, dialogName.hashCode(), Menu.NONE,
+                                     MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
+        menuItem.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+        MenuCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
+      }
     }
-
     return true;
   }
 
@@ -827,7 +824,7 @@ public class MBViewManager extends FragmentActivity
 
   public void addSortedDialogName(String dialogName, MBDialogDefinition dialogDefinition)
   {
-    if (dialogDefinition.isAddToNavbar() && !_sortedDialogNames.contains(dialogName))
+    if (StringUtil.isNotBlank(dialogDefinition.getShowAs()) && !_sortedDialogNames.contains(dialogName))
     {
       _sortedDialogNames.add(dialogName);
     }
@@ -842,7 +839,7 @@ public class MBViewManager extends FragmentActivity
       dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
     }
 
-    if (dialogDefinition.isAddToNavbar() && !_sortedDialogNames.contains(dialogName))
+    if (StringUtil.isNotBlank(dialogDefinition.getShowAs()) && !_sortedDialogNames.contains(dialogName))
     {
       _sortedDialogNames.add(dialogName);
     }
@@ -1038,12 +1035,12 @@ public class MBViewManager extends FragmentActivity
   // Tablet specific methods. Some methods are implemented also to run on smartphone.
   // Others are for tablet only.
 
-  public void invalidateActionBar(boolean selectFirstTab)
+  public void invalidateActionBar(boolean showFirst)
   {
     //    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
-  public void invalidateActionBar(boolean selectFirstTab, boolean notifyListener)
+  public void invalidateActionBar(boolean showFirst, boolean notifyListener)
   {
     //    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
@@ -1071,6 +1068,26 @@ public class MBViewManager extends FragmentActivity
   public void hideSearchView()
   {
     throw new UnsupportedOperationException("This method is not supported on smartphone");
+  }
+
+  public void invalidateSlidingMenu()
+  {
+  }
+
+  protected boolean hasMenuItems()
+  {
+    boolean hasMenu = false;
+    for (final String dialogName : getSortedDialogNames())
+    {
+      final MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+      if (dialogDefinition.isShowAsMenu())
+      {
+        hasMenu = true;
+        break;
+      }
+    }
+
+    return hasMenu;
   }
 
 }
