@@ -311,13 +311,15 @@ public class MBPhoneViewManager extends MBViewManager
         {
           _slidingMenu = new SlidingMenu(getBaseContext());
 
+          MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
+          styleHandler.styleSlidingMenu(_slidingMenu);
+
           LinearLayout slidingMenuMainContainer = new LinearLayout(getBaseContext());
-          slidingMenuMainContainer.setOrientation(LinearLayout.VERTICAL);
+          styleHandler.styleSlidingMenuContainer(slidingMenuMainContainer);
 
           _slidingMenu.setMenu(slidingMenuMainContainer);
           populateSlidingMenuBar();
 
-          _slidingMenu.setBehindWidth(ScreenConstants.TWOHUNDRED);
           _slidingMenu.attachToActivity(getInstance(), SlidingMenu.SLIDING_WINDOW);
         }
       }

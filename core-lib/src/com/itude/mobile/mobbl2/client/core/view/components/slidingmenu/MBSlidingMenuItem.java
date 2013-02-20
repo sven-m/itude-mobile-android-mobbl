@@ -20,12 +20,10 @@ import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MBSlidingMenuItem extends RelativeLayout
 {
-  private ImageView          _icon               = null;
-  private TextView           _textView           = null;
+  private ImageView          _icon     = null;
+  private TextView           _textView = null;
 
   private final LinearLayout _content;
-
-  private Drawable           _selectedBackground = null;
 
   public MBSlidingMenuItem(Context context)
   {
@@ -35,7 +33,7 @@ public class MBSlidingMenuItem extends RelativeLayout
     setClickable(true);
 
     MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
-    //    styleHandler.styleTab(this);
+    styleHandler.styleSlidingMenuItem(this);
 
     setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -51,7 +49,7 @@ public class MBSlidingMenuItem extends RelativeLayout
     _textView.setId(UniqueIntegerGenerator.getId());
     _textView.setSingleLine();
 
-    //    styleHandler.styleTabText(_textView);
+    styleHandler.styleSlidingMenuItemText(_textView);
 
     _content.addView(_icon);
     _content.addView(_textView);
@@ -72,12 +70,6 @@ public class MBSlidingMenuItem extends RelativeLayout
       _textView.setText(MBLocalizationService.getInstance().getTextForKey(text));
     }
 
-    return this;
-  }
-
-  public MBSlidingMenuItem setSelectedBackground(Drawable selectedBackground)
-  {
-    _selectedBackground = selectedBackground;
     return this;
   }
 }

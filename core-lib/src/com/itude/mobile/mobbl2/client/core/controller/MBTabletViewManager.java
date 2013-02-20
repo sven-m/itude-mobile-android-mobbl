@@ -326,9 +326,11 @@ public class MBTabletViewManager extends MBViewManager
         if (hasMenuItems())
         {
           _slidingMenu = new SlidingMenu(getBaseContext());
+          MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
+          styleHandler.styleSlidingMenu(_slidingMenu);
 
           LinearLayout slidingMenuMainContainer = new LinearLayout(getBaseContext());
-          slidingMenuMainContainer.setOrientation(LinearLayout.VERTICAL);
+          styleHandler.styleSlidingMenuContainer(slidingMenuMainContainer);
 
           _slidingMenu.setMenu(slidingMenuMainContainer);
           populateSlidingMenuBar();
