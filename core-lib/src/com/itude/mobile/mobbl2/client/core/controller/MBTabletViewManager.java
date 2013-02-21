@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -316,7 +317,7 @@ public class MBTabletViewManager extends MBViewManager
   }
 
   @Override
-  public void invalidateSlidingMenu()
+  public void buildSlidingMenu()
   {
     runOnUiThread(new MBThread()
     {
@@ -676,7 +677,11 @@ public class MBTabletViewManager extends MBViewManager
   {
     refreshActionBar();
 
+    removeSlidingMenu();
+
     super.onConfigurationChanged(newConfig);
+
+    buildSlidingMenu();
 
     // Android 3.2 (perhaps other versions, but not 3.0) destroys the styling of the home icon in the action bar
     // when an onConfigurationChanged is triggered. When the main thread is about here, the handling of
@@ -693,6 +698,20 @@ public class MBTabletViewManager extends MBViewManager
         MBViewBuilderFactory.getInstance().getStyleHandler().styleHomeIcon(homeIcon);
       }
     });
+
+  }
+
+  private void removeSlidingMenu()
+  {
+    View content = _slidingMenu.getContent();
+
+    ViewGroup contentParent = (ViewGroup) content.getParent();
+    contentParent.removeAllViews();
+
+    ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+    decorView.removeAllViews();
+
+    decorView.addView(content);
 
   }
 }

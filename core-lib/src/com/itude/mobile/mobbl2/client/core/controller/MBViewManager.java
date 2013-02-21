@@ -1072,8 +1072,9 @@ public class MBViewManager extends FragmentActivity
     throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
-  public void invalidateSlidingMenu()
+  public void buildSlidingMenu()
   {
+    //    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
   protected boolean hasMenuItems()

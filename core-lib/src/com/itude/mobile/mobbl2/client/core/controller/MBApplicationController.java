@@ -156,7 +156,7 @@ public class MBApplicationController extends Application
     final MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
 
     MBViewManager.getInstance().invalidateActionBar(homeDialogDefinition.isShowAsTab());
-    MBViewManager.getInstance().invalidateSlidingMenu();
+    MBViewManager.getInstance().buildSlidingMenu();
 
     if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone())
     {

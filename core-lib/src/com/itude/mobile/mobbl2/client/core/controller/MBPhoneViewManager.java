@@ -17,12 +17,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.ViewUtilities;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
@@ -300,7 +302,7 @@ public class MBPhoneViewManager extends MBViewManager
   }
 
   @Override
-  public void invalidateSlidingMenu()
+  public void buildSlidingMenu()
   {
     runOnUiThread(new MBThread()
     {
@@ -595,8 +597,10 @@ public class MBPhoneViewManager extends MBViewManager
   {
     refreshActionBar();
 
+    //    removeSlidingMenu();
     super.onConfigurationChanged(newConfig);
 
+    //    buildSlidingMenu();
   }
 
   @Override
@@ -609,6 +613,32 @@ public class MBPhoneViewManager extends MBViewManager
   public void setContentView(View v)
   {
     setContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+  }
+
+  private void removeSlidingMenu()
+  {
+    runOnUiThread(new Runnable()
+    {
+
+      @Override
+      public void run()
+      {
+        int paddingTop = _slidingMenu.getPaddingTop();
+        View content = _slidingMenu.getContent();
+
+        ViewUtilities.detachView(content);
+
+        ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+
+        decorView.removeView(_slidingMenu);
+
+        content.setPadding(0, paddingTop, 0, 0);
+
+        decorView.addView(content);
+
+        //http://stackoverflow.com/questions/13237554/fullscreen-video-player-mediacontroller-behind-navigation-bar/13237778
+      }
+    });
   }
 
 }
