@@ -52,7 +52,8 @@ import com.itude.mobile.widget.slidingmenu.SlidingMenu;
 @TargetApi(11)
 public class MBPhoneViewManager extends MBViewManager
 {
-  private SlidingMenu _slidingMenu = null;
+  private SlidingMenu    _slidingMenu    = null;
+  private TopViewPadding _topViewPadding = null;
 
   // Android hooks
   @Override
@@ -312,6 +313,12 @@ public class MBPhoneViewManager extends MBViewManager
         if (hasMenuItems())
         {
           _slidingMenu = new SlidingMenu(getBaseContext());
+
+          // https://mobiledev.itude.com/jira/browse/MOBBL-633
+          if (_topViewPadding != null)
+          {
+            _slidingMenu.setPadding(_topViewPadding._left, _topViewPadding._top, _topViewPadding._right, _topViewPadding._bottom);
+          }
 
           MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
           styleHandler.styleSlidingMenu(_slidingMenu);
@@ -597,10 +604,10 @@ public class MBPhoneViewManager extends MBViewManager
   {
     refreshActionBar();
 
-    //    removeSlidingMenu();
-    super.onConfigurationChanged(newConfig);
+    removeSlidingMenu();
+    buildSlidingMenu();
 
-    //    buildSlidingMenu();
+    super.onConfigurationChanged(newConfig);
   }
 
   @Override
@@ -623,8 +630,13 @@ public class MBPhoneViewManager extends MBViewManager
       @Override
       public void run()
       {
-        int paddingTop = _slidingMenu.getPaddingTop();
         View content = _slidingMenu.getContent();
+
+        // https://mobiledev.itude.com/jira/browse/MOBBL-633
+        if (_topViewPadding == null)
+        {
+          _topViewPadding = new TopViewPadding(_slidingMenu);
+        }
 
         ViewUtilities.detachView(content);
 
@@ -632,13 +644,30 @@ public class MBPhoneViewManager extends MBViewManager
 
         decorView.removeView(_slidingMenu);
 
-        content.setPadding(0, paddingTop, 0, 0);
-
         decorView.addView(content);
-
-        //http://stackoverflow.com/questions/13237554/fullscreen-video-player-mediacontroller-behind-navigation-bar/13237778
       }
     });
+  }
+
+  private static class TopViewPadding
+  {
+    private final int _left;
+    private final int _top;
+    private final int _right;
+    private final int _bottom;
+
+    private TopViewPadding(View view)
+    {
+      this(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
+    }
+
+    private TopViewPadding(int left, int top, int right, int bottom)
+    {
+      _left = left;
+      _top = top;
+      _right = right;
+      _bottom = bottom;
+    }
   }
 
 }
