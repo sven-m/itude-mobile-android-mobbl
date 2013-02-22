@@ -29,6 +29,7 @@ import android.widget.SearchView;
 
 import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.ViewUtilities;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
@@ -65,6 +66,7 @@ public class MBTabletViewManager extends MBViewManager
   private Menu             _menu           = null;
   private MBToolDefinition _refreshToolDef = null;
   private SlidingMenu      _slidingMenu    = null;
+  private TopViewPadding   _topViewPadding = null;
 
   @Override
   protected void onPreCreate()
@@ -327,6 +329,13 @@ public class MBTabletViewManager extends MBViewManager
         if (hasMenuItems())
         {
           _slidingMenu = new SlidingMenu(getBaseContext());
+
+          // https://mobiledev.itude.com/jira/browse/MOBBL-633
+          if (_topViewPadding != null)
+          {
+            _slidingMenu.setPadding(_topViewPadding._left, _topViewPadding._top, _topViewPadding._right, _topViewPadding._bottom);
+          }
+
           MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
           styleHandler.styleSlidingMenu(_slidingMenu);
 
@@ -336,7 +345,6 @@ public class MBTabletViewManager extends MBViewManager
           _slidingMenu.setMenu(slidingMenuMainContainer);
           populateSlidingMenuBar();
 
-          _slidingMenu.setBehindWidth(ScreenConstants.TWOHUNDRED);
           _slidingMenu.attachToActivity(getInstance(), SlidingMenu.SLIDING_WINDOW);
         }
       }
@@ -703,15 +711,49 @@ public class MBTabletViewManager extends MBViewManager
 
   private void removeSlidingMenu()
   {
-    View content = _slidingMenu.getContent();
+    runOnUiThread(new Runnable()
+    {
 
-    ViewGroup contentParent = (ViewGroup) content.getParent();
-    contentParent.removeAllViews();
+      @Override
+      public void run()
+      {
+        View content = _slidingMenu.getContent();
 
-    ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
-    decorView.removeAllViews();
+        // https://mobiledev.itude.com/jira/browse/MOBBL-633
+        if (_topViewPadding == null)
+        {
+          _topViewPadding = new TopViewPadding(_slidingMenu);
+        }
 
-    decorView.addView(content);
+        ViewUtilities.detachView(content);
 
+        ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+
+        decorView.removeView(_slidingMenu);
+
+        decorView.addView(content);
+      }
+    });
+  }
+
+  private static class TopViewPadding
+  {
+    private final int _left;
+    private final int _top;
+    private final int _right;
+    private final int _bottom;
+
+    private TopViewPadding(View view)
+    {
+      this(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
+    }
+
+    private TopViewPadding(int left, int top, int right, int bottom)
+    {
+      _left = left;
+      _top = top;
+      _right = right;
+      _bottom = bottom;
+    }
   }
 }
