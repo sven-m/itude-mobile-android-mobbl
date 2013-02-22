@@ -624,6 +624,11 @@ public class MBPhoneViewManager extends MBViewManager
 
   private void removeSlidingMenu()
   {
+    if (_slidingMenu == null)
+    {
+      return;
+    }
+
     runOnUiThread(new Runnable()
     {
 
