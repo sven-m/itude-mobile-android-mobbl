@@ -1077,7 +1077,7 @@ public class MBViewManager extends FragmentActivity
     //    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
-  protected boolean hasMenuItems()
+  protected boolean needsSlidingMenu()
   {
     if (_hasMenu == null)
     {

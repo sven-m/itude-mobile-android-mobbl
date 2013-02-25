@@ -105,12 +105,12 @@ public class MBDialogDefinition extends MBDefinition
 
   public boolean isShowAsTab()
   {
-    return StringUtil.isNotBlank(_showAs) && Constants.C_SHOW_AS_TAB.equals(_showAs);
+    return Constants.C_SHOW_AS_TAB.equals(_showAs);
   }
 
   public boolean isShowAsMenu()
   {
-    return StringUtil.isNotBlank(_showAs) && Constants.C_SHOW_AS_MENU.equals(_showAs);
+    return Constants.C_SHOW_AS_MENU.equals(_showAs);
   }
 
   public void setDomain(String domain)

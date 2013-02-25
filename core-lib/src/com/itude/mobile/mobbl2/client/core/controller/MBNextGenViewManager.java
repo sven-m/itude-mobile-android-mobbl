@@ -229,7 +229,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
 
   protected void onHomeSelected()
   {
-    if (hasMenuItems())
+    if (needsSlidingMenu())
     {
       getSlidingMenu().toggle(true);
     }
@@ -303,14 +303,16 @@ public abstract class MBNextGenViewManager extends MBViewManager
       @Override
       public void runMethod()
       {
-        if (hasMenuItems())
+        if (needsSlidingMenu())
         {
           _slidingMenu = new SlidingMenu(getBaseContext());
 
           // https://mobiledev.itude.com/jira/browse/MOBBL-633
-          if (_topViewPadding != null)
+          TopViewPadding topViewPadding = getTopViewPadding();
+          if (topViewPadding != null)
           {
-            _slidingMenu.setPadding(_topViewPadding._left, _topViewPadding._top, _topViewPadding._right, _topViewPadding._bottom);
+            _slidingMenu.setPadding(topViewPadding.getLeft(), topViewPadding.getTop(), topViewPadding.getRight(),
+                                    topViewPadding.getBottom());
           }
 
           MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
@@ -331,7 +333,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
 
   protected void populateSlidingMenuBar()
   {
-    LinearLayout menu = (LinearLayout) _slidingMenu.getMenu();
+    LinearLayout menu = (LinearLayout) getSlidingMenu().getMenu();
 
     for (final String dialogName : getSortedDialogNames())
     {
@@ -353,7 +355,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
           public void onClick(View v)
           {
             MBViewManager.getInstance().activateOrCreateDialogWithID(dialogName.hashCode());
-            _slidingMenu.showContent(true);
+            getSlidingMenu().showContent(true);
 
             MBTabBar tabBar = getTabBar();
             if (tabBar != null)
@@ -389,7 +391,9 @@ public abstract class MBNextGenViewManager extends MBViewManager
 
   private void removeSlidingMenu()
   {
-    if (_slidingMenu == null)
+    final SlidingMenu slidingMenu = getSlidingMenu();
+
+    if (slidingMenu == null)
     {
       return;
     }
@@ -400,19 +404,19 @@ public abstract class MBNextGenViewManager extends MBViewManager
       @Override
       public void run()
       {
-        View content = _slidingMenu.getContent();
+        View content = slidingMenu.getContent();
 
         // https://mobiledev.itude.com/jira/browse/MOBBL-633
         if (_topViewPadding == null)
         {
-          _topViewPadding = new TopViewPadding(_slidingMenu);
+          _topViewPadding = new TopViewPadding(slidingMenu);
         }
 
         ViewUtilities.detachView(content);
 
         ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
 
-        decorView.removeView(_slidingMenu);
+        decorView.removeView(slidingMenu);
 
         decorView.addView(content);
       }
@@ -522,7 +526,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
 
         actionBar.setDisplayShowTitleEnabled(false);
         int actionBarDisplayOptions = ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO;
-        if (hasMenuItems())
+        if (needsSlidingMenu())
         {
           actionBarDisplayOptions |= ActionBar.DISPLAY_HOME_AS_UP;
         }
@@ -665,9 +669,12 @@ public abstract class MBNextGenViewManager extends MBViewManager
   @Override
   public synchronized void hideProgressIndicatorInTool()
   {
-    if (_refreshToolDef != null && _menu != null)
+    MBToolDefinition refreshToolDef = getRefreshToolDef();
+    Menu menu = getMenu();
+
+    if (refreshToolDef != null && menu != null)
     {
-      final MenuItem item = _menu.findItem(_refreshToolDef.getName().hashCode());
+      final MenuItem item = menu.findItem(refreshToolDef.getName().hashCode());
 
       runOnUiThread(new MBThread()
       {
@@ -723,6 +730,11 @@ public abstract class MBNextGenViewManager extends MBViewManager
     return _refreshToolDef;
   }
 
+  protected TopViewPadding getTopViewPadding()
+  {
+    return _topViewPadding;
+  }
+
   private static class TopViewPadding
   {
     private final int _left;
@@ -741,6 +753,26 @@ public abstract class MBNextGenViewManager extends MBViewManager
       _top = top;
       _right = right;
       _bottom = bottom;
+    }
+
+    public int getLeft()
+    {
+      return _left;
+    }
+
+    public int getTop()
+    {
+      return _top;
+    }
+
+    public int getRight()
+    {
+      return _right;
+    }
+
+    public int getBottom()
+    {
+      return _bottom;
     }
   }
 }
