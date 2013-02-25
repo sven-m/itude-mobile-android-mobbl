@@ -1,17 +1,32 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
+import java.util.List;
+
 import android.R;
+import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.FrameLayout;
+import android.widget.FrameLayout.LayoutParams;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 
+import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.ViewUtilities;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
@@ -22,6 +37,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNotBooleanException;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
+import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
@@ -45,10 +61,83 @@ import com.itude.mobile.widget.slidingmenu.SlidingMenu;
  * features that are both available for V11 (Honeycomb) and V14 (ICS).
  *
  */
+@TargetApi(11)
 public abstract class MBNextGenViewManager extends MBViewManager
 {
-  private SlidingMenu    _slidingMenu    = null;
-  private TopViewPadding _topViewPadding = null;
+  private Menu             _menu           = null;
+  private MBToolDefinition _refreshToolDef = null;
+  private SlidingMenu      _slidingMenu    = null;
+  private TopViewPadding   _topViewPadding = null;
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu)
+  {
+    _menu = menu;
+
+    List<MBToolDefinition> tools = MBMetadataService.getInstance().getTools();
+
+    for (MBToolDefinition def : tools)
+    {
+      if (isPreConditionValid(def))
+      {
+        String localizedTitle = MBLocalizationService.getInstance().getTextForKey(def.getTitle());
+        MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), tools.indexOf(def), localizedTitle);
+
+        Drawable image = null;
+        if (def.getIcon() != null)
+        {
+          image = MBResourceService.getInstance().getImageByID(def.getIcon());
+          menuItem.setIcon(image);
+        }
+
+        menuItem.setShowAsAction(getMenuItemActionFlags(def));
+
+        if ("REFRESH".equals(def.getType()))
+        {
+          _refreshToolDef = def;
+        }
+        else if ("SEARCH".equals(def.getType()))
+        {
+          final SearchView searchView = new SearchView(MBViewManager.getInstance().getApplicationContext());
+          searchView.setTag(def);
+          searchView.setOnQueryTextFocusChangeListener(new OnFocusChangeListener()
+          {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus)
+            {
+              if (hasFocus)
+              {
+                Object tag = v.getTag();
+                if (tag instanceof MBToolDefinition)
+                {
+                  MBToolDefinition toolDef = (MBToolDefinition) tag;
+                  if (toolDef.getOutcomeName() != null)
+                  {
+                    handleOutcome(toolDef);
+                  }
+                }
+              }
+              else
+              {
+                searchView.setIconified(true);
+              }
+            }
+          });
+
+          changeSearchImage(image, searchView);
+
+          SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+          searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+          menuItem.setActionView(searchView);
+        }
+      }
+    }
+
+    return true;
+  }
+
+  protected abstract void changeSearchImage(Drawable image, final SearchView searchView);
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item)
@@ -73,6 +162,22 @@ public abstract class MBNextGenViewManager extends MBViewManager
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  protected void setSearchImage(Drawable image, LinearLayout linearLayout)
+  {
+    ImageView searchViewIcon = null;
+
+    for (int i = 0; i < linearLayout.getChildCount(); i++)
+    {
+      View view = linearLayout.getChildAt(i);
+      if (view instanceof ImageView)
+      {
+        searchViewIcon = (ImageView) view;
+        break;
+      }
+    }
+    searchViewIcon.setImageDrawable(image);
   }
 
   protected final int getMenuItemActionFlags(MBToolDefinition def)
@@ -122,7 +227,37 @@ public abstract class MBNextGenViewManager extends MBViewManager
     return resultFlag;
   }
 
-  protected abstract void onHomeSelected();
+  protected void onHomeSelected()
+  {
+    if (hasMenuItems())
+    {
+      getSlidingMenu().toggle(true);
+    }
+    else
+    {
+      MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
+
+      MBTabBar tabBar = getTabBar();
+      resetViewPreservingCurrentDialog();
+      int firstDialog = homeDialogDefinition.getName().hashCode();
+      MBTab selectedTab = tabBar.getSelectedTab();
+      if (selectedTab == null || firstDialog != selectedTab.getTabId())
+      {
+        if (tabBar.findTabById(firstDialog) != null)
+        {
+          tabBar.selectTab(firstDialog, true);
+        }
+        else
+        {
+          activateDialogWithName(homeDialogDefinition.getName());
+        }
+      }
+      else
+      {
+        activateDialogWithName(homeDialogDefinition.getName());
+      }
+    }
+  }
 
   protected void handleOutcome(MBToolDefinition def)
   {
@@ -323,6 +458,48 @@ public abstract class MBNextGenViewManager extends MBViewManager
     invalidateActionBar(selectFirstTab, true);
   }
 
+  @Override
+  public void invalidateActionBar(final boolean showFirst, final boolean notifyListener)
+  {
+    runOnUiThread(new MBThread()
+    {
+      @Override
+      public void runMethod()
+      {
+        MBTabBar tabBar = getTabBar();
+        int selectedTab = -1;
+        if (tabBar != null)
+        {
+          selectedTab = tabBar.indexOfSelectedTab();
+
+          if (tabBar.getSelectedTab() != null)
+          {
+            tabBar.getSelectedTab().setSelected(false);
+          }
+        }
+        invalidateOptionsMenu();
+        // throw away current MBActionBar and create a new one
+        getActionBar().setCustomView(null);
+
+        populateActionBar();
+
+        tabBar = getTabBar();
+        if (tabBar != null)
+        {
+          if (showFirst)
+          {
+            MBTab tab = tabBar.getTab(0);
+            tabBar.selectTab(tab, notifyListener);
+          }
+          else if (selectedTab >= 0)
+          {
+            tabBar.selectTab(tabBar.getTab(selectedTab), notifyListener);
+          }
+        }
+      }
+    });
+  }
+
   protected void populateActionBar()
   {
     runOnUiThread(new Runnable()
@@ -433,6 +610,76 @@ public abstract class MBNextGenViewManager extends MBViewManager
     });
   }
 
+  @Override
+  public synchronized void showProgressIndicatorInTool()
+  {
+    MBToolDefinition refreshToolDef = getRefreshToolDef();
+    Menu menu = getMenu();
+
+    if (refreshToolDef != null && menu != null)
+    {
+      final MenuItem item = menu.findItem(refreshToolDef.getName().hashCode());
+
+      ImageView rotationImage = getRotationImage();
+
+      float imageWidth = rotationImage.getDrawable().getIntrinsicWidth();
+      int framePadding = (int) ((ScreenUtil.convertDimensionPixelsToPixels(getBaseContext(), 80) - imageWidth) / 2);
+
+      final FrameLayout frameLayout = new FrameLayout(this);
+      frameLayout.setLayoutParams(new FrameLayout.LayoutParams(ScreenUtil.convertDimensionPixelsToPixels(getBaseContext(), 80),
+          LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+      frameLayout.setPadding(framePadding, 0, framePadding, 0);
+
+      frameLayout.addView(rotationImage);
+
+      runOnUiThread(new MBThread()
+      {
+        @Override
+        public void runMethod()
+        {
+          //item.setIcon(null);
+          item.setActionView(frameLayout);
+          getRotationImage().getAnimation().startNow();
+        }
+      });
+    }
+  }
+
+  private ImageView getRotationImage()
+  {
+    RotateAnimation rotateAnimation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+    rotateAnimation.setDuration(1000L);
+    rotateAnimation.setRepeatMode(Animation.INFINITE);
+    rotateAnimation.setRepeatCount(Animation.INFINITE);
+    rotateAnimation.setFillEnabled(false);
+    rotateAnimation.setInterpolator(new LinearInterpolator());
+
+    Drawable drawable = MBResourceService.getInstance().getImageByID(_refreshToolDef.getIcon());
+    ImageView rotationImage = new ImageView(this);
+    rotationImage.setImageDrawable(drawable);
+    rotationImage.setAnimation(rotateAnimation);
+
+    return rotationImage;
+  }
+
+  @Override
+  public synchronized void hideProgressIndicatorInTool()
+  {
+    if (_refreshToolDef != null && _menu != null)
+    {
+      final MenuItem item = _menu.findItem(_refreshToolDef.getName().hashCode());
+
+      runOnUiThread(new MBThread()
+      {
+        @Override
+        public void runMethod()
+        {
+          item.setActionView(null);
+        }
+      });
+    }
+  }
+
   protected final boolean isPreConditionValid(MBToolDefinition def)
   {
     if (def.getPreCondition() == null)
@@ -464,6 +711,16 @@ public abstract class MBNextGenViewManager extends MBViewManager
   protected SlidingMenu getSlidingMenu()
   {
     return _slidingMenu;
+  }
+
+  protected Menu getMenu()
+  {
+    return _menu;
+  }
+
+  protected MBToolDefinition getRefreshToolDef()
+  {
+    return _refreshToolDef;
   }
 
   private static class TopViewPadding
