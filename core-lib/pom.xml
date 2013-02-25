@@ -51,6 +51,11 @@
 			<artifactId>android-util-lib</artifactId>
 			<type>apklib</type>
 		</dependency>
+		<dependency>
+			<groupId>com.itude.mobile.android.widget</groupId>
+			<artifactId>slidingmenu</artifactId>
+			<type>apklib</type>
+		</dependency>
 	</dependencies>
 
 	<scm>
