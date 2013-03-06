@@ -25,6 +25,7 @@ import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition;
@@ -266,14 +267,14 @@ public class MBApplicationController extends Application
       {
         if (causingOutcome.getDocument() == null)
         {
-          String msg = "No document provided (null) in outcome by action/page=" + causingOutcome.getOriginName()
+          String msg = "No document provided (null) in outcome by action/page/alert=" + causingOutcome.getOriginName()
                        + " but transferDocument='TRUE' in outcome definition";
           throw new MBInvalidOutcomeException(msg);
         }
         String actualType = causingOutcome.getDocument().getDefinition().getName();
         if (!actualType.equals(pageDefinition.getDocumentName()))
         {
-          String msg = "Document provided via outcome by action/page=" + causingOutcome.getOriginName()
+          String msg = "Document provided via outcome by action/page/alert=" + causingOutcome.getOriginName()
                        + " (transferDocument='TRUE') is of type " + actualType + " but must be of type " + pageDefinition.getDocumentName();
           throw new MBInvalidOutcomeException(msg);
         }
@@ -358,6 +359,94 @@ public class MBApplicationController extends Application
   }
 
   ////////END OF PAGE HANDLING
+
+  ////////ALERT (AlertDialog) HANDLING
+
+  public Object[] prepareAlert(MBOutcome causingOutcome, String alertName, Boolean backStackEnabled)
+  {
+    Object[] result = null;
+    try
+    {
+
+      // construct the alert
+      MBAlertDefinition alertDefinition = MBMetadataService.getInstance().getDefinitionForAlertName(alertName);
+
+      // Load the document from the store
+      MBDocument document = null;
+
+      if (causingOutcome.getTransferDocument())
+      {
+        if (causingOutcome.getDocument() == null)
+        {
+          String msg = "No document provided (null) in outcome by action/page/alert=" + causingOutcome.getOriginName()
+                       + " but transferDocument='TRUE' in outcome definition";
+          throw new MBInvalidOutcomeException(msg);
+        }
+        String actualType = causingOutcome.getDocument().getDefinition().getName();
+        if (!actualType.equals(alertDefinition.getDocumentName()))
+        {
+          String msg = "Document provided via outcome by action/page/alert=" + causingOutcome.getOriginName()
+                       + " (transferDocument='TRUE') is of type " + actualType + " but must be of type "
+                       + alertDefinition.getDocumentName();
+          throw new MBInvalidOutcomeException(msg);
+        }
+        document = causingOutcome.getDocument();
+      }
+      else
+      {
+        document = MBDataManagerService.getInstance().loadDocument(alertDefinition.getDocumentName());
+
+        if (document == null)
+        {
+          document = MBDataManagerService.getInstance().loadDocument(alertDefinition.getDocumentName());
+          String msg = "Document with name " + alertDefinition.getDocumentName() + " not found (check filesystem/webservice)";
+          throw new MBNoDocumentException(msg);
+        }
+      }
+      if (causingOutcome.getNoBackgroundProcessing())
+      {
+        showResultingAlert(causingOutcome, alertDefinition, document, backStackEnabled);
+      }
+      else
+      {
+        // calling AsyncTask calls showResultingPage in UI thread.
+        Object[] backgroundResult = {causingOutcome, alertDefinition, document, backStackEnabled};
+        result = backgroundResult;
+      }
+    }
+    catch (Exception e)
+    {
+      handleException(e, causingOutcome);
+    }
+    return result;
+  }
+
+  public void showResultingAlert(MBOutcome causingOutcome, MBAlertDefinition alertDefinition, MBDocument document,
+                                 final boolean backStackEnabled)
+  {
+
+    // TODO: Implement correctly
+    //    try
+    //    {
+    //      final MBAlert alert = _applicationFactory.createAlert(alertDefinition, document, causingOutcome.getPath());
+    //      _viewManager.runOnUiThread(new MBThread(alert)
+    //      {
+    //
+    //        @Override
+    //        public void runMethod()
+    //        {
+    //          _viewManager.showAlert(alert, backStackEnabled);
+    //        }
+    //      });
+    //    }
+    //    catch (Exception e)
+    //    {
+    //      handleException(e, causingOutcome);
+    //    }
+
+  }
+
+  ////////END OF ALERT (AlertDialog) HANDLING
 
   ////////ACTION HANDLING
 
