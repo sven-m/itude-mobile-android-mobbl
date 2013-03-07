@@ -423,7 +423,6 @@ public class MBApplicationController extends Application
     {
       final MBAlert alert = _applicationFactory.createAlert(alertDefinition, document, causingOutcome.getPath());
 
-      // TODO: This needs to be on UI thread
       Handler mainHandler = new Handler(MBViewManager.getInstance().getMainLooper());
       Runnable myRunnable = new Runnable()
       {

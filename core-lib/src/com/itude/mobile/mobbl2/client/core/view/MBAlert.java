@@ -2,6 +2,7 @@ package com.itude.mobile.mobbl2.client.core.view;
 
 import android.app.AlertDialog;
 
+import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
@@ -21,8 +22,24 @@ public class MBAlert extends MBComponentContainer
     setTitle(definition.getTitle());
 
     // Ok, now we can build the children
-    // TODO: Build buttons
-    //buildChildren(definition, document, getParent());
+    buildChildren(definition, document, getParent());
+  }
+
+  final private void buildChildren(MBAlertDefinition definition, MBDocument document, MBComponentContainer parent)
+  {
+    for (MBDefinition def : definition.getChildren())
+    {
+      String parentAbsoluteDataPath = null;
+      if (parent != null)
+      {
+        parentAbsoluteDataPath = parent.getAbsoluteDataPath();
+      }
+
+      if (def.isPreConditionValid(document, parentAbsoluteDataPath))
+      {
+        addChild(MBComponentFactory.getComponentFromDefinition(def, document, this));
+      }
+    }
   }
 
   public AlertDialog buildAlertDialog()
