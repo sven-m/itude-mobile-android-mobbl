@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
+import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.view.MBAlert;
 import com.itude.mobile.mobbl2.client.core.view.MBComponent;
@@ -30,25 +31,26 @@ public class MBAlertViewBuilder
       if (child instanceof MBField)
       {
         MBField field = (MBField) child;
-        String text = field.getLabel();
+
         if (Constants.C_FIELD_TEXT.equals(field.getType()))
         {
-          builder.setMessage(text);
+          builder.setMessage(field.getValuesForDisplay());
         }
 
         else if (Constants.C_FIELD_BUTTON.equals(field.getType()))
         {
+          String text = field.getLabel();
           if (C_FIELD_BUTTON_STYLE_NEGATIVE.equals(field.getStyle()))
           {
-            builder.setNegativeButton(text, createOnClickListener(field.getOutcomeName()));
+            builder.setNegativeButton(text, createOnClickListener(field, alert.getDocument()));
           }
           else if (C_FIELD_BUTTON_STYLE_POSITIVE.equals(field.getStyle()))
           {
-            builder.setPositiveButton(text, createOnClickListener(field.getOutcomeName()));
+            builder.setPositiveButton(text, createOnClickListener(field, alert.getDocument()));
           }
           else if (C_FIELD_BUTTON_STYLE_OTHER.equals(field.getStyle()))
           {
-            builder.setNeutralButton(text, createOnClickListener(field.getOutcomeName()));
+            builder.setNeutralButton(text, createOnClickListener(field, alert.getDocument()));
           }
         }
 
@@ -58,17 +60,19 @@ public class MBAlertViewBuilder
     return builder.create();
   }
 
-  private DialogInterface.OnClickListener createOnClickListener(final String outcomeName)
+  private DialogInterface.OnClickListener createOnClickListener(final MBField field, final MBDocument document)
   {
 
-    if (outcomeName != null)
+    if (field.getOutcomeName() != null)
     {
       return new DialogInterface.OnClickListener()
       {
         public void onClick(DialogInterface dialog, int id)
         {
           MBOutcome oc = new MBOutcome();
-          oc.setOutcomeName(outcomeName);
+          oc.setOutcomeName(field.getOutcomeName());
+          oc.setDocument(document);
+          oc.setPath(field.getPath());
           MBApplicationController.getInstance().handleOutcome(oc);
         }
       };
