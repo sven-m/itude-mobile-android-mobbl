@@ -352,8 +352,7 @@ public class MBViewManager extends FragmentActivity
 
   public void showAlert(MBAlert alert, boolean backStackEnabled)
   {
-    // TODO: Implement
-
+    alert.buildAlertDialog().show();
   }
 
   // Activate a dialog based on the hashed Name

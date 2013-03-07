@@ -162,7 +162,7 @@ public class MBOutcomeHandler extends Handler
           MBAlertDefinition alertDef = metadataService.getDefinitionForAlertName(outcomeDef.getAction(), false);
           if (alertDef != null) handleAlert(outcomeToProcess, alertDef);
 
-          if (actionDef == null && pageDef == null && !"none".equals(outcomeDef.getAction()))
+          if (actionDef == null && pageDef == null && alertDef == null && !"none".equals(outcomeDef.getAction()))
           {
             StringBuffer tmp = new StringBuffer();
             String msg = "Invalid outcome; no action or page with name " + outcomeDef.getAction() + " defined. See outcome origin="
@@ -306,6 +306,12 @@ public class MBOutcomeHandler extends Handler
 
   }
 
+  private void handleAlert(final MBOutcome outcomeToProcess, final MBAlertDefinition alertDef)
+  {
+    final MBApplicationController applicationController = MBApplicationController.getInstance();
+    applicationController.prepareAlert(new MBOutcome(outcomeToProcess), alertDef.getName(), applicationController.getBackStackEnabled());
+  }
+
   private void handleAction(final MBOutcome outcomeToProcess, final MBActionDefinition actionDef)
   {
 
@@ -333,12 +339,6 @@ public class MBOutcomeHandler extends Handler
         }
       });
     }
-  }
-
-  private void handleAlert(final MBOutcome outcomeToProcess, final MBAlertDefinition alertDef)
-  {
-    final MBApplicationController applicationController = MBApplicationController.getInstance();
-    applicationController.prepareAlert(new MBOutcome(outcomeToProcess), alertDef.getName(), applicationController.getBackStackEnabled());
   }
 
   /***

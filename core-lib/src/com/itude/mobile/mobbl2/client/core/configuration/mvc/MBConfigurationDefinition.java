@@ -176,6 +176,12 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   }
 
   @Override
+  public void addChildElement(MBAlertDefinition child)
+  {
+    addAlert(child);
+  }
+
+  @Override
   public void addChildElement(MBDocumentDefinition child)
   {
     addDocument(child);

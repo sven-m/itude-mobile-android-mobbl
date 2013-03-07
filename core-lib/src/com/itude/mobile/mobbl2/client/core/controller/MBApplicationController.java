@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue;
@@ -43,6 +44,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowCha
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBNoDocumentException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
+import com.itude.mobile.mobbl2.client.core.view.MBAlert;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 
 public class MBApplicationController extends Application
@@ -403,16 +405,8 @@ public class MBApplicationController extends Application
           throw new MBNoDocumentException(msg);
         }
       }
-      if (causingOutcome.getNoBackgroundProcessing())
-      {
-        showResultingAlert(causingOutcome, alertDefinition, document, backStackEnabled);
-      }
-      else
-      {
-        // calling AsyncTask calls showResultingPage in UI thread.
-        Object[] backgroundResult = {causingOutcome, alertDefinition, document, backStackEnabled};
-        result = backgroundResult;
-      }
+      // Alerts need no background processing
+      showResultingAlert(causingOutcome, alertDefinition, document, backStackEnabled);
     }
     catch (Exception e)
     {
@@ -425,24 +419,28 @@ public class MBApplicationController extends Application
                                  final boolean backStackEnabled)
   {
 
-    // TODO: Implement correctly
-    //    try
-    //    {
-    //      final MBAlert alert = _applicationFactory.createAlert(alertDefinition, document, causingOutcome.getPath());
-    //      _viewManager.runOnUiThread(new MBThread(alert)
-    //      {
-    //
-    //        @Override
-    //        public void runMethod()
-    //        {
-    //          _viewManager.showAlert(alert, backStackEnabled);
-    //        }
-    //      });
-    //    }
-    //    catch (Exception e)
-    //    {
-    //      handleException(e, causingOutcome);
-    //    }
+    try
+    {
+      final MBAlert alert = _applicationFactory.createAlert(alertDefinition, document, causingOutcome.getPath());
+
+      // TODO: This needs to be on UI thread
+      Handler mainHandler = new Handler(MBViewManager.getInstance().getMainLooper());
+      Runnable myRunnable = new Runnable()
+      {
+        @Override
+        public void run()
+        {
+          _viewManager.showAlert(alert, backStackEnabled);
+        }
+
+      };
+      mainHandler.post(myRunnable);
+
+    }
+    catch (Exception e)
+    {
+      handleException(e, causingOutcome);
+    }
 
   }
 
