@@ -27,6 +27,7 @@ public final class MBSecurityHelper implements MBSecurityInterface
     _instance = helper;
   }
 
+  @Override
   public void logOutIfCheckNotSelected()
   {
     MBDocument sessionDoc = MBSession.getInstance().getDocument();
