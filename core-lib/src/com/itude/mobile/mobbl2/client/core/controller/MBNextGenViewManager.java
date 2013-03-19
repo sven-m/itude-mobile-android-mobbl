@@ -46,6 +46,7 @@ import com.itude.mobile.mobbl2.client.core.util.ScreenConstants;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
+import com.itude.mobile.mobbl2.client.core.view.components.MBHeader;
 import com.itude.mobile.mobbl2.client.core.view.components.slidingmenu.MBSlidingMenuItem;
 import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTab;
 import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabBar;
@@ -511,27 +512,6 @@ public abstract class MBNextGenViewManager extends MBViewManager
       @Override
       public void run()
       {
-        final ActionBar actionBar = getActionBar();
-
-        MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
-
-        //fix the Home icon padding
-        View homeIcon = findViewById(R.id.home);
-        if (homeIcon != null)
-        {
-          styleHandler.styleHomeIcon(homeIcon);
-        }
-
-        styleHandler.styleActionBar(actionBar);
-
-        actionBar.setDisplayShowTitleEnabled(false);
-        int actionBarDisplayOptions = ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO;
-        if (needsSlidingMenu())
-        {
-          actionBarDisplayOptions |= ActionBar.DISPLAY_HOME_AS_UP;
-        }
-        actionBar.setDisplayOptions(actionBarDisplayOptions);
-
         MBTabBar tabBar = new MBTabBar(MBNextGenViewManager.this);
 
         for (String dialogName : getSortedDialogNames())
@@ -584,7 +564,51 @@ public abstract class MBNextGenViewManager extends MBViewManager
             }
           }
         }
-        actionBar.setCustomView(tabBar, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
+
+        final ActionBar actionBar = getActionBar();
+
+        MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
+
+        //fix the Home icon padding
+        View homeIcon = findViewById(R.id.home);
+        if (homeIcon != null)
+        {
+          styleHandler.styleHomeIcon(homeIcon);
+        }
+
+        styleHandler.styleActionBar(actionBar);
+
+        int actionBarDisplayOptions = ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO;
+        if (needsSlidingMenu())
+        {
+          actionBarDisplayOptions |= ActionBar.DISPLAY_HOME_AS_UP;
+        }
+        actionBar.setDisplayOptions(actionBarDisplayOptions);
+
+        final View customView;
+        if (!tabBar.isEmpty())
+        {
+          customView = tabBar;
+        }
+        else
+        {
+          //          LinearLayout linearLayout = new LinearLayout(MBNextGenViewManager.this);
+          //          linearLayout.setGravity(Gravity.CENTER_VERTICAL);
+          //
+          //          TextView textView = new TextView(MBNextGenViewManager.this);
+          //          textView.setText(getTitle());
+          //          linearLayout.addView(textView);
+
+          MBHeader header = new MBHeader(MBNextGenViewManager.this);
+          header.setTitleText((String) getTitle());
+
+          styleHandler.styleActionBarHeader(header);
+          styleHandler.styleActionBarHeaderTitle(header.getTitleView());
+
+          customView = header;
+        }
+
+        actionBar.setCustomView(customView, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
             ActionBar.LayoutParams.MATCH_PARENT, Gravity.LEFT));
       }
 

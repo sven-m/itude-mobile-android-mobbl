@@ -97,6 +97,11 @@ public class MBTabBar extends LinearLayout
     return _tabs.indexOf(tab);
   }
 
+  public boolean isEmpty()
+  {
+    return _tabs.isEmpty();
+  }
+
   public void selectTab(int id, boolean notifyListener)
   {
     MBTab tab = findTabById(id);

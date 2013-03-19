@@ -725,4 +725,12 @@ public class MBStyleHandler
     slidingMenuMainContainer.setOrientation(LinearLayout.VERTICAL);
   }
 
+  public void styleActionBarHeader(MBHeader header)
+  {
+  }
+
+  public void styleActionBarHeaderTitle(TextView titleView)
+  {
+  }
+
 }

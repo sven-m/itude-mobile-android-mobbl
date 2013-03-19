@@ -33,6 +33,7 @@ import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBDialogViewBuilder.MBDialogType;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
@@ -591,7 +592,15 @@ public class MBDialogController extends ContextWrapper
 
   public boolean onSearchRequested()
   {
-    return false;
+    MBViewManager.getInstance().runOnUiThread(new MBThread()
+    {
+      @Override
+      public void runMethod()
+      {
+        MBViewManager.getInstance().startSearch(null, false, null, false);
+      }
+    });
+    return true;
   }
 
   public boolean dispatchTouchEvent(MotionEvent ev)

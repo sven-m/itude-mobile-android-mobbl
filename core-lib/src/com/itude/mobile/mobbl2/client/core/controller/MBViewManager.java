@@ -67,10 +67,11 @@ public class MBViewManager extends FragmentActivity
   private Dialog                          _currentAlert;
   private boolean                         _singlePageMode;
   private String                          _activeDialog;
+  private boolean                         _showDialogTitle = false;
 
-  private boolean                         _created = false;
+  private boolean                         _created         = false;
 
-  private Boolean                         _hasMenu = null;
+  private Boolean                         _hasMenu         = null;
 
   ///////////////////// Android lifecycle methods
 
@@ -1017,6 +1018,17 @@ public class MBViewManager extends FragmentActivity
     return list;
   }
 
+  @Override
+  public void setTitle(CharSequence title)
+  {
+    CharSequence titleToSet = null;
+    if (isShowDialogTitle())
+    {
+      titleToSet = title;
+    }
+    super.setTitle(titleToSet);
+  }
+
   ////// Dialog management ////////
 
   private Collection<MBDialogController> getDialogs()
@@ -1032,6 +1044,16 @@ public class MBViewManager extends FragmentActivity
   public MBDialogController getActiveDialog()
   {
     return getDialog(getActiveDialogName());
+  }
+
+  public boolean isShowDialogTitle()
+  {
+    return _showDialogTitle;
+  }
+
+  public void setShowDialogTitle(boolean showDialogTitle)
+  {
+    _showDialogTitle = showDialogTitle;
   }
 
   // Tablet specific methods. Some methods are implemented also to run on smartphone.
@@ -1095,5 +1117,4 @@ public class MBViewManager extends FragmentActivity
 
     return _hasMenu;
   }
-
 }

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import android.annotation.TargetApi;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -17,6 +18,21 @@ import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 @TargetApi(11)
 public class MBPhoneViewManager extends MBNextGenViewManager
 {
+  @Override
+  protected void onPreCreate()
+  {
+    super.onPreCreate();
+  }
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState)
+  {
+    super.onCreate(savedInstanceState);
+
+    // https://mobiledev.itude.com/jira/browse/MOBBL-659
+    setProgressBarIndeterminateVisibility(false);
+  }
+
   @Override
   protected void changeSearchImage(Drawable image, SearchView searchView)
   {
