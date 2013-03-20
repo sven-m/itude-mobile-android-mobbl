@@ -666,7 +666,7 @@ public class MBApplicationController extends Application
 
     String path = Uri.decode(searchIntent.getDataString());
 
-    MBDocument searchRequest = MBDataManagerService.getInstance().loadDocument("MBSearchRequestDoc");
+    MBDocument searchRequest = MBDataManagerService.getInstance().loadDocument(Constants.C_DOC_SEARCH_REQUEST);
     searchRequest.setValue(query, "SearchRequest[0]/@query");
     searchRequest.setValue(isProgressive, "SearchRequest[0]/@isProgressive");
     searchRequest.setValue(_searchResultNormal, "SearchRequest[0]/@searchResultNormal");
