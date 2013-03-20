@@ -78,6 +78,12 @@ public class MBViewManager extends FragmentActivity
   protected void onPreCreate()
   {
     requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
+    // makes sure the action bar is initialized (otherwise, the setProgressBar.. doesn't work)
+    getActionBar();
+
+    // https://mobiledev.itude.com/jira/browse/MOBBL-659
+    setProgressBarIndeterminateVisibility(false);
   }
 
   @Override
@@ -98,6 +104,7 @@ public class MBViewManager extends FragmentActivity
     _instance = this;
 
     MBApplicationController.getInstance().startController();
+
   }
 
   @Override
@@ -686,6 +693,7 @@ public class MBViewManager extends FragmentActivity
     return controller;
   }
 
+  @Override
   public void supportInvalidateOptionsMenu()
   {
     ActivityCompatHoneycomb.invalidateOptionsMenu(this);

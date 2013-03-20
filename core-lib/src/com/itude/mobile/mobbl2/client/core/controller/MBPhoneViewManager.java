@@ -7,9 +7,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.SearchView;
 
 import com.itude.mobile.mobbl2.client.core.util.Constants;
@@ -28,9 +29,6 @@ public class MBPhoneViewManager extends MBNextGenViewManager
   protected void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
-
-    // https://mobiledev.itude.com/jira/browse/MOBBL-659
-    setProgressBarIndeterminateVisibility(false);
   }
 
   @Override
@@ -79,6 +77,6 @@ public class MBPhoneViewManager extends MBNextGenViewManager
   @Override
   public void setContentView(View v)
   {
-    setContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+    setContentView(v, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
   }
 }
