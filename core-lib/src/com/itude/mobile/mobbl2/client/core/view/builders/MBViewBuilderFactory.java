@@ -11,7 +11,7 @@ public class MBViewBuilderFactory
   private MBFieldViewBuilder          _fieldViewBuilder;
   private MBStyleHandler              _styleHandler;
   private MBDialogViewBuilder         _dialogViewBuilder;
-  private MBAlertViewBuilder          _alertViewBuilder;
+  private MBAlertDialogBuilder          _alertViewBuilder;
 
   private MBViewBuilderFactory()
   {
@@ -22,7 +22,7 @@ public class MBViewBuilderFactory
     _fieldViewBuilder = new MBFieldViewBuilder();
     _styleHandler = new MBStyleHandler();
     _dialogViewBuilder = new MBDialogViewBuilder();
-    _alertViewBuilder = new MBAlertViewBuilder();
+    _alertViewBuilder = new MBAlertDialogBuilder();
   }
 
   public static MBViewBuilderFactory getInstance()
@@ -104,7 +104,7 @@ public class MBViewBuilderFactory
     return _dialogViewBuilder;
   }
 
-  public MBAlertViewBuilder getAlertViewBuilder()
+  public MBAlertDialogBuilder getAlertViewBuilder()
   {
     return _alertViewBuilder;
   }

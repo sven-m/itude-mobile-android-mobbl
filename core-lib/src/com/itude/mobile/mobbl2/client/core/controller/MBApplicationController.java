@@ -262,37 +262,7 @@ public class MBApplicationController extends Application
       // construct the page
       MBPageDefinition pageDefinition = MBMetadataService.getInstance().getDefinitionForPageName(pageName);
 
-      // Load the document from the store
-      MBDocument document = null;
-
-      if (causingOutcome.getTransferDocument())
-      {
-        if (causingOutcome.getDocument() == null)
-        {
-          String msg = "No document provided (null) in outcome by action/page/alert=" + causingOutcome.getOriginName()
-                       + " but transferDocument='TRUE' in outcome definition";
-          throw new MBInvalidOutcomeException(msg);
-        }
-        String actualType = causingOutcome.getDocument().getDefinition().getName();
-        if (!actualType.equals(pageDefinition.getDocumentName()))
-        {
-          String msg = "Document provided via outcome by action/page/alert=" + causingOutcome.getOriginName()
-                       + " (transferDocument='TRUE') is of type " + actualType + " but must be of type " + pageDefinition.getDocumentName();
-          throw new MBInvalidOutcomeException(msg);
-        }
-        document = causingOutcome.getDocument();
-      }
-      else
-      {
-        document = MBDataManagerService.getInstance().loadDocument(pageDefinition.getDocumentName());
-
-        if (document == null)
-        {
-          document = MBDataManagerService.getInstance().loadDocument(pageDefinition.getDocumentName());
-          String msg = "Document with name " + pageDefinition.getDocumentName() + " not found (check filesystem/webservice)";
-          throw new MBNoDocumentException(msg);
-        }
-      }
+      MBDocument document = prepareDocument(causingOutcome, pageDefinition.getDocumentName());
       if (causingOutcome.getNoBackgroundProcessing())
       {
         showResultingPage(causingOutcome, pageDefinition, document, selectPageInDialog, backStackEnabled);
@@ -362,6 +332,44 @@ public class MBApplicationController extends Application
 
   ////////END OF PAGE HANDLING
 
+  private MBDocument prepareDocument(MBOutcome causingOutcome, String documentName) throws MBInvalidOutcomeException, MBNoDocumentException
+  {
+
+    // Load the document from the store
+    MBDocument document = null;
+
+    if (causingOutcome.getTransferDocument())
+    {
+      if (causingOutcome.getDocument() == null)
+      {
+        String msg = "No document provided (null) in outcome by action/page/alert=" + causingOutcome.getOriginName()
+                     + " but transferDocument='TRUE' in outcome definition";
+        throw new MBInvalidOutcomeException(msg);
+      }
+      String actualType = causingOutcome.getDocument().getDefinition().getName();
+      if (!actualType.equals(documentName))
+      {
+        String msg = "Document provided via outcome by action/page/alert=" + causingOutcome.getOriginName()
+                     + " (transferDocument='TRUE') is of type " + actualType + " but must be of type " + documentName;
+        throw new MBInvalidOutcomeException(msg);
+      }
+      document = causingOutcome.getDocument();
+    }
+    else
+    {
+      document = MBDataManagerService.getInstance().loadDocument(documentName);
+
+      if (document == null)
+      {
+        document = MBDataManagerService.getInstance().loadDocument(documentName);
+        String msg = "Document with name " + documentName + " not found (check filesystem/webservice)";
+        throw new MBNoDocumentException(msg);
+      }
+    }
+
+    return document;
+  }
+
   ////////ALERT (AlertDialog) HANDLING
 
   public Object[] prepareAlert(MBOutcome causingOutcome, String alertName, Boolean backStackEnabled)
@@ -373,38 +381,8 @@ public class MBApplicationController extends Application
       // construct the alert
       MBAlertDefinition alertDefinition = MBMetadataService.getInstance().getDefinitionForAlertName(alertName);
 
-      // Load the document from the store
-      MBDocument document = null;
+      MBDocument document = prepareDocument(causingOutcome, alertDefinition.getDocumentName());
 
-      if (causingOutcome.getTransferDocument())
-      {
-        if (causingOutcome.getDocument() == null)
-        {
-          String msg = "No document provided (null) in outcome by action/page/alert=" + causingOutcome.getOriginName()
-                       + " but transferDocument='TRUE' in outcome definition";
-          throw new MBInvalidOutcomeException(msg);
-        }
-        String actualType = causingOutcome.getDocument().getDefinition().getName();
-        if (!actualType.equals(alertDefinition.getDocumentName()))
-        {
-          String msg = "Document provided via outcome by action/page/alert=" + causingOutcome.getOriginName()
-                       + " (transferDocument='TRUE') is of type " + actualType + " but must be of type "
-                       + alertDefinition.getDocumentName();
-          throw new MBInvalidOutcomeException(msg);
-        }
-        document = causingOutcome.getDocument();
-      }
-      else
-      {
-        document = MBDataManagerService.getInstance().loadDocument(alertDefinition.getDocumentName());
-
-        if (document == null)
-        {
-          document = MBDataManagerService.getInstance().loadDocument(alertDefinition.getDocumentName());
-          String msg = "Document with name " + alertDefinition.getDocumentName() + " not found (check filesystem/webservice)";
-          throw new MBNoDocumentException(msg);
-        }
-      }
       // Alerts need no background processing
       showResultingAlert(causingOutcome, alertDefinition, document, backStackEnabled);
     }

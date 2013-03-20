@@ -12,7 +12,7 @@ import com.itude.mobile.mobbl2.client.core.view.MBAlert;
 import com.itude.mobile.mobbl2.client.core.view.MBComponent;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 
-public class MBAlertViewBuilder
+public class MBAlertDialogBuilder
 {
 
   private static final String C_FIELD_BUTTON_STYLE_NEGATIVE = "NEGATIVE"; // iOS: Cancel Button
