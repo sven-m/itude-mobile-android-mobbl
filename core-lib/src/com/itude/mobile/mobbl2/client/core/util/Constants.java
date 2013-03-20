@@ -67,6 +67,7 @@ public interface Constants
 
   // Row styles
   public static String       C_STYLE_WRAP_ROW                              = "WRAP";
+  public static String       C_DOC_SEARCH_CONFIGURATION                    = "MBSearchConfiguration";
 
   // field datatypes
   public static final String C_FIELD_DATATYPE_INT                          = "int";

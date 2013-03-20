@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -27,9 +30,12 @@ import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.controller.helpers.MBActivityHelper;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
+import com.itude.mobile.mobbl2.client.core.model.MBDocument;
+import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
@@ -592,12 +598,39 @@ public class MBDialogController extends ContextWrapper
 
   public boolean onSearchRequested()
   {
-    MBViewManager.getInstance().runOnUiThread(new MBThread()
+    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+    SearchableInfo searchableInfo = searchManager.getSearchableInfo(MBViewManager.getInstance().getComponentName());
+
+    if (searchableInfo == null)
+    {
+      return false;
+    }
+
+    MBDocument searchConfigDoc = MBDataManagerService.getInstance().loadDocument(Constants.C_DOC_SEARCH_CONFIGURATION);
+    String searchPage = searchConfigDoc.getValueForPath("/Configuration[0]/@searchPage");
+    String searchAction = searchConfigDoc.getValueForPath("/Configuration[0]/@searchAction");
+    String searchResultNormal = searchConfigDoc.getValueForPath("/Configuration[0]/@searchResultNormal");
+    String searchResultProgressive = searchConfigDoc.getValueForPath("/Configuration[0]/@searchResultProgressive");
+    String searchPath = searchConfigDoc.getValueForPath("/Configuration[0]/@searchPath");
+
+    MBPageDefinition pageDefinition = MBMetadataService.getInstance().getDefinitionForPageName(searchPage);
+    MBDocument document = new MBDocument(MBMetadataService.getInstance().getDefinitionForDocumentName(pageDefinition.getDocumentName()));
+
+    MBPage page = MBApplicationFactory.getInstance().createPage(pageDefinition, document, null, MBViewState.MBViewStatePlain);
+    page.setController(MBApplicationController.getInstance());
+    MBApplicationController.getInstance().setPage(searchAction + searchPage, page);
+
+    final Bundle bundle = new Bundle();
+    bundle.putString("searchResultNormal", searchResultNormal);
+    bundle.putString("searchResultProgressive", searchResultProgressive);
+    bundle.putString("searchPath", searchPath);
+
+    MBViewManager.getInstance().runOnUiThread(new MBThread(page)
     {
       @Override
       public void runMethod()
       {
-        MBViewManager.getInstance().startSearch(null, false, null, false);
+        MBViewManager.getInstance().startSearch(null, false, bundle, false);
       }
     });
     return true;
