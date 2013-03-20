@@ -36,6 +36,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   private final Map<String, MBDialogDefinition>   _dialogs;
   private MBDialogDefinition                      _homeDialog;
   private final Map<String, MBToolDefinition>     _tools;
+  private final Map<String, MBAlertDefinition>    _alerts;
 
   public MBConfigurationDefinition()
   {
@@ -46,6 +47,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     _dialogs = new HashMap<String, MBDialogDefinition>();
     _pageTypes = new HashMap<String, MBPageDefinition>();
     _tools = new LinkedHashMap<String, MBToolDefinition>();
+    _alerts = new HashMap<String, MBAlertDefinition>();
   }
 
   public void addAll(MBIncludableDefinition otherDefinition)
@@ -90,28 +92,30 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     {
       addTool(toolDef);
     }
+    for (MBAlertDefinition alertDef : otherConfig.getAlerts().values())
+    {
+      addAlert(alertDef);
+    }
   }
 
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtil.appendIndentString(appendToMe, level).append("<Configuration>\n")
-        .append(StringUtil.getIndentStringWithLevel(level + 2)).append("<Model>\n")
-        .append(StringUtil.getIndentStringWithLevel(level + 4)).append("<Domains>\n");
+    StringUtil.appendIndentString(appendToMe, level).append("<Configuration>\n").append(StringUtil.getIndentStringWithLevel(level + 2))
+        .append("<Model>\n").append(StringUtil.getIndentStringWithLevel(level + 4)).append("<Domains>\n");
     for (MBDomainDefinition domain : _domainTypes.values())
     {
       domain.asXmlWithLevel(appendToMe, level + 6);
     }
-    StringUtil.appendIndentString(appendToMe, level + 4).append("</Domains>\n")
-        .append(StringUtil.getIndentStringWithLevel(level + 4)).append("<Documents>\n");
+    StringUtil.appendIndentString(appendToMe, level + 4).append("</Domains>\n").append(StringUtil.getIndentStringWithLevel(level + 4))
+        .append("<Documents>\n");
     for (MBDocumentDefinition document : _documentTypes.values())
     {
       document.asXmlWithLevel(appendToMe, level + 6);
     }
     appendToMe.append(StringUtil.getIndentStringWithLevel(level + 4)).append("</Documents>\n")
-        .append(StringUtil.getIndentStringWithLevel(level + 2)).append("</Model>\n")
-        .append(StringUtil.getIndentStringWithLevel(level + 2)).append("<Controller>\n")
-        .append(StringUtil.getIndentStringWithLevel(level + 4)).append("<Actions>\n");
+        .append(StringUtil.getIndentStringWithLevel(level + 2)).append("</Model>\n").append(StringUtil.getIndentStringWithLevel(level + 2))
+        .append("<Controller>\n").append(StringUtil.getIndentStringWithLevel(level + 4)).append("<Actions>\n");
     for (MBActionDefinition acion : _actionTypes.values())
     {
       acion.asXmlWithLevel(appendToMe, level + 6);
@@ -124,8 +128,8 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     }
     appendToMe.append(StringUtil.getIndentStringWithLevel(level + 4)).append("</Wiring>\n")
         .append(StringUtil.getIndentStringWithLevel(level + 2)).append("</Controller>\n")
-        .append(StringUtil.getIndentStringWithLevel(level + 2)).append("<View>\n")
-        .append(StringUtil.getIndentStringWithLevel(level + 4)).append("<Dialogs>\n");
+        .append(StringUtil.getIndentStringWithLevel(level + 2)).append("<View>\n").append(StringUtil.getIndentStringWithLevel(level + 4))
+        .append("<Dialogs>\n");
     for (MBDialogDefinition dialog : _dialogs.values())
     {
       dialog.asXmlWithLevel(appendToMe, level + 6);
@@ -137,10 +141,22 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
       tool.asXmlWithLevel(appendToMe, level + 6);
     }
     appendToMe.append(StringUtil.getIndentStringWithLevel(level + 4)).append("</Toolbar>\n");
+
+    // Append pages
     for (MBPageDefinition page : _pageTypes.values())
     {
       page.asXmlWithLevel(appendToMe, level + 4);
     }
+
+    // Append alerts
+    appendToMe.append(StringUtil.getIndentStringWithLevel(level + 4)).append("<Alerts>\n");
+    for (MBAlertDefinition alert : _alerts.values())
+    {
+      alert.asXmlWithLevel(appendToMe, level + 6);
+    }
+    appendToMe.append(StringUtil.getIndentStringWithLevel(level + 4)).append("</Alerts>\n");
+
+    // Close configuration
     appendToMe.append(StringUtil.getIndentStringWithLevel(level + 2)).append("</View>\n")
         .append(StringUtil.getIndentStringWithLevel(level)).append("</Configuration>\n");
 
@@ -157,6 +173,12 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   public void addChildElement(MBDialogDefinition child)
   {
     addDialog(child);
+  }
+
+  @Override
+  public void addChildElement(MBAlertDefinition child)
+  {
+    addAlert(child);
   }
 
   @Override
@@ -252,6 +274,16 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     }
 
     _tools.put(tool.getName(), tool);
+  }
+
+  public void addAlert(MBAlertDefinition alert)
+  {
+    if (_alerts.containsKey(alert.getName()))
+    {
+      Log.w(Constants.APPLICATION_NAME, "Alert definition overridden: multiple definitions for alert with name " + alert.getName());
+    }
+
+    _alerts.put(alert.getName(), alert);
   }
 
   public MBDomainDefinition getDefinitionForDomainName(String domainName)
@@ -366,13 +398,24 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   {
     ArrayList<MBToolDefinition> result = new ArrayList<MBToolDefinition>();
 
-    for (MBToolDefinition toolDef : _tools.values())
     {
-      if (type.equals(toolDef.getType()))
-      {
-        result.add(toolDef);
-      }
+      for (MBToolDefinition toolDef : _tools.values())
+        if (type.equals(toolDef.getType()))
+        {
+          result.add(toolDef);
+        }
     }
     return result;
   }
+
+  public Map<String, MBAlertDefinition> getAlerts()
+  {
+    return _alerts;
+  }
+
+  public MBAlertDefinition getDefinitionForAlertName(String name)
+  {
+    return _alerts.get(name);
+  }
+
 }

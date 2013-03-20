@@ -50,6 +50,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowCha
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.helper.MBSecurityHelper;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThreadHandler;
+import com.itude.mobile.mobbl2.client.core.view.MBAlert;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabBar;
 
@@ -349,6 +350,11 @@ public class MBViewManager extends FragmentActivity
   }
 
   /////////////////////////////////////////////////////
+
+  public void showAlert(MBAlert alert, boolean backStackEnabled)
+  {
+    alert.buildAlertDialog().show();
+  }
 
   // Activate a dialog based on the hashed Name
   public void activateOrCreateDialogWithID(int itemId)

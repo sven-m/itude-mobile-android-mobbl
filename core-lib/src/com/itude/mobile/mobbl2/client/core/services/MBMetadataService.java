@@ -11,6 +11,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDef
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndpointsConfiguration;
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndpointsConfigurationParser;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
@@ -20,6 +21,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBActionNotDefinedException;
+import com.itude.mobile.mobbl2.client.core.services.exceptions.MBAlertNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBDialogNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBDocumentNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBDomainNotDefinedException;
@@ -251,6 +253,22 @@ public final class MBMetadataService
       throw new MBToolNotDefinedException(message);
     }
     return toolDefs;
+  }
+
+  public MBAlertDefinition getDefinitionForAlertName(String alertName)
+  {
+    return getDefinitionForAlertName(alertName, true);
+  }
+
+  public MBAlertDefinition getDefinitionForAlertName(String alertName, boolean doThrow)
+  {
+    MBAlertDefinition alertDef = _cfg.getDefinitionForAlertName(alertName);
+    if (alertDef == null && doThrow)
+    {
+      String message = "Alert with name " + alertDef + " not defined";
+      throw new MBAlertNotDefinedException(message);
+    }
+    return alertDef;
   }
 
   public MBConfigurationDefinition getConfiguration()

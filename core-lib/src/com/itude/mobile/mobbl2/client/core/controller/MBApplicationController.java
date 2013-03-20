@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue;
@@ -25,6 +26,7 @@ import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition;
@@ -42,6 +44,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowCha
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBNoDocumentException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
+import com.itude.mobile.mobbl2.client.core.view.MBAlert;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 
 public class MBApplicationController extends Application
@@ -259,37 +262,7 @@ public class MBApplicationController extends Application
       // construct the page
       MBPageDefinition pageDefinition = MBMetadataService.getInstance().getDefinitionForPageName(pageName);
 
-      // Load the document from the store
-      MBDocument document = null;
-
-      if (causingOutcome.getTransferDocument())
-      {
-        if (causingOutcome.getDocument() == null)
-        {
-          String msg = "No document provided (null) in outcome by action/page=" + causingOutcome.getOriginName()
-                       + " but transferDocument='TRUE' in outcome definition";
-          throw new MBInvalidOutcomeException(msg);
-        }
-        String actualType = causingOutcome.getDocument().getDefinition().getName();
-        if (!actualType.equals(pageDefinition.getDocumentName()))
-        {
-          String msg = "Document provided via outcome by action/page=" + causingOutcome.getOriginName()
-                       + " (transferDocument='TRUE') is of type " + actualType + " but must be of type " + pageDefinition.getDocumentName();
-          throw new MBInvalidOutcomeException(msg);
-        }
-        document = causingOutcome.getDocument();
-      }
-      else
-      {
-        document = MBDataManagerService.getInstance().loadDocument(pageDefinition.getDocumentName());
-
-        if (document == null)
-        {
-          document = MBDataManagerService.getInstance().loadDocument(pageDefinition.getDocumentName());
-          String msg = "Document with name " + pageDefinition.getDocumentName() + " not found (check filesystem/webservice)";
-          throw new MBNoDocumentException(msg);
-        }
-      }
+      MBDocument document = prepareDocument(causingOutcome, pageDefinition.getDocumentName());
       if (causingOutcome.getNoBackgroundProcessing())
       {
         showResultingPage(causingOutcome, pageDefinition, document, selectPageInDialog, backStackEnabled);
@@ -358,6 +331,97 @@ public class MBApplicationController extends Application
   }
 
   ////////END OF PAGE HANDLING
+
+  private MBDocument prepareDocument(MBOutcome causingOutcome, String documentName) throws MBInvalidOutcomeException, MBNoDocumentException
+  {
+
+    // Load the document from the store
+    MBDocument document = null;
+
+    if (causingOutcome.getTransferDocument())
+    {
+      if (causingOutcome.getDocument() == null)
+      {
+        String msg = "No document provided (null) in outcome by action/page/alert=" + causingOutcome.getOriginName()
+                     + " but transferDocument='TRUE' in outcome definition";
+        throw new MBInvalidOutcomeException(msg);
+      }
+      String actualType = causingOutcome.getDocument().getDefinition().getName();
+      if (!actualType.equals(documentName))
+      {
+        String msg = "Document provided via outcome by action/page/alert=" + causingOutcome.getOriginName()
+                     + " (transferDocument='TRUE') is of type " + actualType + " but must be of type " + documentName;
+        throw new MBInvalidOutcomeException(msg);
+      }
+      document = causingOutcome.getDocument();
+    }
+    else
+    {
+      document = MBDataManagerService.getInstance().loadDocument(documentName);
+
+      if (document == null)
+      {
+        document = MBDataManagerService.getInstance().loadDocument(documentName);
+        String msg = "Document with name " + documentName + " not found (check filesystem/webservice)";
+        throw new MBNoDocumentException(msg);
+      }
+    }
+
+    return document;
+  }
+
+  ////////ALERT (AlertDialog) HANDLING
+
+  public Object[] prepareAlert(MBOutcome causingOutcome, String alertName, Boolean backStackEnabled)
+  {
+    Object[] result = null;
+    try
+    {
+
+      // construct the alert
+      MBAlertDefinition alertDefinition = MBMetadataService.getInstance().getDefinitionForAlertName(alertName);
+
+      MBDocument document = prepareDocument(causingOutcome, alertDefinition.getDocumentName());
+
+      // Alerts need no background processing
+      showResultingAlert(causingOutcome, alertDefinition, document, backStackEnabled);
+    }
+    catch (Exception e)
+    {
+      handleException(e, causingOutcome);
+    }
+    return result;
+  }
+
+  public void showResultingAlert(MBOutcome causingOutcome, MBAlertDefinition alertDefinition, MBDocument document,
+                                 final boolean backStackEnabled)
+  {
+
+    try
+    {
+      final MBAlert alert = _applicationFactory.createAlert(alertDefinition, document, causingOutcome.getPath());
+
+      Handler mainHandler = new Handler(MBViewManager.getInstance().getMainLooper());
+      Runnable myRunnable = new Runnable()
+      {
+        @Override
+        public void run()
+        {
+          _viewManager.showAlert(alert, backStackEnabled);
+        }
+
+      };
+      mainHandler.post(myRunnable);
+
+    }
+    catch (Exception e)
+    {
+      handleException(e, causingOutcome);
+    }
+
+  }
+
+  ////////END OF ALERT (AlertDialog) HANDLING
 
   ////////ACTION HANDLING
 

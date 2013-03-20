@@ -9,6 +9,7 @@ import android.os.Parcelable;
 
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBBundleDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
@@ -111,6 +112,10 @@ public class MBDefinition implements Parcelable
   }
 
   public void addChildElement(MBToolDefinition child)
+  {
+  }
+
+  public void addChildElement(MBAlertDefinition child)
   {
   }
 
