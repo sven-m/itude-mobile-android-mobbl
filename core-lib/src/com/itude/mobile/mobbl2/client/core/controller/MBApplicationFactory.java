@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.itude.mobile.mobbl2.client.core.MBException;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBResultListener;
+import com.itude.mobile.mobbl2.client.core.view.MBAlert;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
@@ -77,6 +79,11 @@ public class MBApplicationFactory
   public MBDialogController createDialogController()
   {
     return new MBDialogController();
+  }
+
+  public final MBAlert createAlert(MBAlertDefinition definition, MBDocument document, String rootPath)
+  {
+    return new MBAlert(definition, document, rootPath);
   }
 
   protected ActionMappings.Registry getActionRegistry()

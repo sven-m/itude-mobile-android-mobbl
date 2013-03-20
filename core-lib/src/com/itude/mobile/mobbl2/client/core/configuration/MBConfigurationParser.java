@@ -19,6 +19,7 @@ import android.util.Log;
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.exceptions.MBUnknownElementException;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBBundleDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
@@ -217,6 +218,12 @@ public abstract class MBConfigurationParser extends DefaultHandler
   }
 
   public void notifyProcessed(MBToolDefinition definition)
+  {
+    getStack().peek().addChildElement(definition);
+    getStack().push(definition);
+  }
+
+  public void notifyProcessed(MBAlertDefinition definition)
   {
     getStack().peek().addChildElement(definition);
     getStack().push(definition);
