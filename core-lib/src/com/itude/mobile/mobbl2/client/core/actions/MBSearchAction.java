@@ -50,7 +50,15 @@ public abstract class MBSearchAction implements MBAction
 
   protected abstract MBDocument executeSearch();
 
-  protected abstract MBOutcome displaySearchResults(MBDocument searchResult, String path);
+  protected MBOutcome displaySearchResults(MBDocument searchResult, String path)
+  {
+    MBOutcome outcome = new MBOutcome();
+    outcome.setOutcomeName(isProgressiveSearch() ? getOutcomeNameProgressive() : getOutcomeNameNormal());
+    outcome.setDocument(searchResult);
+    outcome.setPath(path);
+
+    return outcome;
+  }
 
   protected String getQuery()
   {
