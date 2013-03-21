@@ -240,22 +240,25 @@ public abstract class MBNextGenViewManager extends MBViewManager
 
       MBTabBar tabBar = getTabBar();
       resetViewPreservingCurrentDialog();
-      int firstDialog = homeDialogDefinition.getName().hashCode();
-      MBTab selectedTab = tabBar.getSelectedTab();
-      if (selectedTab == null || firstDialog != selectedTab.getTabId())
+      if (tabBar != null)
       {
-        if (tabBar.findTabById(firstDialog) != null)
+        int firstDialog = homeDialogDefinition.getName().hashCode();
+        MBTab selectedTab = tabBar.getSelectedTab();
+        if (selectedTab == null || firstDialog != selectedTab.getTabId())
         {
-          tabBar.selectTab(firstDialog, true);
+          if (tabBar.findTabById(firstDialog) != null)
+          {
+            tabBar.selectTab(firstDialog, true);
+          }
+          else
+          {
+            activateDialogWithName(homeDialogDefinition.getName());
+          }
         }
         else
         {
           activateDialogWithName(homeDialogDefinition.getName());
         }
-      }
-      else
-      {
-        activateDialogWithName(homeDialogDefinition.getName());
       }
     }
   }
@@ -437,17 +440,10 @@ public abstract class MBNextGenViewManager extends MBViewManager
   @Override
   public MBTabBar getTabBar()
   {
-    try
+    ActionBar actionBar = getActionBar();
+    if (actionBar != null && actionBar.getCustomView() != null && actionBar.getCustomView() instanceof MBTabBar)
     {
-      ActionBar actionBar = getActionBar();
-      if (actionBar != null)
-      {
-        return (MBTabBar) actionBar.getCustomView();
-      }
-    }
-    catch (Exception e)
-    {
-      Log.w(Constants.APPLICATION_NAME, "Unable to retrieve the tab bar, returning null", e);
+      return (MBTabBar) actionBar.getCustomView();
     }
     return null;
   }
