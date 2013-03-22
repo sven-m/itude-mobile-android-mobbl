@@ -3,6 +3,7 @@ package com.itude.mobile.mobbl2.client.core.actions;
 import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.controller.MBAction;
+import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
@@ -28,10 +29,13 @@ public abstract class MBSearchAction implements MBAction
 
       _searchRequestDoc = document;
 
-      _query = document.getValueForPath("SearchRequest[0]/@query");
-      _progressiveSearch = document.getBooleanForPath("SearchRequest[0]/@isProgressive");
-      _outcomeNameNormal = document.getValueForPath("SearchRequest[0]/@searchResultNormal");
-      _outcomeNameProgressive = document.getValueForPath("SearchRequest[0]/@searchResultProgressive");
+      _query = document.getValueForPath(Constants.C_EL_SEARCH_REQUEST + "/" + Constants.C_EL_SEARCH_REQUEST_ATTR_QUERY);
+      _progressiveSearch = document.getBooleanForPath(Constants.C_EL_SEARCH_REQUEST + "/"
+                                                      + Constants.C_EL_SEARCH_REQUEST_ATTR_IS_PROGRESSIVE);
+      _outcomeNameNormal = document.getValueForPath(Constants.C_EL_SEARCH_REQUEST + "/"
+                                                    + Constants.C_EL_SEARCH_REQUEST_ATTR_NORMAL_SEARCH_OUTCOME);
+      _outcomeNameProgressive = document.getValueForPath(Constants.C_EL_SEARCH_REQUEST + "/"
+                                                         + Constants.C_EL_SEARCH_REQUEST_ATTR_PROGRESSIVE_SEARCH_OUTCOME);
 
       MBDocument searchResult = executeSearch();
 
@@ -50,7 +54,25 @@ public abstract class MBSearchAction implements MBAction
 
   protected abstract MBDocument executeSearch();
 
-  protected abstract MBOutcome displaySearchResults(MBDocument searchResult, String path);
+  protected MBOutcome displaySearchResults(MBDocument searchResult, String path)
+  {
+    if (isProgressiveSearch())
+    {
+      MBOutcome outcome = new MBOutcome();
+      outcome.setOutcomeName(getOutcomeNameNormal());
+      outcome.setDocument(searchResult);
+      outcome.setPath(path);
+
+      MBApplicationController.getInstance().handleOutcomeSynchronously(outcome);
+    }
+
+    MBOutcome outcome = new MBOutcome();
+    outcome.setOutcomeName(isProgressiveSearch() ? getOutcomeNameProgressive() : getOutcomeNameNormal());
+    outcome.setDocument(searchResult);
+    outcome.setPath(path);
+
+    return outcome;
+  }
 
   protected String getQuery()
   {

@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -69,6 +70,18 @@ public abstract class MBNextGenViewManager extends MBViewManager
   private MBToolDefinition _refreshToolDef = null;
   private SlidingMenu      _slidingMenu    = null;
   private TopViewPadding   _topViewPadding = null;
+
+  @Override
+  protected void onPreCreate()
+  {
+    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
+    // makes sure the action bar is initialized (otherwise, the setProgressBar.. doesn't work)
+    getActionBar();
+
+    // https://mobiledev.itude.com/jira/browse/MOBBL-659
+    setProgressBarIndeterminateVisibility(false);
+  }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu)
