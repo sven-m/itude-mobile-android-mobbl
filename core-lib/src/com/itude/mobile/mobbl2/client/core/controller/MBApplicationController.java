@@ -61,9 +61,6 @@ public class MBApplicationController extends Application
 
   private static MBApplicationController       _instance                = null;
 
-  private String                               _searchResultNormal      = null;
-  private String                               _searchResultProgressive = null;
-
   private ApplicationState                     _currentApplicationState = ApplicationState.NOTSTARTED;
 
   public static enum ApplicationState {
@@ -719,26 +716,46 @@ public class MBApplicationController extends Application
 
     String searchPath = "";
 
-    Bundle bundle = searchIntent.getBundleExtra(SearchManager.APP_DATA);
-    if (bundle != null)
-    {
+    //    Bundle bundle = searchIntent.getBundleExtra(SearchManager.APP_DATA);
+    //    if (bundle != null)
+    //    {
+    //      _searchResultNormal = bundle.getString(Constants.C_BUNDLE_NORMAL_SEARCH_OUTCOME);
+    //      _searchResultProgressive = bundle.getString(Constants.C_BUNDLE_PROGRESSIVE_SEARCH_OUTCOME);
+    //      searchPath = bundle.getString(Constants.C_BUNDLE_SEARCH_PATH);
+    //    }
 
-      _searchResultNormal = bundle.getString("searchResultNormal");
-      _searchResultProgressive = bundle.getString("searchResultProgressive");
-      searchPath = bundle.getString("searchPath");
-    }
+    MBDocument searchConfigDoc = MBDataManagerService.getInstance().loadDocument(Constants.C_DOC_SEARCH_CONFIGURATION);
+    String searchPage = searchConfigDoc.getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/"
+                                                        + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_SEARCH_PAGE);
+    String searchAction = searchConfigDoc.getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/"
+                                                          + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_SEARCH_ACTION);
+    String normalSearchOutcome = searchConfigDoc.getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/"
+                                                                 + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_NORMAL_SEARCH_OUTCOME);
+    String progressiveSearchOutcome = searchConfigDoc
+        .getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/" + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_PROGRESSIVE_SEARCH_OUTCOME);
+    searchPath = searchConfigDoc.getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/"
+                                                 + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_SEARCH_PATH);
+
+    MBPageDefinition pageDefinition = MBMetadataService.getInstance().getDefinitionForPageName(searchPage);
+    MBDocument document = new MBDocument(MBMetadataService.getInstance().getDefinitionForDocumentName(pageDefinition.getDocumentName()));
+
+    MBPage page = MBApplicationFactory.getInstance().createPage(pageDefinition, document, null, MBViewState.MBViewStatePlain);
+    page.setController(MBApplicationController.getInstance());
+    MBApplicationController.getInstance().setPage(searchAction + searchPage, page);
 
     String path = Uri.decode(searchIntent.getDataString());
 
     MBDocument searchRequest = MBDataManagerService.getInstance().loadDocument(Constants.C_DOC_SEARCH_REQUEST);
-    searchRequest.setValue(query, "SearchRequest[0]/@query");
-    searchRequest.setValue(isProgressive, "SearchRequest[0]/@isProgressive");
-    searchRequest.setValue(_searchResultNormal, "SearchRequest[0]/@searchResultNormal");
-    searchRequest.setValue(_searchResultProgressive, "SearchRequest[0]/@searchResultProgressive");
+    searchRequest.setValue(query, Constants.C_EL_SEARCH_REQUEST + "/" + Constants.C_EL_SEARCH_REQUEST_ATTR_QUERY);
+    searchRequest.setValue(isProgressive, Constants.C_EL_SEARCH_REQUEST + "/" + Constants.C_EL_SEARCH_REQUEST_ATTR_IS_PROGRESSIVE);
+    searchRequest.setValue(normalSearchOutcome, Constants.C_EL_SEARCH_REQUEST + "/"
+                                                + Constants.C_EL_SEARCH_REQUEST_ATTR_NORMAL_SEARCH_OUTCOME);
+    searchRequest.setValue(progressiveSearchOutcome, Constants.C_EL_SEARCH_REQUEST + "/"
+                                                     + Constants.C_EL_SEARCH_REQUEST_ATTR_PROGRESSIVE_SEARCH_OUTCOME);
 
     MBOutcome searchOutcome = new MBOutcome();
-    searchOutcome.setOriginName("Controller");
-    searchOutcome.setOutcomeName("search");
+    searchOutcome.setOriginName(Constants.C_MOBBL_ORIGIN_NAME_CONTROLLER);
+    searchOutcome.setOutcomeName(Constants.C_MOBBL_ORIGIN_CONTROLLER_NAME_SEARCH);
     searchOutcome.setDocument(searchRequest);
     searchOutcome.setPath(path + searchPath);
 
