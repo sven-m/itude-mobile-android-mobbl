@@ -757,7 +757,7 @@ public class MBApplicationController extends Application
     searchOutcome.setOriginName(Constants.C_MOBBL_ORIGIN_NAME_CONTROLLER);
     searchOutcome.setOutcomeName(Constants.C_MOBBL_ORIGIN_CONTROLLER_NAME_SEARCH);
     searchOutcome.setDocument(searchRequest);
-    searchOutcome.setPath(path + searchPath);
+    searchOutcome.setPath((path != null) ? path + searchPath : null);
 
     handleOutcome(searchOutcome);
 

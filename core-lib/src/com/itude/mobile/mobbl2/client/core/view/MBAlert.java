@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
+import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 public class MBAlert extends MBComponentContainer
@@ -69,7 +70,39 @@ public class MBAlert extends MBComponentContainer
 
   public String getTitle()
   {
-    return _title;
+    String result = _title;
+
+    if (_title != null)
+    {
+      result = _title;
+    }
+    else
+    {
+      MBAlertDefinition definition = (MBAlertDefinition) getDefinition();
+      if (definition.getTitle() != null)
+      {
+        result = definition.getTitle();
+      }
+      else if (definition.getTitlePath() != null)
+      {
+        String path = definition.getTitlePath();
+        if (!path.startsWith("/"))
+        {
+          if (getRootPath() != null)
+          {
+            path = getRootPath() + "/" + path;
+          }
+          else
+          {
+            path = getAbsoluteDataPath() + "/" + path;
+          }
+        }
+
+        result = (String) getDocument().getValueForPath(path);
+      }
+    }
+
+    return MBLocalizationService.getInstance().getTextForKey(result);
   }
 
   public void setTitle(String _title)
