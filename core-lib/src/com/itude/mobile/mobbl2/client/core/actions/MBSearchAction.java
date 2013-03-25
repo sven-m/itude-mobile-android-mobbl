@@ -9,6 +9,19 @@ import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 
+/***
+ * 
+ * Important: make sure your application has the MBSearchRequestDoc definition.
+ * 
+ * Perform the search based on the SearchRequest. The method {@link #executeSearch()} must be implemented in a subclass.
+ * The attributes of the search request document can be accessed via their getters. It is also possible to access the 
+ * MBSearchRequestDoc in case you implemented a data handler that can handle the MBSearchRequestDoc.
+ * 
+ * More info: https://mobiledev.itude.com/confluence/display/MOBBL/Search
+ *
+ * @author Coen Houtman
+ * @since 3.0.0.16
+ */
 public abstract class MBSearchAction implements MBAction
 {
   private MBDocument _searchRequestDoc;
@@ -52,8 +65,20 @@ public abstract class MBSearchAction implements MBAction
     }
   }
 
+  /***
+   * 
+   * @return an MBDocument that is used on the page with the search results
+   */
   protected abstract MBDocument executeSearch();
 
+  /***
+   * The page with the search results is always being displayed. In case a progressive search result
+   * is selected, the user automatically navigates to the specific search item.
+   * 
+   * @param searchResult the MBDocument that is used on the page with the search results
+   * @param path the path to the selected progressive search result
+   * @return MBOutcome to display the search results
+   */
   protected MBOutcome displaySearchResults(MBDocument searchResult, String path)
   {
     if (isProgressiveSearch())
