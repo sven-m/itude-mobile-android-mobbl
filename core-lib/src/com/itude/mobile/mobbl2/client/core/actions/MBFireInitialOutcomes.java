@@ -53,7 +53,7 @@ public class MBFireInitialOutcomes implements MBAction
         }
       }
 
-      if (StringUtil.isNotBlank(dialog))
+      if (StringUtil.isNotBlank(dialog) && !"DIALOG-menu".equals(dialog))
       {
         MBViewManager.getInstance().addSortedDialogName(dialog);
       }

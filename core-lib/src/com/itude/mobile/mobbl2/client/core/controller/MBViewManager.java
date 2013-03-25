@@ -1039,6 +1039,11 @@ public class MBViewManager extends FragmentActivity
     return _controllerMap.get(name);
   }
 
+  public MBDialogController getMenuDialog()
+  {
+    return getDialog("DIALOG-menu");
+  }
+
   public MBDialogController getActiveDialog()
   {
     return getDialog(getActiveDialogName());

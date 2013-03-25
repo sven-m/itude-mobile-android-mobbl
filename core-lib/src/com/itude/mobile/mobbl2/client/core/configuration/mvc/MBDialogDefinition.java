@@ -60,7 +60,7 @@ public class MBDialogDefinition extends MBDefinition
 
   public String getTitlePortrait()
   {
-    return _titlePortrait;
+    return _titlePortrait != null ? _titlePortrait : getTitle();
   }
 
   public String getMode()

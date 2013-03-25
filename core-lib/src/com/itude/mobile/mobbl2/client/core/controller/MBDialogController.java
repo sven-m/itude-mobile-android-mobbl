@@ -175,6 +175,14 @@ public class MBDialogController extends ContextWrapper
   {
     getActivity().setContentView(_mainContainer);
 
+    activateWithoutSwitching();
+
+    getActivity().setTitle(_title);
+  }
+
+  public void activateWithoutSwitching()
+  {
+
     if (!_shown && getOutcomeId() != null)
     {
       MBPage page = MBApplicationController.getInstance().getPage(getOutcomeId());
@@ -191,12 +199,11 @@ public class MBDialogController extends ContextWrapper
 
     getFragmentStack().playBackStack();
 
-    getActivity().setTitle(_title);
-
     if (_configurationChanged != null)
     {
       handleOrientationChange(_configurationChanged);
     }
+
   }
 
   public void deactivate()
