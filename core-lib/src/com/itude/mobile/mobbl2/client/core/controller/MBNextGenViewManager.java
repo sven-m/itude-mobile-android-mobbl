@@ -253,26 +253,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
 
       MBTabBar tabBar = getTabBar();
       resetViewPreservingCurrentDialog();
-      if (tabBar != null)
-      {
-        int firstDialog = homeDialogDefinition.getName().hashCode();
-        MBTab selectedTab = tabBar.getSelectedTab();
-        if (selectedTab == null || firstDialog != selectedTab.getTabId())
-        {
-          if (tabBar.findTabById(firstDialog) != null)
-          {
-            tabBar.selectTab(firstDialog, true);
-          }
-          else
-          {
-            activateDialogWithName(homeDialogDefinition.getName());
-          }
-        }
-        else
-        {
-          activateDialogWithName(homeDialogDefinition.getName());
-        }
-      }
+      activateDialogWithName(homeDialogDefinition.getName());
     }
   }
 

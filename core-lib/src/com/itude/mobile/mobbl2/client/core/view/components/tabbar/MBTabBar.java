@@ -105,10 +105,7 @@ public class MBTabBar extends LinearLayout
   public void selectTab(int id, boolean notifyListener)
   {
     MBTab tab = findTabById(id);
-    if (tab != null)
-    {
-      selectTab(tab, notifyListener);
-    }
+    selectTab(tab, notifyListener);
   }
 
   public void selectTab(MBTab tab, boolean notifyListener)
