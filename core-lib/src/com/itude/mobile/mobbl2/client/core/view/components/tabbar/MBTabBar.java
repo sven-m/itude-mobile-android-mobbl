@@ -134,6 +134,8 @@ public class MBTabBar extends LinearLayout
         _selectedTab.unselect();
       }
 
+      _selectedTab = tab;
+
       if (tab != null)
       {
         if (notifyListener)
@@ -148,7 +150,7 @@ public class MBTabBar extends LinearLayout
           tab.setListener(listener);
         }
       }
-      _selectedTab = tab;
+
     }
   }
 }

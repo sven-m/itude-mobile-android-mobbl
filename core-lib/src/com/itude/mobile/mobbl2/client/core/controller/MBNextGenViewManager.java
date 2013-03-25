@@ -299,14 +299,12 @@ public abstract class MBNextGenViewManager extends MBViewManager
         dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
       }
 
-      if (StringUtil.isBlank(dialogDefinition.getShowAs()))
+      MBTabBar tabBar = getTabBar();
+      if (tabBar != null)
       {
-        MBTabBar tabBar = getTabBar();
-        if (tabBar != null)
-        {
-          tabBar.selectTab(null, true);
-        }
+        tabBar.selectTab(dialogName.hashCode(), false);
       }
+
     }
 
     return activated;
@@ -438,16 +436,6 @@ public abstract class MBNextGenViewManager extends MBViewManager
         decorView.addView(content);
       }
     });
-  }
-
-  @Override
-  public void selectTab(int id)
-  {
-    MBTabBar tabBar = getTabBar();
-    if (tabBar != null)
-    {
-      tabBar.selectTab(id, true);
-    }
   }
 
   @Override

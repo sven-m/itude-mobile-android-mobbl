@@ -30,7 +30,6 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 
 import com.itude.mobile.android.util.CollectionUtilities;
-import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
@@ -49,6 +48,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowChangeType;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.helper.MBSecurityHelper;
+import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThreadHandler;
 import com.itude.mobile.mobbl2.client.core.view.MBAlert;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
@@ -230,21 +230,7 @@ public class MBViewManager extends FragmentActivity
     final String firstDialog = firstDialogDefinition.getName();
     if (!childController.getName().equals(firstDialog))
     {
-      if (DeviceUtil.getInstance().isPhone() || DeviceUtil.getInstance().isPhoneV14())
-      {
-        activateDialogWithName(firstDialog);
-      }
-      else if (DeviceUtil.getInstance().isTablet())
-      {
-        runOnUiThread(new Runnable()
-        {
-          @Override
-          public void run()
-          {
-            selectTab(firstDialog.hashCode());
-          }
-        });
-      }
+      activateDialogWithName(firstDialog);
       setTitle(MBLocalizationService.getInstance().getTextForKey(firstDialogDefinition.getTitle()));
     }
     else
@@ -701,10 +687,23 @@ public class MBViewManager extends FragmentActivity
 
   private MBDialogController activateDialog(String dialogName)
   {
-    MBDialogController controller = startDialog(dialogName, null);
+    final MBDialogController controller = startDialog(dialogName, null);
 
-    if (getActiveDialog() != null) getActiveDialog().deactivate();
-    controller.activate();
+    if (getActiveDialog() != null)
+    {
+      getActiveDialog().deactivate();
+    }
+
+    runOnUiThread(new MBThread()
+    {
+      @Override
+      public void runMethod() throws com.itude.mobile.mobbl2.client.core.util.threads.exception.MBInterruptedException
+      {
+        controller.activate();
+
+      };
+    });
+
     _activeDialog = dialogName;
     return controller;
 
@@ -751,15 +750,6 @@ public class MBViewManager extends FragmentActivity
         if (getViewControllers(dialogName).size() > 0)
         {
           dialogController.handleAllOnWindowActivated();
-        }
-
-        if (DeviceUtil.getInstance().isTablet())
-        {
-          MBTabBar tabBar = getTabBar();
-          if (tabBar != null)
-          {
-            tabBar.selectTab(dialogName.hashCode(), false);
-          }
         }
       }
     }
@@ -1088,11 +1078,6 @@ public class MBViewManager extends FragmentActivity
   }
 
   public MBTabBar getTabBar()
-  {
-    throw new UnsupportedOperationException("This method is not supported on smartphone");
-  }
-
-  public void selectTab(int hashCode)
   {
     throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
