@@ -154,20 +154,27 @@ public abstract class MBNextGenViewManager extends MBViewManager
   @Override
   public void buildSlidingMenu()
   {
-    if (needsSlidingMenu())
+    // the needsSlidingMenu-check is placed on the UI thread, since it is possible that the actual initialization of the dialogs
+    // is still queued over there at the moment, which would result in the check failing if it would be fired now
+    runOnUiThread(new MBThread()
     {
-      runOnUiThread(new MBThread()
+      @Override
+      public void runMethod()
       {
-        @Override
-        public void runMethod()
+        if (needsSlidingMenu())
         {
           _slidingMenu = new MBSlidingMenuController(MBNextGenViewManager.this);
         }
-      });
-    }
+        else
+        {
+          Log.w(this.getClass().getSimpleName(), "No sliding menu needed");
+        }
+
+      }
+    });
   }
 
-  protected void removeSlidingMenu()
+  protected void refreshSlidingMenu()
   {
     if (getSlidingMenu() != null)
     {
@@ -178,8 +185,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
         public void runMethod()
         {
 
-          getSlidingMenu().remove();
-          _slidingMenu = null;
+          getSlidingMenu().rebuild();
         }
       });
 
@@ -320,6 +326,8 @@ public abstract class MBNextGenViewManager extends MBViewManager
       }
 
     }
+
+    if (getSlidingMenu() != null) getSlidingMenu().hide();
 
     return activated;
   }
@@ -616,8 +624,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
   {
     refreshActionBar();
 
-    removeSlidingMenu();
-    buildSlidingMenu();
+    refreshSlidingMenu();
 
     super.onConfigurationChanged(newConfig);
   }

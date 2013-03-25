@@ -15,11 +15,12 @@ public interface Constants
 
   public static String       C_SHOW_AS_TAB                                             = "TAB";
   public static String       C_SHOW_AS_MENU                                            = "MENU";
+  public static String       C_SHOW_AS_DOCUMENT                                        = "DOCUMENT";
 
   //Framework outcomes
-  public static final String C_MOBBL_ORIGIN_NAME_CONTROLLER                                 = "Controller";
+  public static final String C_MOBBL_ORIGIN_NAME_CONTROLLER                            = "Controller";
   public static final String C_MOBBL_ORIGIN_CONTROLLER_INIT                            = "init";
-  public static final String C_MOBBL_ORIGIN_CONTROLLER_NAME_SEARCH                          = "search";
+  public static final String C_MOBBL_ORIGIN_CONTROLLER_NAME_SEARCH                     = "search";
 
   //container types
   public static final String C_SECTION                                                 = "SECTION";

@@ -12,6 +12,8 @@ import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition.MBPageType;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPageTypeException;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
+import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
+import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBMetadataDataHandler;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 
 public class MBMvcConfigurationParser extends MBConfigurationParser
@@ -721,6 +723,24 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
     docDef.addElement(elementDef);
   }
 
+  private void addDialogsDocument(MBConfigurationDefinition conf)
+  {
+    MBDocumentDefinition docDef = new MBDocumentDefinition();
+    docDef.setName(MBMetadataDataHandler.DIALOGS_DOCUMENT);
+    docDef.setDataManager(MBDataManagerService.DATA_HANDLER_METADATA);
+    docDef.setAutoCreate(true);
+
+    MBElementDefinition elementDef = new MBElementDefinition();
+    elementDef.setName("Dialog");
+    addAttribute(elementDef, "name", "string");
+    addAttribute(elementDef, "mode", "string");
+    addAttribute(elementDef, "icon", "string");
+    addAttribute(elementDef, "showAs", "string");
+    addAttribute(elementDef, "title", "string");
+    docDef.addElement(elementDef);
+    conf.addDocument(docDef);
+  }
+
   private void addSystemDocuments(MBConfigurationDefinition conf)
   {
     addExceptionDocument(conf);
@@ -728,6 +748,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
     addPropertiesDocument(conf);
     addLanguageDocument(conf);
     addDeviceDocument(conf);
+    addDialogsDocument(conf);
   }
 
   public List<String> getConfigAttributes()

@@ -3,6 +3,7 @@ package com.itude.mobile.mobbl2.client.core.actions;
 import java.util.List;
 
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBAction;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
@@ -10,6 +11,7 @@ import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
+import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 
 public class MBFireInitialOutcomes implements MBAction
 {
@@ -34,6 +36,18 @@ public class MBFireInitialOutcomes implements MBAction
     {
       String action = element.getValueForAttribute("action");
       String dialog = element.getValueForAttribute("dialog");
+      boolean isMenu = false;      
+      
+      if (StringUtil.isNotBlank(dialog))
+      {
+        MBDialogDefinition def = MBMetadataService.getInstance().getDefinitionForDialogName(dialog);
+        if (def != null && !def.isShowAsMenu())
+        {
+          MBViewManager.getInstance().addSortedDialogName(dialog);
+          isMenu = true;
+        }
+      }
+      
       if (StringUtil.isNotBlank(action))
       {
         MBOutcome oc = new MBOutcome();
@@ -42,7 +56,7 @@ public class MBFireInitialOutcomes implements MBAction
         oc.setNoBackgroundProcessing(true);
         oc.setTransferDocument(false);
 
-        if (first && isFirstDialogSynchronized())
+        if (isMenu || (first && isFirstDialogSynchronized()))
         {
           MBApplicationController.getInstance().getOutcomeHandler().handleOutcomeSynchronously(oc, false);
           first = false;
@@ -53,10 +67,7 @@ public class MBFireInitialOutcomes implements MBAction
         }
       }
 
-      if (StringUtil.isNotBlank(dialog) && !"DIALOG-menu".equals(dialog))
-      {
-        MBViewManager.getInstance().addSortedDialogName(dialog);
-      }
+
     }
 
     return null;

@@ -65,14 +65,13 @@ public class MBViewManager extends FragmentActivity
   private ArrayList<String>               _dialogControllers;
   private ArrayList<String>               _sortedDialogNames;
   private Map<String, MBDialogController> _controllerMap;
+  private MBDialogController              _menuController;
   private Dialog                          _currentAlert;
   private boolean                         _singlePageMode;
   private String                          _activeDialog;
   private boolean                         _showDialogTitle = false;
 
   private boolean                         _created         = false;
-
-  private Boolean                         _hasMenu         = null;
 
   ///////////////////// Android lifecycle methods
 
@@ -662,19 +661,23 @@ public class MBViewManager extends FragmentActivity
 
   private MBDialogController startDialog(String dialogName, String outcomeId)
   {
+    MBDialogDefinition def = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
     MBDialogController controller = _controllerMap.get(dialogName);
     if (controller == null)
     {
       controller = MBApplicationFactory.getInstance().createDialogController();
       controller.init(dialogName, outcomeId);
       _controllerMap.put(dialogName, controller);
+
     }
 
-    if (_activeDialog == null)
+    if (_activeDialog == null && !def.isShowAsMenu())
     {
       controller.activate();
       _activeDialog = dialogName;
     }
+
+    if (def.isShowAsMenu()) _menuController = controller;
 
     return controller;
   }
@@ -1041,7 +1044,7 @@ public class MBViewManager extends FragmentActivity
 
   public MBDialogController getMenuDialog()
   {
-    return getDialog("DIALOG-menu");
+    return _menuController;
   }
 
   public MBDialogController getActiveDialog()
@@ -1099,20 +1102,6 @@ public class MBViewManager extends FragmentActivity
 
   protected boolean needsSlidingMenu()
   {
-    if (_hasMenu == null)
-    {
-      _hasMenu = false;
-      for (final String dialogName : getSortedDialogNames())
-      {
-        final MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-        if (dialogDefinition.isShowAsMenu())
-        {
-          _hasMenu = true;
-          break;
-        }
-      }
-    }
-
-    return _hasMenu;
+    return getMenuDialog() != null;
   }
 }

@@ -113,6 +113,11 @@ public class MBDialogDefinition extends MBDefinition
     return Constants.C_SHOW_AS_MENU.equals(_showAs);
   }
 
+  public boolean isShowAsDocument()
+  {
+    return Constants.C_SHOW_AS_DOCUMENT.equals(_showAs);
+  }
+
   public void setDomain(String domain)
   {
     _domain = domain;

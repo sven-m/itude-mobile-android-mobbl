@@ -40,7 +40,6 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBHeader;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedControlBar;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedControlContainer;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedItem;
-import com.itude.mobile.mobbl2.client.core.view.components.slidingmenu.MBSlidingMenuItem;
 import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTab;
 import com.itude.mobile.widget.slidingmenu.SlidingMenu;
 
@@ -704,14 +703,6 @@ public class MBStyleHandler
   }
 
   public void styleDialogHeader(MBHeader dialogHeader)
-  {
-  }
-
-  public void styleSlidingMenuItem(MBSlidingMenuItem slidingMenuItem)
-  {
-  }
-
-  public void styleSlidingMenuItemText(TextView slidingMenuItemText)
   {
   }
 

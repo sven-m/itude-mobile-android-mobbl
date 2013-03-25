@@ -14,8 +14,9 @@ import com.itude.mobile.widget.slidingmenu.SlidingMenu;
 public class MBSlidingMenuController
 {
 
-  private SlidingMenu    _slidingMenu    = null;
-  private TopViewPadding _topViewPadding = null;
+  private SlidingMenu      _slidingMenu    = null;
+  private TopViewPadding   _topViewPadding = null;
+  private FragmentActivity _activity;
 
   protected SlidingMenu getSlidingMenu()
   {
@@ -24,7 +25,13 @@ public class MBSlidingMenuController
 
   public MBSlidingMenuController(FragmentActivity activity)
   {
-    _slidingMenu = new SlidingMenu(activity.getBaseContext());
+    _activity = activity;
+    build();
+  }
+
+  public void build()
+  {
+    _slidingMenu = new SlidingMenu(_activity.getBaseContext());
 
     // https://mobiledev.itude.com/jira/browse/MOBBL-633
     TopViewPadding topViewPadding = getTopViewPadding();
@@ -39,31 +46,13 @@ public class MBSlidingMenuController
     MBDialogController menu = MBViewManager.getInstance().getMenuDialog();
     if (menu != null)
     {
+      ViewUtilities.detachView(menu.getMainContainer());
       menu.activateWithoutSwitching();
       _slidingMenu.setMenu(menu.getMainContainer());
     }
 
-    /*
-        MBPageDefinition pageDefinition = MBMetadataService.getInstance().getDefinitionForPageName("PAGE-sliding-menu");
-        MBDataManagerService.getInstance().loadDocument(pageDefinition.getDocumentName());
+    _slidingMenu.attachToActivity(_activity, SlidingMenu.SLIDING_WINDOW);
 
-        MBPage page = MBApplicationFactory.getInstance().getPageConstructor()
-            .createPage(pageDefinition, null, null, MBViewState.MBViewStatePlain);
-        page.setController(MBApplicationController.getInstance());
-        page.setDialogName(null);
-
-        MBBasicViewController fragment = page.getViewController();
-        fragment.setArguments(new Bundle());
-        fragment.setDialogController(MBViewManager.getInstance().getActiveDialog());
-
-        FragmentManager fm = activity.getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.add(fragment, "SLIDING");
-
-        ft.commitAllowingStateLoss();
-
-        _slidingMenu.setMenu(fragment.getView()); */
-    _slidingMenu.attachToActivity(activity, SlidingMenu.SLIDING_WINDOW);
   }
 
   public void remove()
@@ -90,6 +79,22 @@ public class MBSlidingMenuController
     decorView.removeView(slidingMenu);
 
     decorView.addView(content);
+  }
+
+  public void rebuild()
+  {
+    remove();
+    build();
+  }
+
+  public void toggle()
+  {
+    getSlidingMenu().toggle(true);
+  }
+
+  public void hide()
+  {
+    getSlidingMenu().showContent(true);
   }
 
   protected TopViewPadding getTopViewPadding()
@@ -136,12 +141,6 @@ public class MBSlidingMenuController
     {
       return _bottom;
     }
-  }
-
-  public void toggle()
-  {
-
-    getSlidingMenu().toggle(true);
   }
 
 }
