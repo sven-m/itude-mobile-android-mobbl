@@ -105,10 +105,7 @@ public class MBTabBar extends LinearLayout
   public void selectTab(int id, boolean notifyListener)
   {
     MBTab tab = findTabById(id);
-    if (tab != null)
-    {
-      selectTab(tab, notifyListener);
-    }
+    selectTab(tab, notifyListener);
   }
 
   public void selectTab(MBTab tab, boolean notifyListener)
@@ -134,6 +131,8 @@ public class MBTabBar extends LinearLayout
         _selectedTab.unselect();
       }
 
+      _selectedTab = tab;
+
       if (tab != null)
       {
         if (notifyListener)
@@ -148,7 +147,7 @@ public class MBTabBar extends LinearLayout
           tab.setListener(listener);
         }
       }
-      _selectedTab = tab;
+
     }
   }
 }
