@@ -14,9 +14,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -29,7 +27,6 @@ import android.widget.SearchView;
 
 import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.android.util.StringUtil;
-import com.itude.mobile.android.util.ViewUtilities;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
@@ -48,12 +45,11 @@ import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl2.client.core.view.components.MBHeader;
-import com.itude.mobile.mobbl2.client.core.view.components.slidingmenu.MBSlidingMenuItem;
+import com.itude.mobile.mobbl2.client.core.view.components.slidingmenu.MBSlidingMenuController;
 import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTab;
 import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabBar;
 import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabListener;
 import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabSpinnerAdapter;
-import com.itude.mobile.widget.slidingmenu.SlidingMenu;
 
 /***
  * 
@@ -66,10 +62,9 @@ import com.itude.mobile.widget.slidingmenu.SlidingMenu;
 @TargetApi(11)
 public abstract class MBNextGenViewManager extends MBViewManager
 {
-  private Menu             _menu           = null;
-  private MBToolDefinition _refreshToolDef = null;
-  private SlidingMenu      _slidingMenu    = null;
-  private TopViewPadding   _topViewPadding = null;
+  private Menu                    _menu           = null;
+  private MBToolDefinition        _refreshToolDef = null;
+  private MBSlidingMenuController _slidingMenu    = null;
 
   @Override
   protected void onPreCreate()
@@ -149,6 +144,52 @@ public abstract class MBNextGenViewManager extends MBViewManager
     }
 
     return true;
+  }
+
+  private MBSlidingMenuController getSlidingMenu()
+  {
+    return _slidingMenu;
+  }
+
+  @Override
+  public void buildSlidingMenu()
+  {
+    // the needsSlidingMenu-check is placed on the UI thread, since it is possible that the actual initialization of the dialogs
+    // is still queued over there at the moment, which would result in the check failing if it would be fired now
+    runOnUiThread(new MBThread()
+    {
+      @Override
+      public void runMethod()
+      {
+        if (needsSlidingMenu())
+        {
+          _slidingMenu = new MBSlidingMenuController(MBNextGenViewManager.this);
+        }
+        else
+        {
+          Log.w(this.getClass().getSimpleName(), "No sliding menu needed");
+        }
+
+      }
+    });
+  }
+
+  protected void refreshSlidingMenu()
+  {
+    if (getSlidingMenu() != null)
+    {
+      runOnUiThread(new MBThread()
+      {
+
+        @Override
+        public void runMethod()
+        {
+
+          getSlidingMenu().rebuild();
+        }
+      });
+
+    }
   }
 
   protected abstract void changeSearchImage(Drawable image, final SearchView searchView);
@@ -243,15 +284,13 @@ public abstract class MBNextGenViewManager extends MBViewManager
 
   protected void onHomeSelected()
   {
-    if (needsSlidingMenu())
+    if (getSlidingMenu() != null)
     {
-      getSlidingMenu().toggle(true);
+      getSlidingMenu().toggle();
     }
     else
     {
       MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
-
-      MBTabBar tabBar = getTabBar();
       resetViewPreservingCurrentDialog();
       activateDialogWithName(homeDialogDefinition.getName());
     }
@@ -288,135 +327,9 @@ public abstract class MBNextGenViewManager extends MBViewManager
 
     }
 
+    if (getSlidingMenu() != null) getSlidingMenu().hide();
+
     return activated;
-  }
-
-  @Override
-  public void buildSlidingMenu()
-  {
-    runOnUiThread(new MBThread()
-    {
-      @Override
-      public void runMethod()
-      {
-        if (needsSlidingMenu())
-        {
-          _slidingMenu = new SlidingMenu(getBaseContext());
-
-          // https://mobiledev.itude.com/jira/browse/MOBBL-633
-          TopViewPadding topViewPadding = getTopViewPadding();
-          if (topViewPadding != null)
-          {
-            _slidingMenu.setPadding(topViewPadding.getLeft(), topViewPadding.getTop(), topViewPadding.getRight(),
-                                    topViewPadding.getBottom());
-          }
-
-          MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
-          styleHandler.styleSlidingMenu(_slidingMenu);
-
-          LinearLayout slidingMenuMainContainer = new LinearLayout(getBaseContext());
-          styleHandler.styleSlidingMenuContainer(slidingMenuMainContainer);
-
-          _slidingMenu.setMenu(slidingMenuMainContainer);
-          populateSlidingMenuBar();
-
-          _slidingMenu.attachToActivity(getInstance(), SlidingMenu.SLIDING_WINDOW);
-        }
-      }
-
-    });
-  }
-
-  protected void populateSlidingMenuBar()
-  {
-    LinearLayout menu = (LinearLayout) getSlidingMenu().getMenu();
-
-    for (final String dialogName : getSortedDialogNames())
-    {
-      final MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-
-      if (dialogDefinition.isShowAsMenu())
-      {
-        MBSlidingMenuItem menuItem = new MBSlidingMenuItem(getBaseContext());
-        if (dialogDefinition.getIcon() != null)
-        {
-          menuItem.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
-        }
-
-        setSlidingMenuItemText(dialogDefinition, menuItem);
-
-        menuItem.setOnClickListener(new OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            MBViewManager.getInstance().activateOrCreateDialogWithID(dialogName.hashCode());
-            getSlidingMenu().showContent(true);
-
-            MBTabBar tabBar = getTabBar();
-            if (tabBar != null)
-            {
-              tabBar.selectTab(null, true);
-            }
-          }
-        });
-
-        menu.addView(menuItem);
-      }
-    }
-  }
-
-  private void setSlidingMenuItemText(MBDialogDefinition dialogDefinition, MBSlidingMenuItem menuItem)
-  {
-    String title;
-
-    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-    {
-      title = dialogDefinition.getTitlePortrait();
-    }
-    else
-    {
-      title = dialogDefinition.getTitle();
-    }
-
-    if (StringUtil.isNotBlank(title))
-    {
-      menuItem.setText(title);
-    }
-  }
-
-  private void removeSlidingMenu()
-  {
-    final SlidingMenu slidingMenu = getSlidingMenu();
-
-    if (slidingMenu == null)
-    {
-      return;
-    }
-
-    runOnUiThread(new Runnable()
-    {
-
-      @Override
-      public void run()
-      {
-        View content = slidingMenu.getContent();
-
-        // https://mobiledev.itude.com/jira/browse/MOBBL-633
-        if (_topViewPadding == null)
-        {
-          _topViewPadding = new TopViewPadding(slidingMenu);
-        }
-
-        ViewUtilities.detachView(content);
-
-        ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
-
-        decorView.removeView(slidingMenu);
-
-        decorView.addView(content);
-      }
-    });
   }
 
   @Override
@@ -711,15 +624,9 @@ public abstract class MBNextGenViewManager extends MBViewManager
   {
     refreshActionBar();
 
-    removeSlidingMenu();
-    buildSlidingMenu();
+    refreshSlidingMenu();
 
     super.onConfigurationChanged(newConfig);
-  }
-
-  protected SlidingMenu getSlidingMenu()
-  {
-    return _slidingMenu;
   }
 
   protected Menu getMenu()
@@ -730,51 +637,5 @@ public abstract class MBNextGenViewManager extends MBViewManager
   protected MBToolDefinition getRefreshToolDef()
   {
     return _refreshToolDef;
-  }
-
-  protected TopViewPadding getTopViewPadding()
-  {
-    return _topViewPadding;
-  }
-
-  private static class TopViewPadding
-  {
-    private final int _left;
-    private final int _top;
-    private final int _right;
-    private final int _bottom;
-
-    private TopViewPadding(View view)
-    {
-      this(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
-    }
-
-    private TopViewPadding(int left, int top, int right, int bottom)
-    {
-      _left = left;
-      _top = top;
-      _right = right;
-      _bottom = bottom;
-    }
-
-    public int getLeft()
-    {
-      return _left;
-    }
-
-    public int getTop()
-    {
-      return _top;
-    }
-
-    public int getRight()
-    {
-      return _right;
-    }
-
-    public int getBottom()
-    {
-      return _bottom;
-    }
   }
 }

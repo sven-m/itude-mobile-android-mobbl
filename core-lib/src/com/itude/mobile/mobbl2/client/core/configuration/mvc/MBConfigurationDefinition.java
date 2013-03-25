@@ -16,6 +16,7 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
 public class MBConfigurationDefinition extends MBDefinition implements MBIncludableDefinition
 {
 
+  private static final String                     ORIGIN_WILDCARD                   = "*";
   public static final String                      DOC_SYSTEM_EMPTY                  = "MBEmpty";
   public static final String                      DOC_SYSTEM_LANGUAGE               = "MBBundle";
   public static final String                      DOC_SYSTEM_EXCEPTION              = "MBException";
@@ -264,6 +265,23 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
       _homeDialog = dialog;
     }
     _dialogs.put(dialog.getName(), dialog);
+
+    createImplicitOutcomeForDialog(dialog);
+  }
+
+  private void createImplicitOutcomeForDialog(MBDialogDefinition dialog)
+  {
+    List<MBOutcomeDefinition> def = getOutcomeDefinitionsForOrigin(ORIGIN_WILDCARD, dialog.getName());
+    if (def.isEmpty())
+    {
+      MBOutcomeDefinition definition = new MBOutcomeDefinition();
+      definition.setAction("none");
+      definition.setDialog(dialog.getName());
+      definition.setName(dialog.getName());
+      definition.setNoBackgroundProcessing(true);
+      definition.setOrigin(ORIGIN_WILDCARD);
+      addOutcome(definition);
+    }
   }
 
   public void addTool(MBToolDefinition tool)
@@ -317,7 +335,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
 
     for (MBOutcomeDefinition outcomeDef : _outcomeTypes)
     {
-      if (outcomeDef.getOrigin().equals(originName) || outcomeDef.getOrigin().equals("*"))
+      if (outcomeDef.getOrigin().equals(originName) || outcomeDef.getOrigin().equals(ORIGIN_WILDCARD))
       {
         result.add(outcomeDef);
       }
@@ -344,7 +362,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     {
       for (MBOutcomeDefinition outcomeDef : _outcomeTypes)
       {
-        if (outcomeDef.getOrigin().equals("*") && outcomeDef.getName().equals(outcomeName))
+        if (outcomeDef.getOrigin().equals(ORIGIN_WILDCARD) && outcomeDef.getName().equals(outcomeName))
         {
           result.add(outcomeDef);
         }

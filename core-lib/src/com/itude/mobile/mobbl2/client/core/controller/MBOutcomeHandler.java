@@ -161,7 +161,7 @@ public class MBOutcomeHandler extends Handler
 
           MBAlertDefinition alertDef = metadataService.getDefinitionForAlertName(outcomeDef.getAction(), false);
           if (alertDef != null) handleAlert(outcomeToProcess, alertDef);
-
+          
           if (actionDef == null && pageDef == null && alertDef == null && !"none".equals(outcomeDef.getAction()))
           {
             StringBuffer tmp = new StringBuffer();

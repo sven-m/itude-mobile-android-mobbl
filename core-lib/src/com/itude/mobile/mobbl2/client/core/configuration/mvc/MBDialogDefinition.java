@@ -60,7 +60,7 @@ public class MBDialogDefinition extends MBDefinition
 
   public String getTitlePortrait()
   {
-    return _titlePortrait;
+    return _titlePortrait != null ? _titlePortrait : getTitle();
   }
 
   public String getMode()
@@ -111,6 +111,11 @@ public class MBDialogDefinition extends MBDefinition
   public boolean isShowAsMenu()
   {
     return Constants.C_SHOW_AS_MENU.equals(_showAs);
+  }
+
+  public boolean isShowAsDocument()
+  {
+    return Constants.C_SHOW_AS_DOCUMENT.equals(_showAs);
   }
 
   public void setDomain(String domain)

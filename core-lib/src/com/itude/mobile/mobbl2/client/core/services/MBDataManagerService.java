@@ -15,6 +15,7 @@ import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBDocum
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBDocumentOperationDelegate;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBFileDataHandler;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBMemoryDataHandler;
+import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBMetadataDataHandler;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBRESTServiceDataHandler;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBSystemDataHandler;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.mobbl1.MBMobbl1ServerDataHandler;
@@ -29,6 +30,7 @@ public class MBDataManagerService
   public static final String                                      DATA_HANDLER_WS_REST      = "MBRESTServiceDataHandler";
   public static final String                                      DATA_HANDLER_WS_MOBBL     = "MBMobbl1ServerDataHandler";
   public static final String                                      DATA_HANDLER_WS_MOBBL_XML = "MBMobbl1XmlServerDataHandler";
+  public static final String                                      DATA_HANDLER_METADATA     = "MBMetadataDataHandler";
 
   private static MBDataManagerService                             _instance                 = null;
 
@@ -47,6 +49,7 @@ public class MBDataManagerService
     registerDataHandler(new MBRESTServiceDataHandler(), DATA_HANDLER_WS_REST);
     registerDataHandler(new MBMobbl1ServerDataHandler(), DATA_HANDLER_WS_MOBBL);
     registerDataHandler(new MBMobbl1ServerDataHandler(), DATA_HANDLER_WS_MOBBL_XML);
+    registerDataHandler(new MBMetadataDataHandler(), DATA_HANDLER_METADATA);
   }
 
   public static MBDataManagerService getInstance()
