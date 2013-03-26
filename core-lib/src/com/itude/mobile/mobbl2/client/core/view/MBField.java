@@ -1,10 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.view;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 import android.text.Editable;
@@ -20,7 +17,6 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
-import com.itude.mobile.android.util.DateUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefinition;
@@ -35,6 +31,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
+import com.itude.mobile.mobbl2.client.core.view.builders.datatypes.MBDataTypeFormatterFactory;
 
 public class MBField extends MBComponent
     implements
@@ -390,7 +387,7 @@ public class MBField extends MBComponent
 
   public MBAttributeDefinition getAttributeDefinition()
   {
-    if (_attributeDefinition == null)
+    if (_attributeDefinition == null && getAbsoluteDataPath() != null)
     {
       String path = NUMBERPATTERN.matcher(getAbsoluteDataPath()).replaceAll("");
       if (path == null)
@@ -441,68 +438,11 @@ public class MBField extends MBComponent
     return super.getAbsoluteDataPath();
   }
 
-  private String formatValue(String fieldValue)
+  private String formatValue()
   {
-    boolean fieldValueSameAsNilValue = fieldValue.equals(getValueIfNil());
+    String fieldValue = MBDataTypeFormatterFactory.getInstance().formatField(this);
 
-    final Locale locale = MBLocalizationService.getInstance().getLocale();
-
-    try
-    {
-
-      if (getFormatMask() != null && getDataType().equals("dateTime"))
-      {
-        // Get a date from a xml-dateFormat
-        String xmlDate = fieldValue;
-
-        // Formats the date depending on the current date. 
-        if (getFormatMask().equals("dateOrTimeDependingOnCurrentDate"))
-        {
-          fieldValue = DateUtil.formatDateDependingOnCurrentDate(locale, xmlDate);
-        }
-        else
-        {
-          Date date = DateUtil.dateFromXML(xmlDate);
-
-          SimpleDateFormat df = new SimpleDateFormat(getFormatMask());
-          fieldValue = df.format(date);
-        }
-
-      }
-      else if (!fieldValueSameAsNilValue && getDataType().equals("numberWithTwoDecimals"))
-      {
-        fieldValue = StringUtil.formatNumberWithTwoDecimals(locale, fieldValue);
-      }
-      else if (!fieldValueSameAsNilValue && getDataType().equals("numberWithThreeDecimals"))
-      {
-        fieldValue = StringUtil.formatNumberWithThreeDecimals(locale, fieldValue);
-      }
-      else if (!fieldValueSameAsNilValue && getDataType().equals("priceWithTwoDecimals"))
-      {
-        fieldValue = StringUtil.formatPriceWithTwoDecimals(locale, fieldValue);
-      }
-      else if (!fieldValueSameAsNilValue && getDataType().equals("priceWithThreeDecimals"))
-      {
-        fieldValue = StringUtil.formatPriceWithThreeDecimals(locale, fieldValue);
-      }
-      else if (!fieldValueSameAsNilValue && getDataType().equals("priceWithFourDecimals"))
-      {
-        fieldValue = StringUtil.formatNumberWithDecimals(locale, fieldValue, 4);
-      }
-      else if (getDataType().equals("volume"))
-      {
-        fieldValue = StringUtil.formatVolume(locale, fieldValue);
-      }
-      else if (getDataType().equals("percentageWithTwoDecimals"))
-      {
-        fieldValue = StringUtil.formatPercentageWithTwoDecimals(locale, fieldValue);
-      }
-
-    }
-    catch (NumberFormatException nfe)
-    {
-      throw new NumberFormatException("Unable to format value for field: " + getName());
-    }
+    if (fieldValue == null) return null;
 
     // CURRENCY Symbols
     if ("EURO".equals(getStyle()))
@@ -511,12 +451,6 @@ public class MBField extends MBComponent
     }
 
     return fieldValue;
-  }
-
-  // Apply a formatmask
-  public String getFormattedValue()
-  {
-    return formatValue(getValue());
   }
 
   // Returns a path that has indexed expressions evaluated (translated) i.e. something like myelement[someattr='xx'] -> myelement[12]
@@ -733,15 +667,6 @@ public class MBField extends MBComponent
   {
     //getValue is not a simple getter, so make sure it isn't called
     // unneeded
-    String value = getValue();
-    if (value != null)
-    {
-      if (getDataType() != null)
-      {
-        value = formatValue(value);
-      }
-    }
-
-    return value;
+    return formatValue();
   }
 }

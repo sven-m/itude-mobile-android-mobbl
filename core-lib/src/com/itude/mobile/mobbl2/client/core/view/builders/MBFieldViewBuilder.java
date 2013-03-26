@@ -26,7 +26,7 @@ import com.itude.mobile.mobbl2.client.core.view.builders.field.WebFieldBuilder;
 public class MBFieldViewBuilder extends MBViewBuilder
 {
 
-  private MBBuilderRegistry<MBField, Builder> _builders;
+  private final MBBuilderRegistry<MBField, Builder> _builders;
 
   public MBFieldViewBuilder()
   {
@@ -72,7 +72,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
     if (builder == null) throw new MBException("No field builder found for field " + field);
 
     View view = builder.buildField(field);
-    field.attachView(view);
+    if (view != null) field.attachView(view);
     return view;
   }
 

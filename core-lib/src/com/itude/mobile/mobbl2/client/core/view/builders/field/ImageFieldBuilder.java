@@ -38,7 +38,7 @@ public class ImageFieldBuilder extends MBBaseFieldBuilder
     }
     else
     {
-      drawable = MBResourceService.getInstance().getImageByURL(field.getFormattedValue());
+      drawable = MBResourceService.getInstance().getImageByURL(field.getValue());
     }
     image.setImageDrawable(drawable);
 
