@@ -102,6 +102,13 @@ public class MBTabBar extends LinearLayout
     return _tabs.isEmpty();
   }
 
+  public void selectTabWithoutReselection(int id)
+  {
+    MBTab tab = findTabById(id);
+    if (tab != null && tab.equals(_selectedTab)) return;
+    else selectTab(tab, false);
+  }
+
   public void selectTab(int id, boolean notifyListener)
   {
     MBTab tab = findTabById(id);

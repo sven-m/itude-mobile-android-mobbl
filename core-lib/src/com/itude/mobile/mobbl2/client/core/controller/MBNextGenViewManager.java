@@ -322,7 +322,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
       MBTabBar tabBar = getTabBar();
       if (tabBar != null)
       {
-        tabBar.selectTab(dialogName.hashCode(), false);
+        tabBar.selectTabWithoutReselection(dialogName.hashCode());
       }
 
     }
