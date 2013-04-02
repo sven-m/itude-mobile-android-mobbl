@@ -27,6 +27,7 @@ public class DateTimeFormatter implements MBDataTypeFormatter
       {
         Date date = DateUtil.dateFromXML(xmlDate);
 
+        if (date == null) return null;
         SimpleDateFormat df = new SimpleDateFormat(field.getFormatMask(), MBLocalizationService.getInstance().getLocale());
         return df.format(date);
       }
