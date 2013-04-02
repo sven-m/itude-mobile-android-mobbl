@@ -27,8 +27,11 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
+import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
+import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
+import com.itude.mobile.mobbl2.client.core.util.threads.exception.MBInterruptedException;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl2.client.core.view.listeners.MBTabListenerI;
@@ -107,34 +110,55 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
     _onItemSelectedListener = this;
   }
 
+  private void setContentBackground(final Drawable drawable)
+  {
+    _content.setBackgroundDrawable(drawable);
+  }
+
   void select()
   {
-    if (_isDropDown)
+    MBViewManager.getInstance().runOnUiThread(new MBThread()
     {
-      _content.setBackgroundDrawable(_selectedBackground);
-    }
+      @Override
+      public void runMethod() throws MBInterruptedException
+      {
 
-    setSelected(true);
+        if (_isDropDown)
+        {
+          setContentBackground(_selectedBackground);
+        }
 
-    if (_listener != null)
-    {
-      _listener.onTabSelected(this);
-    }
+        setSelected(true);
+
+        if (_listener != null)
+        {
+          _listener.onTabSelected(MBTab.this);
+        }
+      }
+    });
   }
 
   void unselect()
   {
-    setSelected(false);
-
-    if (_listener != null)
+    MBViewManager.getInstance().runOnUiThread(new MBThread()
     {
-      _listener.onTabUnselected(this);
-    }
+      @Override
+      public void runMethod() throws MBInterruptedException
+      {
 
-    if (_isDropDown)
-    {
-      _content.setBackgroundDrawable(null);
-    }
+        setSelected(false);
+
+        if (_listener != null)
+        {
+          _listener.onTabUnselected(MBTab.this);
+        }
+
+        if (_isDropDown)
+        {
+          setContentBackground(null);
+        }
+      }
+    });
   }
 
   void reselect()
