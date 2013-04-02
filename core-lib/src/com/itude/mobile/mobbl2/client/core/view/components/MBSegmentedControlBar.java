@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
@@ -36,6 +37,24 @@ public class MBSegmentedControlBar extends LinearLayout
      */
     processTitles(context, titles, style);
 
+  }
+
+  /**
+   * Updates the titles of the buttons; useful when different titles appear in landscape vs. portrait mode.
+   * Note that only the titles are updated; no new buttons are made or removed, so the amount of passed titles should be equal to the amount of buttons.
+   * @param titles
+   */
+  public void updateTitles(List<String> titles)
+  {
+    if (titles.size() != _itemButtons.size()) throw new MBException("Passed titles " + titles.size() + " does not equal buttons "
+                                                                    + _itemButtons.size());
+    for (int i = 0; i < titles.size(); ++i)
+    {
+      Button button = _itemButtons.get(i);
+      String title = titles.get(i);
+      button.setText(title);
+      button.requestLayout();
+    }
   }
 
   private void processTitles(Context context, List<String> titles, String style)
