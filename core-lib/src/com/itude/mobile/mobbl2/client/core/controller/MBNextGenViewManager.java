@@ -27,6 +27,7 @@ import android.widget.SearchView;
 
 import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
@@ -465,6 +466,8 @@ public abstract class MBNextGenViewManager extends MBViewManager
         if (homeIcon != null)
         {
           styleHandler.styleHomeIcon(homeIcon);
+          ActivityCompatHoneycomb.enableHomeButton(MBNextGenViewManager.this, actionBar);
+          //actionBar.setHomeButtonEnabled(true);
         }
 
         styleHandler.styleActionBar(actionBar);
