@@ -7,20 +7,22 @@ public class MBViewBuilderFactory
   private MBPanelViewBuilder          _panelViewBuilder;
   private MBPageViewBuilder           _pageViewBuilder;
   private MBForEachViewBuilder        _forEachViewBuilder;
-  private MBRowViewBuilder            _rowViewBuilder;
+  private MBForEachItemViewBuilder    _forEachItemViewBuilder;
   private MBFieldViewBuilder          _fieldViewBuilder;
   private MBStyleHandler              _styleHandler;
   private MBDialogViewBuilder         _dialogViewBuilder;
+  private MBAlertDialogBuilder          _alertViewBuilder;
 
   private MBViewBuilderFactory()
   {
     _panelViewBuilder = new MBPanelViewBuilder();
     _pageViewBuilder = new MBPageViewBuilder();
     _forEachViewBuilder = new MBForEachViewBuilder();
-    _rowViewBuilder = new MBRowViewBuilder();
+    _forEachItemViewBuilder = new MBForEachItemViewBuilder();
     _fieldViewBuilder = new MBFieldViewBuilder();
     _styleHandler = new MBStyleHandler();
     _dialogViewBuilder = new MBDialogViewBuilder();
+    _alertViewBuilder = new MBAlertDialogBuilder();
   }
 
   public static MBViewBuilderFactory getInstance()
@@ -47,11 +49,6 @@ public class MBViewBuilderFactory
     return _panelViewBuilder;
   }
 
-  public void setPanelViewBuilder(MBPanelViewBuilder panelViewBuilder)
-  {
-    _panelViewBuilder = panelViewBuilder;
-  }
-
   public MBPageViewBuilder getPageViewBuilder()
   {
     return _pageViewBuilder;
@@ -72,24 +69,19 @@ public class MBViewBuilderFactory
     _forEachViewBuilder = forEachViewBuilder;
   }
 
-  public MBRowViewBuilder getRowViewBuilder()
+  public MBForEachItemViewBuilder getForEachItemViewBuilder()
   {
-    return _rowViewBuilder;
+    return _forEachItemViewBuilder;
   }
 
-  public void setRowViewBuilder(MBRowViewBuilder rowViewBuilder)
+  public void setForEachItemViewBuilder(MBForEachItemViewBuilder forEachItemViewBuilder)
   {
-    _rowViewBuilder = rowViewBuilder;
+    _forEachItemViewBuilder = forEachItemViewBuilder;
   }
 
   public MBFieldViewBuilder getFieldViewBuilder()
   {
     return _fieldViewBuilder;
-  }
-
-  public void setFieldViewBuilder(MBFieldViewBuilder fieldViewBuilder)
-  {
-    _fieldViewBuilder = fieldViewBuilder;
   }
 
   public MBStyleHandler getStyleHandler()
@@ -110,6 +102,11 @@ public class MBViewBuilderFactory
   public MBDialogViewBuilder getDialogViewBuilder()
   {
     return _dialogViewBuilder;
+  }
+
+  public MBAlertDialogBuilder getAlertViewBuilder()
+  {
+    return _alertViewBuilder;
   }
 
 }

@@ -5,11 +5,11 @@
 	<parent>
 		<groupId>com.itude.poms</groupId>
 		<artifactId>itude-jenkins</artifactId>
-		<version>1.4</version>
+		<version>1.7</version>
 	</parent>
 	<groupId>com.itude.mobile.android.mobbl</groupId>
 	<artifactId>mobbl-core</artifactId>
-	<version>2.0.9.13-SNAPSHOT</version>
+	<version>3.0.0.19-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Android Mobbl Core</name>
 	<description>Android Mobbl Core</description>
@@ -62,6 +62,18 @@
 				<groupId>rhino</groupId>
 				<artifactId>js</artifactId>
 				<version>1.7R2</version>
+			</dependency>
+			<dependency>
+				<groupId>com.itude.mobile.android.util</groupId>
+				<artifactId>android-util-lib</artifactId>
+				<version>${util.lib.version}</version>
+				<type>apklib</type>
+			</dependency>
+			<dependency>
+				<groupId>com.itude.mobile.android.widget</groupId>
+				<artifactId>slidingmenu</artifactId>
+				<version>${widget.slidingmenu.version}</version>
+				<type>apklib</type>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -149,8 +161,10 @@
     </build>
     
     <properties>
-        <xml.obfuscator.version>0.1</xml.obfuscator.version>
+        <xml.obfuscator.version>0.0.2.0</xml.obfuscator.version>
         <core.lib.version>${project.version}</core.lib.version>
+        <util.lib.version>0.0.1.1</util.lib.version>
+        <widget.slidingmenu.version>0.0.1.0</widget.slidingmenu.version>
         <android.version>4.1</android.version>
     </properties>
     

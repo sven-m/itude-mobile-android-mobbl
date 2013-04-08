@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition.MBPageType;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPathException;
@@ -21,7 +22,6 @@ import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentDiff;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 public class MBPage extends MBPanel
@@ -42,8 +42,10 @@ public class MBPage extends MBPanel
   private Object                                                 _maxBounds;
   private final MBViewManager.MBViewState                        _viewState;
   private final boolean                                          _allowedAnyOrientation = true;
+  private boolean                                                _scrollable;
   private boolean                                                _allowedPortraitOrientation;
   private boolean                                                _allowedLandscapeOrientation;
+  private boolean                                                _reloadOnDocChange;
   private View                                                   _selectedView;
 
   public MBPage(MBPageDefinition definition, MBDocument document, String rootPath, MBViewState viewState)
@@ -61,6 +63,9 @@ public class MBPage extends MBPanel
     setPageType(definition.getPageType());
     setTitle(definition.getTitle());
     parseOrientationPermissions(definition.getOrientationPermissions());
+    setScrollable(definition.isScrollable());
+    setReloadOnDocChange(definition.isReloadOnDocChange());
+
     _viewState = viewState;
     _outcomeListeners = new ArrayList<MBOutcomeListenerProtocol>();
     _valueChangedListeners = new Hashtable<String, List<MBValueChangeListenerProtocol>>();
@@ -177,8 +182,12 @@ public class MBPage extends MBPanel
     else
     {
       _controller.handleOutcome(outcome);
-
     }
+    for (MBOutcomeListenerProtocol lsnr : _outcomeListeners)
+    {
+      lsnr.afterOutcomeHandled(outcome);
+    }
+
   }
 
   @Override
@@ -214,7 +223,7 @@ public class MBPage extends MBPanel
     if (path.length() > 0)
     {
       MBPageDefinition pd = (MBPageDefinition) getDefinition();
-      String stripped = StringUtilities.normalizedPath(NUMBERPATTERN.matcher(path).replaceAll(""));
+      String stripped = StringUtil.normalizedPath(NUMBERPATTERN.matcher(path).replaceAll(""));
       if (!stripped.endsWith("/"))
       {
         stripped = stripped + "/";
@@ -279,7 +288,7 @@ public class MBPage extends MBPanel
       path = "/" + path;
     }
 
-    path = StringUtilities.normalizedPath(path);
+    path = StringUtil.normalizedPath(path);
     List<MBValueChangeListenerProtocol> lsnrList = _valueChangedListeners.get(path);
     if (lsnrList == null)
     {
@@ -408,9 +417,9 @@ public class MBPage extends MBPanel
   }
 
   @Override
-  public ViewGroup buildViewWithMaxBounds(MBViewState viewState)
+  public ViewGroup buildView()
   {
-    return MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(this, viewState);
+    return MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(this, null);
   }
 
   public void handleException(Exception exception)
@@ -427,6 +436,18 @@ public class MBPage extends MBPanel
   public void unregisterAllViewControllers()
   {
     setChildViewControllers(null);
+  }
+
+  @Override
+  public boolean isScrollable()
+  {
+    return _scrollable;
+  }
+
+  @Override
+  public void setScrollable(boolean scrollable)
+  {
+    _scrollable = scrollable;
   }
 
   public boolean isAllowedPortraitOrientation()
@@ -447,13 +468,13 @@ public class MBPage extends MBPanel
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<MBPage ").append(attributeAsXml("pageName", _pageName)).append(" ")
+    StringUtil.appendIndentString(appendToMe, level).append("<MBPage ").append(attributeAsXml("pageName", _pageName)).append(" ")
         .append(attributeAsXml("rootPath", _rootPath)).append(" ").append(attributeAsXml("dialogName", _dialogName)).append(" ")
         .append(attributeAsXml("document", _document.getDocumentName())).append(">\n");
 
     childrenAsXmlWithLevel(appendToMe, level + 2);
 
-    return StringUtilities.appendIndentString(appendToMe, level).append("</MBPage>\n");
+    return StringUtil.appendIndentString(appendToMe, level).append("</MBPage>\n");
 
   }
 
@@ -472,6 +493,16 @@ public class MBPage extends MBPanel
   public void setSelectedView(View selectedView)
   {
     _selectedView = selectedView;
+  }
+
+  public boolean isReloadOnDocChange()
+  {
+    return _reloadOnDocChange;
+  }
+
+  public void setReloadOnDocChange(boolean reloadOnDocChange)
+  {
+    _reloadOnDocChange = reloadOnDocChange;
   }
 
 }

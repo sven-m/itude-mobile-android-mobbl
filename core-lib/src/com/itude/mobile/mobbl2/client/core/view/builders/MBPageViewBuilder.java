@@ -1,7 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.view.builders;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -16,83 +15,28 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBHeader;
 public class MBPageViewBuilder extends MBViewBuilder
 {
 
-  public ViewGroup buildPageView(MBPage page, MBViewManager.MBViewState viewState)
+  public ViewGroup buildPageView(MBPage page, MBViewManager.MBViewState viewState, boolean buildWithContent)
   {
+    boolean buildWithScrollView = page.isScrollable();
+
     Context context = MBApplicationController.getInstance().getBaseContext();
     MBStyleHandler styleHandler = getStyleHandler();
 
+    /*
+     * Our view that will contain our header and potentially the page content
+     */
     LinearLayout main = new LinearLayout(context);
-    main.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+    main.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     main.setOrientation(LinearLayout.VERTICAL);
 
-    LinearLayout view = new LinearLayout(context);
-    view.setOrientation(LinearLayout.VERTICAL);
-    view.setScrollContainer(true);
-    view.setFadingEdgeLength(0);
-    view.setVerticalFadingEdgeEnabled(false);
-
-    if (page.getTitle() != null)
-    {
-      LinearLayout headerContainer = new LinearLayout(view.getContext());
-      headerContainer.setOrientation(LinearLayout.VERTICAL);
-      headerContainer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-
-      MBHeader header = new MBHeader(headerContainer.getContext());
-      header.setTag(Constants.C_PAGE_CONTENT_HEADER_VIEW);
-      header.getTitleView().setText(page.getTitle());
-      styleHandler.stylePageHeader(header);
-      styleHandler.stylePageHeaderTitle(header.getTitleView());
-      headerContainer.addView(header);
-
-      main.addView(headerContainer);
-
-      addDivider(context, main);
-    }
-
-    buildChildren(page.getChildren(), view, viewState);
-
-    styleHandler.applyStyle(page, view, viewState);
-
-    // Add linearlayout to scrollview
-    ScrollView scrollView = new ScrollView(context);
-    scrollView.setTag(Constants.C_PAGE_CONTENT_VIEW);
-    scrollView.setFadingEdgeLength(0);
-    scrollView.setVerticalFadingEdgeEnabled(false);
-    styleHandler.styleMainScrollbarView(page, scrollView);
-    scrollView.addView(view);
-
-    main.addView(scrollView);
-
-    main.setFadingEdgeLength(0);
-    main.setVerticalFadingEdgeEnabled(false);
-    // End of page content
-
-    return main;
-  }
-
-  private void addDivider(Context context, LinearLayout main)
-  {
-    LinearLayout divider = new LinearLayout(context);
-    divider.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, 1));
-    divider.setBackgroundColor(Color.DKGRAY);
-
-    main.addView(divider);
-  }
-
-  public ViewGroup buildPageViewWithoutContent(MBPage page, MBViewManager.MBViewState viewState)
-  {
-    Context context = MBApplicationController.getInstance().getBaseContext();
-    MBStyleHandler styleHandler = getStyleHandler();
-
-    LinearLayout main = new LinearLayout(context);
-    main.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-    main.setOrientation(LinearLayout.VERTICAL);
-
+    /*
+     * Add a styled header if we have got a title
+     */
     if (page.getTitle() != null)
     {
       LinearLayout headerContainer = new LinearLayout(context);
       headerContainer.setOrientation(LinearLayout.VERTICAL);
-      headerContainer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+      headerContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
       MBHeader header = new MBHeader(headerContainer.getContext());
       header.setTag(Constants.C_PAGE_CONTENT_HEADER_VIEW);
@@ -102,24 +46,64 @@ public class MBPageViewBuilder extends MBViewBuilder
       headerContainer.addView(header);
 
       main.addView(headerContainer);
-
-      addDivider(context, main);
     }
 
-    // Add linearlayout to scrollview
-    ScrollView scrollView = new ScrollView(context);
-    scrollView.setTag(Constants.C_PAGE_CONTENT_VIEW);
-    scrollView.setFadingEdgeLength(0);
-    scrollView.setVerticalFadingEdgeEnabled(false);
-    styleHandler.styleMainScrollbarView(page, scrollView);
+    /*
+     * Create the content of this page if we want to
+     */
+    LinearLayout view = null;
+    if (buildWithContent)
+    {
+      view = new LinearLayout(context);
+      view.setOrientation(LinearLayout.VERTICAL);
+      view.setScrollContainer(true);
+      view.setFadingEdgeLength(0);
+      view.setVerticalFadingEdgeEnabled(false);
 
-    main.addView(scrollView);
+      buildChildren(page.getChildren(), view);
+
+      styleHandler.applyStyle(page, view);
+    }
+
+    /*
+     * If we want to have a scrollview we will create one and add our content to it
+     * If we don't want a scrollview but do want content we will add our content directly to our main view
+     */
+    if (buildWithScrollView)
+    {
+      ScrollView scrollView = new ScrollView(context);
+      scrollView.setTag(Constants.C_PAGE_CONTENT_VIEW);
+      scrollView.setFadingEdgeLength(0);
+      scrollView.setVerticalFadingEdgeEnabled(false);
+      styleHandler.styleMainScrollbarView(page, scrollView);
+
+      if (buildWithContent)
+      {
+        scrollView.addView(view);
+      }
+
+      main.addView(scrollView);
+    }
+    else if (buildWithContent && view != null)
+    {
+      styleHandler.styleMainScrollbarView(page, view);
+      main.addView(view);
+    }
 
     main.setFadingEdgeLength(0);
     main.setVerticalFadingEdgeEnabled(false);
-    // End of page content
 
     return main;
+  }
+
+  public ViewGroup buildPageView(MBPage page, MBViewManager.MBViewState viewState)
+  {
+    return buildPageView(page, viewState, true);
+  }
+
+  public ViewGroup buildPageViewWithoutContent(MBPage page, MBViewManager.MBViewState viewState)
+  {
+    return buildPageView(page, viewState, false);
   }
 
 }

@@ -10,6 +10,7 @@ import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNot
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 
 public class MBOutcome implements Parcelable
 {
@@ -204,14 +205,8 @@ public class MBOutcome implements Parcelable
         doc = MBDataManagerService.getInstance().loadDocument(MBConfigurationDefinition.DOC_SYSTEM_EMPTY);
       }
       String result = doc.evaluateExpression(this.getPreCondition());
-      if ("1".equals(result) || "YES".equalsIgnoreCase(result) || "TRUE".equalsIgnoreCase(result))
-      {
-        return true;
-      }
-      if ("0".equals(result) || "NO".equalsIgnoreCase(result) || "FALSE".equalsIgnoreCase(result))
-      {
-        return false;
-      }
+      Boolean bool = MBParseUtil.strictBooleanValue(result);
+      if (bool != null) return bool;
       String msg = "Expression of outcome with origin=" + getOriginName() + " name=" + getOutcomeName() + " precondition="
                    + getPreCondition() + " is not boolean (result=" + result + ")";
       throw new MBExpressionNotBooleanException(msg);

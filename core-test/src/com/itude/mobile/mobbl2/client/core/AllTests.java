@@ -1,8 +1,8 @@
 package com.itude.mobile.mobbl2.client.core;
 
-import android.test.suitebuilder.TestSuiteBuilder;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import android.test.suitebuilder.TestSuiteBuilder;
 
 /**
 * A test suite containing all tests for MorseFlash.

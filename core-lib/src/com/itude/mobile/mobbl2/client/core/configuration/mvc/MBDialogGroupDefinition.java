@@ -5,9 +5,9 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidDialogDefinitionException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBDialogGroupDefinition extends MBDialogDefinition
 {
@@ -53,7 +53,7 @@ public class MBDialogGroupDefinition extends MBDialogDefinition
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level)//
+    StringUtil.appendIndentString(appendToMe, level)//
         .append("<DialogGroup name='")//
         .append(getName())//
         .append('\'')//
@@ -68,7 +68,7 @@ public class MBDialogGroupDefinition extends MBDialogDefinition
       dialog.asXmlWithLevel(appendToMe, level + 2);
     }
 
-    StringUtilities.appendIndentString(appendToMe, level).append("<DialogGroup/>");
+    StringUtil.appendIndentString(appendToMe, level).append("<DialogGroup/>");
 
     return appendToMe;
   }

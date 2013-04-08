@@ -8,11 +8,11 @@ import java.util.Map;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidElementNameException;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBElementDefinition extends MBDefinition
 {
@@ -34,7 +34,7 @@ public class MBElementDefinition extends MBDefinition
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<Element name='").append(getName()).append("' minOccurs='")
+    StringUtil.appendIndentString(appendToMe, level).append("<Element name='").append(getName()).append("' minOccurs='")
         .append(_minOccurs).append("' maxOccurs='").append(_maxOccurs).append("'>\n");
     for (MBAttributeDefinition attr : _attributesSorted)
     {
@@ -44,7 +44,7 @@ public class MBElementDefinition extends MBDefinition
     {
       elemDef.asXmlWithLevel(appendToMe, level + 2);
     }
-    return StringUtilities.appendIndentString(appendToMe, level).append("</Element>\n");
+    return StringUtil.appendIndentString(appendToMe, level).append("</Element>\n");
   }
 
   @Override

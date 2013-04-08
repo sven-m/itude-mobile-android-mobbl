@@ -5,10 +5,13 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.itude.mobile.android.util.DataUtil;
+import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndpointsConfiguration;
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndpointsConfigurationParser;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
@@ -18,14 +21,13 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBActionNotDefinedException;
+import com.itude.mobile.mobbl2.client.core.services.exceptions.MBAlertNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBDialogNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBDocumentNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBDomainNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBPageNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBToolNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.DataUtil;
-import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 
 public final class MBMetadataService
 {
@@ -41,8 +43,8 @@ public final class MBMetadataService
   private MBMetadataService()
   {
     MBMvcConfigurationParser mvcParser = new MBMvcConfigurationParser();
-    if (_phoneConfigName != null && (MBDevice.getInstance().isPhone() || MBDevice.getInstance().isPhoneV14())) _configName = _phoneConfigName;
-    else if (_tabletConfigName != null && MBDevice.getInstance().isTablet()) _configName = _tabletConfigName;
+    if (_phoneConfigName != null && (DeviceUtil.getInstance().isPhone() || DeviceUtil.getInstance().isPhoneV14())) _configName = _phoneConfigName;
+    else if (_tabletConfigName != null && DeviceUtil.getInstance().isTablet()) _configName = _tabletConfigName;
 
     // Configuration definition
     _cfg = (MBConfigurationDefinition) mvcParser.parseData(DataUtil.getInstance().readFromAssetOrFile(_configName), _configName);
@@ -251,6 +253,22 @@ public final class MBMetadataService
       throw new MBToolNotDefinedException(message);
     }
     return toolDefs;
+  }
+
+  public MBAlertDefinition getDefinitionForAlertName(String alertName)
+  {
+    return getDefinitionForAlertName(alertName, true);
+  }
+
+  public MBAlertDefinition getDefinitionForAlertName(String alertName, boolean doThrow)
+  {
+    MBAlertDefinition alertDef = _cfg.getDefinitionForAlertName(alertName);
+    if (alertDef == null && doThrow)
+    {
+      String message = "Alert with name " + alertDef + " not defined";
+      throw new MBAlertNotDefinedException(message);
+    }
+    return alertDef;
   }
 
   public MBConfigurationDefinition getConfiguration()

@@ -1,8 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.view;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -19,21 +17,21 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBFieldDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPathException;
+import com.itude.mobile.mobbl2.client.core.controller.MBApplicationFactory;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.DateUtilities;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
+import com.itude.mobile.mobbl2.client.core.view.builders.datatypes.MBDataTypeFormatterFactory;
 
 public class MBField extends MBComponent
     implements
@@ -43,7 +41,7 @@ public class MBField extends MBComponent
       TextWatcher,
       OnKeyListener
 {
-  private static final Pattern  NUMBERPATTERN   = Pattern.compile("\\[[0-9]+\\]");
+  private static final Pattern  NUMBERPATTERN            = Pattern.compile("\\[[0-9]+\\]");
 
   private MBAttributeDefinition _attributeDefinition;
   private boolean               _domainDetermined;
@@ -52,27 +50,18 @@ public class MBField extends MBComponent
   private String                _label;
   private String[]              _labelAttrs;
   private String                _source;
-  private String                _type;
   private String                _dataType;
   private String                _formatMask;
   private String                _alignment;
   private String                _valueIfNil;
   private boolean               _hidden;
-  private boolean               _required;
   private int                   _width;
   private int                   _height;
-  private String                _custom1;
-  private String                _custom2;
-  private String                _custom3;
   private String                _hint;
 
-  private String                _cachedValue    = null;
-  private boolean               _cachedValueSet = false;
-
-  // diffable
-  private boolean               _diffableMarker;
-  private boolean               _diffablePrimary;
-  private boolean               _diffableSecondary;
+  private String                _cachedValue             = null;
+  private String                _cachedUntranslatedValue = null;
+  private boolean               _cachedValueSet          = false;
 
   public MBField(MBDefinition definition, MBDocument document, MBComponentContainer parent)
   {
@@ -125,53 +114,13 @@ public class MBField extends MBComponent
     setFormatMask(substituteExpressions(fieldDef.getFormatMask()));
     setAlignment(substituteExpressions(fieldDef.getAlignment()));
     setHidden(Boolean.parseBoolean(substituteExpressions(fieldDef.getHidden())));
-    setRequired(Boolean.parseBoolean(substituteExpressions(fieldDef.getRequired())));
-    setCustom1(substituteExpressions(fieldDef.getCustom1()));
-    setCustom2(substituteExpressions(fieldDef.getCustom2()));
-    setCustom3(substituteExpressions(fieldDef.getCustom3()));
     setHint(substituteExpressions(fieldDef.getHint()));
 
-    checkForDiffable();
-  }
-
-  private void checkForDiffable()
-  {
-    // skip this method if invalid parent (structure)
-    if (!Constants.C_FIELD_MATRIXCELL.equals(getType())) return;
-
-    MBPanel parent = (MBPanel) getFirstParentOfKind(MBPanel.class);
-
-    if (_diffableMarker = Constants.C_FIELD_STYLE_DIFFABLE_MARKER.equals(getStyle())
-                          || (_diffableMarker = Constants.C_FIELD_STYLE_DIFFABLE_MARKER.equals(getCustom1()))
-                          || (_diffableMarker = Constants.C_FIELD_STYLE_DIFFABLE_MARKER.equals(getCustom2()))
-                          || (_diffableMarker = Constants.C_FIELD_STYLE_DIFFABLE_MARKER.equals(getCustom3())))
-    {
-      String path = getAbsoluteDataPath();
-      if (path != null)
-      {
-        parent.setDiffableMarkerPath(path);
-      }
-    }
-    else if (_diffablePrimary = Constants.C_FIELD_STYLE_DIFFABLE_PRIMARY.equals(getStyle())
-                                || (_diffablePrimary = Constants.C_FIELD_STYLE_DIFFABLE_PRIMARY.equals(getCustom1()))
-                                || (_diffablePrimary = Constants.C_FIELD_STYLE_DIFFABLE_PRIMARY.equals(getCustom2()))
-                                || (_diffablePrimary = Constants.C_FIELD_STYLE_DIFFABLE_PRIMARY.equals(getCustom3())))
-    {
-      String path = getAbsoluteDataPath();
-      if (path != null)
-      {
-        parent.setDiffablePrimaryPath(path);
-      }
-    }
-
-    _diffableSecondary = Constants.C_FIELD_STYLE_DIFFABLE_SECONDARY.equals(getStyle())
-                         || Constants.C_FIELD_STYLE_DIFFABLE_SECONDARY.equals(getCustom1())
-                         || Constants.C_FIELD_STYLE_DIFFABLE_SECONDARY.equals(getCustom2())
-                         || Constants.C_FIELD_STYLE_DIFFABLE_SECONDARY.equals(getCustom3());
+    MBApplicationFactory.getInstance().getPageConstructor().onConstructedField(this);
   }
 
   @Override
-  public View buildViewWithMaxBounds(MBViewState viewState)
+  public View buildView()
   {
     return MBViewBuilderFactory.getInstance().getFieldViewBuilder().buildFieldView(this);
   }
@@ -244,11 +193,6 @@ public class MBField extends MBComponent
     _source = source;
   }
 
-  public void setType(String type)
-  {
-    _type = type;
-  }
-
   public String getDataType()
   {
     String result = _dataType;
@@ -297,6 +241,11 @@ public class MBField extends MBComponent
     _alignment = alignment;
   }
 
+  public String getUntranslatedValueIfNil()
+  {
+    return _valueIfNil;
+  }
+
   public String getValueIfNil()
   {
     return MBLocalizationService.getInstance().getTextForKey(_valueIfNil);
@@ -317,46 +266,6 @@ public class MBField extends MBComponent
     _hidden = hidden;
   }
 
-  public boolean getRequired()
-  {
-    return _required;
-  }
-
-  public void setRequired(boolean required)
-  {
-    _required = required;
-  }
-
-  public String getCustom1()
-  {
-    return _custom1;
-  }
-
-  public void setCustom1(String custom1)
-  {
-    _custom1 = custom1;
-  }
-
-  public String getCustom2()
-  {
-    return _custom2;
-  }
-
-  public void setCustom2(String custom2)
-  {
-    _custom2 = custom2;
-  }
-
-  public String getCustom3()
-  {
-    return _custom3;
-  }
-
-  public void setCustom3(String custom3)
-  {
-    _custom3 = custom3;
-  }
-
   public String getHint()
   {
     return _hint;
@@ -367,21 +276,6 @@ public class MBField extends MBComponent
     _hint = hint;
   }
 
-  public boolean isDiffableMarker()
-  {
-    return _diffableMarker;
-  }
-
-  public boolean isDiffablePrimary()
-  {
-    return _diffablePrimary;
-  }
-
-  public boolean isDiffableSecondary()
-  {
-    return _diffableSecondary;
-  }
-
   /**
    * Returns the value of this field, please note this is an EXPENSIVE call.
    * Try not to call it repeatedly, but cache the value.
@@ -389,27 +283,45 @@ public class MBField extends MBComponent
    */
   public String getValue()
   {
-    if (_cachedValueSet)
-    {
-      return _cachedValue;
-    }
-    String result = null;
+    calculateValueIfNeeded();
+    return _cachedValue;
+  }
 
-    if (getDocument() != null)
-    {
-      Object value = getDocument().getValueForPath(getAbsoluteDataPath());
-      if (value instanceof String) result = (String) value;
-      else if (value != null) result = value.toString();
+  public String getUntranslatedValue()
+  {
+    calculateValueIfNeeded();
+    return _cachedUntranslatedValue;
+  }
 
-      // don't use the getter here!
-      if (_dataType == null)
+  private void calculateValueIfNeeded()
+  {
+    if (!_cachedValueSet)
+    {
+      String result = null;
+
+      if (getDocument() != null)
       {
-        result = MBLocalizationService.getInstance().getTextForKey(result);
+        Object value = getDocument().getValueForPath(getAbsoluteDataPath());
+        if (value instanceof String) result = (String) value;
+        else if (value != null) result = value.toString();
+
+        _cachedUntranslatedValue = result;
+        // don't use the getter here!
+        if (_dataType == null)
+        {
+          result = MBLocalizationService.getInstance().getTextForKey(result);
+        }
       }
+      _cachedValue = result;
+      _cachedValueSet = true;
+
     }
-    _cachedValue = result;
-    _cachedValueSet = true;
-    return result;
+
+  }
+
+  public void setValue(boolean value)
+  {
+    setValue(value ? Constants.C_TRUE : Constants.C_FALSE);
   }
 
   public void setValue(String value)
@@ -433,6 +345,7 @@ public class MBField extends MBComponent
     return ((MBFieldDefinition) getDefinition()).getPath();
   }
 
+  @Override
   public String getType()
   {
     return ((MBFieldDefinition) getDefinition()).getDisplayType();
@@ -474,7 +387,7 @@ public class MBField extends MBComponent
 
   public MBAttributeDefinition getAttributeDefinition()
   {
-    if (_attributeDefinition == null)
+    if (_attributeDefinition == null && getAbsoluteDataPath() != null)
     {
       String path = NUMBERPATTERN.matcher(getAbsoluteDataPath()).replaceAll("");
       if (path == null)
@@ -525,61 +438,11 @@ public class MBField extends MBComponent
     return super.getAbsoluteDataPath();
   }
 
-  private String formatValue(String fieldValue)
+  private String formatValue()
   {
-    boolean fieldValueSameAsNilValue = fieldValue.equals(getValueIfNil());
+    String fieldValue = MBDataTypeFormatterFactory.getInstance().formatField(this);
 
-    try
-    {
-
-      if (getFormatMask() != null && getDataType().equals("dateTime"))
-      {
-        // Get a date from a xml-dateFormat
-        String xmlDate = fieldValue;
-
-        // Formats the date depending on the current date. 
-        if (getFormatMask().equals("dateOrTimeDependingOnCurrentDate"))
-        {
-          fieldValue = DateUtilities.formatDateDependingOnCurrentDate(xmlDate);
-        }
-        else
-        {
-          Date date = DateUtilities.dateFromXML(xmlDate);
-
-          SimpleDateFormat df = new SimpleDateFormat(getFormatMask());
-          fieldValue = df.format(date);
-        }
-
-      }
-      else if (!fieldValueSameAsNilValue && getDataType().equals("numberWithTwoDecimals"))
-      {
-        fieldValue = StringUtilities.formatNumberWithTwoDecimals(fieldValue);
-      }
-      else if (!fieldValueSameAsNilValue && getDataType().equals("numberWithThreeDecimals"))
-      {
-        fieldValue = StringUtilities.formatNumberWithThreeDecimals(fieldValue);
-      }
-      else if (!fieldValueSameAsNilValue && getDataType().equals("priceWithTwoDecimals"))
-      {
-        fieldValue = StringUtilities.formatPriceWithTwoDecimals(fieldValue);
-      }
-      else if (!fieldValueSameAsNilValue && getDataType().equals("priceWithThreeDecimals"))
-      {
-        fieldValue = StringUtilities.formatPriceWithThreeDecimals(fieldValue);
-      }
-      else if (getDataType().equals("volume"))
-      {
-        fieldValue = StringUtilities.formatVolume(fieldValue);
-      }
-      else if (getDataType().equals("percentageWithTwoDecimals"))
-      {
-        fieldValue = StringUtilities.formatPercentageWithTwoDecimals(fieldValue);
-      }
-    }
-    catch (NumberFormatException nfe)
-    {
-      throw new NumberFormatException("Unable to format value for field: " + getName());
-    }
+    if (fieldValue == null) return null;
 
     // CURRENCY Symbols
     if ("EURO".equals(getStyle()))
@@ -588,12 +451,6 @@ public class MBField extends MBComponent
     }
 
     return fieldValue;
-  }
-
-  // Apply a formatmask
-  public String getFormattedValue()
-  {
-    return formatValue(getValue());
   }
 
   // Returns a path that has indexed expressions evaluated (translated) i.e. something like myelement[someattr='xx'] -> myelement[12]
@@ -633,16 +490,15 @@ public class MBField extends MBComponent
   {
     try
     {
-      String required = getRequired() ? "TRUE" : "FALSE";
 
-      StringUtilities.appendIndentString(appendToMe, level).append("<MBField ").append(attributeAsXml("value", getValue())).append(" ")
+      StringUtil.appendIndentString(appendToMe, level).append("<MBField ").append(attributeAsXml("value", getValue())).append(" ")
           .append(attributeAsXml("path", getAbsoluteDataPath())).append(" ").append(attributeAsXml("style", getStyle())).append(" ")
           .append(attributeAsXml("label", getLabel())).append(" ").append(attributeAsXml("type", getType())).append(" ")
           .append(attributeAsXml("dataType", getDataType())).append(" ").append(attributeAsXml("outcomeName", getOutcomeName()))
           .append(" ").append(attributeAsXml("formatMask", getFormatMask())).append(" ")
           .append(attributeAsXml("alignment", getAlignment())).append(" ").append(attributeAsXml("valueIfNil", getValueIfNil()))
-          .append(" ").append(attributeAsXml("required", required)).append(" width='").append(getWidth()).append("' height='")
-          .append(getHeight()).append(" hint='").append(getHint()).append("'/>\n");
+          .append(" ").append(" width='").append(getWidth()).append("' height='").append(getHeight()).append(" hint='").append(getHint())
+          .append("'/>\n");
     }
     catch (Exception e)
     {
@@ -662,6 +518,7 @@ public class MBField extends MBComponent
   }
 
   // android.view.View.OnClickListener method
+  @Override
   public void onClick(View v)
   {
 
@@ -675,11 +532,11 @@ public class MBField extends MBComponent
 
       if (tb.isChecked())
       {
-        setValue("true");
+        setValue(true);
       }
       else
       {
-        setValue("false");
+        setValue(false);
       }
     }
     else
@@ -690,6 +547,7 @@ public class MBField extends MBComponent
   }
 
   // OnItemSelectedListener Methods
+  @Override
   public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
   {
     if (getDomain() != null && !getDomain().getDomainValidators().isEmpty())
@@ -699,31 +557,36 @@ public class MBField extends MBComponent
     }
   }
 
+  @Override
   public void onNothingSelected(AdapterView<?> parent)
   {
   }
 
   //OnCheckedChangeListener Method
+  @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
   {
     if (isChecked)
     {
-      setValue("true");
+      setValue(true);
     }
     else
     {
-      setValue("false");
+      setValue(false);
     }
   }
 
+  @Override
   public void afterTextChanged(Editable s)
   {
   }
 
+  @Override
   public void beforeTextChanged(CharSequence s, int start, int count, int after)
   {
   }
 
+  @Override
   public void onTextChanged(CharSequence s, int start, int before, int count)
   {
     String textFieldValue = s.toString();
@@ -777,7 +640,7 @@ public class MBField extends MBComponent
     if (_label != null)
     {
       String label = getLabel();
-      if (StringUtilities.isNotBlank(value))
+      if (StringUtil.isNotBlank(value))
       {
         return label + " " + value;
       }
@@ -790,7 +653,7 @@ public class MBField extends MBComponent
 
     // getValue is not a simple getter, so make sure it isn't called
     // unneeded
-    if (StringUtilities.isNotBlank(value))
+    if (StringUtil.isNotBlank(value))
     {
       return value;
     }
@@ -804,15 +667,6 @@ public class MBField extends MBComponent
   {
     //getValue is not a simple getter, so make sure it isn't called
     // unneeded
-    String value = getValue();
-    if (value != null)
-    {
-      if (getDataType() != null)
-      {
-        value = formatValue(value);
-      }
-    }
-
-    return value;
+    return formatValue();
   }
 }

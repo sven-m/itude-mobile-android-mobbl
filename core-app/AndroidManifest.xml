@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="2.0.9.10-SNAPSHOT" package="com.itude.mobile.mobbl2.client.core">
-    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="11"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="3.0.0.19-SNAPSHOT" package="com.itude.mobile.mobbl2.client.core">
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="11"/>
 
     <application android:debuggable="true" android:name="MBApplicationCore">
 

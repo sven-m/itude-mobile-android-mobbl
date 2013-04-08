@@ -3,8 +3,8 @@ package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.MBConditionalDefinition;
 import com.itude.mobile.mobbl2.client.core.view.MBStylableDefinition;
 
@@ -20,7 +20,6 @@ public class MBPanelDefinition extends MBConditionalDefinition implements MBStyl
   private String             _outcomeName;
   private String             _path;
   private String             _mode;
-  private String             _permissions;
   private boolean            _focused = false;
 
   public MBPanelDefinition()
@@ -37,7 +36,7 @@ public class MBPanelDefinition extends MBConditionalDefinition implements MBStyl
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level)//
+    StringUtil.appendIndentString(appendToMe, level)//
         .append("<Panel width='")//
         .append(_width)//
         .append("' height='")//
@@ -58,7 +57,7 @@ public class MBPanelDefinition extends MBConditionalDefinition implements MBStyl
     {
       child.asXmlWithLevel(appendToMe, level + 2);
     }
-    return StringUtilities.appendIndentString(appendToMe, level).append("</Panel>\n");
+    return StringUtil.appendIndentString(appendToMe, level).append("</Panel>\n");
 
   }
 
@@ -165,16 +164,6 @@ public class MBPanelDefinition extends MBConditionalDefinition implements MBStyl
   public void setMode(String mode)
   {
     _mode = mode;
-  }
-
-  public String getPermissions()
-  {
-    return _permissions;
-  }
-
-  public void setPermissions(String permissions)
-  {
-    _permissions = permissions;
   }
 
   public void setFocused(boolean focused)

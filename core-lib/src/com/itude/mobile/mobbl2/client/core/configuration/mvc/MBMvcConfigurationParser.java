@@ -2,14 +2,18 @@ package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.configuration.MBConfigurationParser;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition.MBPageType;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPageTypeException;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
+import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBMetadataDataHandler;
+import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 
 public class MBMvcConfigurationParser extends MBConfigurationParser
 {
@@ -29,6 +33,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
   private List<String> _domainValidatorAttributes;
   private List<String> _variableAttributes;
   private List<String> _toolAttributes;
+  private List<String> _alertAttributes;
 
   @Override
   public MBDefinition parseData(byte[] data, String documentName)
@@ -94,7 +99,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _dialogAttributes.add("title");
       _dialogAttributes.add("mode");
       _dialogAttributes.add("icon");
-      _dialogAttributes.add("addToNavbar");
+      _dialogAttributes.add("showAs");
       _dialogAttributes.add("domain");
       _dialogAttributes.add("action");
     }
@@ -106,7 +111,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _dialogGroupAttributes.add("title");
       _dialogGroupAttributes.add("mode");
       _dialogGroupAttributes.add("icon");
-      _dialogGroupAttributes.add("addToNavbar");
+      _dialogGroupAttributes.add("showAs");
       _dialogGroupAttributes.add("domain");
       _dialogGroupAttributes.add("action");
 
@@ -125,6 +130,8 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _pageAttributes.add("preCondition");
       _pageAttributes.add("style");
       _pageAttributes.add("orientationPermissions");
+      _pageAttributes.add("scrollable");
+      _pageAttributes.add("reloadOnDocChange");
     }
     if (_panelAttributes == null)
     {
@@ -141,7 +148,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _panelAttributes.add("outcome");
       _panelAttributes.add("path");
       _panelAttributes.add("mode");
-      _panelAttributes.add("permissions");
       _panelAttributes.add("focused");
     }
     if (_forEachAttributes == null)
@@ -171,7 +177,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _fieldAttributes.add("path");
       _fieldAttributes.add("type");
       _fieldAttributes.add("dataType");
-      _fieldAttributes.add("required");
       _fieldAttributes.add("outcome");
       _fieldAttributes.add("style");
       _fieldAttributes.add("width");
@@ -181,9 +186,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _fieldAttributes.add("valueIfNil");
       _fieldAttributes.add("hidden");
       _fieldAttributes.add("preCondition");
-      _fieldAttributes.add("custom1");
-      _fieldAttributes.add("custom2");
-      _fieldAttributes.add("custom3");
       _fieldAttributes.add("hint");
     }
     if (_domainAttributes == null)
@@ -216,8 +218,21 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _toolAttributes.add("preCondition");
       _toolAttributes.add("visibility");
     }
+    if (_alertAttributes == null)
+    {
+      _alertAttributes = new ArrayList<String>();
+      _alertAttributes.add("xmlns");
+      _alertAttributes.add("type");
+      _alertAttributes.add("name");
+      _alertAttributes.add("document");
+      _alertAttributes.add("style");
+      _alertAttributes.add("title");
+      _alertAttributes.add("titlePath");
+    }
 
     MBConfigurationDefinition conf = (MBConfigurationDefinition) super.parseData(data, documentName);
+
+    if (conf == null) throw new MBException("Could not open configuration file " + documentName);
 
     if (conf.getDefinitionForDocumentName(MBConfigurationDefinition.DOC_SYSTEM_EXCEPTION) == null)
     {
@@ -329,7 +344,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       dialogDef.setTitle(attributeDict.get("title"));
       dialogDef.setMode(attributeDict.get("mode"));
       dialogDef.setIcon(attributeDict.get("icon"));
-      dialogDef.setAddToNavbar(attributeDict.get("addToNavbar"));
+      dialogDef.setShowAs(attributeDict.get("showAs"));
       dialogDef.setDomain(attributeDict.get("domain"));
       dialogDef.setAction(attributeDict.get("action"));
 
@@ -349,7 +364,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       dialogDef.setTitlePortrait(attributeDict.get("titlePortrait"));
       dialogDef.setMode(attributeDict.get("mode"));
       dialogDef.setIcon(attributeDict.get("icon"));
-      dialogDef.setAddToNavbar(attributeDict.get("addToNavbar"));
+      dialogDef.setShowAs(attributeDict.get("showAs"));
       dialogDef.setDomain(attributeDict.get("domain"));
 
       notifyProcessed(dialogDef);
@@ -363,6 +378,8 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       pageDef.setDocumentName(attributeDict.get("document"));
       pageDef.setTitle(attributeDict.get("title"));
       pageDef.setTitlePath(attributeDict.get("titlePath"));
+      pageDef.setScrollable(MBParseUtil.booleanValue(attributeDict.get("scrollable"), true));
+      pageDef.setReloadOnDocChange(MBParseUtil.booleanValue(attributeDict.get("reloadOnDocChange"), false));
       if (attributeDict.containsKey("width"))
       {
         pageDef.setWidth(Integer.parseInt(attributeDict.get("width")));
@@ -400,8 +417,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
     }
     else if (elementName.equals("Panel"))
     {
-      checkAttributesForElement(elementName, attributeDict, _panelAttributes);
-
       MBPanelDefinition panelDef = new MBPanelDefinition();
       panelDef.setType(attributeDict.get("type"));
       panelDef.setName(attributeDict.get("name"));
@@ -420,8 +435,8 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       panelDef.setOutcomeName(attributeDict.get("outcome"));
       panelDef.setPath(attributeDict.get("path"));
       panelDef.setMode(attributeDict.get("mode"));
-      panelDef.setPermissions(attributeDict.get("permissions"));
       panelDef.setFocused(Boolean.parseBoolean(attributeDict.get("focused")));
+      panelDef.setCustom(extractCustomAttributes(attributeDict, _panelAttributes));
 
       notifyProcessed(panelDef);
     }
@@ -448,8 +463,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
     }
     else if (elementName.equals("Field"))
     {
-      checkAttributesForElement(elementName, attributeDict, _fieldAttributes);
-
       MBFieldDefinition fieldDef = new MBFieldDefinition();
       fieldDef.setName(attributeDict.get("name"));
       fieldDef.setLabel(attributeDict.get("label"));
@@ -459,7 +472,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       fieldDef.setDisplayType(attributeDict.get("type"));
       fieldDef.setDataType(attributeDict.get("dataType"));
       fieldDef.setStyle(attributeDict.get("style"));
-      fieldDef.setRequired(attributeDict.get("required"));
       fieldDef.setOutcomeName(attributeDict.get("outcome"));
       fieldDef.setWidth(attributeDict.get("width"));
       fieldDef.setHeight(attributeDict.get("height"));
@@ -468,10 +480,8 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       fieldDef.setValueIfNil(attributeDict.get("valueIfNil"));
       fieldDef.setHidden(attributeDict.get("hidden"));
       fieldDef.setPreCondition(attributeDict.get("preCondition"));
-      fieldDef.setCustom1(attributeDict.get("custom1"));
-      fieldDef.setCustom2(attributeDict.get("custom2"));
-      fieldDef.setCustom3(attributeDict.get("custom3"));
       fieldDef.setHint(attributeDict.get("hint"));
+      fieldDef.setCustom(extractCustomAttributes(attributeDict, _fieldAttributes));
 
       notifyProcessed(fieldDef);
     }
@@ -523,12 +533,35 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
 
       notifyProcessed(toolDef);
     }
+    else if (elementName.equals("Alert"))
+    {
+      checkAttributesForElement(elementName, attributeDict, _alertAttributes);
+
+      MBAlertDefinition alertDef = new MBAlertDefinition();
+      alertDef.setType(attributeDict.get("type"));
+      alertDef.setName(attributeDict.get("name"));
+      alertDef.setDocumentName(attributeDict.get("document"));
+      alertDef.setStyle(attributeDict.get("style"));
+      alertDef.setTitle(attributeDict.get("title"));
+      alertDef.setTitlePath(attributeDict.get("titlePath"));
+
+      notifyProcessed(alertDef);
+    }
     else
     {
       return false;
     }
 
     return true;
+  }
+
+  private Map<String, String> extractCustomAttributes(Map<String, String> attributes, List<String> predefinedAttributes)
+  {
+    Map<String, String> custom = new HashMap<String, String>(attributes);
+    for (String attribute : predefinedAttributes)
+      custom.remove(attribute);
+
+    return custom;
   }
 
   @Override
@@ -565,7 +598,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
            || element.equals("Attribute") || element.equals("Action") || element.equals("Outcome") || element.equals("Page")
            || element.equals("Dialog") || element.equals("DialogGroup") || element.equals("ForEach") || element.equals("Variable")
            || element.equals("Panel") || element.equals("Field") || element.equals("Domain") || element.equals("DomainValidator")
-           || element.equals("Tool");
+           || element.equals("Tool") || element.equals("Alert");
   }
 
   @Override
@@ -573,7 +606,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
   {
     return element.equals("Model") || element.equals("Dialogs") || element.equals("Domains") || element.equals("Documents")
            || element.equals("Controller") || element.equals("Actions") || element.equals("Wiring") || element.equals("View")
-           || element.equals("Toolbar");
+           || element.equals("Toolbar") || element.equals("Alerts");
   }
 
   private void addExceptionDocument(MBConfigurationDefinition conf)
@@ -689,6 +722,24 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
     docDef.addElement(elementDef);
   }
 
+  private void addDialogsDocument(MBConfigurationDefinition conf)
+  {
+    MBDocumentDefinition docDef = new MBDocumentDefinition();
+    docDef.setName(MBMetadataDataHandler.DIALOGS_DOCUMENT);
+    docDef.setDataManager(MBDataManagerService.DATA_HANDLER_METADATA);
+    docDef.setAutoCreate(true);
+
+    MBElementDefinition elementDef = new MBElementDefinition();
+    elementDef.setName("Dialog");
+    addAttribute(elementDef, "name", "string");
+    addAttribute(elementDef, "mode", "string");
+    addAttribute(elementDef, "icon", "string");
+    addAttribute(elementDef, "showAs", "string");
+    addAttribute(elementDef, "title", "string");
+    docDef.addElement(elementDef);
+    conf.addDocument(docDef);
+  }
+
   private void addSystemDocuments(MBConfigurationDefinition conf)
   {
     addExceptionDocument(conf);
@@ -696,6 +747,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
     addPropertiesDocument(conf);
     addLanguageDocument(conf);
     addDeviceDocument(conf);
+    addDialogsDocument(conf);
   }
 
   public List<String> getConfigAttributes()

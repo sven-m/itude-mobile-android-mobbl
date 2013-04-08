@@ -5,9 +5,9 @@ import java.math.BigDecimal;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBDomainValidatorDefinition extends MBDefinition
 {
@@ -23,7 +23,7 @@ public class MBDomainValidatorDefinition extends MBDefinition
 
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    return StringUtilities.appendIndentString(appendToMe, level).append("<DomainValidator").append(getAttributeAsXml("title", _title))
+    return StringUtil.appendIndentString(appendToMe, level).append("<DomainValidator").append(getAttributeAsXml("title", _title))
         .append(getAttributeAsXml("value", _value)).append(getAttributeAsXml("lowerBound", _lowerBound))
         .append(getAttributeAsXml("upperBound", _upperBound)).append("/>\n");
   }

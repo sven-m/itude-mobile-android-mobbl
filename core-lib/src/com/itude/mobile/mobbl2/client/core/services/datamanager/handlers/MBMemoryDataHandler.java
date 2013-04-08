@@ -5,6 +5,8 @@ import java.util.Map;
 
 import android.util.Log;
 
+import com.itude.mobile.android.util.DataUtil;
+import com.itude.mobile.android.util.exceptions.DataParsingException;
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
@@ -12,8 +14,6 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.MBDataHandlerBase;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.DataUtil;
-import com.itude.mobile.mobbl2.client.core.util.exceptions.MBDataParsingException;
 
 public class MBMemoryDataHandler extends MBDataHandlerBase
 {
@@ -38,7 +38,7 @@ public class MBMemoryDataHandler extends MBDataHandlerBase
       {
         data = DataUtil.getInstance().readFromAssetOrFile(fileName);
       }
-      catch (MBDataParsingException e)
+      catch (DataParsingException e)
       {
         Log.d(Constants.APPLICATION_NAME, "Unable to find file " + fileName + " in assets");
       }
@@ -58,6 +58,18 @@ public class MBMemoryDataHandler extends MBDataHandlerBase
   public void storeDocument(MBDocument document)
   {
     _dictionary.put(document.getName(), document);
+  }
+
+  @Override
+  public MBDocument loadFreshDocument(String documentName)
+  {
+
+    if (_dictionary.containsKey(documentName))
+    {
+      _dictionary.remove(documentName);
+    }
+
+    return loadDocument(documentName);
   }
 
 }

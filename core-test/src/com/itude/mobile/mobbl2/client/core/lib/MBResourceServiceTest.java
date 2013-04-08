@@ -3,10 +3,10 @@ package com.itude.mobile.mobbl2.client.core.lib;
 import android.graphics.drawable.Drawable;
 import android.test.ApplicationTestCase;
 
+import com.itude.mobile.android.util.AssetUtil;
 import com.itude.mobile.mobbl2.client.core.MBApplicationCore;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBResourceNotDefinedException;
-import com.itude.mobile.mobbl2.client.core.util.AssetUtil;
 
 public class MBResourceServiceTest extends ApplicationTestCase<MBApplicationCore>
 {

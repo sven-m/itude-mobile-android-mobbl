@@ -8,14 +8,14 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.itude.mobile.android.util.CollectionUtilities;
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBCannotAssignException;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBDocumentOperationDelegate;
-import com.itude.mobile.mobbl2.client.core.util.CollectionUtilities;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBDocument extends MBElementContainer
 {
@@ -197,7 +197,7 @@ public class MBDocument extends MBElementContainer
 
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level, boolean escapeContent)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<")
+    StringUtil.appendIndentString(appendToMe, level).append("<")
         .append((_definition.getRootElement() == null) ? _definition.getName() : _definition.getRootElement());
 
     if (getElements().size() == 0)
@@ -218,7 +218,9 @@ public class MBDocument extends MBElementContainer
           }
         }
       }
-      StringUtilities.appendIndentString(appendToMe, level).append("</").append(_definition.getName()).append(">\n");
+
+      StringUtil.appendIndentString(appendToMe, level).append("</")
+          .append((_definition.getRootElement() == null) ? _definition.getName() : _definition.getRootElement()).append(">\n");
     }
 
     return appendToMe;

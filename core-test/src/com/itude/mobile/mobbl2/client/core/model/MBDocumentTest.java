@@ -5,14 +5,14 @@ import java.util.List;
 import android.test.ApplicationTestCase;
 import android.util.Log;
 
+import com.itude.mobile.android.util.AssetUtil;
+import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.MBApplicationCore;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBMvcConfigurationParser;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPathException;
-import com.itude.mobile.mobbl2.client.core.util.AssetUtil;
-import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 
 public class MBDocumentTest extends ApplicationTestCase<MBApplicationCore>
 {

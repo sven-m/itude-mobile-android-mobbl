@@ -1,5 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.view.builders;
 
+import java.util.List;
+
 import android.R;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -18,33 +20,37 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
+import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
+import com.itude.mobile.mobbl2.client.core.util.ScreenConstants;
 import com.itude.mobile.mobbl2.client.core.view.MBComponent;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.components.MBCirclePageIndicatorBar;
 import com.itude.mobile.mobbl2.client.core.view.components.MBDrawablePageIndicatorBar;
+import com.itude.mobile.mobbl2.client.core.view.components.MBHeader;
+import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedControlBar;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedControlContainer;
 import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedItem;
-import com.itude.mobile.mobbl2.client.core.view.components.MBTab;
+import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTab;
+import com.itude.mobile.widget.slidingmenu.SlidingMenu;
 
 public class MBStyleHandler
 {
 
-  public void applyStyle(MBComponent component, View view, MBViewManager.MBViewState viewState)
+  public void applyStyle(MBComponent component, View view)
   {
-    if (component instanceof MBField) applyStyle(view, (MBField) component, viewState);
-    else if (component instanceof MBPage) applyStyle(view, (MBPage) component, viewState);
-    else if (component instanceof MBPanel) applyStyle(view, (MBPanel) component, viewState);
+    if (component instanceof MBField) applyStyle(view, (MBField) component);
+    else if (component instanceof MBPage) applyStyle(view, (MBPage) component);
+    else if (component instanceof MBPanel) applyStyle(view, (MBPanel) component);
   }
 
   public void styleLabel(TextView view, MBField field)
@@ -111,14 +117,6 @@ public class MBStyleHandler
    */
   public void styleButtonWithName(Button view, String style)
   {
-    if (Constants.C_EDITABLEMATRIX_DELETEBUTTON.equals(style))
-    {
-      view.setBackgroundDrawable(getStatedButtonBackground("button-delete-normal", "button-delete-pressed", "button-delete-disabled"));
-    }
-    else if (Constants.C_EDITABLEMATRIX_DRAGBUTTON.equals(style))
-    {
-      view.setBackgroundDrawable(MBResourceService.getInstance().getImageByID("button-drag"));
-    }
   }
 
   public void styleButtonHeight(Button view, String style)
@@ -258,12 +256,12 @@ public class MBStyleHandler
 
   public void styleSectionContainer(LinearLayout view, boolean hasTitle)
   {
-    view.setPadding(0, MBScreenUtilities.SEVEN, 0, 0);
+    view.setPadding(0, ScreenConstants.SEVEN, 0, 0);
   }
 
   public void styleSectionContainer(LinearLayout view, boolean hasTitle, MBPanel panel)
   {
-    view.setPadding(0, MBScreenUtilities.SEVEN, 0, 0);
+    view.setPadding(0, ScreenConstants.SEVEN, 0, 0);
   }
 
   public Object sizeForTextField(MBField field, Object bounds)
@@ -280,11 +278,11 @@ public class MBStyleHandler
   // subclass// You should not normally call them; use the generic method
   // above for that- (void) applyStyle:(Object *)view page:(MBPage *)page
   // viewState:(MBViewState)viewState;
-  public void applyStyle(View view, MBPanel panel, MBViewManager.MBViewState viewState)
+  public void applyStyle(View view, MBPanel panel)
   {
   }
 
-  public void applyStyle(View view, MBField field, MBViewManager.MBViewState viewState)
+  public void applyStyle(View view, MBField field)
   {
   }
 
@@ -348,6 +346,18 @@ public class MBStyleHandler
 
   public void styleMatrixRow(MBPanel panel, LinearLayout row)
   {
+    alignMatrixRow(panel, row);
+  }
+
+  public void alignMatrixRow(MBPanel panel, LinearLayout row)
+  {
+    List<MBField> fields = panel.getChildrenOfKindWithType(MBField.class, Constants.C_FIELD_MATRIXCELL, Constants.C_FIELD_MATRIXCELL);
+    for (int idx = 0; idx < fields.size(); ++idx)
+    {
+      MBField field = fields.get(idx);
+      if (idx > 0 && field.getAlignment() == null && field.getAttachedView() instanceof TextView) ((TextView) field.getAttachedView())
+          .setGravity(Gravity.CENTER_HORIZONTAL);
+    }
   }
 
   public void styleMatrixRowPanel(MBPanel panel, RelativeLayout row, boolean isClickable, String style, int rowNumber)
@@ -398,11 +408,7 @@ public class MBStyleHandler
   {
   }
 
-  public void styleRowItemLeft(RelativeLayout.LayoutParams params)
-  {
-  }
-
-  public void styleRowItemRight(RelativeLayout.LayoutParams params)
+  public void styleRow(ViewGroup rowPanel, String style)
   {
   }
 
@@ -412,7 +418,7 @@ public class MBStyleHandler
 
   public void styleClickableRow(RelativeLayout view, String style)
   {
-    view.setMinimumHeight(MBScreenUtilities.FIFTY);
+    view.setMinimumHeight(ScreenConstants.FIFTY);
 
     RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
         RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -421,10 +427,10 @@ public class MBStyleHandler
 
     ImageView arrow = new ImageView(view.getContext());
     arrow.setLayoutParams(arrowParams);
-    arrow.setMinimumWidth(MBScreenUtilities.FORTY);
+    arrow.setMinimumWidth(ScreenConstants.FORTY);
     arrow.setImageDrawable(MBResourceService.getInstance().getImageByID(Constants.C_ARROW));
 
-    if (StringUtilities.isNotBlank(style))
+    if (StringUtil.isNotBlank(style))
     {
       if (Constants.C_STYLE_WRAP_ROW.equals(style))
       {
@@ -432,7 +438,7 @@ public class MBStyleHandler
         if (siblings > 0)
         {
           View latestChild = view.getChildAt(siblings - 1);
-          latestChild.setPadding(0, 0, MBScreenUtilities.TWENTYEIGHT, 0);
+          latestChild.setPadding(0, 0, ScreenConstants.TWENTYEIGHT, 0);
         }
       }
     }
@@ -446,7 +452,7 @@ public class MBStyleHandler
 
   public void styleMatrixContainer(MBPanel matrixPanel, LinearLayout view)
   {
-    view.setPadding(0, MBScreenUtilities.SEVEN, 0, 0);
+    view.setPadding(0, ScreenConstants.SEVEN, 0, 0);
   }
 
   public void styleMainScrollbarView(MBPage page, View scrollableView)
@@ -461,7 +467,7 @@ public class MBStyleHandler
 
   public void styleSegmentedControl(View segmentedControl)
   {
-    segmentedControl.setPadding(0, MBScreenUtilities.SEVEN, 0, 0);
+    segmentedControl.setPadding(0, ScreenConstants.SEVEN, 0, 0);
   }
 
   public void styleSegmentedItem(MBSegmentedItem item)
@@ -552,17 +558,17 @@ public class MBStyleHandler
       MBField field = (MBField) child;
 
       String alignment = field.getAlignment();
-      if (StringUtilities.isNotBlank(alignment))
+      if (StringUtil.isNotBlank(alignment))
       {
         if (alignment.equals(Constants.C_ALIGNMENT_RIGHT))
         {
           childParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-          childParams.setMargins(0, 0, MBScreenUtilities.FIVE, MBScreenUtilities.FIVE);
+          childParams.setMargins(0, 0, ScreenConstants.FIVE, ScreenConstants.FIVE);
         }
         else if (alignment.equals(Constants.C_ALIGNMENT_LEFT))
         {
           childParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-          childParams.setMargins(MBScreenUtilities.FIVE, 0, 0, MBScreenUtilities.FIVE);
+          childParams.setMargins(ScreenConstants.FIVE, 0, 0, ScreenConstants.FIVE);
         }
         else
         {
@@ -610,7 +616,7 @@ public class MBStyleHandler
   {
     if (notDirectChildOfSection)
     {
-      view.setPadding(0, MBScreenUtilities.SEVEN, 0, MBScreenUtilities.SEVEN);
+      view.setPadding(0, ScreenConstants.SEVEN, 0, ScreenConstants.SEVEN);
     }
 
   }
@@ -631,32 +637,90 @@ public class MBStyleHandler
   {
   }
 
-  public void styleFirstSegmentedItem(Button item, MBPanel panel)
+  public void styleFirstSegmentedItem(Button item, String style)
   {
+    item.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1));
   }
 
-  public void styleLastSegmentedItem(Button item, MBPanel panel)
+  public void styleLastSegmentedItem(Button item, String style)
   {
+    item.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1));
   }
 
-  public void styleCenterSegmentedItem(Button item, MBPanel panel)
+  public void styleCenterSegmentedItem(Button item, String style)
   {
+    item.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1));
+
   }
 
-  public void styleSegmentedControlBar(LinearLayout segmentedControlBar, MBPanel panel)
+  public void styleSegmentedControlBar(MBSegmentedControlBar segmentedControlBar, String style)
   {
+    segmentedControlBar.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
   }
 
   public void styleSegmentedControlContainer(MBSegmentedControlContainer scc, MBPanel panel)
   {
   }
 
-  public void styleSegmentedControlContentContainer(LinearLayout contentContainer, MBPanel segmentedControlPanel)
+  public void styleSegmentedControlContentContainer(ViewGroup contentContainer, MBPanel segmentedControlPanel)
   {
+  }
+
+  public void styleSegmentedControlLayoutStructure(MBSegmentedControlBar controlBar, View contentContainer)
+  {
+    controlBar.setId(UniqueIntegerGenerator.getId());
+
+    /*
+     * Default we want the controlbar to be above the contentcontainer and the contentcontainer to fill up the height of the screen
+     */
+    RelativeLayout.LayoutParams containerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
+        RelativeLayout.LayoutParams.WRAP_CONTENT);
+    containerParams.addRule(RelativeLayout.BELOW, controlBar.getId());
+    containerParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+    contentContainer.setLayoutParams(containerParams);
   }
 
   // TODO, moet samen gevoegd worden
   public void styleDatePickerDialog(DatePickerDialog datePickerDialog, TextView view, MBField field)
+  {
+  }
+
+  public void styleLabelContainer(LinearLayout labelLayout, MBField field)
+  {
+  }
+
+  public void styleImageButton(ImageButton button, MBField field)
+  {
+  }
+
+  public void styleDialogCloseButton(Button closeButton)
+  {
+  }
+
+  public void styleDialogCloseButtonWrapper(View wrapper)
+  {
+  }
+
+  public void styleDialogHeader(MBHeader dialogHeader)
+  {
+  }
+
+  public void styleSlidingMenu(SlidingMenu slidingMenu)
+  {
+    slidingMenu.setBehindWidth(ScreenConstants.TWOHUNDRED);
+  }
+
+  public void styleSlidingMenuContainer(LinearLayout slidingMenuMainContainer)
+  {
+    slidingMenuMainContainer.setOrientation(LinearLayout.VERTICAL);
+  }
+
+  public void styleActionBarHeader(MBHeader header)
+  {
+  }
+
+  public void styleActionBarHeaderTitle(TextView titleView)
   {
   }
 

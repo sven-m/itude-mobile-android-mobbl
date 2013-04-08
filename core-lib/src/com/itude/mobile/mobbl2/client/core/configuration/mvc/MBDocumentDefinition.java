@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBEmptyPathException;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidElementNameException;
@@ -17,7 +18,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBUnknow
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBDocumentDefinition extends MBDefinition
 {
@@ -40,12 +40,12 @@ public class MBDocumentDefinition extends MBDefinition
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<Document name='").append(getName()).append("' dataManager='")
+    StringUtil.appendIndentString(appendToMe, level).append("<Document name='").append(getName()).append("' dataManager='")
         .append(_dataManager).append("' autoCreate='" + _autoCreate).append("' rootElement='" + _rootElement).append("'>\n");
     for (MBElementDefinition elem : _elements.values())
       elem.asXmlWithLevel(appendToMe, level + 2);
 
-    return StringUtilities.appendIndentString(appendToMe, level).append("</Document>\n");
+    return StringUtil.appendIndentString(appendToMe, level).append("</Document>\n");
   }
 
   @Override
@@ -102,7 +102,7 @@ public class MBDocumentDefinition extends MBDefinition
 
   public MBElementDefinition getElementWithPath(String path)
   {
-    List<String> pathComponents = StringUtilities.splitPath(path);
+    List<String> pathComponents = StringUtil.splitPath(path);
 
     // If there is a ':' in the name of the first component; we might need a different document than 'self'
     if (pathComponents.size() > 0)

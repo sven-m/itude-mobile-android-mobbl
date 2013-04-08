@@ -7,8 +7,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
+import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
-import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
 
 /**
  * @author Coen Houtman
@@ -86,7 +86,8 @@ public class MBDialogViewBuilder
       fragmentContainer.setId(_sortedDialogIds.get(i));
 
       RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-          MBScreenUtilities.getWidthPixelsForPercentage(LEFT_FRAGMENT_WIDTH_PERCENTAGE), RelativeLayout.LayoutParams.MATCH_PARENT);
+          ScreenUtil.getWidthPixelsForPercentage(MBApplicationController.getInstance().getBaseContext(), LEFT_FRAGMENT_WIDTH_PERCENTAGE),
+          RelativeLayout.LayoutParams.MATCH_PARENT);
 
       // position fragment containers next to each other
       if (i == 0)

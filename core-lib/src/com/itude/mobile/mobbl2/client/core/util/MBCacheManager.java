@@ -10,6 +10,9 @@ import java.util.Set;
 
 import android.util.Log;
 
+import com.itude.mobile.android.util.DataUtil;
+import com.itude.mobile.android.util.FileUtil;
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBXmlDocumentParser;
@@ -99,7 +102,7 @@ public final class MBCacheManager
       if (fileName != null)
       {
         String ttl = _ttls.get(key);
-        if (StringUtilities.isNotBlank(ttl))
+        if (StringUtil.isNotBlank(ttl))
         {
           long maxAge = Long.parseLong(ttl);
           if (maxAge != 0 && maxAge < System.currentTimeMillis())

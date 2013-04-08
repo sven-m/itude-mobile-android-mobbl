@@ -15,7 +15,7 @@ public class MBCacheWriterTest extends ApplicationTestCase<MBApplicationCore>
   {
     super(MBApplicationCore.class);
   }
-  
+
   public void testPutInCache()
   {
     HashMap<String, String> registry = new HashMap<String, String>();
@@ -27,25 +27,23 @@ public class MBCacheWriterTest extends ApplicationTestCase<MBApplicationCore>
     byte[] data = null;
     HashMap<String, byte[]> temporaryMemoryCache = new HashMap<String, byte[]>();
     String key = null;
-    
-    MBCacheWriter writer = new MBCacheWriter(registry, registryFileName, documentTypes, ttls, ttlsFileName, fileName, data, temporaryMemoryCache, key);
+
+    MBCacheWriter writer = new MBCacheWriter(registry, registryFileName, documentTypes, ttls, ttlsFileName, fileName, data,
+        temporaryMemoryCache, key);
     writer.start();
   }
-  
+
   @Override
   protected void tearDown() throws Exception
   {
     File root = getContext().getFilesDir();
     File registry = new File(root, "registry_test.cache");
-    if (registry.exists())
-      registry.delete();
+    if (registry.exists()) registry.delete();
     File ttls = new File(root, "ttls_test.cache");
-    if (ttls.exists())
-      ttls.delete();
+    if (ttls.exists()) ttls.delete();
     File cache = new File(root, "cache.cache");
-    if (cache.exists())
-      cache.delete();
-    
+    if (cache.exists()) cache.delete();
+
     super.tearDown();
   }
 

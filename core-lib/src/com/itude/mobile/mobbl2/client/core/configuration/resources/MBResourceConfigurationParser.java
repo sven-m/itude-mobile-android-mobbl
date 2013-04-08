@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.itude.mobile.mobbl2.client.core.configuration.MBConfigurationParser;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
-import com.itude.mobile.mobbl2.client.core.util.MBBundleDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBBundleDefinition;
 
 public class MBResourceConfigurationParser extends MBConfigurationParser
 {

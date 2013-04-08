@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.view;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +10,8 @@ import android.view.View;
 
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBComponent
 
@@ -18,14 +19,10 @@ public class MBComponent
   private MBDefinition         _definition;
   private MBComponentContainer _parent;
   private String               _style;
-  private Map<String, Object>  _viewData;
   private boolean              _markedForDestruction;
-  private int                  _leftInset;
-  private int                  _rightInset;
-  private int                  _topInset;
-  private int                  _bottomInset;
   private MBDocument           _document;
   private View                 _view;
+  private Map<String, String>  _custom;
 
   public MBComponent(MBDefinition definition, MBDocument document, MBComponentContainer parent)
   {
@@ -36,10 +33,18 @@ public class MBComponent
     // Not all definitions have a style attribute; if they do set it
     if (MBStylableDefinition.class.isAssignableFrom(definition.getClass()))
     {
-      setStyle(((MBStylableDefinition) definition).getStyle());
+      String style = ((MBStylableDefinition) definition).getStyle();
+      setStyle(substituteExpressions(style));
     }
 
-    _viewData = null;
+    if (definition.getCustom().isEmpty()) _custom = Collections.emptyMap();
+    else
+    {
+      _custom = new HashMap<String, String>();
+      for (Map.Entry<String, String> custom : definition.getCustom().entrySet())
+        _custom.put(custom.getKey(), substituteExpressions(custom.getValue()));
+    }
+
   }
 
   public MBDefinition getDefinition()
@@ -87,47 +92,7 @@ public class MBComponent
     _markedForDestruction = markedForDestruction;
   }
 
-  public int getLeftInset()
-  {
-    return _leftInset;
-  }
-
-  public void setLeftInset(int leftInset)
-  {
-    _leftInset = leftInset;
-  }
-
-  public int getRightInset()
-  {
-    return _rightInset;
-  }
-
-  public void setRightInset(int rightInset)
-  {
-    _rightInset = rightInset;
-  }
-
-  public int getTopInset()
-  {
-    return _topInset;
-  }
-
-  public void setTopInset(int topInset)
-  {
-    _topInset = topInset;
-  }
-
-  public int getBottomInset()
-  {
-    return _bottomInset;
-  }
-
-  public void setBottomInset(int bottomInset)
-  {
-    _bottomInset = bottomInset;
-  }
-
-  public View buildViewWithMaxBounds(MBViewManager.MBViewState viewState)
+  public View buildView()
   {
     return null;
   }
@@ -151,12 +116,12 @@ public class MBComponent
 
     if (expression.equalsIgnoreCase("YES"))
     {
-      return "TRUE";
+      return Constants.C_TRUE;
     }
 
     if (expression.equalsIgnoreCase("NO"))
     {
-      return "FALSE";
+      return Constants.C_FALSE;
     }
 
     if (expression.indexOf('{') < 0)
@@ -259,21 +224,6 @@ public class MBComponent
     }
   }
 
-  public void setViewData(Object value, String key)
-  {
-    if (_viewData == null)
-    {
-      _viewData = new HashMap<String, Object>();
-    }
-
-    _viewData.put(key, value);
-  }
-
-  public Object getViewData(String key)
-  {
-    return _viewData.get(key);
-  }
-
   public String evaluateExpression(String variableName)
   {
     if (getParent() != null)
@@ -282,8 +232,8 @@ public class MBComponent
     }
 
     Object value = getDocument().getValueForPath(variableName);
-    if (value instanceof String) return (String) value;
-    else if (value != null) return value.toString();
+
+    if (value != null) return value.toString();
 
     return null;
   }
@@ -308,54 +258,27 @@ public class MBComponent
   {
   }
 
-  public ArrayList<Object> getDescendantsOfKind(Class<?> clazz)
+  public <T extends MBComponent> List<T> getDescendantsOfKind(Class<T> clazz)
   {
     // This method is overridden by the various subclasses; if this could be an abstract method it would be
-    return new ArrayList<Object>();
+    return new ArrayList<T>();
   }
 
-  // TODO method has a selector, needs implementation
-  public ArrayList<?> getDescendantsOfKind(Class<?> clazz, Object selector, Object value)
-  {
-
-    return null;
-  }
-
-  public ArrayList<MBComponent> getChildrenOfKind(Class<?> clazz)
+  public <T extends MBComponent> List<T> getChildrenOfKind(Class<T> clazz)
   {
     // This method is overridden by the various subclasses; if this could be an abstract method it would be
-    return new ArrayList<MBComponent>();
+    return new ArrayList<T>();
   }
 
-  //TODO method has a selector, needs implementation
-  public ArrayList<?> getChildrenOfKind(Class<?> clazz, Object selector, Object value)
+  public <T extends MBComponent> List<T> getChildrenOfKindWithType(Class<T> clazz, String... types)
   {
-    return null;
+    // This method is overridden by the various subclasses; if this could be an abstract method it would be
+    return new ArrayList<T>();
   }
 
-  // TODO filterSet Method should be implemented
-
-  public Object getFirstDescendantOfKind(Class<?> clazz)
+  public <T extends MBComponent> T getFirstDescendantOfKind(Class<T> clazz)
   {
-    List<Object> result = getDescendantsOfKind(clazz);
-
-    if (result.size() == 0)
-    {
-      return null;
-    }
-
-    return result.get(0);
-  }
-
-  // TODO method has a selector, needs implementation
-  public Object getFirstDescendantOfKind(Class<?> clazz, Object selector, Object value)
-  {
-    return null;
-  }
-
-  public MBComponent getFirstChildOfKind(Class<?> clazz)
-  {
-    ArrayList<MBComponent> result = getChildrenOfKind(clazz);
+    List<T> result = getDescendantsOfKind(clazz);
 
     if (result.size() == 0)
     {
@@ -366,9 +289,9 @@ public class MBComponent
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends MBComponent> T getFirstChildOfKindWithName(Class<?> clazz, String name)
+  public <T extends MBComponent> T getFirstDescendantOfKindWithName(Class<T> clazz, String name)
   {
-    ArrayList<MBComponent> result = getChildrenOfKind(clazz);
+    List<T> result = getDescendantsOfKind(clazz);
 
     for (MBComponent component : result)
     {
@@ -381,36 +304,57 @@ public class MBComponent
     return null;
   }
 
-  public MBPanel getFirstChildOfPanelWithType(String type)
+  public <T extends MBComponent> T getFirstChildOfKind(Class<T> clazz)
   {
-    ArrayList<MBComponent> result = getChildrenOfKind(MBPanel.class);
+    List<T> result = getChildrenOfKind(clazz);
 
-    for (MBComponent component : result)
+    if (result.size() == 0)
     {
-      if (((MBPanel) component).getType().equals(type))
+      return null;
+    }
+
+    return result.get(0);
+  }
+
+  public <T extends MBComponent> T getFirstChildOfKindWithName(Class<T> clazz, String name)
+  {
+    List<T> result = getChildrenOfKind(clazz);
+
+    for (T component : result)
+    {
+      if (name.equals(component.getName()))
       {
-        return (MBPanel) component;
+        return component;
       }
     }
 
     return null;
   }
 
-  // TODO Method has a selector, needs implementation
-  public Object getFirstChildOfKind(Class<?> clazz, Object selector, Object value)
+  public MBPanel getFirstChildOfPanelWithType(String type)
   {
+    List<MBPanel> result = getChildrenOfKind(MBPanel.class);
+
+    for (MBPanel panel : result)
+    {
+      if (panel.getType().equals(type))
+      {
+        return panel;
+      }
+    }
+
     return null;
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends MBRow> T getRow(int index)
+  public <T extends MBForEachItem> T getRow(int index)
   {
-    ArrayList<Object> result = getDescendantsOfKind(MBRow.class);
+    List<MBForEachItem> result = getDescendantsOfKind(MBForEachItem.class);
 
-    for (Object row : result)
+    for (MBForEachItem row : result)
     {
 
-      if (((MBRow) row).getIndex() == index)
+      if (row.getIndex() == index)
       {
         return (T) row;
       }
@@ -471,6 +415,23 @@ public class MBComponent
   public View getAttachedView()
   {
     return _view;
+  }
+
+  public String getType()
+  {
+    // return something marginally useful; should be overridden by subclasses
+    return this.getClass().getSimpleName();
+  }
+
+  public String getCustom(String attribute)
+  {
+    return _custom.get(attribute);
+  }
+
+  public void setCustom(String attribute, String value)
+  {
+    if (_custom.isEmpty()) _custom = new HashMap<String, String>();
+    _custom.put(attribute, value);
   }
 
 }

@@ -3,6 +3,7 @@ package com.itude.mobile.mobbl2.client.core.services.datamanager.handlers;
 import java.util.Hashtable;
 import java.util.Map;
 
+import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
@@ -12,7 +13,6 @@ import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.model.MBXmlDocumentParser;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.MBDataHandlerBase;
-import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 
 public class MBSystemDataHandler extends MBDataHandlerBase
 {

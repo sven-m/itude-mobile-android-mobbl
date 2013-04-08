@@ -4,14 +4,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import com.itude.mobile.android.util.DeviceUtil;
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPanelDefinition;
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
+import com.itude.mobile.mobbl2.client.core.controller.MBApplicationFactory;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
-import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.MBDevice;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 public class MBPanel extends MBComponentContainer implements OnClickListener
@@ -25,16 +24,11 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   private String  _translatedPath;
   private String  _mode;
   private boolean _focused;
+  private boolean _scrollable;
 
-  private boolean _childrenDeletable     = false;
-  private boolean _childrenDraggable     = false;
-  private boolean _childrenSelectable    = false;
-  private boolean _childrenClickable     = false;
-  private boolean _childrenLongClickable = false;
-
-  private String  _diffableMarkerPath    = null;
-  private String  _diffablePrimaryPath   = null;
-  private boolean _diffableMaster        = false;
+  private String  _diffableMarkerPath  = null;
+  private String  _diffablePrimaryPath = null;
+  private boolean _diffableMaster      = false;
 
   public MBPanel(MBPanelDefinition definition, MBDocument document, MBComponentContainer parent)
   {
@@ -51,17 +45,14 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     setOutcomeName(substituteExpressions(definition.getOutcomeName()));
     setPath(definition.getPath());
     setMode(definition.getMode());
-    parsePermissions(definition.getPermissions());
     setFocused(definition.isFocused());
 
     if (buildViewStructure)
     {
       buildChildren(definition, document, parent);
-      if (Constants.C_MATRIX.equals(_type) || Constants.C_MATRIXROW.equals(_type))
-      {
-        processDiffResponsibility();
-      }
+      MBApplicationFactory.getInstance().getPageConstructor().onConstructedPanel(this);
     }
+
   }
 
   final protected void buildChildren(MBPanelDefinition definition, MBDocument document, MBComponentContainer parent)
@@ -81,43 +72,13 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     }
   }
 
-  private void processDiffResponsibility()
-  {
-    if (getDiffableMarkerPath() == null || getDiffablePrimaryPath() == null)
-    {
-      if (!Constants.C_MATRIX.equals(getType()))
-      {
-        // assume inter-row diffables so make the matrix panel the master and move diffable knowledge to the parent
-        setDiffableMaster(false);
-        MBPanel parent = getFirstParentPanelWithType(Constants.C_MATRIX);
-        if (parent == null)
-        {
-          parent = getFirstParentPanelWithType(Constants.C_EDITABLEMATRIX);
-        }
-        parent.setDiffableMaster(true);
-        if (getDiffableMarkerPath() != null)
-        {
-          parent.setDiffableMarkerPath(getDiffableMarkerPath());
-        }
-
-        if (getDiffablePrimaryPath() != null)
-        {
-          parent.setDiffablePrimaryPath(getDiffablePrimaryPath());
-        }
-      }
-    }
-    else
-    {
-      setDiffableMaster(true);
-    }
-  }
-
+  @Override
   public String getType()
   {
     return _type;
   }
 
-  public void setType(String type)
+  private void setType(String type)
   {
     _type = type;
   }
@@ -173,15 +134,15 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   }
 
   @Override
-  public ViewGroup buildViewWithMaxBounds(MBViewState viewState)
+  public ViewGroup buildView()
   {
-    return MBViewBuilderFactory.getInstance().getPanelViewBuilder().buildPanelView(this, viewState);
+    return MBViewBuilderFactory.getInstance().getPanelViewBuilder().buildPanelView(this);
   }
 
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level)//
+    StringUtil.appendIndentString(appendToMe, level)//
         .append("<MBPanel ")//
         .append(attributeAsXml("type", _type))//
         .append(" ")//
@@ -201,7 +162,7 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
         .append(">\n");
 
     childrenAsXmlWithLevel(appendToMe, level + 2);
-    return StringUtilities.appendIndentString(appendToMe, level).append("</MBPanel>\n");
+    return StringUtil.appendIndentString(appendToMe, level).append("</MBPanel>\n");
   }
 
   @Override
@@ -276,58 +237,6 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     }
   }
 
-  @Override
-  public int getLeftInset()
-  {
-    if (getType().equals("LIST") || getType().equals("MATRIX"))
-    {
-      return 10;
-    }
-    else
-    {
-      return super.getLeftInset();
-    }
-  }
-
-  @Override
-  public int getBottomInset()
-  {
-    if (getType().equals("LIST") || getType().equals("MATRIX"))
-    {
-      return 10;
-    }
-    else
-    {
-      return super.getBottomInset();
-    }
-  }
-
-  @Override
-  public int getRightInset()
-  {
-    if (getType().equals("LIST") || getType().equals("MATRIX"))
-    {
-      return 10;
-    }
-    else
-    {
-      return super.getRightInset();
-    }
-  }
-
-  @Override
-  public int getTopInset()
-  {
-    if (getType().equals("LIST") || getType().equals("MATRIX"))
-    {
-      return 0;
-    }
-    else
-    {
-      return super.getTopInset();
-    }
-  }
-
   public String getMode()
   {
     return _mode;
@@ -348,61 +257,15 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     _focused = focused;
   }
 
-  public void parsePermissions(String permissions)
+  
+  public boolean isScrollable()
   {
-    if (permissions != null)
-    {
-      String[] permissionList = permissions.split("\\|");
-      for (String permission : permissionList)
-      {
-        if (permission.equals(Constants.C_EDITABLEMATRIX_PERMISSION_DELETE))
-        {
-          _childrenDeletable = true;
-        }
-        else if (permission.equals(Constants.C_EDITABLEMATRIX_PERMISSION_DRAGGABLE))
-        {
-          _childrenDraggable = true;
-        }
-        else if (permission.equals(Constants.C_EDITABLEMATRIX_PERMISSION_SELECTABLE))
-        {
-          _childrenSelectable = true;
-        }
-        else if (permission.equals(Constants.C_EDITABLEMATRIX_PERMISSION_CLICKABLE))
-        {
-          _childrenClickable = true;
-        }
-        else if (permission.equals(Constants.C_EDITABLEMATRIX_PERMISSION_LONGCLICKABLE))
-        {
-          _childrenLongClickable = true;
-        }
-      }
-    }
-
+    return _scrollable;
   }
 
-  public boolean isChildrenDeletable()
+  public void setScrollable(boolean scrollable)
   {
-    return _childrenDeletable;
-  }
-
-  public boolean isChildrenDraggable()
-  {
-    return _childrenDraggable;
-  }
-
-  public boolean isChildrenSelectable()
-  {
-    return _childrenSelectable;
-  }
-
-  public boolean isChildrenClickable()
-  {
-    return _childrenClickable;
-  }
-
-  public boolean isChildrenLongClickable()
-  {
-    return _childrenLongClickable;
+    _scrollable = scrollable;
   }
 
   public void setDiffableMaster(boolean diffableMaster)
@@ -440,7 +303,7 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   @Override
   public void onClick(View v)
   {
-    if (MBDevice.getInstance().isTablet())
+    if (DeviceUtil.getInstance().isTablet())
     {
       View selectedView = getPage().getSelectedView();
 

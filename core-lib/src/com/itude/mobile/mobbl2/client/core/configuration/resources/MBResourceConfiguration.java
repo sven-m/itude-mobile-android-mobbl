@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.MBIncludableDefinition;
-import com.itude.mobile.mobbl2.client.core.util.MBBundleDefinition;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBBundleDefinition;
 
 public class MBResourceConfiguration extends MBDefinition implements MBIncludableDefinition
 {
@@ -86,7 +86,7 @@ public class MBResourceConfiguration extends MBDefinition implements MBIncludabl
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<Resources>\n");
+    StringUtil.appendIndentString(appendToMe, level).append("<Resources>\n");
     for (MBBundleDefinition bundle : _bundles)
     {
       bundle.asXmlWithLevel(appendToMe, level + 2);
@@ -96,7 +96,7 @@ public class MBResourceConfiguration extends MBDefinition implements MBIncludabl
       resource.asXmlWithLevel(appendToMe, level + 2);
     }
 
-    StringUtilities.appendIndentString(appendToMe, level).append("</Resources>");
+    StringUtil.appendIndentString(appendToMe, level).append("</Resources>");
 
     return appendToMe;
   }

@@ -8,9 +8,9 @@ import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBDomainDefinition extends MBDefinition
 {
@@ -45,7 +45,7 @@ public class MBDomainDefinition extends MBDefinition
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<Domain name='").append(getName()).append("' type='").append(_type)
+    StringUtil.appendIndentString(appendToMe, level).append("<Domain name='").append(getName()).append("' type='").append(_type)
         .append("'").append(getAttributeAsXml("maxLength", _maxLength)).append(">\n");
 
     for (MBDomainValidatorDefinition vld : _validators)
@@ -53,7 +53,7 @@ public class MBDomainDefinition extends MBDefinition
       vld.asXmlWithLevel(appendToMe, level + 2);
     }
 
-    return StringUtilities.appendIndentString(appendToMe, level).append("</Domain>\n");
+    return StringUtil.appendIndentString(appendToMe, level).append("</Domain>\n");
   }
 
   public String getType()

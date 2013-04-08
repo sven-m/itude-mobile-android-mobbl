@@ -19,7 +19,10 @@ package com.itude.mobile.mobbl2.client.core.android.compatibility;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
+import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
+import android.os.Build;
 
 /**
  * Implementation of activity compatibility that can call Honeycomb APIs.
@@ -31,6 +34,7 @@ public final class ActivityCompatHoneycomb
   {
   }
 
+  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
   public static void invalidateOptionsMenu(final Activity activity)
   {
     activity.runOnUiThread(new Runnable()
@@ -43,6 +47,27 @@ public final class ActivityCompatHoneycomb
     });
   }
 
+  @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+  public static void enableHomeButton(final Activity activity, final ActionBar actionBar)
+  {
+    activity.runOnUiThread(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        try
+        {
+          actionBar.setHomeButtonEnabled(true);
+        }
+        catch (NoSuchMethodError e)
+        {
+          // not running on ICS, so ignore
+        }
+      }
+    });
+  }
+
+  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
   static void dump(Activity activity, String prefix, FileDescriptor fd, PrintWriter writer, String[] args)
   {
     activity.dump(prefix, fd, writer, args);

@@ -1,7 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBVariableDefinition extends MBDefinition
 {
@@ -10,7 +10,7 @@ public class MBVariableDefinition extends MBDefinition
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    return StringUtilities.appendIndentString(appendToMe, level).append("<Variable name='").append(getName()).append("' expression='")
+    return StringUtil.appendIndentString(appendToMe, level).append("<Variable name='").append(getName()).append("' expression='")
         .append(_expression).append("'/>\n");
   }
 

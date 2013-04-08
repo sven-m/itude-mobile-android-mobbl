@@ -1,7 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.util.resources;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceConfiguration;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 
 public class MBStatedResourceBuilderFactory
 {
@@ -23,7 +23,7 @@ public class MBStatedResourceBuilderFactory
 
   public MBAbstractStatedResourceBuilder getStatedResourceBuilder(String builder, MBResourceConfiguration config)
   {
-    if (StringUtilities.isBlank(builder))
+    if (StringUtil.isBlank(builder))
     {
       return new MBStatedResourceBuilder(config);
     }

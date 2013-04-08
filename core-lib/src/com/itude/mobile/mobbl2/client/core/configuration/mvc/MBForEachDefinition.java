@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
 import com.itude.mobile.mobbl2.client.core.view.MBConditionalDefinition;
 
 public class MBForEachDefinition extends MBConditionalDefinition
@@ -25,10 +25,10 @@ public class MBForEachDefinition extends MBConditionalDefinition
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).//
+    StringUtil.appendIndentString(appendToMe, level).//
     append("<MBForEach ").//
     append(getAttributeAsXml("value", _value)).//
-    append(getAttributeAsXml("suppressRowComponent", _suppressRowComponent ? "TRUE" : "FALSE")).//
+    append(getAttributeAsXml("suppressRowComponent", _suppressRowComponent)).//
     append(">\n");
 
     for (MBVariableDefinition var : _variables.values())
@@ -42,7 +42,7 @@ public class MBForEachDefinition extends MBConditionalDefinition
       def.asXmlWithLevel(appendToMe, level + 2);
     }
 
-    return StringUtilities.appendIndentString(appendToMe, level).append("</MBForEach>\n");
+    return StringUtil.appendIndentString(appendToMe, level).append("</MBForEach>\n");
   }
 
   @Override

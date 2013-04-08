@@ -1,8 +1,9 @@
 package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidDialogDefinitionException;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBDialogDefinition extends MBDefinition
 {
@@ -11,13 +12,14 @@ public class MBDialogDefinition extends MBDefinition
   private String _mode;
   private String _icon;
   private String _parent;
-  private String _addToNavbar;
+  private String _showAs;
   private String _domain;
   private String _action;
 
+  @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    return StringUtilities.appendIndentString(appendToMe, level)//
+    return StringUtil.appendIndentString(appendToMe, level)//
         .append("<Dialog name='")//
         .append(getName())//
         .append('\'')//
@@ -25,12 +27,13 @@ public class MBDialogDefinition extends MBDefinition
         .append(getAttributeAsXml("title", _title))//
         .append(getAttributeAsXml("titlePortrait", _titlePortrait))//
         .append(getAttributeAsXml("icon", _icon))//
-        .append(getAttributeAsXml("addToNavbar", _addToNavbar))//
+        .append(getAttributeAsXml("showAs", _showAs))//
         .append(getAttributeAsXml("domain", _domain))//
         .append(getAttributeAsXml("action", _action))//
         .append("/>\n");
   }
 
+  @Override
   public void validateDefinition()
   {
     if (getName() == null)
@@ -57,7 +60,7 @@ public class MBDialogDefinition extends MBDefinition
 
   public String getTitlePortrait()
   {
-    return _titlePortrait;
+    return _titlePortrait != null ? _titlePortrait : getTitle();
   }
 
   public String getMode()
@@ -90,14 +93,29 @@ public class MBDialogDefinition extends MBDefinition
     _parent = parent;
   }
 
-  public String getAddToNavbar()
+  public String getShowAs()
   {
-    return _addToNavbar;
+    return _showAs;
   }
 
-  public void setAddToNavbar(String addToNavbar)
+  public void setShowAs(String showAs)
   {
-    _addToNavbar = addToNavbar;
+    _showAs = showAs;
+  }
+
+  public boolean isShowAsTab()
+  {
+    return Constants.C_SHOW_AS_TAB.equals(_showAs);
+  }
+
+  public boolean isShowAsMenu()
+  {
+    return Constants.C_SHOW_AS_MENU.equals(_showAs);
+  }
+
+  public boolean isShowAsDocument()
+  {
+    return Constants.C_SHOW_AS_DOCUMENT.equals(_showAs);
   }
 
   public void setDomain(String domain)

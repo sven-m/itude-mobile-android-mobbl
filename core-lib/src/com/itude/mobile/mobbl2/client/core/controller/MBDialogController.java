@@ -4,56 +4,96 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
-import android.content.Intent;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.BackStackEntry;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Window;
+import android.view.KeyEvent;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
+import com.itude.mobile.android.util.DeviceUtil;
+import com.itude.mobile.android.util.ScreenUtil;
+import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
+import com.itude.mobile.mobbl2.client.core.controller.helpers.MBActivityHelper;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.MBDevice;
-import com.itude.mobile.mobbl2.client.core.util.MBScreenUtilities;
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
-import com.itude.mobile.mobbl2.client.core.util.UniqueIntegerGenerator;
+import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBDialogViewBuilder.MBDialogType;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
-public class MBDialogController extends FragmentActivity
+public class MBDialogController extends ContextWrapper
 {
+
   private String                     _name;
   private String                     _iconName;
   private String                     _dialogMode;
+  private String                     _outcomeId;
   private Object                     _rootController;
   private boolean                    _temporary;
-  private final List<Integer>        _sortedDialogIds  = new ArrayList<Integer>();
-  private final Map<String, Integer> _dialogIds        = new HashMap<String, Integer>();
-  private final Map<String, String>  _childDialogModes = new HashMap<String, String>();
-  private boolean                    _clearDialog      = false;
+  private final List<Integer>        _sortedDialogIds      = new ArrayList<Integer>();
+  private final Map<String, Integer> _dialogIds            = new HashMap<String, Integer>();
+  private final Map<String, String>  _childDialogModes     = new HashMap<String, String>();
+  private View                       _mainContainer;
+  private boolean                    _shown                = false;
+  private FragmentStack              _fragmentStack;
+  private String                     _title;
+  private boolean                    _clearDialog;
+  private Configuration              _configurationChanged = null;
 
-  // Android lifecycle methods
-
-  @Override
-  protected void onCreate(Bundle savedInstanceState)
+  public MBDialogController()
   {
-    super.onCreate(savedInstanceState);
+    super(MBViewManager.getInstance());
+  }
+
+  public void init(String dialog, String outcomeId)
+  {
+    _fragmentStack = new FragmentStack(getSupportFragmentManager());
+    setName(dialog);
+    setOutcomeId(outcomeId);
     if (controllerInit())
     {
       viewInit();
     }
+  }
+
+  public void finish()
+  {
+    getActivity().finishFromChild(this);
+  }
+
+  void shutdown()
+  {
+    onShutdown();
+  }
+
+  protected void onShutdown()
+  {
+    // hook to be called when the application is shutting down
+  }
+
+  private MBViewManager getActivity()
+  {
+    return MBViewManager.getInstance();
   }
 
   /**
@@ -61,18 +101,14 @@ public class MBDialogController extends FragmentActivity
    */
   private boolean controllerInit()
   {
-    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
-    Intent intent = getIntent();
-    String dialogName = intent.getStringExtra("dialogName");
-
-    if (dialogName != null)
+    if (getName() != null)
     {
-      setName(dialogName);
-      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(getName());
       setIconName(dialogDefinition.getIcon());
       setDialogMode(dialogDefinition.getMode());
-      setTitle(MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
+
+      _title = MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle());
       if (dialogDefinition.isGroup())
       {
         List<MBDialogDefinition> children = ((MBDialogGroupDefinition) dialogDefinition).getChildren();
@@ -114,52 +150,73 @@ public class MBDialogController extends FragmentActivity
 
   private void viewInit()
   {
-    RelativeLayout mainContainer = null;
-
     // handle as a single dialog
     if (_dialogIds.size() == 1)
     {
-      mainContainer = (RelativeLayout) MBViewBuilderFactory.getInstance().getDialogViewBuilder()
-          .buildDialog(MBDialogType.Single, _sortedDialogIds);
+      _mainContainer = MBViewBuilderFactory.getInstance().getDialogViewBuilder().buildDialog(MBDialogType.Single, _sortedDialogIds);
     }
     // handle as a group of dialogs
     else if (_dialogIds.size() > 1)
     {
-      mainContainer = (RelativeLayout) MBViewBuilderFactory.getInstance().getDialogViewBuilder()
-          .buildDialog(MBDialogType.Split, _sortedDialogIds);
+      _mainContainer = MBViewBuilderFactory.getInstance().getDialogViewBuilder().buildDialog(MBDialogType.Split, _sortedDialogIds);
     }
 
-    setContentView(mainContainer);
-
-    String outcomeID = getIntent().getStringExtra("outcomeID");
-    if (outcomeID != null)
+    if (getOutcomeId() != null)
     {
-      Log.d(Constants.APPLICATION_NAME, "MBDialogController.onCreate: found outcomeID=" + outcomeID);
-      MBPage page = MBApplicationController.getInstance().getPage(outcomeID);
-      showPage(page, null, outcomeID, page.getDialogName(), false);
+      /*Log.d(Constants.APPLICATION_NAME, "MBDialogController.onCreate: found outcomeID=" + getOutcomeId());
+      MBPage page = MBApplicationController.getInstance().getPage(getOutcomeId());
+      showPage(page, null, getOutcomeId(), page.getDialogName(), false);*/
     }
-  }
-
-  @Override
-  public void onWindowFocusChanged(boolean hasFocus)
-  {
-    if (hasFocus)
-    {
-      getParent().setTitle(getTitle());
-    }
-    super.onWindowFocusChanged(hasFocus);
   }
 
   ////////////////////////////
 
-  /**
-   * 
-   */
+  public void activate()
+  {
+    getActivity().setContentView(_mainContainer);
+
+    activateWithoutSwitching();
+
+    getActivity().setTitle(_title);
+  }
+
+  public void activateWithoutSwitching()
+  {
+
+    if (!_shown && getOutcomeId() != null)
+    {
+      MBPage page = MBApplicationController.getInstance().getPage(getOutcomeId());
+      showPage(page, null, getOutcomeId(), page.getDialogName(), false);
+      _shown = true;
+    }
+
+    if (_clearDialog)
+    {
+      getFragmentStack().emptyBackStack(false);
+      _fragmentStack = new FragmentStack(getSupportFragmentManager());
+      _clearDialog = false;
+    }
+
+    getFragmentStack().playBackStack();
+
+    if (_configurationChanged != null)
+    {
+      handleOrientationChange(_configurationChanged);
+    }
+
+  }
+
+  public void deactivate()
+  {
+    getFragmentStack().emptyBackStack(true);
+  }
+
   public void clearAllViews()
   {
-    if (getName().equals(MBViewManager.getInstance().getActiveDialogName()))
+    if (getName().equals(MBViewManager.getInstance().getActiveDialogName())
+        && !MBActivityHelper.isApplicationBroughtToBackground(getActivity()))
     {
-      doClearAllViews();
+      getFragmentStack().emptyBackStack(false);
     }
     else
     {
@@ -167,34 +224,28 @@ public class MBDialogController extends FragmentActivity
     }
   }
 
-  private void doClearAllViews()
+  public void removeOnBackStackChangedListenerOfCurrentDialog()
   {
-    _clearDialog = false;
-    final FragmentManager fragmentManager = getSupportFragmentManager();
-
-    if (fragmentManager.getBackStackEntryCount() > 0)
+    if (_fragmentStack != null)
     {
-      runOnUiThread(new Runnable()
-      {
-        @Override
-        public void run()
-        {
-          fragmentManager.popBackStackImmediate(fragmentManager.getBackStackEntryAt(0).getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
-      });
+      _fragmentStack.getFragmentManager().removeOnBackStackChangedListener(_fragmentStack);
     }
+  }
 
+  private FragmentManager getSupportFragmentManager()
+  {
+    return getActivity().getSupportFragmentManager();
+  }
+
+  public FragmentStack getFragmentStack()
+  {
+    return _fragmentStack;
   }
 
   public void popView()
   {
-    if (isBackStackEmpty()) finish();
+    if (getFragmentStack().isBackStackEmpty()) finish();
     else getSupportFragmentManager().popBackStack();
-  }
-
-  public boolean isBackStackEmpty()
-  {
-    return getSupportFragmentManager().getBackStackEntryCount() == 0;
   }
 
   public void endModalPage(String pageName)
@@ -204,7 +255,7 @@ public class MBDialogController extends FragmentActivity
       getSupportFragmentManager().popBackStack(pageName, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
       // Make sure no unnecessary views are being popped
-      MBApplicationController.getInstance().removeLastModalPageID();
+      //      MBApplicationController.getInstance().removeLastModalPageID();
     }
   }
 
@@ -236,6 +287,16 @@ public class MBDialogController extends FragmentActivity
   public void setDialogMode(String dialogMode)
   {
     _dialogMode = dialogMode;
+  }
+
+  private String getOutcomeId()
+  {
+    return _outcomeId;
+  }
+
+  private void setOutcomeId(String outcomeId)
+  {
+    _outcomeId = outcomeId;
   }
 
   public Object getRootController()
@@ -271,8 +332,13 @@ public class MBDialogController extends FragmentActivity
     {
       addToBackStack = false;
     }
+    else if ("REPLACEDIALOG".equals(displayMode) && !getFragmentStack().isBackStackEmpty())
+    {
+      getFragmentStack().emptyBackStack(false);
+    }
 
     MBBasicViewController fragment = MBApplicationFactory.getInstance().createFragment(page.getPageName());
+    fragment.setDialogController(this);
     Bundle args = new Bundle();
     args.putString("id", id);
     fragment.setArguments(args);
@@ -327,7 +393,7 @@ public class MBDialogController extends FragmentActivity
       }
 
       Fragment dialogFragment = getSupportFragmentManager().findFragmentByTag(modalPageID);
-      if (dialogFragment != null && !isBackStackEmpty())
+      if (dialogFragment != null && !getFragmentStack().isBackStackEmpty())
       {
         getSupportFragmentManager().popBackStack();
       }
@@ -342,13 +408,13 @@ public class MBDialogController extends FragmentActivity
       }
       else
       {
-        if (!isBackStackEmpty())
+        if (!getFragmentStack().isBackStackEmpty())
         {
           getSupportFragmentManager().popBackStack();
           transaction.addToBackStack(id);
         }
       }
-      transaction.replace(_dialogIds.get(dialogName), fragment);
+      transaction.replace(_dialogIds.get(dialogName), fragment, id);
     }
 
     // commitAllowingStateLoss makes sure that the transaction is being commit,
@@ -406,11 +472,6 @@ public class MBDialogController extends FragmentActivity
    */
   public void handleAllOnWindowActivated()
   {
-    if (_clearDialog)
-    {
-      doClearAllViews();
-    }
-
     for (MBBasicViewController controller : getAllFragments())
     {
       handleOnWindowActivated(controller);
@@ -450,42 +511,214 @@ public class MBDialogController extends FragmentActivity
 
   public void handleOrientationChange(Configuration newConfig)
   {
-    if (MBDevice.getInstance().isTablet() && "SPLIT".equals(_dialogMode))
+    if (getName().equals(MBViewManager.getInstance().getActiveDialogName()))
     {
-      for (int i = 0; i < _sortedDialogIds.size() - 1; i++)
+      if (DeviceUtil.isTablet() && "SPLIT".equals(_dialogMode))
       {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(_sortedDialogIds.get(i));
-        FrameLayout fragmentContainer = (FrameLayout) fragment.getView().getParent();
-        fragmentContainer.getLayoutParams().width = MBScreenUtilities.getWidthPixelsForPercentage(33);
+        for (int i = 0; i < _sortedDialogIds.size() - 1; i++)
+        {
+          Fragment fragment = getSupportFragmentManager().findFragmentById(_sortedDialogIds.get(i));
+          // if the fragment didn't load correctly (e.g. a network error occurred), we don't want to crash the app
+          if (fragment != null)
+          {
+            FrameLayout fragmentContainer = (FrameLayout) fragment.getView().getParent();
+            fragmentContainer.getLayoutParams().width = ScreenUtil.getWidthPixelsForPercentage(getBaseContext(), 33);
+          }
+        }
       }
+
+      for (MBBasicViewController controller : getAllFragments())
+      {
+        controller.handleOrientationChange(newConfig);
+      }
+
+      String modalPageID = MBApplicationController.getInstance().getModalPageID();
+      if (StringUtil.isNotBlank(modalPageID))
+      {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(modalPageID);
+        if (fragment != null && fragment instanceof MBBasicViewController)
+        {
+          ((MBBasicViewController) fragment).handleOrientationChange(newConfig);
+        }
+      }
+
+      _configurationChanged = null;
+    }
+    else
+    {
+      _configurationChanged = newConfig;
     }
 
-    for (MBBasicViewController controller : getAllFragments())
-    {
-      controller.handleOrientationChange(newConfig);
-    }
+  }
 
-    String modalPageID = MBApplicationController.getInstance().getModalPageID();
-    if (StringUtilities.isNotBlank(modalPageID))
-    {
-      Fragment fragment = getSupportFragmentManager().findFragmentByTag(modalPageID);
-      if (fragment != null && fragment instanceof MBBasicViewController)
-      {
-        ((MBBasicViewController) fragment).handleOrientationChange(newConfig);
-      }
-    }
+  public View getMainContainer()
+  {
+    return _mainContainer;
   }
 
   // Back button press handling
-
-  @Override
-  public void onBackPressed()
+  public boolean onBackPressed()
   {
     boolean handled = false;
     for (MBBasicViewController controller : getAllFragments())
-      if (controller.onBackKeyPressed()) handled = true;
+    {
+      if (controller.onBackKeyPressed())
+      {
+        handled = true;
+      }
+    }
 
-    if (!handled) super.onBackPressed();
+    if (!handled)
+    {
+      popView();
+    }
+
+    return true;
   }
 
+  /*
+   * To enable fragments to catch key events we will need to be able to pass it through to them
+   */
+  public boolean onKeyDown(int keyCode, KeyEvent event)
+  {
+
+    boolean handled = false;
+
+    for (MBBasicViewController controller : getAllFragments())
+    {
+      if (controller.onKeyDown(keyCode, event))
+      {
+        handled = true;
+      }
+    }
+
+    return handled;
+  }
+
+  public boolean onMenuItemSelected(int featureId, MenuItem item)
+  {
+    return false;
+  }
+
+  public boolean onSearchRequested()
+  {
+    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+    SearchableInfo searchableInfo = searchManager.getSearchableInfo(MBViewManager.getInstance().getComponentName());
+
+    if (searchableInfo == null)
+    {
+      return false;
+    }
+
+    MBViewManager.getInstance().runOnUiThread(new MBThread()
+    {
+      @Override
+      public void runMethod()
+      {
+        MBViewManager.getInstance().startSearch(null, false, null, false);
+      }
+    });
+    return true;
+  }
+
+  public boolean dispatchTouchEvent(MotionEvent ev)
+  {
+    return false;
+  }
+
+  private static class FragmentStack implements OnBackStackChangedListener
+  {
+
+    private final FragmentManager _fragmentManager;
+
+    private static class SavedStackEntry
+    {
+      public String   id;
+      public int      dialogId;
+      public Fragment fragment;
+    }
+
+    private final Stack<SavedStackEntry> _stack = new Stack<SavedStackEntry>();
+
+    public FragmentStack(FragmentManager manager)
+    {
+      _fragmentManager = manager;
+    }
+
+    public FragmentManager getFragmentManager()
+    {
+      return _fragmentManager;
+    }
+
+    @Override
+    public void onBackStackChanged()
+    {
+      int count = getFragmentManager().getBackStackEntryCount();
+
+      _stack.clear();
+      for (; _stack.size() < count;)
+      {
+        SavedStackEntry entry = new SavedStackEntry();
+        BackStackEntry bse = getFragmentManager().getBackStackEntryAt(_stack.size());
+        entry.id = bse.getName();
+
+        entry.fragment = getFragmentManager().findFragmentByTag(entry.id);
+        entry.dialogId = entry.fragment.getId();
+        _stack.push(entry);
+      }
+
+    }
+
+    private void playBackStack()
+    {
+      if (!_stack.isEmpty())
+      {
+        for (SavedStackEntry sse : _stack)
+        {
+          if (sse.dialogId != 0)
+          {
+            FragmentTransaction fr = getFragmentManager().beginTransaction();
+
+            fr.addToBackStack(sse.id);
+            fr.replace(sse.dialogId, sse.fragment, sse.id);
+            fr.commitAllowingStateLoss();
+
+            //https://mobiledev.itude.com/jira/browse/MOBBL-621
+            getFragmentManager().executePendingTransactions();
+          }
+
+        }
+
+      }
+
+      getFragmentManager().addOnBackStackChangedListener(this);
+    }
+
+    private void emptyBackStack(boolean deactivate)
+    {
+      if (deactivate)
+      {
+        getFragmentManager().removeOnBackStackChangedListener(this);
+      }
+
+      MBViewManager.getInstance().runOnUiThread(new Runnable()
+      {
+        @Override
+        public void run()
+        {
+          if (!isBackStackEmpty())
+          {
+            BackStackEntry backStackEntry = getFragmentManager().getBackStackEntryAt(0);
+            getFragmentManager().popBackStackImmediate(backStackEntry.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+          }
+        }
+      });
+    }
+
+    public boolean isBackStackEmpty()
+    {
+      return getFragmentManager().getBackStackEntryCount() == 0;
+    }
+
+  }
 }

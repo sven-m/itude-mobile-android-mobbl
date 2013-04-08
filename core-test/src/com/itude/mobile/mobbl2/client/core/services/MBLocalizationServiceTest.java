@@ -2,8 +2,8 @@ package com.itude.mobile.mobbl2.client.core.services;
 
 import android.test.ApplicationTestCase;
 
+import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.MBApplicationCore;
-import com.itude.mobile.mobbl2.client.core.util.DataUtil;
 
 public class MBLocalizationServiceTest extends ApplicationTestCase<MBApplicationCore>
 {

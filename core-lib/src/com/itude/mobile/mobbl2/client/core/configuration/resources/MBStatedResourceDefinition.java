@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.configuration.resources;
 
-import com.itude.mobile.mobbl2.client.core.util.StringUtilities;
+import com.itude.mobile.android.util.StringUtil;
+
 
 public class MBStatedResourceDefinition extends MBAbstractResourceCollectionDefinition
 {
@@ -9,14 +10,14 @@ public class MBStatedResourceDefinition extends MBAbstractResourceCollectionDefi
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtilities.appendIndentString(appendToMe, level).append("<StatedResource id='").append(getResourceId()).append("' type='")
+    StringUtil.appendIndentString(appendToMe, level).append("<StatedResource id='").append(getResourceId()).append("' type='")
         .append(getType()).append("' >");
     for (MBItemDefinition item : getItems().values())
     {
       item.asXmlWithLevel(appendToMe, level + 2);
     }
 
-    return StringUtilities.appendIndentString(appendToMe, level).append("</StatedResource>");
+    return StringUtil.appendIndentString(appendToMe, level).append("</StatedResource>");
   }
 
   public String getType()

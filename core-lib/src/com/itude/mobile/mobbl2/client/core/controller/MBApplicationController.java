@@ -13,14 +13,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue;
 import android.os.MessageQueue.IdleHandler;
 import android.util.Log;
 
+import com.itude.mobile.android.util.AssertUtil;
+import com.itude.mobile.android.util.CollectionUtilities;
+import com.itude.mobile.android.util.DataUtil;
+import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition;
@@ -28,8 +34,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBInvalidOutcomeException;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
-import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBActivityIndicator;
-import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndeterminateProgressIndicator;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
@@ -38,12 +42,9 @@ import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowChangeType;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBNoDocumentException;
-import com.itude.mobile.mobbl2.client.core.util.CollectionUtilities;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.DataUtil;
-import com.itude.mobile.mobbl2.client.core.util.DeviceUtil;
-import com.itude.mobile.mobbl2.client.core.util.MBDevice;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
+import com.itude.mobile.mobbl2.client.core.view.MBAlert;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 
 public class MBApplicationController extends Application
@@ -60,9 +61,6 @@ public class MBApplicationController extends Application
 
   private static MBApplicationController       _instance                = null;
 
-  private String                               _searchResultNormal      = null;
-  private String                               _searchResultProgressive = null;
-
   private ApplicationState                     _currentApplicationState = ApplicationState.NOTSTARTED;
 
   public static enum ApplicationState {
@@ -78,7 +76,6 @@ public class MBApplicationController extends Application
     Context context = getBaseContext();
     DataUtil.getInstance().setContext(context);
     DeviceUtil.getInstance().setContext(context);
-    MBDevice.getInstance();
     super.onCreate();
     _instance = this;
     _pages = new HashMap<String, MBPage>();
@@ -118,7 +115,7 @@ public class MBApplicationController extends Application
   {
     Log.d(Constants.APPLICATION_NAME, "MBApplicationController.startApplication");
     Log.d(Constants.APPLICATION_NAME, "Device info:\n");
-    Log.d(Constants.APPLICATION_NAME, MBDevice.getInstance().toString());
+    Log.d(Constants.APPLICATION_NAME, DeviceUtil.getInstance().toString());
 
     startOutcomeHandler();
 
@@ -128,8 +125,6 @@ public class MBApplicationController extends Application
     _viewManager = MBViewManager.getInstance();
 
     _viewManager.setSinglePageMode((MBMetadataService.getInstance().getDialogs().size() <= 1));
-    _viewManager.setActivityIndicator(MBActivityIndicator.getInstance());
-    _viewManager.setIndeterminateIndicator(MBIndeterminateProgressIndicator.getInstance());
 
     fireInitialOutcomes();
   }
@@ -144,7 +139,7 @@ public class MBApplicationController extends Application
 
     _suppressPageSelection = true;
     _backStackEnabled = false;
-    handleOutcome(initialOutcome);
+    handleOutcomeSynchronously(initialOutcome);
 
     _outcomeHandler.sendEmptyMessage(Constants.C_MESSAGE_INITIAL_OUTCOMES_FINISHED);
   }
@@ -159,11 +154,13 @@ public class MBApplicationController extends Application
     _backStackEnabled = true;
 
     final MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
-    boolean isInNavbar = "TRUE".equalsIgnoreCase(homeDialogDefinition.getAddToNavbar());
-    MBViewManager.getInstance().invalidateActionBar(isInNavbar);
 
-    if (!isInNavbar || MBDevice.getInstance().isPhone())
+    MBViewManager.getInstance().invalidateActionBar(homeDialogDefinition.isShowAsTab());
+    MBViewManager.getInstance().buildSlidingMenu();
+
+    if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone())
     {
+
       _viewManager.runOnUiThread(new Runnable()
       {
         @Override
@@ -196,7 +193,7 @@ public class MBApplicationController extends Application
 
   }
 
-  void onApplicationStarted()
+  protected void onApplicationStarted()
   {
     // Let's see if we want to fire an outcome after the initial ones but before we let the application know it's finished starting
     final String outcomeName = _viewManager.getIntent().getStringExtra(Constants.C_INTENT_POST_INITIALOUTCOMES_OUTCOMENAME);
@@ -251,35 +248,9 @@ public class MBApplicationController extends Application
     _outcomeHandler.sendMessage(msg);
   }
 
-  public void showIndicatorForOutcome(MBOutcome outcome)
-  {
-    String indicator = outcome.getIndicator();
-    if (indicator == null || "ACTIVITY".equals(indicator))
-    {
-      _viewManager.showActivityIndicator();
-    }
-    else if ("PROGRESS".equals(indicator))
-    {
-      _viewManager.showIndeterminateProgressIndicator();
-    }
-  }
-
-  public void hideIndicatorForOutcome(MBOutcome outcome)
-  {
-    String indicator = outcome.getIndicator();
-    if (indicator == null || "ACTIVITY".equals(indicator))
-    {
-      _viewManager.hideActivityIndicator();
-    }
-    else if ("PROGRESS".equals(indicator))
-    {
-      _viewManager.hideIndeterminateProgressIndicator();
-    }
-  }
-
   ////////////// PAGE HANDLING
 
-  public Object[] preparePageInBackground(MBOutcome causingOutcome, String pageName, String selectPageInDialog, Boolean backStackEnabled)
+  public Object[] preparePage(MBOutcome causingOutcome, String pageName, String selectPageInDialog, Boolean backStackEnabled)
   {
     Object[] result = null;
     try
@@ -288,37 +259,7 @@ public class MBApplicationController extends Application
       // construct the page
       MBPageDefinition pageDefinition = MBMetadataService.getInstance().getDefinitionForPageName(pageName);
 
-      // Load the document from the store
-      MBDocument document = null;
-
-      if (causingOutcome.getTransferDocument())
-      {
-        if (causingOutcome.getDocument() == null)
-        {
-          String msg = "No document provided (null) in outcome by action/page=" + causingOutcome.getOriginName()
-                       + " but transferDocument='TRUE' in outcome definition";
-          throw new MBInvalidOutcomeException(msg);
-        }
-        String actualType = causingOutcome.getDocument().getDefinition().getName();
-        if (!actualType.equals(pageDefinition.getDocumentName()))
-        {
-          String msg = "Document provided via outcome by action/page=" + causingOutcome.getOriginName()
-                       + " (transferDocument='TRUE') is of type " + actualType + "but must be of type " + pageDefinition.getDocumentName();
-          throw new MBInvalidOutcomeException(msg);
-        }
-        document = causingOutcome.getDocument();
-      }
-      else
-      {
-        document = MBDataManagerService.getInstance().loadDocument(pageDefinition.getDocumentName());
-
-        if (document == null)
-        {
-          document = MBDataManagerService.getInstance().loadDocument(pageDefinition.getDocumentName());
-          String msg = "Document with name " + pageDefinition.getDocumentName() + " not found (check filesystem/webservice)";
-          throw new MBNoDocumentException(msg);
-        }
-      }
+      MBDocument document = prepareDocument(causingOutcome, pageDefinition.getDocumentName());
       if (causingOutcome.getNoBackgroundProcessing())
       {
         showResultingPage(causingOutcome, pageDefinition, document, selectPageInDialog, backStackEnabled);
@@ -346,6 +287,7 @@ public class MBApplicationController extends Application
       MBViewState viewState = _viewManager.getCurrentViewState();
 
       if ("MODAL".equals(displayMode) //
+          || "MODALWITHCLOSEBUTTON".equals(displayMode) //
           || "MODALFORMSHEET".equals(displayMode) //
           || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode) //
           || "MODALPAGESHEET".equals(displayMode) //
@@ -359,7 +301,8 @@ public class MBApplicationController extends Application
         viewState = MBViewState.MBViewStateModal;
       }
 
-      final MBPage page = _applicationFactory.createPage(pageDefinition, document, causingOutcome.getPath(), viewState);
+      final MBPage page = _applicationFactory.getPageConstructor()
+          .createPage(pageDefinition, document, causingOutcome.getPath(), viewState);
       page.setController(this);
       page.setDialogName(causingOutcome.getDialogName());
       // Fallback on the lastly selected dialog if there is no dialog set in the outcome:
@@ -377,7 +320,6 @@ public class MBApplicationController extends Application
           _viewManager.showPage(page, displayMode, doSelect, backStackEnabled);
         }
       });
-      hideIndicatorForOutcome(causingOutcome);
     }
     catch (Exception e)
     {
@@ -387,23 +329,114 @@ public class MBApplicationController extends Application
 
   ////////END OF PAGE HANDLING
 
+  private MBDocument prepareDocument(MBOutcome causingOutcome, String documentName) throws MBInvalidOutcomeException, MBNoDocumentException
+  {
+
+    // Load the document from the store
+    MBDocument document = null;
+
+    if (causingOutcome.getTransferDocument())
+    {
+      if (causingOutcome.getDocument() == null)
+      {
+        String msg = "No document provided (null) in outcome by action/page/alert=" + causingOutcome.getOriginName()
+                     + " but transferDocument='TRUE' in outcome definition";
+        throw new MBInvalidOutcomeException(msg);
+      }
+      String actualType = causingOutcome.getDocument().getDefinition().getName();
+      if (!actualType.equals(documentName))
+      {
+        String msg = "Document provided via outcome by action/page/alert=" + causingOutcome.getOriginName()
+                     + " (transferDocument='TRUE') is of type " + actualType + " but must be of type " + documentName;
+        throw new MBInvalidOutcomeException(msg);
+      }
+      document = causingOutcome.getDocument();
+    }
+    else
+    {
+      document = MBDataManagerService.getInstance().loadDocument(documentName);
+
+      if (document == null)
+      {
+        document = MBDataManagerService.getInstance().loadDocument(documentName);
+        String msg = "Document with name " + documentName + " not found (check filesystem/webservice)";
+        throw new MBNoDocumentException(msg);
+      }
+    }
+
+    return document;
+  }
+
+  ////////ALERT (AlertDialog) HANDLING
+
+  public Object[] prepareAlert(MBOutcome causingOutcome, String alertName, Boolean backStackEnabled)
+  {
+    Object[] result = null;
+    try
+    {
+
+      // construct the alert
+      MBAlertDefinition alertDefinition = MBMetadataService.getInstance().getDefinitionForAlertName(alertName);
+
+      MBDocument document = prepareDocument(causingOutcome, alertDefinition.getDocumentName());
+
+      // Alerts need no background processing
+      showResultingAlert(causingOutcome, alertDefinition, document, backStackEnabled);
+    }
+    catch (Exception e)
+    {
+      handleException(e, causingOutcome);
+    }
+    return result;
+  }
+
+  public void showResultingAlert(MBOutcome causingOutcome, MBAlertDefinition alertDefinition, MBDocument document,
+                                 final boolean backStackEnabled)
+  {
+
+    try
+    {
+      final MBAlert alert = _applicationFactory.createAlert(alertDefinition, document, causingOutcome.getPath());
+
+      Handler mainHandler = new Handler(MBViewManager.getInstance().getMainLooper());
+      Runnable myRunnable = new Runnable()
+      {
+        @Override
+        public void run()
+        {
+          _viewManager.showAlert(alert, backStackEnabled);
+        }
+
+      };
+      mainHandler.post(myRunnable);
+
+    }
+    catch (Exception e)
+    {
+      handleException(e, causingOutcome);
+    }
+
+  }
+
+  ////////END OF ALERT (AlertDialog) HANDLING
+
   ////////ACTION HANDLING
 
-  public void performActionInBackground(MBOutcome causingOutcome, MBActionDefinition actionDef)
+  public void performAction(MBOutcome causingOutcome, MBActionDefinition actionDef)
   {
+    AssertUtil.notNull("causingOutcome", causingOutcome);
+    AssertUtil.notNull("actionDef", actionDef);
     try
     {
 
       MBAction action = _applicationFactory.createAction(actionDef.getClassName());
       if (action == null)
       {
-        Log.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action "
-                                          + actionDef.getName() + " (outcome == null); no further procesing.");
+        throw new MBException("No action found for " + actionDef.getClassName());
       }
 
       MBOutcome actionOutcome = action.execute(causingOutcome.getDocument(), causingOutcome.getPath());
 
-      hideIndicatorForOutcome(causingOutcome);
       if (actionOutcome == null)
       {
         Log.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action "
@@ -567,7 +600,7 @@ public class MBApplicationController extends Application
     exceptionDocument.setValue(outcome.getOutcomeName(), MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_OUTCOME);
     for (StackTraceElement traceElement : exception.getStackTrace())
     {
-      MBElement stackline = exceptionDocument.createElementWithName("/Exception[0]/Stackline");
+      MBElement stackline = exceptionDocument.createElement("/Exception[0]/Stackline");
       String line = traceElement.toString();
       if (line.length() > 52) line = line.substring(0, 52);
       stackline.setAttributeValue(line, "line");
@@ -576,12 +609,6 @@ public class MBApplicationController extends Application
     MBDataManagerService.getInstance().storeDocument(exceptionDocument);
 
     MBMetadataService metadataService = MBMetadataService.getInstance();
-
-    // We are not sure at this moment if the activity indicator is shown. But to be sure; try to hide it.
-    // This might mess up the count of the activity indicators if more than one page is being constructed in the background;
-    // however most of the times this will work out; so:
-    //    _viewManager.hideActivityIndicatorForDialog(outcome.getDialogName());
-    _viewManager.hideActivityIndicator();
 
     // See if there is an outcome defined for this particular exception
     ArrayList<MBOutcomeDefinition> outcomeDefinitions = (ArrayList<MBOutcomeDefinition>) metadataService
@@ -681,36 +708,56 @@ public class MBApplicationController extends Application
   public void handleSearchRequest(Intent searchIntent)
   {
     final String query;
-    final String isProgressive;
+    final boolean isProgressive;
 
     query = searchIntent.getStringExtra(SearchManager.QUERY);
 
-    isProgressive = Intent.ACTION_SEARCH.equals(searchIntent.getAction()) ? "FALSE" : "TRUE";
+    isProgressive = !Intent.ACTION_SEARCH.equals(searchIntent.getAction());
 
     String searchPath = "";
 
-    Bundle bundle = searchIntent.getBundleExtra(SearchManager.APP_DATA);
-    if (bundle != null)
-    {
+    //    Bundle bundle = searchIntent.getBundleExtra(SearchManager.APP_DATA);
+    //    if (bundle != null)
+    //    {
+    //      _searchResultNormal = bundle.getString(Constants.C_BUNDLE_NORMAL_SEARCH_OUTCOME);
+    //      _searchResultProgressive = bundle.getString(Constants.C_BUNDLE_PROGRESSIVE_SEARCH_OUTCOME);
+    //      searchPath = bundle.getString(Constants.C_BUNDLE_SEARCH_PATH);
+    //    }
 
-      _searchResultNormal = bundle.getString("searchResultNormal");
-      _searchResultProgressive = bundle.getString("searchResultProgressive");
-      searchPath = bundle.getString("searchPath");
-    }
+    MBDocument searchConfigDoc = MBDataManagerService.getInstance().loadDocument(Constants.C_DOC_SEARCH_CONFIGURATION);
+    String searchPage = searchConfigDoc.getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/"
+                                                        + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_SEARCH_PAGE);
+    String searchAction = searchConfigDoc.getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/"
+                                                          + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_SEARCH_ACTION);
+    String normalSearchOutcome = searchConfigDoc.getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/"
+                                                                 + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_NORMAL_SEARCH_OUTCOME);
+    String progressiveSearchOutcome = searchConfigDoc
+        .getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/" + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_PROGRESSIVE_SEARCH_OUTCOME);
+    searchPath = searchConfigDoc.getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/"
+                                                 + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_SEARCH_PATH);
+
+    MBPageDefinition pageDefinition = MBMetadataService.getInstance().getDefinitionForPageName(searchPage);
+    MBDocument document = new MBDocument(MBMetadataService.getInstance().getDefinitionForDocumentName(pageDefinition.getDocumentName()));
+
+    MBPage page = MBApplicationFactory.getInstance().createPage(pageDefinition, document, null, MBViewState.MBViewStatePlain);
+    page.setController(MBApplicationController.getInstance());
+    MBApplicationController.getInstance().setPage(searchAction + searchPage, page);
 
     String path = Uri.decode(searchIntent.getDataString());
 
-    MBDocument searchRequest = MBDataManagerService.getInstance().loadDocument("MBSearchRequestDoc");
-    searchRequest.setValue(query, "SearchRequest[0]/@query");
-    searchRequest.setValue(isProgressive, "SearchRequest[0]/@isProgressive");
-    searchRequest.setValue(_searchResultNormal, "SearchRequest[0]/@searchResultNormal");
-    searchRequest.setValue(_searchResultProgressive, "SearchRequest[0]/@searchResultProgressive");
+    MBDocument searchRequest = MBDataManagerService.getInstance().loadDocument(Constants.C_DOC_SEARCH_REQUEST);
+    searchRequest.setValue(query, Constants.C_EL_SEARCH_REQUEST + "/" + Constants.C_EL_SEARCH_REQUEST_ATTR_QUERY);
+    searchRequest.setValue(isProgressive, Constants.C_EL_SEARCH_REQUEST + "/" + Constants.C_EL_SEARCH_REQUEST_ATTR_IS_PROGRESSIVE);
+    searchRequest.setValue(normalSearchOutcome, Constants.C_EL_SEARCH_REQUEST + "/"
+                                                + Constants.C_EL_SEARCH_REQUEST_ATTR_NORMAL_SEARCH_OUTCOME);
+    searchRequest.setValue(progressiveSearchOutcome, Constants.C_EL_SEARCH_REQUEST + "/"
+                                                     + Constants.C_EL_SEARCH_REQUEST_ATTR_PROGRESSIVE_SEARCH_OUTCOME);
 
     MBOutcome searchOutcome = new MBOutcome();
-    searchOutcome.setOriginName("Controller");
-    searchOutcome.setOutcomeName("search");
+    searchOutcome.setOriginName(Constants.C_MOBBL_ORIGIN_NAME_CONTROLLER);
+    searchOutcome.setOutcomeName(Constants.C_MOBBL_ORIGIN_CONTROLLER_NAME_SEARCH);
     searchOutcome.setDocument(searchRequest);
-    searchOutcome.setPath(path + searchPath);
+    searchOutcome.setPath((path != null) ? path + searchPath : null);
 
     handleOutcome(searchOutcome);
 

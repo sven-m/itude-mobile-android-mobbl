@@ -5,6 +5,8 @@ import java.util.Map;
 
 import android.util.Log;
 
+import com.itude.mobile.android.util.FileUtil;
+
 public class MBCacheWriter extends Thread
 {
   private Map<String, String>       _registry;

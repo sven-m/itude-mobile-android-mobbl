@@ -1,13 +1,17 @@
 package com.itude.mobile.mobbl2.client.core.configuration;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBBundleDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
@@ -21,11 +25,11 @@ import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceDef
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBResultListenerDefinition;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.MBBundleDefinition;
 
 public class MBDefinition implements Parcelable
 {
-  private String _name;
+  private String              _name;
+  private Map<String, String> _custom = Collections.emptyMap();
 
   public MBDefinition()
   {
@@ -111,6 +115,10 @@ public class MBDefinition implements Parcelable
   {
   }
 
+  public void addChildElement(MBAlertDefinition child)
+  {
+  }
+
   public void addChildElement(MBResourceDefinition child)
   {
   }
@@ -147,6 +155,16 @@ public class MBDefinition implements Parcelable
   public String toString()
   {
     return asXmlWithLevel(new StringBuffer(), 0).toString();
+  }
+
+  public Map<String, String> getCustom()
+  {
+    return _custom;
+  }
+
+  public void setCustom(Map<String, String> custom)
+  {
+    _custom = custom;
   }
 
   //Parcelable stuff
