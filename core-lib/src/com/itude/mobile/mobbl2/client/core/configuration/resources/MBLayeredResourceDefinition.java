@@ -13,16 +13,16 @@ public class MBLayeredResourceDefinition extends MBAbstractResourceCollectionDef
    * @return a reversed list of item definitions
    */
   @Override
-  public List<MBItemDefinition> getSortedItems()
+  public List<MBItemDefinition> getItems()
   {
-    List<MBItemDefinition> sortedItems = super.getSortedItems();
+    List<MBItemDefinition> items = super.getItems();
 
-    if (sortedItems == null)
+    if (items == null)
     {
       return null;
     }
 
-    ArrayList<MBItemDefinition> tmpList = new ArrayList<MBItemDefinition>(sortedItems);
+    ArrayList<MBItemDefinition> tmpList = new ArrayList<MBItemDefinition>(items);
     Collections.reverse(tmpList);
 
     return tmpList;
@@ -32,7 +32,7 @@ public class MBLayeredResourceDefinition extends MBAbstractResourceCollectionDef
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
     StringUtil.appendIndentString(appendToMe, level).append("<LayeredResource name='").append(getName()).append("' >");
-    for (MBItemDefinition item : getItems().values())
+    for (MBItemDefinition item : getItems())
     {
       item.asXmlWithLevel(appendToMe, level + 2);
     }

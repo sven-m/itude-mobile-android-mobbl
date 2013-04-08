@@ -24,8 +24,7 @@ public class MBColorStatedResourceBuilder extends MBAbstractStatedResourceBuilde
   @Override
   public <T> T build(MBStatedResourceDefinition def)
   {
-    // We are assuming a list has been provided
-    Map<String, MBItemDefinition> items = ((MBStatedResourceDefinition) def).getItems();
+    Map<String, MBItemDefinition> items = getItems(def);
 
     final int statedItemCount = items.size();
     if (statedItemCount == 0)

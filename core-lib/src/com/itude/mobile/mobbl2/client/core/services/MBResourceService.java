@@ -136,7 +136,10 @@ public final class MBResourceService
       throw new MBResourceNotDefinedException("Resource for ID=" + resourceId + " could not be found");
     }
 
-    return null;
+    MBAbstractStatedResourceBuilder builder = MBStatedResourceBuilderFactory.getInstance().getStatedResourceBuilder("Color", getConfig());
+    ColorStateList result = builder.build((MBStatedResourceDefinition) def);
+
+    return result;
 
   }
 
@@ -255,7 +258,7 @@ public final class MBResourceService
 
   private Drawable buildLayeredImage(MBLayeredResourceDefinition def)
   {
-    List<MBItemDefinition> items = def.getSortedItems();
+    List<MBItemDefinition> items = def.getItems();
 
     if (items.size() == 0)
     {
