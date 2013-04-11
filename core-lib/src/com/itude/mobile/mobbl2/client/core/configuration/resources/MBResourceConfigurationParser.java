@@ -58,6 +58,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       _itemAttributes.add("xmlns");
       _itemAttributes.add("state");
       _itemAttributes.add("resource");
+      _itemAttributes.add("align");
     }
 
     return super.parseData(data, documentName);
@@ -161,6 +162,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       MBItemDefinition itemDefinition = new MBItemDefinition();
       itemDefinition.setResource(attributeDict.get("resource"));
       itemDefinition.setState(attributeDict.get("state"));
+      itemDefinition.setAlign(attributeDict.get("align"));
 
       notifyProcessed(itemDefinition);
     }

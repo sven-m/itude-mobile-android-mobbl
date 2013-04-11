@@ -20,6 +20,16 @@ public class MBBundleBuilder
     _builders.registerBuilder(null, new MBLanguageBundleBuilder());
   }
 
+  public void registerBuilder(String type, Builder builder)
+  {
+    _builders.registerBuilder(type, builder);
+  }
+
+  public void registerBuilder(String type, String style, Builder builder)
+  {
+    _builders.registerBuilder(type, style, builder);
+  }
+
   public MBBundle buildBundle(MBBundle bundle)
   {
     AssertUtil.notNull("bundle", bundle);

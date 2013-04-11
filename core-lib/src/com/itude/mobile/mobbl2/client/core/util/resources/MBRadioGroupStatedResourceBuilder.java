@@ -1,7 +1,13 @@
 package com.itude.mobile.mobbl2.client.core.util.resources;
 
-import android.graphics.drawable.Drawable;
+import java.util.Map;
 
+import android.R;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
+
+import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
+import com.itude.mobile.mobbl2.client.core.view.MBItem;
 import com.itude.mobile.mobbl2.client.core.view.MBResource;
 
 public class MBRadioGroupStatedResourceBuilder extends MBAbstractStatedResourceBuilder
@@ -10,41 +16,27 @@ public class MBRadioGroupStatedResourceBuilder extends MBAbstractStatedResourceB
   @Override
   public Drawable buildResource(MBResource resource)
   {
-    // TODO Auto-generated method stub
-    return null;
-  }
+    Map<String, MBItem> items = resource.getItems();
 
-  //  public MBRadioGroupStatedResourceBuilder(MBResourceConfiguration config)
-  //  {
-  //    super(config);
-  //  }
-  //
-  //  @Override
-  //  public <T> T build(MBStatedResourceDefinition def)
-  //  {
-  //    Map<String, MBItemDefinition> items = getItems(def);
-  //
-  //    MBItemDefinition checked = items.get("checked");
-  //    MBItemDefinition unchecked = items.get("unchecked");
-  //
-  //    StateListDrawable stateDrawable = new StateListDrawable();
-  //
-  //    if (checked != null)
-  //    {
-  //      String resource = checked.getResource();
-  //      validateItemInStatedResource(resource);
-  //      Drawable drawable = getImageByID(resource);
-  //      stateDrawable.addState(new int[]{R.attr.state_checked}, drawable);
-  //    }
-  //    if (unchecked != null)
-  //    {
-  //      String resource = unchecked.getResource();
-  //      validateItemInStatedResource(resource);
-  //      Drawable drawable = getImageByID(resource);
-  //      stateDrawable.addState(new int[]{-R.attr.state_checked}, drawable);
-  //    }
-  //
-  //    return (T) stateDrawable;
-  //  }
+    MBItem checked = items.get("checked");
+    MBItem unchecked = items.get("unchecked");
+
+    StateListDrawable stateDrawable = new StateListDrawable();
+
+    if (checked != null)
+    {
+      String itemResource = checked.getResource();
+      Drawable drawable = MBResourceService.getInstance().getImageByID(itemResource);
+      stateDrawable.addState(new int[]{R.attr.state_checked}, drawable);
+    }
+    if (unchecked != null)
+    {
+      String itemResource = unchecked.getResource();
+      Drawable drawable = MBResourceService.getInstance().getImageByID(itemResource);
+      stateDrawable.addState(new int[]{-R.attr.state_checked}, drawable);
+    }
+
+    return stateDrawable;
+  }
 
 }

@@ -7,6 +7,7 @@ public class MBItemDefinition extends MBDefinition
 {
   private String _resource;
   private String _state;
+  private String _align;
 
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
@@ -39,5 +40,15 @@ public class MBItemDefinition extends MBDefinition
   public String getState()
   {
     return _state;
+  }
+
+  public String getAlign()
+  {
+    return _align;
+  }
+
+  public void setAlign(String align)
+  {
+    _align = align;
   }
 }

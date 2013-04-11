@@ -20,9 +20,20 @@ public class MBResourceBuilder
     _builders.registerBuilder("IMAGE", new MBImageResourceBuilder());
     _builders.registerBuilder("STATEDIMAGE", new MBStatedImageResourceBuilder());
     _builders.registerBuilder("STATEDIMAGE", "COLOR", new MBColorStatedResourceBuilder());
+    _builders.registerBuilder("STATEDIMAGE", "RADIOGROUP", new MBRadioGroupStatedResourceBuilder());
     _builders.registerBuilder("REMOTE_IMAGE", new MBRemoteImageResourceBuilder());
     _builders.registerBuilder("LAYEREDIMAGE", new MBLayeredImageResourceBuilder());
     _builders.registerBuilder("COLOR", new MBColorResourceBuilder());
+  }
+
+  public void registerBuilder(String type, Builder<?> builder)
+  {
+    _builders.registerBuilder(type, builder);
+  }
+
+  public void registerBuilder(String type, String style, Builder<?> builder)
+  {
+    _builders.registerBuilder(type, style, builder);
   }
 
   public <T> T buildResource(MBResource resource)

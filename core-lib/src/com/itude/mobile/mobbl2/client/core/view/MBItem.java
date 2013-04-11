@@ -7,6 +7,7 @@ public class MBItem extends MBComponent
 {
   private String _resource;
   private String _state;
+  private String _align;
 
   public MBItem(MBItemDefinition definition, MBDocument document, MBComponentContainer parent)
   {
@@ -14,6 +15,7 @@ public class MBItem extends MBComponent
 
     _resource = definition.getResource();
     _state = definition.getState();
+    _align = definition.getAlign();
   }
 
   public String getResource()
@@ -34,6 +36,16 @@ public class MBItem extends MBComponent
   public void setState(String state)
   {
     _state = state;
+  }
+
+  public String getAlign()
+  {
+    return _align;
+  }
+
+  public void setAlign(String align)
+  {
+    _align = align;
   }
 
 }
