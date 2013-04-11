@@ -22,7 +22,6 @@ import com.itude.mobile.mobbl2.client.core.services.exceptions.MBResourceNotDefi
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBCacheManager;
 import com.itude.mobile.mobbl2.client.core.util.resources.MBBundleBuilder;
-import com.itude.mobile.mobbl2.client.core.util.resources.MBRemoteImageResource;
 import com.itude.mobile.mobbl2.client.core.util.resources.MBResourceBuilder;
 import com.itude.mobile.mobbl2.client.core.util.resources.MBResourceBuilderFactory;
 import com.itude.mobile.mobbl2.client.core.view.MBBundle;
@@ -76,7 +75,7 @@ public final class MBResourceService
     _config = config;
   }
 
-  public <T extends MBResource> T getResource(String resourceId)
+  public MBResource getResource(String resourceId)
   {
     MBResourceDefinition def = getConfig().getResourceWithID(resourceId);
     if (def == null)
@@ -108,63 +107,32 @@ public final class MBResourceService
     return builder.buildResource(resource);
   }
 
+  public int getColor(String resourceId)
+  {
+    MBResource resource = getResource(resourceId);
+
+    MBResourceBuilder builder = MBResourceBuilderFactory.getInstance().getResourceBuilder();
+    return builder.buildResource(resource);
+  }
+
   public ColorStateList getColorStateListById(String resourceId)
   {
-    //      MBResourceDefinition def = getResource(resourceId);
-    //  
-    //      MBAbstractStatedResourceBuilder builder = MBStatedResourceBuilderFactory.getInstance().getStatedResourceBuilder("Color", getConfig());
-    //      ColorStateList result = builder.build((MBStatedResourceDefinition) def);
-    //  
-    //      return result;
+    MBResource resource = getResource(resourceId);
 
-    return null;
-
+    MBResourceBuilder builder = MBResourceBuilderFactory.getInstance().getResourceBuilder();
+    return builder.buildResource(resource);
   }
 
   public Drawable getImageByURL(String url)
   {
     MBResourceBuilder builder = MBResourceBuilderFactory.getInstance().getResourceBuilder();
 
-    MBResource resource = new MBRemoteImageResource(url);
+    MBResource resource = new MBResource(null, null, null);
+    resource.setType("REMOTE_IMAGE");
+    resource.setUrl(url);
 
     return builder.buildResource(resource);
   }
-
-  //  private Drawable buildLayeredImage(MBLayeredResourceDefinition def)
-  //  {
-  //    List<MBItemDefinition> items = def.getItems();
-  //
-  //    if (items.size() == 0)
-  //    {
-  //      return null;
-  //    }
-  //
-  //    Drawable[] layers = new Drawable[items.size()];
-  //
-  //    for (MBItemDefinition item : items)
-  //    {
-  //      String resource = item.getResource();
-  //
-  //      // FIXME: CH: don't know the purpose of this validation
-  //      //      validateItemInLayeredResource(resource);
-  //
-  //      Drawable drawable = getImageByID(resource);
-  //      layers[items.indexOf(item)] = drawable;
-  //    }
-  //
-  //    LayerDrawable layerDrawable = new LayerDrawable(layers);
-  //    return layerDrawable;
-  //  }
-
-  //  private void validateItemInLayeredResource(String itemResource) throws MBInvalidItemException
-  //  {
-  //    MBResourceDefinition resourceDef = getConfig().getResourceWithID(itemResource);
-  //
-  //    if (resourceDef instanceof MBStatedResourceDefinition)
-  //    {
-  //      throw new MBInvalidItemException("Layered resources can not contain stated resources");
-  //    }
-  //  }
 
   public byte[] getResourceByURL(MBResource resource)
   {
@@ -244,7 +212,7 @@ public final class MBResourceService
   {
     List<MBBundleDefinition> bundleDefs = getConfig().getBundlesForLanguageCode(languageCode);
 
-    if (bundleDefs == null)
+    if (bundleDefs == null || bundleDefs.isEmpty())
     {
       String message = "No bundles defined for language with code " + languageCode;
       throw new MBBundleNotFoundException(message);

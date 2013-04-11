@@ -4,27 +4,18 @@ import java.util.Map;
 
 import android.R;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 
-import com.itude.mobile.mobbl2.client.core.configuration.resources.MBItemDefinition;
-import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceConfiguration;
-import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceDefinition;
-import com.itude.mobile.mobbl2.client.core.configuration.resources.MBStatedResourceDefinition;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
-import com.itude.mobile.mobbl2.client.core.services.exceptions.MBResourceNotDefinedException;
+import com.itude.mobile.mobbl2.client.core.view.MBItem;
+import com.itude.mobile.mobbl2.client.core.view.MBResource;
 
-public class MBColorStatedResourceBuilder extends MBAbstractStatedResourceBuilder
+public class MBColorStatedResourceBuilder implements MBResourceBuilder.Builder<ColorStateList>
 {
 
-  public MBColorStatedResourceBuilder(MBResourceConfiguration config)
-  {
-    super(config);
-  }
-
   @Override
-  public <T> T build(MBStatedResourceDefinition def)
+  public ColorStateList buildResource(MBResource resource)
   {
-    Map<String, MBItemDefinition> items = getItems(def);
+    Map<String, MBItem> items = resource.getItems();
 
     final int statedItemCount = items.size();
     if (statedItemCount == 0)
@@ -36,79 +27,61 @@ public class MBColorStatedResourceBuilder extends MBAbstractStatedResourceBuilde
     int[] colors = new int[statedItemCount];
     int counter = 0;
 
-    MBItemDefinition enabled = items.get("enabled");
-    MBItemDefinition selected = items.get("selected");
-    MBItemDefinition pressed = items.get("pressed");
-    MBItemDefinition disabled = items.get("disabled");
-    MBItemDefinition checked = items.get("checked");
+    MBItem enabled = items.get("enabled");
+    MBItem selected = items.get("selected");
+    MBItem pressed = items.get("pressed");
+    MBItem disabled = items.get("disabled");
+    MBItem checked = items.get("checked");
 
     if (pressed != null)
     {
-      String resource = pressed.getResource();
-      validateItemInStatedResource(resource);
+      String itemResource = pressed.getResource();
 
       states[counter] = new int[]{R.attr.state_pressed};
-      colors[counter] = getColorById(resource);
+      colors[counter] = MBResourceService.getInstance().getColor(itemResource);
 
       counter++;
     }
 
     if (enabled != null)
     {
-      String resource = enabled.getResource();
-      validateItemInStatedResource(resource);
+      String itemResource = enabled.getResource();
 
       states[counter] = new int[]{R.attr.state_enabled, -R.attr.state_selected};
-      colors[counter] = getColorById(resource);
+      colors[counter] = MBResourceService.getInstance().getColor(itemResource);
 
       counter++;
     }
 
     if (disabled != null)
     {
-      String resource = disabled.getResource();
-      validateItemInStatedResource(resource);
+      String itemResource = disabled.getResource();
 
       states[counter] = new int[]{-R.attr.state_enabled};
-      colors[counter] = getColorById(resource);
+      colors[counter] = MBResourceService.getInstance().getColor(itemResource);
 
       counter++;
     }
 
     if (selected != null)
     {
-      String resource = selected.getResource();
-      validateItemInStatedResource(resource);
+      String itemResource = selected.getResource();
 
       states[counter] = new int[]{R.attr.state_selected};
-      colors[counter] = getColorById(resource);
+      colors[counter] = MBResourceService.getInstance().getColor(itemResource);
 
       counter++;
     }
     if (checked != null)
     {
-      String resource = checked.getResource();
-      validateItemInStatedResource(resource);
+      String itemResource = checked.getResource();
 
       states[counter] = new int[]{R.attr.state_checked};
-      colors[counter] = getColorById(resource);
+      colors[counter] = MBResourceService.getInstance().getColor(itemResource);
 
       counter++;
     }
 
-    return (T) new ColorStateList(states, colors);
+    return new ColorStateList(states, colors);
   }
-
-  public int getColorById(String resourceId)
-  {
-    MBResourceDefinition def = MBResourceService.getInstance().getConfig().getResourceWithID(resourceId);
-
-    if (def == null)
-    {
-      throw new MBResourceNotDefinedException("Resource for ID=" + resourceId + " could not be found");
-    }
-
-    return Color.parseColor(def.getColor());
-  }
-
 }

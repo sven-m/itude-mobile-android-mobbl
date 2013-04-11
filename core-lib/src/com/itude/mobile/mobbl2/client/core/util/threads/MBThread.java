@@ -79,7 +79,14 @@ public class MBThread extends Thread
 
   protected void handleException(Exception e)
   {
-    if (_page != null) _page.handleException(e);
+    if (_page != null)
+    {
+      _page.handleException(e);
+    }
+    else
+    {
+      Log.w(Constants.APPLICATION_NAME, "Exception thrown in thread " + getName(), e);
+    }
   }
 
   /**

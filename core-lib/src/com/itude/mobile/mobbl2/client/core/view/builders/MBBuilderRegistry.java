@@ -39,9 +39,9 @@ public class MBBuilderRegistry<T extends MBComponent, S, U>
     _searchOptimizer = null;
   }
 
-  public S getBuilder(U clazz)
+  public S getBuilder(U type)
   {
-    return getBuilder(clazz, null);
+    return getBuilder(type, null);
   }
 
   public S getBuilder(U type, String style)
