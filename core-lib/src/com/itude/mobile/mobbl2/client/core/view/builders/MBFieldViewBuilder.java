@@ -26,11 +26,11 @@ import com.itude.mobile.mobbl2.client.core.view.builders.field.WebFieldBuilder;
 public class MBFieldViewBuilder extends MBViewBuilder
 {
 
-  private final MBBuilderRegistry<MBField, Builder> _builders;
+  private final MBBuilderRegistry<MBField, Builder, String> _builders;
 
   public MBFieldViewBuilder()
   {
-    _builders = new MBBuilderRegistry<MBField, MBFieldViewBuilder.Builder>();
+    _builders = new MBBuilderRegistry<MBField, MBFieldViewBuilder.Builder, String>();
     registerBuilders();
   }
 

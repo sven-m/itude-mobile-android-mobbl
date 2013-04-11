@@ -16,12 +16,12 @@ import com.itude.mobile.mobbl2.client.core.view.builders.panel.SegmentedControlP
 public class MBPanelViewBuilder extends MBViewBuilder
 {
 
-  private MBBuilderRegistry<MBPanel, Builder> _builders;
-  private final BuildState                    _buildState;
+  private MBBuilderRegistry<MBPanel, Builder, String> _builders;
+  private final BuildState                            _buildState;
 
   private void registerBuilders()
   {
-    MBBuilderRegistry<MBPanel, Builder> builders = new MBBuilderRegistry<MBPanel, MBPanelViewBuilder.Builder>();
+    MBBuilderRegistry<MBPanel, Builder, String> builders = new MBBuilderRegistry<MBPanel, MBPanelViewBuilder.Builder, String>();
     builders.registerBuilder(Constants.C_PLAIN, new PlainPanelBuilder());
     builders.registerBuilder(Constants.C_LIST, new ListPanelBuilder());
     builders.registerBuilder(Constants.C_SECTION, new SectionPanelBuilder());
