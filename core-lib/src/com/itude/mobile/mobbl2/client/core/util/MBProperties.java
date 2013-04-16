@@ -46,7 +46,13 @@ public final class MBProperties
     return MBParseUtil.booleanValue(getValueForProperty(key));
   }
 
-  
+  public int getIntegerProperty(String key, int dflt)
+  {
+    String value = getValueForProperty(key);
+    if (value == null) return dflt;
+    return Integer.parseInt(value);
+  }
+
   public String getValueForSystemProperty(String key)
   {
     String value = _systemPropertiesCache.get(key);

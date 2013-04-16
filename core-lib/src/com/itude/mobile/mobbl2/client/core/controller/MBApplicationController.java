@@ -43,6 +43,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowChangeType;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBNoDocumentException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.imagecache.ImageUtil;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.MBAlert;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
@@ -125,6 +126,8 @@ public class MBApplicationController extends Application
     _viewManager = MBViewManager.getInstance();
 
     _viewManager.setSinglePageMode((MBMetadataService.getInstance().getDialogs().size() <= 1));
+
+    ImageUtil.loadImageCache(getBaseContext().getCacheDir());
 
     fireInitialOutcomes();
   }

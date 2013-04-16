@@ -114,6 +114,8 @@ public interface Constants
   public static final String C_PROPERTY_INDEVELOPMENT                                  = "inDevelopment";
   public static final String C_PROPERTY_STRICTMODE                                     = "enableStrictMode";
   public static final String C_PROPERTY_LOGLEVEL                                       = "logLevel";
+  public static final String C_PROPERTY_IMAGE_CACHE_MEMORY                             = "imageCacheMemSize";
+  public static final String C_PROPERTY_IMAGE_CACHE_DISK                               = "imageCacheDiskSize";
 
   // Parcelable types
   public static final int    C_PARCELABLE_TYPE_OUTCOME                                 = 0;

@@ -9,6 +9,7 @@ import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.imagecache.ImageUtil;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 
 public class ImageFieldBuilder extends MBBaseFieldBuilder
@@ -35,12 +36,12 @@ public class ImageFieldBuilder extends MBBaseFieldBuilder
     if (StringUtil.isNotBlank(source))
     {
       drawable = MBResourceService.getInstance().getImageByID(source);
+      image.setImageDrawable(drawable);
     }
     else
     {
-      drawable = MBResourceService.getInstance().getImageByURL(field.getValue());
+      ImageUtil.loadImage(image, field.getValue());
     }
-    image.setImageDrawable(drawable);
 
     getStyleHandler().styleImage(image);
     getStyleHandler().styleImage(image, field.getStyle());
