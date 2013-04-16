@@ -25,7 +25,6 @@ public final class ImageUtil
       public void doneLoading(Bitmap bitmap)
       {
         view.setImageBitmap(bitmap);
-        view.requestLayout();
       }
     });
   }
