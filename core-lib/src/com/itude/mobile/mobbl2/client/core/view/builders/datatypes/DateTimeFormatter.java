@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.itude.mobile.android.util.DateUtil;
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 
@@ -17,6 +18,7 @@ public class DateTimeFormatter implements MBDataTypeFormatter
     {
       // Get a date from a xml-dateFormat
       String xmlDate = field.getValue();
+      if (StringUtil.isEmpty(xmlDate)) return xmlDate;
 
       // Formats the date depending on the current date. 
       if (field.getFormatMask().equals("dateOrTimeDependingOnCurrentDate"))
