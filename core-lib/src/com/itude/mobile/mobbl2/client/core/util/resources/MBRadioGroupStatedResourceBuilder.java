@@ -4,9 +4,8 @@ import java.util.Map;
 
 import android.R;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.StateListDrawable;
 
-import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.view.MBItem;
 import com.itude.mobile.mobbl2.client.core.view.MBResource;
 
@@ -18,25 +17,23 @@ public class MBRadioGroupStatedResourceBuilder extends MBAbstractStatedResourceB
   {
     Map<String, MBItem> items = resource.getItems();
 
-    MBItem checked = items.get("checked");
-    MBItem unchecked = items.get("unchecked");
-
-    StateListDrawable stateDrawable = new StateListDrawable();
+    MBItem checked = items.get(Constants.C_STATED_RESOURCE_STATE_CHECKED);
+    MBItem unchecked = items.get(Constants.C_STATED_RESOURCE_STATE_UNCHECKED);
 
     if (checked != null)
     {
-      String itemResource = checked.getResource();
-      Drawable drawable = MBResourceService.getInstance().getImageByID(itemResource);
-      stateDrawable.addState(new int[]{R.attr.state_checked}, drawable);
+      int[] itemStates = new int[]{R.attr.state_checked};
+
+      processItem(checked, itemStates);
     }
     if (unchecked != null)
     {
-      String itemResource = unchecked.getResource();
-      Drawable drawable = MBResourceService.getInstance().getImageByID(itemResource);
-      stateDrawable.addState(new int[]{-R.attr.state_checked}, drawable);
+      int[] itemStates = new int[]{-R.attr.state_checked};
+
+      processItem(unchecked, itemStates);
     }
 
-    return stateDrawable;
+    return getStateListDrawable();
   }
 
 }

@@ -12,6 +12,10 @@ import com.itude.mobile.mobbl2.client.core.view.MBResource;
 public class MBColorStatedResourceBuilder implements MBResourceBuilder.Builder<ColorStateList>
 {
 
+  private int[][] _states;
+  private int[]   _colors;
+  private int     _counter;
+
   @Override
   public ColorStateList buildResource(MBResource resource)
   {
@@ -23,9 +27,9 @@ public class MBColorStatedResourceBuilder implements MBResourceBuilder.Builder<C
       return null;
     }
 
-    int[][] states = new int[statedItemCount][];
-    int[] colors = new int[statedItemCount];
-    int counter = 0;
+    _states = new int[statedItemCount][];
+    _colors = new int[statedItemCount];
+    _counter = 0;
 
     MBItem enabled = items.get("enabled");
     MBItem selected = items.get("selected");
@@ -35,53 +39,51 @@ public class MBColorStatedResourceBuilder implements MBResourceBuilder.Builder<C
 
     if (pressed != null)
     {
-      String itemResource = pressed.getResource();
+      int[] itemStates = new int[]{R.attr.state_pressed};
 
-      states[counter] = new int[]{R.attr.state_pressed};
-      colors[counter] = MBResourceService.getInstance().getColor(itemResource);
-
-      counter++;
+      processItem(pressed, itemStates);
     }
 
     if (enabled != null)
     {
-      String itemResource = enabled.getResource();
+      int[] itemStates = new int[]{R.attr.state_enabled, -R.attr.state_selected};
 
-      states[counter] = new int[]{R.attr.state_enabled, -R.attr.state_selected};
-      colors[counter] = MBResourceService.getInstance().getColor(itemResource);
-
-      counter++;
+      processItem(enabled, itemStates);
     }
 
     if (disabled != null)
     {
-      String itemResource = disabled.getResource();
+      int[] itemStates = new int[]{-R.attr.state_enabled};
 
-      states[counter] = new int[]{-R.attr.state_enabled};
-      colors[counter] = MBResourceService.getInstance().getColor(itemResource);
-
-      counter++;
+      processItem(disabled, itemStates);
     }
 
     if (selected != null)
     {
-      String itemResource = selected.getResource();
+      int[] itemStates = new int[]{R.attr.state_selected};
 
-      states[counter] = new int[]{R.attr.state_selected};
-      colors[counter] = MBResourceService.getInstance().getColor(itemResource);
-
-      counter++;
+      processItem(selected, itemStates);
     }
+
     if (checked != null)
     {
-      String itemResource = checked.getResource();
+      int[] itemStates = new int[]{R.attr.state_checked};
 
-      states[counter] = new int[]{R.attr.state_checked};
-      colors[counter] = MBResourceService.getInstance().getColor(itemResource);
-
-      counter++;
+      processItem(checked, itemStates);
     }
 
-    return new ColorStateList(states, colors);
+    return new ColorStateList(_states, _colors);
+  }
+
+  private void processItem(MBItem item, int[] itemStates)
+  {
+    String itemResource = item.getResource();
+
+    int color = MBResourceService.getInstance().getColor(itemResource);
+
+    _states[_counter] = itemStates;
+    _colors[_counter] = color;
+
+    _counter++;
   }
 }

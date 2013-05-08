@@ -8,6 +8,7 @@ import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBConfigurationParser;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBBundleDefinition;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBResourceConfigurationParser extends MBConfigurationParser
 {
@@ -102,7 +103,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
     {
       checkAttributesForElement(elementName, attributeDict, _resourceAttributes);
 
-      String type = "IMAGE";
+      String type = Constants.C_STATED_RESOURCE_STATE_TYPE_IMAGE;
 
       MBResourceDefinition resourceDef = new MBResourceDefinition();
       resourceDef.setResourceId(attributeDict.get("id"));
@@ -113,7 +114,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
 
       if (StringUtil.isNotBlank(resourceDef.getColor()))
       {
-        type = "COLOR";
+        type = Constants.C_STATED_RESOURCE_STATE_TYPE_COLOR;
       }
       resourceDef.setType(type);
       if (attributeDict.containsKey("ttl"))

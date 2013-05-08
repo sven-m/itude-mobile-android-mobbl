@@ -4,9 +4,8 @@ import java.util.Map;
 
 import android.R;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.StateListDrawable;
 
-import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.view.MBItem;
 import com.itude.mobile.mobbl2.client.core.view.MBResource;
 
@@ -18,53 +17,46 @@ public class MBStatedImageResourceBuilder extends MBAbstractStatedResourceBuilde
   {
     Map<String, MBItem> items = resource.getItems();
 
-    MBItem enabled = items.get("enabled");
-    MBItem selected = items.get("selected");
-    MBItem pressed = items.get("pressed");
-    MBItem disabled = items.get("disabled");
-    MBItem checked = items.get("checked");
-
-    StateListDrawable stateDrawable = new StateListDrawable();
+    MBItem enabled = items.get(Constants.C_STATED_RESOURCE_STATE_ENABLED);
+    MBItem selected = items.get(Constants.C_STATED_RESOURCE_STATE_SELECTED);
+    MBItem pressed = items.get(Constants.C_STATED_RESOURCE_STATE_PRESSED);
+    MBItem disabled = items.get(Constants.C_STATED_RESOURCE_STATE_DISABLED);
+    MBItem checked = items.get(Constants.C_STATED_RESOURCE_STATE_CHECKED);
 
     if (pressed != null)
     {
-      String itemResource = pressed.getResource();
-      validateItemInStatedResource(resource);
-      Drawable drawable = MBResourceService.getInstance().getImageByID(itemResource);
-      stateDrawable.addState(new int[]{R.attr.state_pressed}, drawable);
+      int[] itemStates = new int[]{R.attr.state_pressed};
+
+      processItem(pressed, itemStates);
     }
 
     if (enabled != null)
     {
-      String itemResource = enabled.getResource();
-      validateItemInStatedResource(resource);
-      Drawable drawable = MBResourceService.getInstance().getImageByID(itemResource);
-      stateDrawable.addState(new int[]{R.attr.state_enabled, -R.attr.state_selected}, drawable);
+      int[] itemStates = new int[]{R.attr.state_enabled, -R.attr.state_selected};
+
+      processItem(enabled, itemStates);
     }
 
     if (disabled != null)
     {
-      String itemResource = disabled.getResource();
-      validateItemInStatedResource(resource);
-      Drawable drawable = MBResourceService.getInstance().getImageByID(itemResource);
-      stateDrawable.addState(new int[]{-R.attr.state_enabled}, drawable);
+      int[] itemStates = new int[]{-R.attr.state_enabled};
+
+      processItem(disabled, itemStates);
     }
 
     if (selected != null)
     {
-      String itemResource = selected.getResource();
-      validateItemInStatedResource(resource);
-      Drawable drawable = MBResourceService.getInstance().getImageByID(itemResource);
-      stateDrawable.addState(new int[]{R.attr.state_selected}, drawable);
+      int[] itemStates = new int[]{R.attr.state_selected};
+
+      processItem(selected, itemStates);
     }
     if (checked != null)
     {
-      String itemResource = checked.getResource();
-      validateItemInStatedResource(resource);
-      Drawable drawable = MBResourceService.getInstance().getImageByID(itemResource);
-      stateDrawable.addState(new int[]{R.attr.state_checked}, drawable);
+      int[] itemStates = new int[]{R.attr.state_checked};
+
+      processItem(checked, itemStates);
     }
 
-    return stateDrawable;
+    return getStateListDrawable();
   }
 }

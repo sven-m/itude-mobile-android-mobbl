@@ -8,6 +8,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.view.Gravity;
 
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.view.MBItem;
 import com.itude.mobile.mobbl2.client.core.view.MBResource;
 
@@ -26,8 +27,10 @@ public class MBLayeredImageResourceBuilder implements MBResourceBuilder.Builder<
 
     Drawable[] layers = new Drawable[items.size()];
 
-    for (MBItem item : items)
+    for (int i = 0; i < items.size(); i++)
     {
+      MBItem item = items.get(i);
+
       String itemResource = item.getResource();
 
       Drawable drawable = MBResourceService.getInstance().getImageByID(itemResource);
@@ -40,7 +43,7 @@ public class MBLayeredImageResourceBuilder implements MBResourceBuilder.Builder<
 
         drawable = bitmapDrawable;
       }
-      layers[items.indexOf(item)] = drawable;
+      layers[i] = drawable;
     }
 
     LayerDrawable layerDrawable = new LayerDrawable(layers);
@@ -49,23 +52,23 @@ public class MBLayeredImageResourceBuilder implements MBResourceBuilder.Builder<
 
   private void setBitmapGravity(String align, BitmapDrawable drawable)
   {
-    if ("LEFT".equals(align))
+    if (Constants.C_GRAVITY_LEFT.equals(align))
     {
       drawable.setGravity(Gravity.LEFT);
     }
-    else if ("RIGHT".equals(align))
+    else if (Constants.C_GRAVITY_RIGHT.equals(align))
     {
       drawable.setGravity(Gravity.RIGHT);
     }
-    else if ("TOP".equals(align))
+    else if (Constants.C_GRAVITY_TOP.equals(align))
     {
       drawable.setGravity(Gravity.TOP);
     }
-    else if ("BOTTOM".equals(align))
+    else if (Constants.C_GRAVITY_BOTTOM.equals(align))
     {
       drawable.setGravity(Gravity.BOTTOM);
     }
-    else if ("CENTER".equals(align))
+    else if (Constants.C_GRAVITY_CENTER.equals(align))
     {
       drawable.setGravity(Gravity.CENTER);
     }
