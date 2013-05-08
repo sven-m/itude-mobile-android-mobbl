@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBConfigurationParser;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBBundleDefinition;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBResourceConfigurationParser extends MBConfigurationParser
 {
@@ -24,10 +26,12 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       _resourceAttributes = new ArrayList<String>();
       _resourceAttributes.add("xmlns");
       _resourceAttributes.add("id");
+      _resourceAttributes.add("type");
       _resourceAttributes.add("url");
       _resourceAttributes.add("color");
       _resourceAttributes.add("cacheable");
       _resourceAttributes.add("ttl");
+      _resourceAttributes.add("align");
     }
     if (_bundleAttributes == null)
     {
@@ -41,6 +45,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       _statedResourceAttributes = new ArrayList<String>();
       _statedResourceAttributes.add("xmlns");
       _statedResourceAttributes.add("id");
+      _statedResourceAttributes.add("viewType");
     }
     if (_layeredResourceAttributes == null)
     {
@@ -52,7 +57,9 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
     {
       _itemAttributes = new ArrayList<String>();
       _itemAttributes.add("xmlns");
+      _itemAttributes.add("state");
       _itemAttributes.add("resource");
+      _itemAttributes.add("align");
     }
 
     return super.parseData(data, documentName);
@@ -96,11 +103,20 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
     {
       checkAttributesForElement(elementName, attributeDict, _resourceAttributes);
 
+      String type = Constants.C_STATED_RESOURCE_STATE_TYPE_IMAGE;
+
       MBResourceDefinition resourceDef = new MBResourceDefinition();
       resourceDef.setResourceId(attributeDict.get("id"));
       resourceDef.setUrl(attributeDict.get("url"));
       resourceDef.setColor(attributeDict.get("color"));
       resourceDef.setCacheable(Boolean.parseBoolean(attributeDict.get("cacheable")));
+      resourceDef.setAlign(attributeDict.get("align"));
+
+      if (StringUtil.isNotBlank(resourceDef.getColor()))
+      {
+        type = Constants.C_STATED_RESOURCE_STATE_TYPE_COLOR;
+      }
+      resourceDef.setType(type);
       if (attributeDict.containsKey("ttl"))
       {
         resourceDef.setTtl(Integer.parseInt(attributeDict.get("ttl")));
@@ -112,29 +128,33 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
     {
       checkAttributesForElement(elementName, attributeDict, _bundleAttributes);
 
-      MBBundleDefinition bundleDef = new MBBundleDefinition();
-      bundleDef.setUrl(attributeDict.get("url"));
-      bundleDef.setLanguageCode(attributeDict.get("languageCode"));
+      MBBundleDefinition resourceDef = new MBBundleDefinition();
 
-      notifyProcessed(bundleDef);
+      resourceDef.setUrl(attributeDict.get("url"));
+      resourceDef.setLanguageCode(attributeDict.get("languageCode"));
+
+      notifyProcessed(resourceDef);
     }
     else if (elementName.equals("StatedResource"))
     {
       checkAttributesForElement(elementName, attributeDict, _statedResourceAttributes);
 
-      MBStatedResourceDefinition statedResourceDef = new MBStatedResourceDefinition();
-      statedResourceDef.setResourceId(attributeDict.get("id"));
+      MBResourceDefinition resourceDef = new MBResourceDefinition();
+      resourceDef.setType("STATEDIMAGE");
+      resourceDef.setResourceId(attributeDict.get("id"));
+      resourceDef.setViewType(attributeDict.get("viewType"));
 
-      notifyProcessed(statedResourceDef);
+      notifyProcessed(resourceDef);
     }
     else if (elementName.equals("LayeredResource"))
     {
       checkAttributesForElement(elementName, attributeDict, _layeredResourceAttributes);
 
-      MBLayeredResourceDefinition layeredResourceDef = new MBLayeredResourceDefinition();
-      layeredResourceDef.setResourceId(attributeDict.get("id"));
+      MBResourceDefinition resourceDef = new MBResourceDefinition();
+      resourceDef.setType("LAYEREDIMAGE");
+      resourceDef.setResourceId(attributeDict.get("id"));
 
-      notifyProcessed(layeredResourceDef);
+      notifyProcessed(resourceDef);
     }
     else if (elementName.equals("Item"))
     {
@@ -143,6 +163,7 @@ public class MBResourceConfigurationParser extends MBConfigurationParser
       MBItemDefinition itemDefinition = new MBItemDefinition();
       itemDefinition.setResource(attributeDict.get("resource"));
       itemDefinition.setState(attributeDict.get("state"));
+      itemDefinition.setAlign(attributeDict.get("align"));
 
       notifyProcessed(itemDefinition);
     }
