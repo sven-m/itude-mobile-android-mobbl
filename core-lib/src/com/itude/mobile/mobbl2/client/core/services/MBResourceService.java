@@ -112,7 +112,7 @@ public final class MBResourceService
     MBResource resource = getResource(resourceId);
 
     MBResourceBuilder builder = MBResourceBuilderFactory.getInstance().getResourceBuilder();
-    return builder.buildResource(resource);
+    return (Integer) builder.buildResource(resource);
   }
 
   public ColorStateList getColorStateListById(String resourceId)
