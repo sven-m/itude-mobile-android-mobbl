@@ -207,6 +207,16 @@ public class MBViewManager extends FragmentActivity
 
   }
 
+  /***
+   * Only sets a flag to invalidate the menu on first invocation. The menu is built in {@link #onPrepareOptionsMenu(Menu)}
+   */
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu)
+  {
+    _optionsMenuInvalid = true;
+    return false;
+  }
+
   @Override
   public boolean onPrepareOptionsMenu(Menu menu)
   {
@@ -441,7 +451,7 @@ public class MBViewManager extends FragmentActivity
 
     _sortedDialogNames = new ArrayList<String>();
 
-    List<MBDialogDefinition> dialogs = MBMetadataService.getInstance().getDialogs();
+    List<MBDialogDefinition> dialogs = MBMetadataService.getInstance().getDialogsSorted();
 
     for (MBDialogDefinition dialog : dialogs)
     {

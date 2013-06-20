@@ -35,6 +35,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   private final List<MBOutcomeDefinition>         _outcomeTypes;
   private final Map<String, MBPageDefinition>     _pageTypes;
   private final Map<String, MBDialogDefinition>   _dialogs;
+  private final List<MBDialogDefinition>          _dialogsSorted;
   private MBDialogDefinition                      _homeDialog;
   private final Map<String, MBToolDefinition>     _tools;
   private final Map<String, MBAlertDefinition>    _alerts;
@@ -46,11 +47,13 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     _actionTypes = new HashMap<String, MBActionDefinition>();
     _outcomeTypes = new ArrayList<MBOutcomeDefinition>();
     _dialogs = new HashMap<String, MBDialogDefinition>();
+    _dialogsSorted = new ArrayList<MBDialogDefinition>();
     _pageTypes = new HashMap<String, MBPageDefinition>();
     _tools = new LinkedHashMap<String, MBToolDefinition>();
     _alerts = new HashMap<String, MBAlertDefinition>();
   }
 
+  @Override
   public void addAll(MBIncludableDefinition otherDefinition)
   {
     MBConfigurationDefinition otherConfig = null;
@@ -81,7 +84,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     {
       addOutcome(outcomeDef);
     }
-    for (MBDialogDefinition dialogDef : otherConfig.getDialogs().values())
+    for (MBDialogDefinition dialogDef : otherConfig.getDialogsSorted())
     {
       addDialog(dialogDef);
     }
@@ -265,6 +268,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
       _homeDialog = dialog;
     }
     _dialogs.put(dialog.getName(), dialog);
+    _dialogsSorted.add(dialog);
 
     createImplicitOutcomeForDialog(dialog);
   }
@@ -375,6 +379,11 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   public Map<String, MBDialogDefinition> getDialogs()
   {
     return _dialogs;
+  }
+
+  public List<MBDialogDefinition> getDialogsSorted()
+  {
+    return _dialogsSorted;
   }
 
   public Map<String, MBDomainDefinition> getDomains()

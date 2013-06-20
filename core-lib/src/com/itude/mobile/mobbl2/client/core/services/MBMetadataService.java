@@ -209,6 +209,11 @@ public final class MBMetadataService
     return new ArrayList<MBDialogDefinition>(_cfg.getDialogs().values());
   }
 
+  public List<MBDialogDefinition> getDialogsSorted()
+  {
+    return _cfg.getDialogsSorted();
+  }
+
   //For now do not raise an exception if an outcome is not defined
   public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(String originName)
   {
