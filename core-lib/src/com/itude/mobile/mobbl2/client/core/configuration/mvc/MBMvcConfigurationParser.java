@@ -102,6 +102,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _dialogAttributes.add("showAs");
       _dialogAttributes.add("domain");
       _dialogAttributes.add("action");
+      _dialogAttributes.add("preCondition");
     }
     if (_dialogGroupAttributes == null)
     {
@@ -114,7 +115,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _dialogGroupAttributes.add("showAs");
       _dialogGroupAttributes.add("domain");
       _dialogGroupAttributes.add("action");
-
+      _dialogGroupAttributes.add("preCondition");
     }
     if (_pageAttributes == null)
     {
@@ -347,6 +348,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       dialogDef.setShowAs(attributeDict.get("showAs"));
       dialogDef.setDomain(attributeDict.get("domain"));
       dialogDef.setAction(attributeDict.get("action"));
+      dialogDef.setPreCondition(attributeDict.get("preCondition"));
 
       // On tablets, we can have a split view, which is defined as a DialogGroup in xml
       MBDefinition lastDef = getStack().peek();

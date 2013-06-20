@@ -36,18 +36,18 @@ public class MBFireInitialOutcomes implements MBAction
     {
       String action = element.getValueForAttribute("action");
       String dialog = element.getValueForAttribute("dialog");
-      boolean isMenu = false;      
-      
+      boolean isMenu = false;
+
       if (StringUtil.isNotBlank(dialog))
       {
         MBDialogDefinition def = MBMetadataService.getInstance().getDefinitionForDialogName(dialog);
-        if (def != null && !def.isShowAsMenu())
+        if (def != null && def.isPreConditionValid() && !def.isShowAsMenu())
         {
           MBViewManager.getInstance().addSortedDialogName(dialog);
           isMenu = true;
         }
       }
-      
+
       if (StringUtil.isNotBlank(action))
       {
         MBOutcome oc = new MBOutcome();
@@ -66,7 +66,6 @@ public class MBFireInitialOutcomes implements MBAction
           MBApplicationController.getInstance().handleOutcome(oc);
         }
       }
-
 
     }
 

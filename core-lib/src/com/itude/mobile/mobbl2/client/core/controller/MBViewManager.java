@@ -69,9 +69,10 @@ public class MBViewManager extends FragmentActivity
   private Dialog                          _currentAlert;
   private boolean                         _singlePageMode;
   private String                          _activeDialog;
-  private boolean                         _showDialogTitle = false;
+  private boolean                         _showDialogTitle    = false;
 
-  private boolean                         _created         = false;
+  private boolean                         _activityExists     = false;
+  private boolean                         _optionsMenuInvalid = false;
 
   ///////////////////// Android lifecycle methods
 
@@ -84,6 +85,8 @@ public class MBViewManager extends FragmentActivity
   protected void onCreate(android.os.Bundle savedInstanceState)
   {
     onPreCreate();
+
+    invalidateOptionsMenu();
 
     // https://dev.itude.com/jira/browse/BINCKAPPS-1131
     super.onCreate(null);
@@ -104,9 +107,9 @@ public class MBViewManager extends FragmentActivity
   @Override
   protected void onResume()
   {
-    if (!_created)
+    if (!_activityExists)
     {
-      _created = true;
+      _activityExists = true;
     }
     else
     {
@@ -207,19 +210,27 @@ public class MBViewManager extends FragmentActivity
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu)
+  public boolean onPrepareOptionsMenu(Menu menu)
   {
-    for (String dialogName : getSortedDialogNames())
+    if (_optionsMenuInvalid)
     {
-      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      if (dialogDefinition.isShowAsTab())
+      menu.clear();
+
+      for (String dialogName : getSortedDialogNames())
       {
-        MenuItem menuItem = menu.add(Menu.NONE, dialogName.hashCode(), Menu.NONE,
-                                     MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
-        menuItem.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
-        MenuCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
+        MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+        if (dialogDefinition.isPreConditionValid() && dialogDefinition.isShowAsTab())
+        {
+          MenuItem menuItem = menu.add(Menu.NONE, dialogName.hashCode(), Menu.NONE,
+                                       MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
+          menuItem.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+          MenuCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
       }
+
+      _optionsMenuInvalid = false;
     }
+
     return true;
   }
 
@@ -407,6 +418,14 @@ public class MBViewManager extends FragmentActivity
         }
       }
     }
+  }
+
+  @Override
+  public void invalidateOptionsMenu()
+  {
+    _optionsMenuInvalid = true;
+
+    _sortedDialogNames = new ArrayList<String>();
   }
 
   public Dialog getCurrentAlert()
@@ -668,7 +687,6 @@ public class MBViewManager extends FragmentActivity
       controller = MBApplicationFactory.getInstance().createDialogController();
       controller.init(dialogName, outcomeId);
       _controllerMap.put(dialogName, controller);
-
     }
 
     if (_activeDialog == null && !def.isShowAsMenu())
