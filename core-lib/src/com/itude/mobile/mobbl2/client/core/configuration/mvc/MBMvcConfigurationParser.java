@@ -368,6 +368,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       dialogDef.setIcon(attributeDict.get("icon"));
       dialogDef.setShowAs(attributeDict.get("showAs"));
       dialogDef.setDomain(attributeDict.get("domain"));
+      dialogDef.setPreCondition(attributeDict.get("preCondition"));
 
       notifyProcessed(dialogDef);
     }

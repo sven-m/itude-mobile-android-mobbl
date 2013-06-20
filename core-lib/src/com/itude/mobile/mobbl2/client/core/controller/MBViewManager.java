@@ -30,6 +30,7 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 
 import com.itude.mobile.android.util.CollectionUtilities;
+import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
@@ -99,7 +100,6 @@ public class MBViewManager extends FragmentActivity
     _instance = this;
 
     MBApplicationController.getInstance().startController();
-    invalidateOptionsMenu();
   }
 
   @Override
@@ -210,19 +210,21 @@ public class MBViewManager extends FragmentActivity
   @Override
   public boolean onPrepareOptionsMenu(Menu menu)
   {
+    boolean displayMenu = true;
+
     if (_optionsMenuInvalid)
     {
       menu.clear();
 
-      buildOptionsMenu(menu);
+      displayMenu = buildOptionsMenu(menu);
 
       _optionsMenuInvalid = false;
     }
 
-    return true;
+    return displayMenu;
   }
 
-  protected void buildOptionsMenu(Menu menu)
+  protected boolean buildOptionsMenu(Menu menu)
   {
     for (String dialogName : getSortedDialogNames())
     {
@@ -235,6 +237,8 @@ public class MBViewManager extends FragmentActivity
         MenuCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
       }
     }
+
+    return true;
   }
 
   public void finishFromChild(MBDialogController childController)
@@ -426,7 +430,14 @@ public class MBViewManager extends FragmentActivity
   @Override
   public void invalidateOptionsMenu()
   {
-    _optionsMenuInvalid = true;
+    if (DeviceUtil.getInstance().isPhoneV14() || DeviceUtil.isTablet())
+    {
+      super.invalidateOptionsMenu();
+    }
+    else
+    {
+      _optionsMenuInvalid = true;
+    }
 
     _sortedDialogNames = new ArrayList<String>();
 

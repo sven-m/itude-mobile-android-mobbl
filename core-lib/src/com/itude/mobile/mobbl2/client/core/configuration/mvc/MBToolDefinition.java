@@ -1,22 +1,22 @@
 package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
 import com.itude.mobile.android.util.StringUtil;
-import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.MBConditionalDefinition;
 
-public class MBToolDefinition extends MBDefinition
+public class MBToolDefinition extends MBConditionalDefinition
 {
   private String _type;
   private String _outcomeName;
   private String _icon;
   private String _title;
-  private String _preCondition;
   private String _visibility;
 
+  @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
     return StringUtil.appendIndentString(appendToMe, level).append("<Tool name='").append(getName()).append('\'')
         .append(getAttributeAsXml("type", _type)).append(getAttributeAsXml("title", _title)).append(getAttributeAsXml("icon", _icon))
-        .append(getAttributeAsXml("outcome", _outcomeName)).append(getAttributeAsXml("preCondition", _preCondition))
+        .append(getAttributeAsXml("outcome", _outcomeName)).append(getAttributeAsXml("preCondition", getPreCondition()))
         .append(getAttributeAsXml("visibility", _visibility)).append("/>\n");
   }
 
@@ -58,16 +58,6 @@ public class MBToolDefinition extends MBDefinition
   public String getTitle()
   {
     return _title;
-  }
-
-  public void setPreCondition(String preCondition)
-  {
-    _preCondition = preCondition;
-  }
-
-  public String getPreCondition()
-  {
-    return _preCondition;
   }
 
   public void setVisibility(String visibility)

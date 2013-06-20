@@ -3,7 +3,7 @@ package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 import java.util.Map;
 
 import com.itude.mobile.android.util.StringUtil;
-import com.itude.mobile.mobbl2.client.core.view.MBConditionalDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.MBConditionalDefinition;
 import com.itude.mobile.mobbl2.client.core.view.MBStylableDefinition;
 
 public class MBFieldDefinition extends MBConditionalDefinition implements MBStylableDefinition

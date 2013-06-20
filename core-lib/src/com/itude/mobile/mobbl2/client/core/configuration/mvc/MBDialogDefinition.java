@@ -1,13 +1,9 @@
 package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.mobbl2.client.core.configuration.MBConditionalDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidDialogDefinitionException;
-import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNotBooleanException;
-import com.itude.mobile.mobbl2.client.core.model.MBDocument;
-import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
-import com.itude.mobile.mobbl2.client.core.view.MBConditionalDefinition;
 
 public class MBDialogDefinition extends MBConditionalDefinition
 {
@@ -45,23 +41,6 @@ public class MBDialogDefinition extends MBConditionalDefinition
       String message = "no name set for dialog";
       throw new MBInvalidDialogDefinitionException(message);
     }
-  }
-
-  public boolean isPreConditionValid()
-  {
-    boolean isValid = true;
-    if (getPreCondition() != null)
-    {
-      MBDocument doc = MBDataManagerService.getInstance().loadDocument(MBConfigurationDefinition.DOC_SYSTEM_EMPTY);
-
-      String result = doc.evaluateExpression(this.getPreCondition());
-      Boolean bool = MBParseUtil.strictBooleanValue(result);
-      if (bool != null) return bool;
-      String msg = "Expression of dialog " + getName() + " precondition=" + getPreCondition() + " is not boolean (result=" + result + ")";
-      throw new MBExpressionNotBooleanException(msg);
-    }
-
-    return isValid;
   }
 
   public String getTitle()

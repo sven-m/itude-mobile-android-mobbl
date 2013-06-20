@@ -80,7 +80,13 @@ public abstract class MBNextGenViewManager extends MBViewManager
   }
 
   @Override
-  protected void buildOptionsMenu(Menu menu)
+  public boolean onCreateOptionsMenu(Menu menu)
+  {
+    return buildOptionsMenu(menu);
+  }
+
+  @Override
+  protected boolean buildOptionsMenu(Menu menu)
   {
     _menu = menu;
 
@@ -88,7 +94,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
 
     for (MBToolDefinition def : tools)
     {
-      if (isPreConditionValid(def))
+      if (def.isPreConditionValid())
       {
         String localizedTitle = MBLocalizationService.getInstance().getTextForKey(def.getTitle());
         MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), tools.indexOf(def), localizedTitle);
@@ -143,6 +149,8 @@ public abstract class MBNextGenViewManager extends MBViewManager
         }
       }
     }
+
+    return true;
   }
 
   private MBSlidingMenuController getSlidingMenu()
@@ -603,6 +611,13 @@ public abstract class MBNextGenViewManager extends MBViewManager
     }
   }
 
+  /***
+   * @deprecated please use {@link com.itude.mobile.mobbl2.client.core.configuration.MBConditionalDefinition#isPreConditionValid()
+   * 
+   * @param def
+   * @return
+   */
+  @Deprecated
   protected final boolean isPreConditionValid(MBToolDefinition def)
   {
     if (def.getPreCondition() == null)
