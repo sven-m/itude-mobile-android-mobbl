@@ -86,8 +86,6 @@ public class MBViewManager extends FragmentActivity
   {
     onPreCreate();
 
-    invalidateOptionsMenu();
-
     // https://dev.itude.com/jira/browse/BINCKAPPS-1131
     super.onCreate(null);
 
@@ -101,7 +99,7 @@ public class MBViewManager extends FragmentActivity
     _instance = this;
 
     MBApplicationController.getInstance().startController();
-
+    invalidateOptionsMenu();
   }
 
   @Override
@@ -426,6 +424,16 @@ public class MBViewManager extends FragmentActivity
     _optionsMenuInvalid = true;
 
     _sortedDialogNames = new ArrayList<String>();
+
+    List<MBDialogDefinition> dialogs = MBMetadataService.getInstance().getDialogs();
+
+    for (MBDialogDefinition dialog : dialogs)
+    {
+      if (dialog.isPreConditionValid() && dialog.isShowAsTab())
+      {
+        addSortedDialogName(dialog.getName());
+      }
+    }
   }
 
   public Dialog getCurrentAlert()
