@@ -214,22 +214,27 @@ public class MBViewManager extends FragmentActivity
     {
       menu.clear();
 
-      for (String dialogName : getSortedDialogNames())
-      {
-        MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-        if (dialogDefinition.isPreConditionValid() && dialogDefinition.isShowAsTab())
-        {
-          MenuItem menuItem = menu.add(Menu.NONE, dialogName.hashCode(), Menu.NONE,
-                                       MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
-          menuItem.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
-          MenuCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
-        }
-      }
+      buildOptionsMenu(menu);
 
       _optionsMenuInvalid = false;
     }
 
     return true;
+  }
+
+  protected void buildOptionsMenu(Menu menu)
+  {
+    for (String dialogName : getSortedDialogNames())
+    {
+      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+      if (dialogDefinition.isPreConditionValid() && dialogDefinition.isShowAsTab())
+      {
+        MenuItem menuItem = menu.add(Menu.NONE, dialogName.hashCode(), Menu.NONE,
+                                     MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
+        menuItem.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
+        MenuCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
+      }
+    }
   }
 
   public void finishFromChild(MBDialogController childController)

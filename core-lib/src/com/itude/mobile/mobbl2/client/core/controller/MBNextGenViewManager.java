@@ -80,7 +80,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu)
+  protected void buildOptionsMenu(Menu menu)
   {
     _menu = menu;
 
@@ -143,8 +143,6 @@ public abstract class MBNextGenViewManager extends MBViewManager
         }
       }
     }
-
-    return true;
   }
 
   private MBSlidingMenuController getSlidingMenu()
@@ -410,7 +408,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
         {
           MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
 
-          if (dialogDefinition.isShowAsTab())
+          if (dialogDefinition.isPreConditionValid() && dialogDefinition.isShowAsTab())
           {
             if (dialogDefinition.getDomain() != null)
             {
