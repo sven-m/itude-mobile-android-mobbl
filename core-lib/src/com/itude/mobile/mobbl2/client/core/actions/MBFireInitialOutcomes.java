@@ -41,7 +41,12 @@ public class MBFireInitialOutcomes implements MBAction
       if (StringUtil.isNotBlank(dialog))
       {
         MBDialogDefinition def = MBMetadataService.getInstance().getDefinitionForDialogName(dialog);
-        if (def != null && def.isPreConditionValid() && !def.isShowAsMenu())
+        if (!def.isPreConditionValid())
+        {
+          continue;
+        }
+
+        if (def != null && !def.isShowAsMenu())
         {
           MBViewManager.getInstance().addSortedDialogName(dialog);
           isMenu = true;

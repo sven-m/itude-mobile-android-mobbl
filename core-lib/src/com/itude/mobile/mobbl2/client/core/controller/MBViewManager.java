@@ -472,6 +472,20 @@ public class MBViewManager extends FragmentActivity
         }
       }
     }
+
+    final MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
+
+    if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone())
+    {
+      runOnUiThread(new Runnable()
+      {
+        @Override
+        public void run()
+        {
+          activateDialogWithName(homeDialogDefinition.getName());
+        }
+      });
+    }
   }
 
   public Dialog getCurrentAlert()
