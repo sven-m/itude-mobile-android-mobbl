@@ -352,17 +352,17 @@ public abstract class MBNextGenViewManager extends MBViewManager
 
   private void refreshActionBar()
   {
-    invalidateActionBar(false, false);
+    invalidateActionBar(false, false, false);
   }
 
   @Override
   public void invalidateActionBar(boolean selectFirstTab)
   {
-    invalidateActionBar(selectFirstTab, true);
+    invalidateActionBar(selectFirstTab, true, true);
   }
 
   @Override
-  public void invalidateActionBar(final boolean showFirst, final boolean notifyListener)
+  public void invalidateActionBar(final boolean showFirst, final boolean notifyListener, final boolean resetHomeDialog)
   {
     runOnUiThread(new MBThread()
     {
@@ -380,7 +380,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
             tabBar.getSelectedTab().setSelected(false);
           }
         }
-        invalidateOptionsMenu();
+        invalidateOptionsMenu(resetHomeDialog);
         // throw away current MBActionBar and create a new one
         getActionBar().setCustomView(null);
 

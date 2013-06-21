@@ -40,6 +40,8 @@ public final class MBMetadataService
   private static String                   _tabletConfigName = null;
   private static String                   _endpointsName    = "endpoints.xml";
 
+  private MBDialogDefinition              _homeDialog       = null;
+
   private MBMetadataService()
   {
     MBMvcConfigurationParser mvcParser = new MBMvcConfigurationParser();
@@ -201,7 +203,17 @@ public final class MBMetadataService
 
   public MBDialogDefinition getHomeDialogDefinition()
   {
-    return _cfg.getHomeDialogDefinition();
+    if (_homeDialog == null)
+    {
+      _homeDialog = _cfg.getHomeDialogDefinition();
+    }
+
+    return _homeDialog;
+  }
+
+  public void setHomeDialogDefinition(MBDialogDefinition dialogDef)
+  {
+    _homeDialog = dialogDef;
   }
 
   public List<MBDialogDefinition> getDialogs()

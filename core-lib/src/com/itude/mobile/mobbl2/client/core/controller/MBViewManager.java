@@ -437,8 +437,7 @@ public class MBViewManager extends FragmentActivity
     }
   }
 
-  @Override
-  public void invalidateOptionsMenu()
+  public void invalidateOptionsMenu(boolean resetHomeDialog)
   {
     if (DeviceUtil.getInstance().isPhoneV14() || DeviceUtil.isTablet())
     {
@@ -453,11 +452,24 @@ public class MBViewManager extends FragmentActivity
 
     List<MBDialogDefinition> dialogs = MBMetadataService.getInstance().getDialogsSorted();
 
-    for (MBDialogDefinition dialog : dialogs)
+    boolean didResetHomeDialog = (resetHomeDialog) ? false : true;
+
+    for (int i = 0; i < dialogs.size(); i++)
     {
-      if (dialog.isPreConditionValid() && dialog.isShowAsTab())
+      MBDialogDefinition dialog = dialogs.get(i);
+
+      if (dialog.isPreConditionValid())
       {
-        addSortedDialogName(dialog.getName());
+        if (!didResetHomeDialog)
+        {
+          MBMetadataService.getInstance().setHomeDialogDefinition(dialog);
+          didResetHomeDialog = true;
+        }
+
+        if (dialog.isShowAsTab())
+        {
+          addSortedDialogName(dialog.getName());
+        }
       }
     }
   }
@@ -1122,7 +1134,7 @@ public class MBViewManager extends FragmentActivity
     //    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
-  public void invalidateActionBar(boolean showFirst, boolean notifyListener)
+  public void invalidateActionBar(boolean showFirst, boolean notifyListener, final boolean resetHomeDialog)
   {
     //    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
