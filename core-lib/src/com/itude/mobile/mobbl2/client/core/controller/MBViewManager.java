@@ -454,10 +454,8 @@ public class MBViewManager extends FragmentActivity
 
     boolean didResetHomeDialog = (resetHomeDialog) ? false : true;
 
-    for (int i = 0; i < dialogs.size(); i++)
+    for (MBDialogDefinition dialog : dialogs)
     {
-      MBDialogDefinition dialog = dialogs.get(i);
-
       if (dialog.isPreConditionValid())
       {
         if (!didResetHomeDialog)
