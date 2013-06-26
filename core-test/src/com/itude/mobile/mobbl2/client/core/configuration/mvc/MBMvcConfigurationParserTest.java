@@ -82,13 +82,6 @@ public class MBMvcConfigurationParserTest extends ApplicationTestCase<MBApplicat
       data = AssetUtil.getInstance().getByteArray("unittests/config_unittests.xml");
       config = (MBConfigurationDefinition) parser.parseData(data, "Config");
     }
-
-    //    _dialogDefNameInOrder = new ArrayList<String>();
-    //    _dialogDefNameInOrder.add("DIALOG-tab_home");
-    //    _dialogDefNameInOrder.add("DIALOG-tab_shares");
-    //    _dialogDefNameInOrder.add("DIALOG-tab_my_account");
-    //    _dialogDefNameInOrder.add("DIALOG-tab_favourites");
-    //    _dialogDefNameInOrder.add("DIALOG-tab_settings");
   }
 
   public void testConfigParsing()
