@@ -1,5 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import android.R;
@@ -350,20 +351,26 @@ public abstract class MBNextGenViewManager extends MBViewManager
     return null;
   }
 
-  private void refreshActionBar()
-  {
-    invalidateActionBar(false, false, false);
-  }
-
   @Override
-  public void invalidateActionBar(boolean selectFirstTab)
+  public void invalidateActionBar(EnumSet<MBActionBarInvalidationOption> flags)
   {
-    invalidateActionBar(selectFirstTab, true, true);
-  }
+    final boolean showFirst;
+    final boolean notifyListener;
+    final boolean resetHomeDialog;
 
-  @Override
-  public void invalidateActionBar(final boolean showFirst, final boolean notifyListener, final boolean resetHomeDialog)
-  {
+    if (flags == null)
+    {
+      showFirst = false;
+      notifyListener = false;
+      resetHomeDialog = false;
+    }
+    else
+    {
+      showFirst = flags.contains(MBActionBarInvalidationOption.SHOW_FIRST);
+      notifyListener = flags.contains(MBActionBarInvalidationOption.NOTIFY_LISTENER);
+      resetHomeDialog = flags.contains(MBActionBarInvalidationOption.RESET_HOME_DIALOG);
+    }
+
     runOnUiThread(new MBThread()
     {
       @Override
@@ -638,7 +645,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
   @Override
   public void onConfigurationChanged(Configuration newConfig)
   {
-    refreshActionBar();
+    invalidateActionBar();
 
     refreshSlidingMenu();
 

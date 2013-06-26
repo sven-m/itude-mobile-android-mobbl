@@ -2,6 +2,7 @@ package com.itude.mobile.mobbl2.client.core.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,10 @@ public class MBViewManager extends FragmentActivity
   public enum MBViewState {
     MBViewStateFullScreen, MBViewStatePlain, MBViewStateTabbed, MBViewStateModal
   };
+
+  public enum MBActionBarInvalidationOption {
+    SHOW_FIRST, RESET_HOME_DIALOG, NOTIFY_LISTENER
+  }
 
   protected static MBViewManager          _instance;
 
@@ -450,18 +455,16 @@ public class MBViewManager extends FragmentActivity
 
     _sortedDialogNames = new ArrayList<String>();
 
-    List<MBDialogDefinition> dialogs = MBMetadataService.getInstance().getDialogsSorted();
-
-    boolean didResetHomeDialog = (resetHomeDialog) ? false : true;
+    List<MBDialogDefinition> dialogs = MBMetadataService.getInstance().getDialogs();
 
     for (MBDialogDefinition dialog : dialogs)
     {
       if (dialog.isPreConditionValid())
       {
-        if (!didResetHomeDialog)
+        if (resetHomeDialog)
         {
           MBMetadataService.getInstance().setHomeDialogDefinition(dialog);
-          didResetHomeDialog = true;
+          resetHomeDialog = false;
         }
 
         if (dialog.isShowAsTab())
@@ -1141,12 +1144,59 @@ public class MBViewManager extends FragmentActivity
   // Tablet specific methods. Some methods are implemented also to run on smartphone.
   // Others are for tablet only.
 
-  public void invalidateActionBar(boolean showFirst)
+  public void invalidateActionBar()
   {
-    //    throw new UnsupportedOperationException("This method is not supported on smartphone");
+    invalidateActionBar(null);
   }
 
+  /***
+   * 
+   * @param showFirst
+   * 
+   * @deprecated please use {@link #invalidateActionBar(EnumSet)}
+   */
+  @Deprecated
+  public void invalidateActionBar(boolean showFirst)
+  {
+    EnumSet<MBActionBarInvalidationOption> options = EnumSet.noneOf(MBActionBarInvalidationOption.class);
+    if (showFirst)
+    {
+      options.add(MBActionBarInvalidationOption.SHOW_FIRST);
+    }
+
+    invalidateActionBar(options);
+  }
+
+  /**
+   * @param showFirst
+   * @param notifyListener
+   * @param resetHomeDialog
+   * 
+   * @deprecated please use {@link #invalidateActionBar(boolean)}
+   */
+  @Deprecated
   public void invalidateActionBar(boolean showFirst, boolean notifyListener, final boolean resetHomeDialog)
+  {
+    EnumSet<MBActionBarInvalidationOption> options = EnumSet.noneOf(MBActionBarInvalidationOption.class);
+    if (showFirst)
+    {
+      options.add(MBActionBarInvalidationOption.SHOW_FIRST);
+    }
+
+    if (notifyListener)
+    {
+      options.add(MBActionBarInvalidationOption.NOTIFY_LISTENER);
+    }
+
+    if (resetHomeDialog)
+    {
+      options.add(MBActionBarInvalidationOption.RESET_HOME_DIALOG);
+    }
+
+    invalidateActionBar(options);
+  }
+
+  public void invalidateActionBar(EnumSet<MBActionBarInvalidationOption> flags)
   {
     //    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
