@@ -557,6 +557,13 @@ public class MBElementContainer implements Parcelable
 
       if (subPartPosition != -1)
       {
+        String substring = expression.substring(0, subPartPosition);
+        if (substring.contains(variableOpenTag))
+        {
+          expression = substituteExpressions(expression, nilMarker, currentPath);
+          subPartPosition = expression.indexOf(variableCloseTag);
+        }
+
         subPart = expression.substring(subPartPosition + 1);
 
         singleExpression = expression.substring(0, subPartPosition);
