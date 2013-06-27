@@ -262,7 +262,14 @@ public class MBViewManager extends FragmentActivity
     final String firstDialog = firstDialogDefinition.getName();
     if (!childController.getName().equals(firstDialog))
     {
-      activateDialogWithName(firstDialog);
+      if (getDialog(firstDialogDefinition.getName()) == null)
+      {
+        createDialogWithID(firstDialogDefinition);
+      }
+      else
+      {
+        activateDialogWithName(firstDialog);
+      }
       setTitle(MBLocalizationService.getInstance().getTextForKey(firstDialogDefinition.getTitle()));
     }
     else
@@ -419,6 +426,8 @@ public class MBViewManager extends FragmentActivity
       oc.setDialogName(dialogDefinition.getName());
       oc.setNoBackgroundProcessing(true);
       oc.setTransferDocument(false);
+      oc.setDisplayMode(Constants.C_DISPLAY_MODE_REPLACE);
+
       MBApplicationController.getInstance().getOutcomeHandler().handleOutcomeSynchronously(oc, false);
     }
   }
@@ -1116,7 +1125,7 @@ public class MBViewManager extends FragmentActivity
     return _controllerMap.values();
   }
 
-  private MBDialogController getDialog(String name)
+  protected MBDialogController getDialog(String name)
   {
     return _controllerMap.get(name);
   }

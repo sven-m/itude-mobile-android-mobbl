@@ -300,6 +300,11 @@ public abstract class MBNextGenViewManager extends MBViewManager
     {
       MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
       resetViewPreservingCurrentDialog();
+
+      if (getDialog(homeDialogDefinition.getName()) == null)
+      {
+        createDialogWithID(homeDialogDefinition);
+      }
       activateDialogWithName(homeDialogDefinition.getName());
     }
   }

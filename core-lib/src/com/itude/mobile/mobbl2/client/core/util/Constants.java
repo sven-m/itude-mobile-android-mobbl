@@ -177,4 +177,7 @@ public interface Constants
   public static String       C_STATED_RESOURCE_STATE_CHECKED                           = "checked";
   public static String       C_STATED_RESOURCE_STATE_UNCHECKED                         = "unchecked";
 
+  // Display modes
+  public static String       C_DISPLAY_MODE_REPLACE                                    = "REPLACE";
+
 }
