@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -451,6 +452,7 @@ public class MBViewManager extends FragmentActivity
     }
   }
 
+  @SuppressLint("NewApi")
   public void invalidateOptionsMenu(boolean resetHomeDialog)
   {
     if (DeviceUtil.getInstance().isPhoneV14() || DeviceUtil.isTablet())
@@ -1179,9 +1181,32 @@ public class MBViewManager extends FragmentActivity
   /**
    * @param showFirst
    * @param notifyListener
+   * 
+   * @deprecated please use {@link #invalidateActionBar(EnumSet)}
+   */
+  @Deprecated
+  public void invalidateActionBar(boolean showFirst, boolean notifyListener)
+  {
+    EnumSet<MBActionBarInvalidationOption> options = EnumSet.noneOf(MBActionBarInvalidationOption.class);
+    if (showFirst)
+    {
+      options.add(MBActionBarInvalidationOption.SHOW_FIRST);
+    }
+
+    if (notifyListener)
+    {
+      options.add(MBActionBarInvalidationOption.NOTIFY_LISTENER);
+    }
+
+    invalidateActionBar(options);
+  }
+
+  /**
+   * @param showFirst
+   * @param notifyListener
    * @param resetHomeDialog
    * 
-   * @deprecated please use {@link #invalidateActionBar(boolean)}
+   * @deprecated please use {@link #invalidateActionBar(EnumSet)}
    */
   @Deprecated
   public void invalidateActionBar(boolean showFirst, boolean notifyListener, final boolean resetHomeDialog)
