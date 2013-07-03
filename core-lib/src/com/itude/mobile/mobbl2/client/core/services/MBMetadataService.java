@@ -40,11 +40,13 @@ public final class MBMetadataService
   private static String                   _tabletConfigName = null;
   private static String                   _endpointsName    = "endpoints.xml";
 
+  private MBDialogDefinition              _homeDialog       = null;
+
   private MBMetadataService()
   {
     MBMvcConfigurationParser mvcParser = new MBMvcConfigurationParser();
     if (_phoneConfigName != null && (DeviceUtil.getInstance().isPhone() || DeviceUtil.getInstance().isPhoneV14())) _configName = _phoneConfigName;
-    else if (_tabletConfigName != null && DeviceUtil.getInstance().isTablet()) _configName = _tabletConfigName;
+    else if (_tabletConfigName != null && DeviceUtil.isTablet()) _configName = _tabletConfigName;
 
     // Configuration definition
     _cfg = (MBConfigurationDefinition) mvcParser.parseData(DataUtil.getInstance().readFromAssetOrFile(_configName), _configName);
@@ -201,7 +203,17 @@ public final class MBMetadataService
 
   public MBDialogDefinition getHomeDialogDefinition()
   {
-    return _cfg.getHomeDialogDefinition();
+    if (_homeDialog == null)
+    {
+      _homeDialog = _cfg.getHomeDialogDefinition();
+    }
+
+    return _homeDialog;
+  }
+
+  public void setHomeDialogDefinition(MBDialogDefinition dialogDef)
+  {
+    _homeDialog = dialogDef;
   }
 
   public List<MBDialogDefinition> getDialogs()

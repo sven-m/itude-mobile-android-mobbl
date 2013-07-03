@@ -2,6 +2,7 @@ package com.itude.mobile.mobbl2.client.core.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -31,6 +32,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefi
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
+import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBActionBarInvalidationOption;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBInvalidOutcomeException;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
@@ -158,7 +160,14 @@ public class MBApplicationController extends Application
 
     final MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
 
-    MBViewManager.getInstance().invalidateActionBar(homeDialogDefinition.isShowAsTab());
+    EnumSet<MBActionBarInvalidationOption> actionBarRefreshOptions = EnumSet.noneOf(MBActionBarInvalidationOption.class);
+
+    if (homeDialogDefinition.isShowAsTab())
+    {
+      actionBarRefreshOptions.add(MBActionBarInvalidationOption.SHOW_FIRST);
+    }
+
+    MBViewManager.getInstance().invalidateActionBar(actionBarRefreshOptions);
     MBViewManager.getInstance().buildSlidingMenu();
 
     if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone())

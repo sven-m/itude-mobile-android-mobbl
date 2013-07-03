@@ -1,7 +1,9 @@
 package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.util.Log;
 
@@ -11,11 +13,13 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBDialogGroupDefinition extends MBDialogDefinition
 {
-  private List<MBDialogDefinition> _children;
+  private final List<MBDialogDefinition>        _children;
+  private final Map<MBDialogDefinition, String> _childrenPreCondition;
 
   public MBDialogGroupDefinition()
   {
     _children = new ArrayList<MBDialogDefinition>();
+    _childrenPreCondition = new HashMap<MBDialogDefinition, String>();
   }
 
   public void addDialog(MBDialogDefinition dialogDef)
@@ -26,6 +30,7 @@ public class MBDialogGroupDefinition extends MBDialogDefinition
     }
 
     _children.add(dialogDef);
+    _childrenPreCondition.put(dialogDef, dialogDef.getPreCondition());
   }
 
   @Override
@@ -47,7 +52,35 @@ public class MBDialogGroupDefinition extends MBDialogDefinition
   @Override
   public void validateDefinition()
   {
-    if (getName() == null) throw new MBInvalidDialogDefinitionException("no name set for dialogGroup");
+    if (getName() == null)
+    {
+      throw new MBInvalidDialogDefinitionException("no name set for dialogGroup");
+    }
+  }
+
+  @Override
+  public boolean isPreConditionValid()
+  {
+    boolean valid = super.isPreConditionValid();
+
+    if (valid)
+    {
+      // then reset pre conditions
+      for (MBDialogDefinition child : getChildren())
+      {
+        child.setPreCondition(_childrenPreCondition.get(child));
+      }
+    }
+    else
+    {
+      // then override children to also be invalid
+      for (MBDialogDefinition child : getChildren())
+      {
+        child.setPreCondition(Constants.C_FALSE);
+      }
+    }
+
+    return valid;
   }
 
   @Override

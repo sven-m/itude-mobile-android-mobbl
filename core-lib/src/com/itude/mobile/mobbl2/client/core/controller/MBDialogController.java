@@ -255,7 +255,7 @@ public class MBDialogController extends ContextWrapper
       getSupportFragmentManager().popBackStack(pageName, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
       // Make sure no unnecessary views are being popped
-      //      MBApplicationController.getInstance().removeLastModalPageID();
+      MBApplicationController.getInstance().removeLastModalPageID();
     }
   }
 

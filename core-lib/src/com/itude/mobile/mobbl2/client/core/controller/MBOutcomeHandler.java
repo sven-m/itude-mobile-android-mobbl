@@ -161,7 +161,7 @@ public class MBOutcomeHandler extends Handler
 
           MBAlertDefinition alertDef = metadataService.getDefinitionForAlertName(outcomeDef.getAction(), false);
           if (alertDef != null) handleAlert(outcomeToProcess, alertDef);
-          
+
           if (actionDef == null && pageDef == null && alertDef == null && !"none".equals(outcomeDef.getAction()))
           {
             StringBuffer tmp = new StringBuffer();
@@ -242,6 +242,7 @@ public class MBOutcomeHandler extends Handler
     outcomeToProcess.setDocument(outcome.getDocument());
     outcomeToProcess.setDialogName(outcome.getDialogName());
     outcomeToProcess.setNoBackgroundProcessing(outcome.getNoBackgroundProcessing() || outcomeDef.getNoBackgroundProcessing());
+    outcomeToProcess.setDisplayMode(outcome.getDisplayMode());
 
     String copyIndicator = outcome.getIndicator();
     if (copyIndicator == null)

@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,12 +46,13 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     _documentTypes = new HashMap<String, MBDocumentDefinition>();
     _actionTypes = new HashMap<String, MBActionDefinition>();
     _outcomeTypes = new ArrayList<MBOutcomeDefinition>();
-    _dialogs = new HashMap<String, MBDialogDefinition>();
+    _dialogs = Collections.synchronizedMap(new LinkedHashMap<String, MBDialogDefinition>());
     _pageTypes = new HashMap<String, MBPageDefinition>();
     _tools = new LinkedHashMap<String, MBToolDefinition>();
     _alerts = new HashMap<String, MBAlertDefinition>();
   }
 
+  @Override
   public void addAll(MBIncludableDefinition otherDefinition)
   {
     MBConfigurationDefinition otherConfig = null;
@@ -416,12 +418,12 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   {
     ArrayList<MBToolDefinition> result = new ArrayList<MBToolDefinition>();
 
+    for (MBToolDefinition toolDef : _tools.values())
     {
-      for (MBToolDefinition toolDef : _tools.values())
-        if (type.equals(toolDef.getType()))
-        {
-          result.add(toolDef);
-        }
+      if (type.equals(toolDef.getType()))
+      {
+        result.add(toolDef);
+      }
     }
     return result;
   }

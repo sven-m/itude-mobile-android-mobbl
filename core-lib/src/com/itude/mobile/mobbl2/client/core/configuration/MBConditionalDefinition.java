@@ -1,10 +1,11 @@
-package com.itude.mobile.mobbl2.client.core.view;
+package com.itude.mobile.mobbl2.client.core.configuration;
 
 import android.util.Log;
 
-import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNotBooleanException;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
+import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 
@@ -22,10 +23,35 @@ public class MBConditionalDefinition extends MBDefinition
     _preCondition = preCondition;
   }
 
+  public boolean isPreConditionValid()
+  {
+    if (getPreCondition() == null)
+    {
+      return true;
+    }
+
+    MBDocument doc = MBDataManagerService.getInstance().loadDocument(MBConfigurationDefinition.DOC_SYSTEM_EMPTY);
+
+    String result = doc.evaluateExpression(getPreCondition());
+    Boolean bool = MBParseUtil.strictBooleanValue(result);
+
+    if (bool != null)
+    {
+      return bool;
+    }
+    String msg = "Expression of definition with name=" + getName() + " precondition=" + getPreCondition() + " is not boolean (result="
+                 + result + ")";
+
+    throw new MBExpressionNotBooleanException(msg);
+  }
+
   @Override
   public boolean isPreConditionValid(MBDocument document, String currentPath)
   {
-    if (_preCondition == null) return true;
+    if (_preCondition == null)
+    {
+      return true;
+    }
 
     String result = null;
     try

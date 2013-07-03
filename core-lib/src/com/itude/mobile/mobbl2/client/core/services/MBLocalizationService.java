@@ -1,6 +1,5 @@
 package com.itude.mobile.mobbl2.client.core.services;
 
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
@@ -10,19 +9,20 @@ import android.util.Log;
 
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBProperties;
+import com.itude.mobile.mobbl2.client.core.view.MBBundle;
 
 public class MBLocalizationService
 {
-  private final Map<String, Map<String, String>> _languages;         //DictionaryofDictionaries(languagecode->(key->value))
-  private String                                 _currentLanguage;
-  private Map<String, String>                    _currentLanguageMap;
-  private String                                 _localeCode;
+  private final Map<String, MBBundle>  _languages;         //DictionaryofDictionaries(languagecode->(key->value))
+  private String                       _currentLanguage;
+  private MBBundle                     _currentLanguageMap;
+  private String                       _localeCode;
 
-  private static MBLocalizationService           _instance;
+  private static MBLocalizationService _instance;
 
   private MBLocalizationService()
   {
-    _languages = new Hashtable<String, Map<String, String>>();
+    _languages = new Hashtable<String, MBBundle>();
 
     // Let's set our language to the one we've set in our applicationproperties.xml or to a default one if none were found.
     setCurrentLanguage(getLocale().getLanguage());
@@ -42,24 +42,13 @@ public class MBLocalizationService
     return _instance;
   }
 
-  public Map<String, String> getBundleForCode(String languageCode)
+  private MBBundle getLanguageForCode(String languageCode)
   {
-    Map<String, String> result = new HashMap<String, String>();
-    for (Map<String, String> bundle : MBResourceService.getInstance().getBundlesForLanguageCode(languageCode))
-    {
-      result.putAll(bundle);
-    }
-
-    return result;
-  }
-
-  private Map<String, String> getLanguageForCode(String languageCode)
-  {
-    Map<String, String> result = null;
+    MBBundle result = null;
     result = _languages.get(languageCode);
     if (result == null)
     {
-      result = getBundleForCode(languageCode);
+      result = MBResourceService.getInstance().getBundle(languageCode);
       _languages.put(languageCode, result);
     }
 
@@ -73,8 +62,8 @@ public class MBLocalizationService
       return getTextForKey(key);
     }
 
-    Map<String, String> keys = getLanguageForCode(languageCode);
-    String text = keys.get(key);
+    MBBundle bundle = getLanguageForCode(languageCode);
+    String text = bundle.getText(key);
 
     if (text == null)
     {
@@ -109,13 +98,13 @@ public class MBLocalizationService
       return null;
     }
 
-    Map<String, String> dict = _currentLanguageMap;
-    String text = dict.get(key);
+    MBBundle dict = _currentLanguageMap;
+    String text = dict.getText(key);
     if (text == null)
     {
       Log.w(Constants.APPLICATION_NAME, "Warning: no translation defined for key '" + key + "' using languageCode=" + getCurrentLanguage());
       // add the missing translation to prevent future warnings
-      dict.put(key, key);
+      dict.putText(key, key);
       text = key;
     }
 

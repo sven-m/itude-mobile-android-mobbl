@@ -1,22 +1,61 @@
 package com.itude.mobile.mobbl2.client.core.configuration.resources;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.util.Log;
+
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBResourceDefinition extends MBDefinition
 {
-  private String  _resourceId;
-  private String  _url;
-  private String  _color;
-  private boolean _cacheable;
-  private int     _ttl;
+  private String                        _resourceId;
+  private String                        _type;
+  private String                        _url;
+  private String                        _color;
+  private String                        _align;
+  private String                        _languageCode;
+  private String                        _viewType;
+  private boolean                       _cacheable;
+  private int                           _ttl;
+
+  private Map<String, MBItemDefinition> _items;
+  private List<MBItemDefinition>        _sortedItems;
+
+  public MBResourceDefinition()
+  {
+    _items = new HashMap<String, MBItemDefinition>();
+    _sortedItems = new ArrayList<MBItemDefinition>();
+  }
 
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    return StringUtil.appendIndentString(appendToMe, level).append("<Resource id='").append(getResourceId()).append("' url='")
-        .append(getUrl()).append("' cacheable='").append(getCacheable()).append("' ttl='").append(getTtl()).append("' color='")
-        .append(getColor()).append("' />");
+    return StringUtil.appendIndentString(appendToMe, level).append("<Resource id='").append(getResourceId()).append("' type='")
+        .append(getType()).append("' url='").append(getUrl()).append("' cacheable='").append(getCacheable()).append("' ttl='")
+        .append(getTtl()).append("' color='").append(getColor()).append("' align='").append(getAlign()).append("' />");
+  }
+
+  @Override
+  public void addChildElement(MBItemDefinition child)
+  {
+    addItem(child);
+  }
+
+  public void addItem(MBItemDefinition child)
+  {
+    String state = child.getState();
+    if (StringUtil.isNotBlank(state) && _items.containsKey(state))
+    {
+      Log.w(Constants.APPLICATION_NAME, "Item definition overridden: multiple definitions with the same state for resource " + getName());
+    }
+
+    _items.put(child.getState(), child);
+    _sortedItems.add(child);
   }
 
   public String getResourceId()
@@ -67,6 +106,71 @@ public class MBResourceDefinition extends MBDefinition
   public void setColor(String color)
   {
     _color = color;
+  }
+
+  public String getAlign()
+  {
+    return _align;
+  }
+
+  public void setAlign(String align)
+  {
+    _align = align;
+  }
+
+  public String getType()
+  {
+    return _type;
+  }
+
+  public void setType(String type)
+  {
+    _type = type;
+  }
+
+  public String getLanguageCode()
+  {
+    return _languageCode;
+  }
+
+  public void setLanguageCode(String languageCode)
+  {
+    _languageCode = languageCode;
+  }
+
+  public String getViewType()
+  {
+    return _viewType;
+  }
+
+  public void setViewType(String viewType)
+  {
+    _viewType = viewType;
+  }
+
+  public boolean hasItems()
+  {
+    return !_items.isEmpty();
+  }
+
+  public Map<String, MBItemDefinition> getItems()
+  {
+    return _items;
+  }
+
+  public void setItems(Map<String, MBItemDefinition> items)
+  {
+    _items = items;
+  }
+
+  public List<MBItemDefinition> getSortedItems()
+  {
+    return _sortedItems;
+  }
+
+  public void setSortedItems(List<MBItemDefinition> sortedItems)
+  {
+    _sortedItems = sortedItems;
   }
 
 }

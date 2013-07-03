@@ -1,5 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import android.R;
@@ -82,13 +83,19 @@ public abstract class MBNextGenViewManager extends MBViewManager
   @Override
   public boolean onCreateOptionsMenu(Menu menu)
   {
+    return buildOptionsMenu(menu);
+  }
+
+  @Override
+  protected boolean buildOptionsMenu(Menu menu)
+  {
     _menu = menu;
 
     List<MBToolDefinition> tools = MBMetadataService.getInstance().getTools();
 
     for (MBToolDefinition def : tools)
     {
-      if (isPreConditionValid(def))
+      if (def.isPreConditionValid())
       {
         String localizedTitle = MBLocalizationService.getInstance().getTextForKey(def.getTitle());
         MenuItem menuItem = menu.add(Menu.NONE, def.getName().hashCode(), tools.indexOf(def), localizedTitle);
@@ -293,6 +300,11 @@ public abstract class MBNextGenViewManager extends MBViewManager
     {
       MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
       resetViewPreservingCurrentDialog();
+
+      if (getDialog(homeDialogDefinition.getName()) == null)
+      {
+        createDialogWithID(homeDialogDefinition);
+      }
       activateDialogWithName(homeDialogDefinition.getName());
     }
   }
@@ -344,20 +356,26 @@ public abstract class MBNextGenViewManager extends MBViewManager
     return null;
   }
 
-  private void refreshActionBar()
-  {
-    invalidateActionBar(false, false);
-  }
-
   @Override
-  public void invalidateActionBar(boolean selectFirstTab)
+  public void invalidateActionBar(EnumSet<MBActionBarInvalidationOption> flags)
   {
-    invalidateActionBar(selectFirstTab, true);
-  }
+    final boolean showFirst;
+    final boolean notifyListener;
+    final boolean resetHomeDialog;
 
-  @Override
-  public void invalidateActionBar(final boolean showFirst, final boolean notifyListener)
-  {
+    if (flags == null)
+    {
+      showFirst = false;
+      notifyListener = false;
+      resetHomeDialog = false;
+    }
+    else
+    {
+      showFirst = flags.contains(MBActionBarInvalidationOption.SHOW_FIRST);
+      notifyListener = flags.contains(MBActionBarInvalidationOption.NOTIFY_LISTENER);
+      resetHomeDialog = flags.contains(MBActionBarInvalidationOption.RESET_HOME_DIALOG);
+    }
+
     runOnUiThread(new MBThread()
     {
       @Override
@@ -374,7 +392,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
             tabBar.getSelectedTab().setSelected(false);
           }
         }
-        invalidateOptionsMenu();
+        invalidateOptionsMenu(resetHomeDialog);
         // throw away current MBActionBar and create a new one
         getActionBar().setCustomView(null);
 
@@ -410,7 +428,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
         {
           MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
 
-          if (dialogDefinition.isShowAsTab())
+          if (dialogDefinition.isPreConditionValid() && dialogDefinition.isShowAsTab())
           {
             if (dialogDefinition.getDomain() != null)
             {
@@ -605,6 +623,13 @@ public abstract class MBNextGenViewManager extends MBViewManager
     }
   }
 
+  /***
+   * @deprecated please use {@link com.itude.mobile.mobbl2.client.core.configuration.MBConditionalDefinition#isPreConditionValid()
+   * 
+   * @param def
+   * @return
+   */
+  @Deprecated
   protected final boolean isPreConditionValid(MBToolDefinition def)
   {
     if (def.getPreCondition() == null)
@@ -625,7 +650,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
   @Override
   public void onConfigurationChanged(Configuration newConfig)
   {
-    refreshActionBar();
+    invalidateActionBar();
 
     refreshSlidingMenu();
 

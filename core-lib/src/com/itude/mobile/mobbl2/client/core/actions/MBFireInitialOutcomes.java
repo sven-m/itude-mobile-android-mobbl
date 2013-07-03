@@ -36,18 +36,34 @@ public class MBFireInitialOutcomes implements MBAction
     {
       String action = element.getValueForAttribute("action");
       String dialog = element.getValueForAttribute("dialog");
-      boolean isMenu = false;      
-      
+      boolean isMenu = false;
+
+      MBDialogDefinition def = MBMetadataService.getInstance().getDefinitionForDialogName(dialog);
       if (StringUtil.isNotBlank(dialog))
       {
-        MBDialogDefinition def = MBMetadataService.getInstance().getDefinitionForDialogName(dialog);
+        String parentDialog = def.getParent();
+
+        if (parentDialog != null)
+        {
+          MBDialogDefinition parent = MBMetadataService.getInstance().getDefinitionForDialogName(parentDialog);
+
+          if (!parent.isPreConditionValid())
+          {
+            continue;
+          }
+        }
+        else if (!def.isPreConditionValid())
+        {
+          continue;
+        }
+
         if (def != null && !def.isShowAsMenu())
         {
           MBViewManager.getInstance().addSortedDialogName(dialog);
           isMenu = true;
         }
       }
-      
+
       if (StringUtil.isNotBlank(action))
       {
         MBOutcome oc = new MBOutcome();
@@ -59,6 +75,13 @@ public class MBFireInitialOutcomes implements MBAction
         if (isMenu || (first && isFirstDialogSynchronized()))
         {
           MBApplicationController.getInstance().getOutcomeHandler().handleOutcomeSynchronously(oc, false);
+
+          if (def.getParent() != null)
+          {
+            def = MBMetadataService.getInstance().getDefinitionForDialogName(def.getParent());
+          }
+
+          MBMetadataService.getInstance().setHomeDialogDefinition(def);
           first = false;
         }
         else
@@ -66,7 +89,6 @@ public class MBFireInitialOutcomes implements MBAction
           MBApplicationController.getInstance().handleOutcome(oc);
         }
       }
-
 
     }
 

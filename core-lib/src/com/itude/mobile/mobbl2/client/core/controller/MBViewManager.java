@@ -2,6 +2,7 @@ package com.itude.mobile.mobbl2.client.core.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 
 import com.itude.mobile.android.util.CollectionUtilities;
+import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
@@ -60,6 +62,10 @@ public class MBViewManager extends FragmentActivity
     MBViewStateFullScreen, MBViewStatePlain, MBViewStateTabbed, MBViewStateModal
   };
 
+  public enum MBActionBarInvalidationOption {
+    SHOW_FIRST, RESET_HOME_DIALOG, NOTIFY_LISTENER
+  }
+
   protected static MBViewManager          _instance;
 
   private ArrayList<String>               _dialogControllers;
@@ -69,9 +75,10 @@ public class MBViewManager extends FragmentActivity
   private Dialog                          _currentAlert;
   private boolean                         _singlePageMode;
   private String                          _activeDialog;
-  private boolean                         _showDialogTitle = false;
+  private boolean                         _showDialogTitle    = false;
 
-  private boolean                         _created         = false;
+  private boolean                         _activityExists     = false;
+  private boolean                         _optionsMenuInvalid = false;
 
   ///////////////////// Android lifecycle methods
 
@@ -98,15 +105,14 @@ public class MBViewManager extends FragmentActivity
     _instance = this;
 
     MBApplicationController.getInstance().startController();
-
   }
 
   @Override
   protected void onResume()
   {
-    if (!_created)
+    if (!_activityExists)
     {
-      _created = true;
+      _activityExists = true;
     }
     else
     {
@@ -206,13 +212,39 @@ public class MBViewManager extends FragmentActivity
 
   }
 
+  /***
+   * Only sets a flag to invalidate the menu on first invocation. The menu is built in {@link #onPrepareOptionsMenu(Menu)}
+   */
   @Override
   public boolean onCreateOptionsMenu(Menu menu)
+  {
+    _optionsMenuInvalid = true;
+    return false;
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu)
+  {
+    boolean displayMenu = true;
+
+    if (_optionsMenuInvalid)
+    {
+      menu.clear();
+
+      displayMenu = buildOptionsMenu(menu);
+
+      _optionsMenuInvalid = false;
+    }
+
+    return displayMenu;
+  }
+
+  protected boolean buildOptionsMenu(Menu menu)
   {
     for (String dialogName : getSortedDialogNames())
     {
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      if (dialogDefinition.isShowAsTab())
+      if (dialogDefinition.isPreConditionValid() && dialogDefinition.isShowAsTab())
       {
         MenuItem menuItem = menu.add(Menu.NONE, dialogName.hashCode(), Menu.NONE,
                                      MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
@@ -220,6 +252,7 @@ public class MBViewManager extends FragmentActivity
         MenuCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
       }
     }
+
     return true;
   }
 
@@ -229,7 +262,14 @@ public class MBViewManager extends FragmentActivity
     final String firstDialog = firstDialogDefinition.getName();
     if (!childController.getName().equals(firstDialog))
     {
-      activateDialogWithName(firstDialog);
+      if (getDialog(firstDialogDefinition.getName()) == null)
+      {
+        createDialogWithID(firstDialogDefinition);
+      }
+      else
+      {
+        activateDialogWithName(firstDialog);
+      }
       setTitle(MBLocalizationService.getInstance().getTextForKey(firstDialogDefinition.getTitle()));
     }
     else
@@ -386,6 +426,8 @@ public class MBViewManager extends FragmentActivity
       oc.setDialogName(dialogDefinition.getName());
       oc.setNoBackgroundProcessing(true);
       oc.setTransferDocument(false);
+      oc.setDisplayMode(Constants.C_DISPLAY_MODE_REPLACE);
+
       MBApplicationController.getInstance().getOutcomeHandler().handleOutcomeSynchronously(oc, false);
     }
   }
@@ -406,6 +448,53 @@ public class MBViewManager extends FragmentActivity
           getActiveDialog().clearAllViews();
         }
       }
+    }
+  }
+
+  public void invalidateOptionsMenu(boolean resetHomeDialog)
+  {
+    if (DeviceUtil.getInstance().isPhoneV14() || DeviceUtil.isTablet())
+    {
+      super.invalidateOptionsMenu();
+    }
+    else
+    {
+      _optionsMenuInvalid = true;
+    }
+
+    _sortedDialogNames = new ArrayList<String>();
+
+    List<MBDialogDefinition> dialogs = MBMetadataService.getInstance().getDialogs();
+
+    for (MBDialogDefinition dialog : dialogs)
+    {
+      if (dialog.isPreConditionValid())
+      {
+        if (resetHomeDialog)
+        {
+          MBMetadataService.getInstance().setHomeDialogDefinition(dialog);
+          resetHomeDialog = false;
+        }
+
+        if (dialog.isShowAsTab())
+        {
+          addSortedDialogName(dialog.getName());
+        }
+      }
+    }
+
+    final MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
+
+    if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone())
+    {
+      runOnUiThread(new Runnable()
+      {
+        @Override
+        public void run()
+        {
+          activateDialogWithName(homeDialogDefinition.getName());
+        }
+      });
     }
   }
 
@@ -668,7 +757,6 @@ public class MBViewManager extends FragmentActivity
       controller = MBApplicationFactory.getInstance().createDialogController();
       controller.init(dialogName, outcomeId);
       _controllerMap.put(dialogName, controller);
-
     }
 
     if (_activeDialog == null && !def.isShowAsMenu())
@@ -1037,7 +1125,7 @@ public class MBViewManager extends FragmentActivity
     return _controllerMap.values();
   }
 
-  private MBDialogController getDialog(String name)
+  protected MBDialogController getDialog(String name)
   {
     return _controllerMap.get(name);
   }
@@ -1065,12 +1153,59 @@ public class MBViewManager extends FragmentActivity
   // Tablet specific methods. Some methods are implemented also to run on smartphone.
   // Others are for tablet only.
 
-  public void invalidateActionBar(boolean showFirst)
+  public void invalidateActionBar()
   {
-    //    throw new UnsupportedOperationException("This method is not supported on smartphone");
+    invalidateActionBar(null);
   }
 
-  public void invalidateActionBar(boolean showFirst, boolean notifyListener)
+  /***
+   * 
+   * @param showFirst
+   * 
+   * @deprecated please use {@link #invalidateActionBar(EnumSet)}
+   */
+  @Deprecated
+  public void invalidateActionBar(boolean showFirst)
+  {
+    EnumSet<MBActionBarInvalidationOption> options = EnumSet.noneOf(MBActionBarInvalidationOption.class);
+    if (showFirst)
+    {
+      options.add(MBActionBarInvalidationOption.SHOW_FIRST);
+    }
+
+    invalidateActionBar(options);
+  }
+
+  /**
+   * @param showFirst
+   * @param notifyListener
+   * @param resetHomeDialog
+   * 
+   * @deprecated please use {@link #invalidateActionBar(boolean)}
+   */
+  @Deprecated
+  public void invalidateActionBar(boolean showFirst, boolean notifyListener, final boolean resetHomeDialog)
+  {
+    EnumSet<MBActionBarInvalidationOption> options = EnumSet.noneOf(MBActionBarInvalidationOption.class);
+    if (showFirst)
+    {
+      options.add(MBActionBarInvalidationOption.SHOW_FIRST);
+    }
+
+    if (notifyListener)
+    {
+      options.add(MBActionBarInvalidationOption.NOTIFY_LISTENER);
+    }
+
+    if (resetHomeDialog)
+    {
+      options.add(MBActionBarInvalidationOption.RESET_HOME_DIALOG);
+    }
+
+    invalidateActionBar(options);
+  }
+
+  public void invalidateActionBar(EnumSet<MBActionBarInvalidationOption> flags)
   {
     //    throw new UnsupportedOperationException("This method is not supported on smartphone");
   }

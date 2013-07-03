@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.mobbl2.client.core.configuration.MBConditionalDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
-import com.itude.mobile.mobbl2.client.core.view.MBConditionalDefinition;
 import com.itude.mobile.mobbl2.client.core.view.MBStylableDefinition;
 
 public class MBPanelDefinition extends MBConditionalDefinition implements MBStylableDefinition

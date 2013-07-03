@@ -1,47 +1,32 @@
 package com.itude.mobile.mobbl2.client.core.services;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.R;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.util.Log;
-import android.view.Gravity;
 
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBBundleDefinition;
-import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
-import com.itude.mobile.mobbl2.client.core.configuration.resources.MBItemDefinition;
-import com.itude.mobile.mobbl2.client.core.configuration.resources.MBLayeredResourceDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceConfiguration;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceConfigurationParser;
 import com.itude.mobile.mobbl2.client.core.configuration.resources.MBResourceDefinition;
-import com.itude.mobile.mobbl2.client.core.configuration.resources.MBStatedResourceDefinition;
-import com.itude.mobile.mobbl2.client.core.configuration.resources.exceptions.MBInvalidItemException;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
-import com.itude.mobile.mobbl2.client.core.model.MBDocument;
-import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
-import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBBundleNotFoundException;
-import com.itude.mobile.mobbl2.client.core.services.exceptions.MBResourceInvalidException;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBResourceNotDefinedException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBCacheManager;
+import com.itude.mobile.mobbl2.client.core.util.resources.MBBundleBuilder;
+import com.itude.mobile.mobbl2.client.core.util.resources.MBResourceBuilder;
+import com.itude.mobile.mobbl2.client.core.util.resources.MBResourceBuilderFactory;
+import com.itude.mobile.mobbl2.client.core.view.MBBundle;
+import com.itude.mobile.mobbl2.client.core.view.MBComponentFactory;
+import com.itude.mobile.mobbl2.client.core.view.MBResource;
 
 public final class MBResourceService
 {
@@ -90,12 +75,15 @@ public final class MBResourceService
     _config = config;
   }
 
-  public byte[] getResourceByID(String resourceId)
+  public MBResource getResource(String resourceId)
   {
     MBResourceDefinition def = getConfig().getResourceWithID(resourceId);
-    if (def == null) throw new MBResourceNotDefinedException("Resource for ID=" + resourceId + " could not be found");
+    if (def == null)
+    {
+      throw new MBResourceNotDefinedException("Resource for ID=" + resourceId + " could not be found");
+    }
 
-    return getResourceByURL(def.getUrl(), def.getCacheable(), def.getTtl());
+    return MBComponentFactory.getComponentFromDefinition(def, null, null);
   }
 
   public int getDrawableIdentifier(String drawableName)
@@ -108,320 +96,69 @@ public final class MBResourceService
 
   public Drawable getImageByID(String resourceId)
   {
+    MBResource resource = getResource(resourceId);
 
-    // First attempt to get the image from local resource
-    MBResourceDefinition def = getConfig().getResourceWithID(resourceId);
-    if (def == null)
-    {
-      throw new MBResourceNotDefinedException("Resource for ID=" + resourceId + " could not be found");
-    }
-
-    if (def instanceof MBStatedResourceDefinition)
-    {
-      return buildStatedImage((MBStatedResourceDefinition) def);
-    }
-    else if (def instanceof MBLayeredResourceDefinition)
-    {
-      return buildLayeredImage((MBLayeredResourceDefinition) def);
-    }
-    else
-    {
-      return getImage(resourceId, def);
-    }
+    return getImage(resource);
   }
 
-  public int getColorById(String resourceId)
+  public Drawable getImage(MBResource resource)
   {
-    MBResourceDefinition def = getConfig().getResourceWithID(resourceId);
+    MBResourceBuilder builder = MBResourceBuilderFactory.getInstance().getResourceBuilder();
+    return builder.buildResource(resource);
+  }
 
-    if (def == null)
-    {
-      throw new MBResourceNotDefinedException("Resource for ID=" + resourceId + " could not be found");
-    }
+  public int getColor(String resourceId)
+  {
+    MBResource resource = getResource(resourceId);
 
-    return Color.parseColor(def.getColor());
+    MBResourceBuilder builder = MBResourceBuilderFactory.getInstance().getResourceBuilder();
+    return (Integer) builder.buildResource(resource);
   }
 
   public ColorStateList getColorStateListById(String resourceId)
   {
-    MBResourceDefinition def = getConfig().getResourceWithID(resourceId);
-    if (def == null)
-    {
-      throw new MBResourceNotDefinedException("Resource for ID=" + resourceId + " could not be found");
-    }
+    MBResource resource = getResource(resourceId);
 
-    // We are assuming a list has been provided
-    if (def instanceof MBStatedResourceDefinition)
-    {
-      Map<String, MBItemDefinition> items = ((MBStatedResourceDefinition) def).getItems();
-
-      final int statedItemCount = items.size();
-      if (statedItemCount == 0)
-      {
-        return null;
-      }
-
-      int[][] states = new int[statedItemCount][];
-      int[] colors = new int[statedItemCount];
-      int counter = 0;
-
-      MBItemDefinition enabled = items.get("enabled");
-      MBItemDefinition selected = items.get("selected");
-      MBItemDefinition pressed = items.get("pressed");
-      MBItemDefinition disabled = items.get("disabled");
-      MBItemDefinition checked = items.get("checked");
-
-      if (pressed != null)
-      {
-        String resource = pressed.getResource();
-        validateItemInStatedResource(resource);
-
-        states[counter] = new int[]{R.attr.state_pressed};
-        colors[counter] = getColorById(resource);
-
-        counter++;
-      }
-
-      if (enabled != null)
-      {
-        String resource = enabled.getResource();
-        validateItemInStatedResource(resource);
-
-        states[counter] = new int[]{R.attr.state_enabled, -R.attr.state_selected};
-        colors[counter] = getColorById(resource);
-
-        counter++;
-      }
-
-      if (disabled != null)
-      {
-        String resource = disabled.getResource();
-        validateItemInStatedResource(resource);
-
-        states[counter] = new int[]{-R.attr.state_enabled};
-        colors[counter] = getColorById(resource);
-
-        counter++;
-      }
-
-      if (selected != null)
-      {
-        String resource = selected.getResource();
-        validateItemInStatedResource(resource);
-
-        states[counter] = new int[]{R.attr.state_selected};
-        colors[counter] = getColorById(resource);
-
-        counter++;
-      }
-      if (checked != null)
-      {
-        String resource = checked.getResource();
-        validateItemInStatedResource(resource);
-
-        states[counter] = new int[]{R.attr.state_checked};
-        colors[counter] = getColorById(resource);
-
-        counter++;
-      }
-
-      return new ColorStateList(states, colors);
-    }
-    else
-    {
-      // No list was provided so we are assuming only one color was provided. 
-      throw new MBResourceInvalidException("Resource for ID=" + resourceId
-                                           + " is not a valid resource for a ColorStateList, define the resource as a StatedResource");
-    }
-
+    MBResourceBuilder builder = MBResourceBuilderFactory.getInstance().getResourceBuilder();
+    return builder.buildResource(resource);
   }
 
   public Drawable getImageByURL(String url)
   {
-    Drawable image;
-    try
-    {
-      image = Drawable.createFromStream((InputStream) new URL(url).getContent(), "src");
-    }
-    catch (MalformedURLException e)
-    {
-      Log.e(Constants.APPLICATION_NAME, "Not a correct img source: " + e.getMessage());
-      image = MBResourceService.getInstance().getImageByID(Constants.C_ICON_TRANSPARENT);
-    }
-    catch (IOException e)
-    {
-      Log.e(Constants.APPLICATION_NAME, "Could not read img: " + e.getMessage());
-      image = MBResourceService.getInstance().getImageByID(Constants.C_ICON_TRANSPARENT);
-    }
+    MBResourceBuilder builder = MBResourceBuilderFactory.getInstance().getResourceBuilder();
 
-    return image;
+    MBResource resource = new MBResource(null, null, null);
+    resource.setType("REMOTE_IMAGE");
+    resource.setUrl(url);
+
+    return builder.buildResource(resource);
   }
 
-  private Drawable getImage(String resourceId, MBResourceDefinition def)
+  public byte[] getResourceByURL(MBResource resource)
   {
-    // Only return an error if ways of getting the image fail
-    Exception error = null;
+    return getResourceByURL(resource.getUrl(), false, 0);
+  }
 
-    if (def.getUrl() != null && def.getUrl().startsWith("file://"))
+  public List<byte[]> getResourceByURL(MBBundle bundle)
+  {
+    ArrayList<byte[]> bundleBytes = new ArrayList<byte[]>();
+
+    List<String> urls = bundle.getUrls();
+
+    for (String url : urls)
     {
+      byte[] bytes = getResourceByURL(url, false, 0);
 
-      Context baseContext = MBApplicationController.getInstance().getBaseContext();
-
-      String imageName = def.getUrl().substring(7);
-      imageName = imageName.substring(0, imageName.indexOf(".")).toLowerCase();
-
-      Resources resources = baseContext.getResources();
-
-      try
+      if (bytes == null)
       {
-        int identifier = resources.getIdentifier(imageName, "drawable", baseContext.getPackageName());
-        return resources.getDrawable(identifier);
+        String message = "Bundle with url " + url + " could not be loaded";
+        throw new MBBundleNotFoundException(message);
       }
-      catch (Exception e)
-      {
-        error = e;
-      }
+
+      bundleBytes.add(bytes);
     }
 
-    // Now attempt to get the image from different sources
-    byte[] bytes = getResourceByID(resourceId);
-    if (bytes == null)
-    {
-      if (error != null)
-      {
-        Log.w(Constants.APPLICATION_NAME, "Warning: could not load file for resource=" + resourceId, error);
-      }
-      else
-
-      {
-        Log.w(Constants.APPLICATION_NAME, "Warning: could not load file for resource=" + resourceId);
-      }
-      return null;
-    }
-
-    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-    if (bitmap == null)
-    {
-      Log.w(Constants.APPLICATION_NAME, "Could not create image for resource=" + resourceId);
-    }
-
-    Resources res = MBApplicationController.getInstance().getBaseContext().getResources();
-    return new BitmapDrawable(res, bitmap);
-
-  }
-
-  private Drawable buildStatedImage(MBStatedResourceDefinition def)
-  {
-    Map<String, MBItemDefinition> items = def.getItems();
-
-    if (items.size() == 0)
-    {
-      return null;
-    }
-
-    MBItemDefinition enabled = items.get("enabled");
-    MBItemDefinition selected = items.get("selected");
-    MBItemDefinition pressed = items.get("pressed");
-    MBItemDefinition disabled = items.get("disabled");
-    MBItemDefinition checked = items.get("checked");
-
-    StateListDrawable stateDrawable = new StateListDrawable();
-
-    if (pressed != null)
-    {
-      String resource = pressed.getResource();
-      validateItemInStatedResource(resource);
-      Drawable drawable = getImageByID(resource);
-      stateDrawable.addState(new int[]{R.attr.state_pressed}, drawable);
-    }
-
-    if (enabled != null)
-    {
-      String resource = enabled.getResource();
-      validateItemInStatedResource(resource);
-      Drawable drawable = getImageByID(resource);
-      stateDrawable.addState(new int[]{R.attr.state_enabled, -R.attr.state_selected}, drawable);
-    }
-
-    if (disabled != null)
-    {
-      String resource = disabled.getResource();
-      validateItemInStatedResource(resource);
-      Drawable drawable = getImageByID(resource);
-      stateDrawable.addState(new int[]{-R.attr.state_enabled}, drawable);
-    }
-
-    if (selected != null)
-    {
-      String resource = selected.getResource();
-      validateItemInStatedResource(resource);
-      Drawable drawable = getImageByID(resource);
-      stateDrawable.addState(new int[]{R.attr.state_selected}, drawable);
-    }
-    if (checked != null)
-    {
-      String resource = checked.getResource();
-      validateItemInStatedResource(resource);
-      Drawable drawable = getImageByID(resource);
-      stateDrawable.addState(new int[]{R.attr.state_checked}, drawable);
-    }
-
-    return stateDrawable;
-  }
-
-  private Drawable buildLayeredImage(MBLayeredResourceDefinition def)
-  {
-    List<MBItemDefinition> items = def.getSortedItems();
-
-    if (items.size() == 0)
-    {
-      return null;
-    }
-
-    Drawable[] layers = new Drawable[items.size()];
-
-    for (MBItemDefinition item : items)
-    {
-      String resource = item.getResource();
-      validateItemInLayeredResource(resource);
-
-      Drawable drawable = getImageByID(resource);
-      if (drawable instanceof BitmapDrawable)
-      {
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-        bitmapDrawable.setGravity(Gravity.CENTER);
-        drawable = bitmapDrawable;
-      }
-      layers[items.indexOf(item)] = drawable;
-    }
-
-    LayerDrawable layerDrawable = new LayerDrawable(layers);
-    return layerDrawable;
-  }
-
-  private void validateItemInStatedResource(String itemResource) throws MBInvalidItemException
-  {
-    MBResourceDefinition targetResourceDef = getConfig().getResourceWithID(itemResource);
-
-    if (targetResourceDef instanceof MBStatedResourceDefinition)
-    {
-      throw new MBInvalidItemException("A stated resource can not have a stated item");
-    }
-  }
-
-  private void validateItemInLayeredResource(String itemResource) throws MBInvalidItemException
-  {
-    MBResourceDefinition resourceDef = getConfig().getResourceWithID(itemResource);
-
-    if (resourceDef instanceof MBStatedResourceDefinition)
-    {
-      throw new MBInvalidItemException("Layered resources can not contain stated resources");
-    }
-  }
-
-  public byte[] getResourceByURL(String urlString)
-  {
-    return getResourceByURL(urlString, false, 0);
+    return bundleBytes;
   }
 
   public byte[] getResourceByURL(String urlString, boolean cacheable, int ttl)
@@ -471,40 +208,27 @@ public final class MBResourceService
     return null;
   }
 
-  public List<Map<String, String>> getBundlesForLanguageCode(String languageCode)
+  public MBBundle getBundle(String languageCode)
   {
-    List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+    List<MBBundleDefinition> bundleDefs = getConfig().getBundlesForLanguageCode(languageCode);
 
-    List<MBBundleDefinition> bundleDefs = _config.getBundlesForLanguageCode(languageCode);
-    if (bundleDefs == null)
+    if (bundleDefs == null || bundleDefs.isEmpty())
     {
       String message = "No bundles defined for language with code " + languageCode;
       throw new MBBundleNotFoundException(message);
     }
 
+    MBBundleDefinition firstBundleDef = bundleDefs.remove(0);
+    MBBundle bundle = MBComponentFactory.getComponentFromDefinition(firstBundleDef, null, null);
+
     for (MBBundleDefinition def : bundleDefs)
     {
-      byte[] data = getResourceByURL(def.getUrl());
-
-      if (data == null)
-      {
-        String message = "Bundle with url " + def.getUrl() + " could not be loaded";
-        throw new MBBundleNotFoundException(message);
-      }
-
-      MBDocument bundleDoc = MBDocumentFactory.getInstance()
-          .getDocumentWithData(data, MBDocumentFactory.PARSER_XML,
-                               MBMetadataService.getInstance().getDefinitionForDocumentName(MBConfigurationDefinition.DOC_SYSTEM_LANGUAGE));
-      Map<String, String> dict = new HashMap<String, String>();
-      result.add(dict);
-      for (MBElement text : (List<MBElement>) bundleDoc.getValueForPath("/Text"))
-      {
-        dict.put(text.getValueForAttribute("key"), text.getValueForAttribute("value"));
-      }
-
+      bundle.addUrl(def.getUrl());
     }
 
-    return result;
+    MBBundleBuilder builder = MBResourceBuilderFactory.getInstance().getBundleResourceBuilder();
+
+    return builder.buildBundle(bundle);
   }
 
   public String getUrlById(String resourceId)

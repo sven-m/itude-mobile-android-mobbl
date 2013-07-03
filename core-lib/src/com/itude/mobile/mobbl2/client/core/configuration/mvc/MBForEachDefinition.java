@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.mobbl2.client.core.configuration.MBConditionalDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
-import com.itude.mobile.mobbl2.client.core.view.MBConditionalDefinition;
 
 public class MBForEachDefinition extends MBConditionalDefinition
 {

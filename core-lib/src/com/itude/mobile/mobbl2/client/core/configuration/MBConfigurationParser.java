@@ -70,6 +70,16 @@ public abstract class MBConfigurationParser extends DefaultHandler
     catch (Exception e)
     {
       Log.e(Constants.APPLICATION_NAME, "Unable to parse document " + documentName, e);
+
+      /*
+       * CH: In some magical way, the exception itself can be null. Well it can't, but it sometimes is.
+       * In my case I used the MBMetadataService before the config was loaded. Please add hints if the hint below
+       * doesn't suffice. Please ignore the dead code warning!!
+       */
+      if (e == null)
+      {
+        Log.e(Constants.APPLICATION_NAME, "Maybe the config is not loaded yet. (Hint: MBMetadataService)");
+      }
     }
 
     return null;

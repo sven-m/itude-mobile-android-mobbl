@@ -1,11 +1,11 @@
 package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
 import com.itude.mobile.android.util.StringUtil;
-import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.MBConditionalDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidDialogDefinitionException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 
-public class MBDialogDefinition extends MBDefinition
+public class MBDialogDefinition extends MBConditionalDefinition
 {
   private String _title;
   private String _titlePortrait;

@@ -159,4 +159,25 @@ public interface Constants
   public static String       C_BUNDLE_PROGRESSIVE_SEARCH_OUTCOME                       = "progressiveSearchOutcome";
   public static String       C_BUNDLE_SEARCH_PATH                                      = "searchPath";
 
+  // Gravity
+  public static String       C_GRAVITY_LEFT                                            = "LEFT";
+  public static String       C_GRAVITY_RIGHT                                           = "RIGHT";
+  public static String       C_GRAVITY_TOP                                             = "TOP";
+  public static String       C_GRAVITY_BOTTOM                                          = "BOTTOM";
+  public static String       C_GRAVITY_CENTER                                          = "CENTER";
+
+  // Stated resources
+  public static String       C_STATED_RESOURCE_STATE_TYPE_IMAGE                        = "IMAGE";
+  public static String       C_STATED_RESOURCE_STATE_TYPE_COLOR                        = "COLOR";
+
+  public static String       C_STATED_RESOURCE_STATE_ENABLED                           = "enabled";
+  public static String       C_STATED_RESOURCE_STATE_SELECTED                          = "selected";
+  public static String       C_STATED_RESOURCE_STATE_PRESSED                           = "pressed";
+  public static String       C_STATED_RESOURCE_STATE_DISABLED                          = "disabled";
+  public static String       C_STATED_RESOURCE_STATE_CHECKED                           = "checked";
+  public static String       C_STATED_RESOURCE_STATE_UNCHECKED                         = "unchecked";
+
+  // Display modes
+  public static String       C_DISPLAY_MODE_REPLACE                                    = "REPLACE";
+
 }
