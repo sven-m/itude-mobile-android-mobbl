@@ -126,7 +126,8 @@ public class MBElementContainer implements Parcelable
   }
 
   /***
-   * @deprecated Please use createElement(String name)
+   * @deprecated Please use {@link createElement(String)}
+   *  createElement(String name)
    * @param name
    * @return
    */

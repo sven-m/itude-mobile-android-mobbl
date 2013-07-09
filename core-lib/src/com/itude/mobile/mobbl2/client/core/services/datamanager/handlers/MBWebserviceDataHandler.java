@@ -4,7 +4,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDef
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.MBDataHandlerBase;
-import com.itude.mobile.mobbl2.client.core.util.MBCacheManager;
 
 public abstract class MBWebserviceDataHandler extends MBDataHandlerBase
 {
@@ -24,48 +23,13 @@ public abstract class MBWebserviceDataHandler extends MBDataHandlerBase
   @Override
   public MBDocument loadFreshDocument(String documentName, MBDocument doc, MBEndPointDefinition endPointDefenition)
   {
-    MBEndPointDefinition endPoint = endPointDefenition != null ? endPointDefenition : getEndPointForDocument(documentName);
-
-    String key = doc == null ? documentName : documentName + doc.getUniqueId();
-
-    MBDocument result = doLoadDocument(documentName, doc);
-
-    if (endPoint.getCacheable())
-    {
-      MBCacheManager.setDocument(result, key, endPoint.getTtl());
-    }
-
-    return result;
+    return doLoadDocument(documentName, doc);
   }
 
   @Override
   public MBDocument loadDocument(String documentName, MBDocument doc, MBEndPointDefinition endPointDefenition)
   {
-    MBEndPointDefinition endPoint = endPointDefenition != null ? endPointDefenition : getEndPointForDocument(documentName);
-
-    boolean cacheable = endPoint.getCacheable();
-
-    String key = null;
-
-    if (cacheable)
-    {
-      key = doc == null ? documentName : documentName + doc.getUniqueId();
-
-      MBDocument result = MBCacheManager.documentForKey(key);
-      if (result != null)
-      {
-        return result;
-      }
-    }
-
-    MBDocument result = doLoadDocument(documentName, doc);
-
-    if (cacheable)
-    {
-      MBCacheManager.setDocument(result, key, endPoint.getTtl());
-    }
-
-    return result;
+    return doLoadDocument(documentName, doc);
   }
 
   protected abstract MBDocument doLoadDocument(String documentName, MBDocument doc);

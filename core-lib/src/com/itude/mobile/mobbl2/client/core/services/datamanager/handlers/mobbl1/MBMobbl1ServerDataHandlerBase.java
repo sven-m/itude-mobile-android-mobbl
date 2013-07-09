@@ -1,5 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.mobbl1;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -27,13 +28,13 @@ public abstract class MBMobbl1ServerDataHandlerBase extends MBRESTServiceDataHan
     String secret = MBProperties.getInstance().getValueForProperty("mobblSecret");
 
     // package the incoming document in a StrayClient envelope
-    String applicationID = (String) doc.getValueForPath("Request[0]/@name");
+    String applicationID = (String) doc.getValueForPath("Operation[0]/@name");
     MBDocument mobblDoc = getRequestDocumentForApplicationID(applicationID);
     MBElement mobblRequest = (MBElement) mobblDoc.getValueForPath("StrayClient[0]/SendDataDetails[0]/request[0]");
 
     //
     @SuppressWarnings({"unchecked"})
-    List<MBElement> parameters = (List<MBElement>) doc.getValueForPath("Request[0]/Parameter");
+    List<MBElement> parameters = (List<MBElement>) doc.getValueForPath("Operation[0]/Parameter");
 
     for (MBElement parameter : parameters)
     {
@@ -42,16 +43,6 @@ public abstract class MBMobbl1ServerDataHandlerBase extends MBRESTServiceDataHan
       String value = parameter.getValueForAttribute("value");
       mobblParameter.setAttributeValue(key, "key");
       mobblParameter.setAttributeValue(value, "value");
-      // subparameters
-      for (MBElement subparameter : parameter.getElementsWithName("Subparameter"))
-      {
-        MBElement mobblSubparameter = mobblParameter.createElement("subparameter");
-        String subkey = subparameter.getValueForAttribute("key");
-        String subvalue = subparameter.getValueForAttribute("value");
-        mobblSubparameter.setAttributeValue(subkey, "key");
-        mobblSubparameter.setAttributeValue(subvalue, "value");
-      }
-
     }
 
     MBElement sendData = (MBElement) mobblDoc.getValueForPath("StrayClient[0]");
@@ -88,6 +79,12 @@ public abstract class MBMobbl1ServerDataHandlerBase extends MBRESTServiceDataHan
     MBElement element = (MBElement) requestDoc.getValueForPath("StrayClient[0]");
     element.setAttributeValue(applicationID, "applicationID");
     return requestDoc;
+  }
+
+  @Override
+  protected String getRequestUrlFromDocument(String urlString, MBDocument document) throws UnsupportedEncodingException
+  {
+    return urlString;
   }
 
   protected void setDataHandlerType(String type)

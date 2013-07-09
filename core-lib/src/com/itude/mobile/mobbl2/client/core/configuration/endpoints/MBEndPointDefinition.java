@@ -15,7 +15,6 @@ public class MBEndPointDefinition extends MBDefinition
   private boolean                                _cacheable;
   private int                                    _timeout;
   private int                                    _ttl;
-  private String                                 _requestMethod;
 
   public MBEndPointDefinition()
   {
@@ -31,7 +30,6 @@ public class MBEndPointDefinition extends MBDefinition
     _cacheable = mbEndPointDefinition.getCacheable();
     _timeout = mbEndPointDefinition.getTimeout();
     _ttl = mbEndPointDefinition.getTtl();
-    _requestMethod = mbEndPointDefinition.getRequestMethod();
   }
 
   public String getDocumentIn()
@@ -92,16 +90,6 @@ public class MBEndPointDefinition extends MBDefinition
   public void setTtl(int ttl)
   {
     _ttl = ttl;
-  }
-
-  public String getRequestMethod()
-  {
-    return _requestMethod;
-  }
-
-  public void setRequestMethod(String requestMethod)
-  {
-    _requestMethod = requestMethod;
   }
 
   @Override

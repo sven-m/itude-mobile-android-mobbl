@@ -142,12 +142,12 @@ public class MBDocumentTest extends ApplicationTestCase<MBApplicationCore>
 
   public void testAddElementWithIndex()
   {
-    MBDocumentDefinition docDef = config.getDefinitionForDocumentName("MBGenericRequest");
+    MBDocumentDefinition docDef = config.getDefinitionForDocumentName("MBGenericRestRequest");
 
     MBDocument doc = new MBDocument(docDef);
     assertNotNull(doc);
 
-    MBElementDefinition elementDef = docDef.getElementWithPath("/Request");
+    MBElementDefinition elementDef = docDef.getElementWithPath("/Operation");
     MBElement requestElement = new MBElement(elementDef);
     doc.addElement(requestElement);
 
@@ -164,9 +164,9 @@ public class MBDocumentTest extends ApplicationTestCase<MBApplicationCore>
     MBElement param3Element = requestElement.createElement("Parameter");
     param3Element.setAttributeValue("param3", "key");
 
-    String beforeParam1Value = doc.getValueForPath("/Request[0]/Parameter[0]/@key");
-    String beforeParam2Value = doc.getValueForPath("/Request[0]/Parameter[1]/@key");
-    String beforeParam3Value = doc.getValueForPath("/Request[0]/Parameter[2]/@key");
+    String beforeParam1Value = doc.getValueForPath("/Operation[0]/Parameter[0]/@key");
+    String beforeParam2Value = doc.getValueForPath("/Operation[0]/Parameter[1]/@key");
+    String beforeParam3Value = doc.getValueForPath("/Operation[0]/Parameter[2]/@key");
 
     assertEquals("param1", beforeParam1Value);
     assertEquals("param2", beforeParam2Value);
@@ -183,11 +183,11 @@ public class MBDocumentTest extends ApplicationTestCase<MBApplicationCore>
 
     doc.clearPathCache();
 
-    String afterParam1Value = doc.getValueForPath("/Request[0]/Parameter[1]/@key");
-    String afterParam2Value = doc.getValueForPath("/Request[0]/Parameter[2]/@key");
-    String afterParam3Value = doc.getValueForPath("/Request[0]/Parameter[4]/@key");
-    String afterParam4Value = doc.getValueForPath("/Request[0]/Parameter[0]/@key");
-    String afterParam5Value = doc.getValueForPath("/Request[0]/Parameter[3]/@key");
+    String afterParam1Value = doc.getValueForPath("/Operation[0]/Parameter[1]/@key");
+    String afterParam2Value = doc.getValueForPath("/Operation[0]/Parameter[2]/@key");
+    String afterParam3Value = doc.getValueForPath("/Operation[0]/Parameter[4]/@key");
+    String afterParam4Value = doc.getValueForPath("/Operation[0]/Parameter[0]/@key");
+    String afterParam5Value = doc.getValueForPath("/Operation[0]/Parameter[3]/@key");
 
     assertEquals("param1", afterParam1Value);
     assertEquals("param2", afterParam2Value);

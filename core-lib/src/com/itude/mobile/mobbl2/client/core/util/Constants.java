@@ -138,6 +138,10 @@ public interface Constants
   // Http request methods
   public static final String C_HTTP_REQUEST_METHOD_GET                                 = "GET";
   public static final String C_HTTP_REQUEST_METHOD_POST                                = "POST";
+  public static final String C_HTTP_REQUEST_METHOD_PUT                                 = "PUT";
+  public static final String C_HTTP_REQUEST_METHOD_DELETE                              = "DELETE";
+  public static final String C_HTTP_REQUEST_METHOD_HEAD                                = "HEAD";
+  public static final String C_HTTP_REQUEST_CONTENT_TYPE                               = "Content-Type";
 
   // Search
   public static String       C_DOC_SEARCH_CONFIGURATION                                = "MBSearchConfiguration";

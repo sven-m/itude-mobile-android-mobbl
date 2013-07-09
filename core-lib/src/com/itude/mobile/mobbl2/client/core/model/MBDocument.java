@@ -14,7 +14,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinitio
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBCannotAssignException;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
-import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBDocumentOperationDelegate;
+import com.itude.mobile.mobbl2.client.core.services.operation.MBDocumentOperationDelegate;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBDocument extends MBElementContainer

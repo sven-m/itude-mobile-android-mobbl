@@ -1,4 +1,4 @@
-package com.itude.mobile.mobbl2.client.core.services.datamanager.handlers;
+package com.itude.mobile.mobbl2.client.core.services.operation;
 
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 

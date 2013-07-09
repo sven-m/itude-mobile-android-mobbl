@@ -13,8 +13,8 @@ import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 
 public class MBCacheManagerTest extends ApplicationTestCase<MBApplicationCore>
 {
-  public final static String C_GENERIC_REQUEST = "MBGenericRequest";
-  public final static String C_EMPTY_DOC       = "MBEmptyDoc";
+  public final static String C_GENERIC_REST_REQUEST = "MBGenericRestRequest";
+  public final static String C_EMPTY_DOC            = "MBEmptyDoc";
 
   public MBCacheManagerTest()
   {
@@ -96,7 +96,7 @@ public class MBCacheManagerTest extends ApplicationTestCase<MBApplicationCore>
 
   public void testDocumentCache()
   {
-    MBDocument document = MBDataManagerService.getInstance().loadDocument(C_GENERIC_REQUEST);
+    MBDocument document = MBDataManagerService.getInstance().loadDocument(C_GENERIC_REST_REQUEST);
     assertNotNull(document);
 
     doPutDocumentInCache(document.getUniqueId(), document, 0);
@@ -105,7 +105,7 @@ public class MBCacheManagerTest extends ApplicationTestCase<MBApplicationCore>
 
   public void testDocumentCacheExpiration()
   {
-    MBDocument document = MBDataManagerService.getInstance().loadDocument(C_GENERIC_REQUEST);
+    MBDocument document = MBDataManagerService.getInstance().loadDocument(C_GENERIC_REST_REQUEST);
     assertNotNull(document);
     doPutDocumentInCache(document.getUniqueId(), document, 0);
 
@@ -120,7 +120,7 @@ public class MBCacheManagerTest extends ApplicationTestCase<MBApplicationCore>
 
   public void testDocumentCacheTimedExpiration()
   {
-    MBDocument document = MBDataManagerService.getInstance().loadDocument(C_GENERIC_REQUEST);
+    MBDocument document = MBDataManagerService.getInstance().loadDocument(C_GENERIC_REST_REQUEST);
     assertNotNull(document);
     doPutDocumentInCache(document.getUniqueId(), document, 3000); // cache for 3 seconds
 
@@ -143,7 +143,7 @@ public class MBCacheManagerTest extends ApplicationTestCase<MBApplicationCore>
 
   public void testExpireAllDocumentsInCache()
   {
-    MBDocument documentOne = MBDataManagerService.getInstance().loadDocument(C_GENERIC_REQUEST);
+    MBDocument documentOne = MBDataManagerService.getInstance().loadDocument(C_GENERIC_REST_REQUEST);
     assertNotNull(documentOne);
 
     MBDocument documentTwo = MBDataManagerService.getInstance().loadDocument(C_EMPTY_DOC);

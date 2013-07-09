@@ -112,7 +112,6 @@
 							<Attribute name="universeID" type="string" />
 							<Attribute name="applicationID" type="string" />
 							<Attribute name="iPhoneUID" type="string" />
-							<!-- <Attribute name="uniqueDeviceID" type="string"/> -->
 							<Attribute name="messageID" type="string" />
 							<Attribute name="dateTime" type="date" />
 							<Element name="SendDataDetails" minOccurs="1">
@@ -120,30 +119,25 @@
 									<Element name="parameter">
 										<Attribute name="key" type="string" />
 										<Attribute name="value" type="string" />
-										<Element name="subparameter">
-											<Attribute name="key" type="string" />
-											<Attribute name="value" type="string" />
-										</Element>
 									</Element>
 								</Element>
 							</Element>
+							<Element name="Operation" minOccurs="1">
+                    			<Attribute name="httpMethod" type="string" defaultValue="POST"/>
+                			</Element>
 						</Element>
 					</Document>
 
-					<Document name="MBGenericRequest" dataManager="MBMemoryDataHandler"
-						autoCreate="TRUE">
-						<Element name="Request" minOccurs="1">
-							<Attribute name="name" type="string" />
-							<Element name="Parameter">
-								<Attribute name="key" type="string" />
-								<Attribute name="value" type="string" />
-								<Element name="Subparameter">
-									<Attribute name="key" type="string" />
-									<Attribute name="value" type="string" />
-								</Element>
-							</Element>
-						</Element>
-					</Document>
+					<Document name="MBGenericRestRequest" dataManager="MBMemoryDataHandler" autoCreate="TRUE">
+                		<Element name="Operation" minOccurs="1">
+                    		<Attribute name="name" type="string" />
+                    		<Attribute name="httpMethod" type="string" />
+                    		<Element name="Parameter">
+                        		<Attribute name="key" type="string"/>
+                        		<Attribute name="value" type="string"/>
+                    		</Element>
+                		</Element>
+            		</Document>	
 
 					<Document name="MBEmptyDoc" dataManager="MBMemoryDataHandler"
 						autoCreate="TRUE">

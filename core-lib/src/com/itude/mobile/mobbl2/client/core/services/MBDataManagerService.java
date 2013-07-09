@@ -11,8 +11,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.endpoints.MBEndPointDef
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.MBDataHandler;
-import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBDocumentOperation;
-import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBDocumentOperationDelegate;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBFileDataHandler;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBMemoryDataHandler;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBMetadataDataHandler;
@@ -20,6 +18,8 @@ import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBRESTS
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBSystemDataHandler;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.mobbl1.MBMobbl1ServerDataHandler;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBNoDataManagerException;
+import com.itude.mobile.mobbl2.client.core.services.operation.MBDocumentOperation;
+import com.itude.mobile.mobbl2.client.core.services.operation.MBDocumentOperationDelegate;
 
 public class MBDataManagerService
 {
