@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.mobbl2.client.core.util.MBPathUtil;
 
 public class MBDocumentDiff
 {
@@ -29,7 +29,7 @@ public class MBDocumentDiff
       path = "/" + path;
     }
 
-    return StringUtil.normalizedPath(path);
+    return MBPathUtil.normalizedPath(path);
   }
 
   private void diffA(MBDocument a, MBDocument b)

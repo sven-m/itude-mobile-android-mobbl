@@ -22,6 +22,7 @@ import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentDiff;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBPathUtil;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 public class MBPage extends MBPanel
@@ -223,7 +224,7 @@ public class MBPage extends MBPanel
     if (path.length() > 0)
     {
       MBPageDefinition pd = (MBPageDefinition) getDefinition();
-      String stripped = StringUtil.normalizedPath(NUMBERPATTERN.matcher(path).replaceAll(""));
+      String stripped = MBPathUtil.normalizedPath(NUMBERPATTERN.matcher(path).replaceAll(""));
       if (!stripped.endsWith("/"))
       {
         stripped = stripped + "/";
@@ -288,7 +289,7 @@ public class MBPage extends MBPanel
       path = "/" + path;
     }
 
-    path = StringUtil.normalizedPath(path);
+    path = MBPathUtil.normalizedPath(path);
     List<MBValueChangeListenerProtocol> lsnrList = _valueChangedListeners.get(path);
     if (lsnrList == null)
     {

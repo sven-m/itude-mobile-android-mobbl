@@ -14,6 +14,7 @@ import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBStringUtil;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 
 public class InputFieldBuilder extends MBBaseFieldBuilder
@@ -77,7 +78,7 @@ public class InputFieldBuilder extends MBBaseFieldBuilder
              && (field.getDataType().equals(Constants.C_FIELD_DATATYPE_DOUBLE) || field.getDataType()
                  .equals(Constants.C_FIELD_DATATYPE_FLOAT)))
     {
-      inputField.setKeyListener(StringUtil.getCurrencyNumberKeyListener());
+      inputField.setKeyListener(MBStringUtil.getCurrencyNumberKeyListener());
 
       try
       {
