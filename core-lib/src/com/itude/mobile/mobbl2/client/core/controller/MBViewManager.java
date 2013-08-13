@@ -453,7 +453,7 @@ public class MBViewManager extends FragmentActivity
   }
 
   @SuppressLint("NewApi")
-  public void invalidateOptionsMenu(boolean resetHomeDialog)
+  public void invalidateOptionsMenu(boolean resetHomeDialog, final boolean selectHome)
   {
     if (DeviceUtil.getInstance().isPhoneV14() || DeviceUtil.isTablet())
     {
@@ -488,7 +488,7 @@ public class MBViewManager extends FragmentActivity
 
     final MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
 
-    if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone())
+    if (selectHome && (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone()))
     {
       runOnUiThread(new Runnable()
       {
