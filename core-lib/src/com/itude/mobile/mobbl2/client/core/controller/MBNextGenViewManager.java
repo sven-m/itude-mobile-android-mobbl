@@ -403,8 +403,12 @@ public abstract class MBNextGenViewManager extends MBViewManager
         {
           if (showFirst)
           {
-            MBTab tab = tabBar.getTab(0);
-            tabBar.selectTab(tab, notifyListener);
+            //            MBTab tab = tabBar.getTab(0);
+            //            tabBar.selectTab(tab, notifyListener);
+
+            tabBar.selectTab(null, false);
+
+            onHomeSelected();
           }
           else if (selectedTab >= 0)
           {

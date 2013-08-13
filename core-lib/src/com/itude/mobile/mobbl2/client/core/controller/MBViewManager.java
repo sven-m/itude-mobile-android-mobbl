@@ -472,7 +472,8 @@ public class MBViewManager extends FragmentActivity
     {
       if (dialog.isPreConditionValid())
       {
-        if (resetHomeDialog)
+        String action = dialog.getAction();
+        if (resetHomeDialog && StringUtil.isNotBlank(action))
         {
           MBMetadataService.getInstance().setHomeDialogDefinition(dialog);
           resetHomeDialog = false;
@@ -494,6 +495,13 @@ public class MBViewManager extends FragmentActivity
         @Override
         public void run()
         {
+          resetViewPreservingCurrentDialog();
+
+          if (getDialog(homeDialogDefinition.getName()) == null)
+          {
+            createDialogWithID(homeDialogDefinition);
+          }
+
           activateDialogWithName(homeDialogDefinition.getName());
         }
       });
