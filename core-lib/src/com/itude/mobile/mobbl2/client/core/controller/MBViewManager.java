@@ -55,6 +55,7 @@ import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThreadHandler;
 import com.itude.mobile.mobbl2.client.core.view.MBAlert;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
+import com.itude.mobile.mobbl2.client.core.view.MBPage.OrientationPermission;
 import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabBar;
 
 public class MBViewManager extends FragmentActivity
@@ -81,6 +82,8 @@ public class MBViewManager extends FragmentActivity
   private boolean                         _activityExists     = false;
   private boolean                         _optionsMenuInvalid = false;
 
+  private int                             _defaultScreenOrientation;
+
   ///////////////////// Android lifecycle methods
 
   protected void onPreCreate()
@@ -92,6 +95,12 @@ public class MBViewManager extends FragmentActivity
   protected void onCreate(android.os.Bundle savedInstanceState)
   {
     onPreCreate();
+
+    /*
+     *  We store our default orientation. This will be used to determine how pages should be shown by default
+     *  See setOrientation
+     */
+    _defaultScreenOrientation = getRequestedOrientation();
 
     // https://dev.itude.com/jira/browse/BINCKAPPS-1131
     super.onCreate(null);
@@ -1051,7 +1060,20 @@ public class MBViewManager extends FragmentActivity
   public void setOrientation(MBPage page)
   {
 
-    if (page.isAllowedAnyOrientation())
+    MBPage.OrientationPermission orientationPermissions = page.getOrientationPermissions();
+
+    /*
+     *  If no orientation permissions have been set on a Page level we want to use the permission that is defined in the the AndroidManifest.xml (if any)
+     */
+    if (orientationPermissions == MBPage.OrientationPermission.UNDEFINED)
+    {
+      if (_defaultScreenOrientation != getRequestedOrientation())
+      {
+        setRequestedOrientation(_defaultScreenOrientation);
+      }
+
+    }
+    else if (orientationPermissions == MBPage.OrientationPermission.ANY)
     {
       if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_SENSOR)
       {
@@ -1059,16 +1081,17 @@ public class MBViewManager extends FragmentActivity
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
       }
     }
-    else if (page.isAllowedPortraitOrientation())
+    else if (orientationPermissions == OrientationPermission.PORTRAIT)
     {
       Log.d(Constants.APPLICATION_NAME, "MBViewManager.setOrientation: Changing to PORTRAIT");
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
-    else if (page.isAllowedLandscapeOrientation())
+    else if (orientationPermissions == OrientationPermission.LANDSCAPE)
     {
       Log.d(Constants.APPLICATION_NAME, "MBViewManager.setOrientation: Changing to LANDSCAPE");
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
+
   }
 
   @Override

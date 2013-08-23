@@ -26,7 +26,7 @@ import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 public class MBPage extends MBPanel
 {
-  private static final Pattern                                   NUMBERPATTERN          = Pattern.compile("\\[[0-9]+\\]");
+  private static final Pattern                                   NUMBERPATTERN = Pattern.compile("\\[[0-9]+\\]");
 
   private String                                                 _pageName;
   private String                                                 _rootPath;
@@ -41,12 +41,13 @@ public class MBPage extends MBPanel
   private MBPageDefinition.MBPageType                            _pageType;
   private Object                                                 _maxBounds;
   private final MBViewManager.MBViewState                        _viewState;
-  private final boolean                                          _allowedAnyOrientation = true;
   private boolean                                                _scrollable;
-  private boolean                                                _allowedPortraitOrientation;
-  private boolean                                                _allowedLandscapeOrientation;
+  //  private boolean                                                _allowedPortraitOrientation;
+  //  private boolean                                                _allowedLandscapeOrientation;
   private boolean                                                _reloadOnDocChange;
   private View                                                   _selectedView;
+
+  private OrientationPermission                                  _orientationPermission;
 
   public MBPage(MBPageDefinition definition, MBDocument document, String rootPath, MBViewState viewState)
   {
@@ -72,6 +73,10 @@ public class MBPage extends MBPanel
 
     // Ok, now we can build the children
     buildChildren(definition, document, getParent());
+  }
+
+  public enum OrientationPermission {
+    UNDEFINED, ANY, PORTRAIT, LANDSCAPE
   }
 
   public String getPageName()
@@ -384,28 +389,41 @@ public class MBPage extends MBPanel
 
   public void parseOrientationPermissions(String permissions)
   {
-    if (permissions != null && !permissions.equals(Constants.C_PAGE_ORIENTATION_PERMISSION_ANY))
+
+    if (permissions == null)
     {
-      _allowedLandscapeOrientation = false;
-      _allowedPortraitOrientation = false;
+      _orientationPermission = OrientationPermission.UNDEFINED;
+    }
+    else if (permissions.equals(Constants.C_PAGE_ORIENTATION_PERMISSION_ANY))
+    {
+      _orientationPermission = OrientationPermission.ANY;
+    }
+    else
+    {
+      boolean allowedLandscapeOrientation = false;
+      boolean allowedPortraitOrientation = false;
 
       String[] permissionList = permissions.split("\\|");
       for (String permission : permissionList)
       {
         if (permission.equals(Constants.C_PAGE_ORIENTATION_PERMISSION_LANDSCAPE))
         {
-          _allowedLandscapeOrientation = true;
+          allowedLandscapeOrientation = true;
         }
         else if (permission.equals(Constants.C_PAGE_ORIENTATION_PERMISSION_PORTRAIT))
         {
-          _allowedPortraitOrientation = true;
+          allowedPortraitOrientation = true;
         }
       }
-    }
-    else
-    {
-      _allowedLandscapeOrientation = true;
-      _allowedPortraitOrientation = true;
+
+      if (allowedLandscapeOrientation)
+      {
+        _orientationPermission = OrientationPermission.LANDSCAPE;
+      }
+      else if (allowedPortraitOrientation)
+      {
+        _orientationPermission = OrientationPermission.PORTRAIT;
+      }
     }
 
   }
@@ -450,19 +468,9 @@ public class MBPage extends MBPanel
     _scrollable = scrollable;
   }
 
-  public boolean isAllowedPortraitOrientation()
+  public OrientationPermission getOrientationPermissions()
   {
-    return _allowedPortraitOrientation;
-  }
-
-  public boolean isAllowedLandscapeOrientation()
-  {
-    return _allowedLandscapeOrientation;
-  }
-
-  public boolean isAllowedAnyOrientation()
-  {
-    return _allowedLandscapeOrientation && _allowedPortraitOrientation;
+    return _orientationPermission;
   }
 
   @Override
