@@ -28,7 +28,7 @@ public abstract class MBBaseDataTypeFormatter implements MBDataTypeFormatter
     }
     catch (NumberFormatException nfe)
     {
-      throw new NumberFormatException("Unable to format value for field: " + field.getName());
+      throw new NumberFormatException("Unable to format value for field: " + field.toString());
     }
 
   }

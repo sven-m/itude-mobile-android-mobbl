@@ -27,6 +27,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBScriptService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBDynamicAttributeComparator;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
+import com.itude.mobile.mobbl2.client.core.util.MBPathUtil;
 
 public class MBElementContainer implements Parcelable
 {
@@ -168,7 +169,7 @@ public class MBElementContainer implements Parcelable
   protected TwinResult<MBElementContainer, MBElement> doCreateElement(String name)
   {
     Stack<String> pathComponents = new Stack<String>();
-    pathComponents.addAll(StringUtil.splitPath(name));
+    pathComponents.addAll(MBPathUtil.splitPath(name));
 
     if (pathComponents.size() > 1)
     {
@@ -282,7 +283,7 @@ public class MBElementContainer implements Parcelable
       return null;
     }
 
-    List<String> pathComponents = StringUtil.splitPath(path);
+    List<String> pathComponents = MBPathUtil.splitPath(path);
 
     // If there is a ':' in the name of the first component; we might need a different document than 'self'
     if (pathComponents.size() > 0)
@@ -333,7 +334,7 @@ public class MBElementContainer implements Parcelable
   public void setValue(String value, String path)
   {
     Stack<String> pathComponents = new Stack<String>();
-    pathComponents.addAll(StringUtil.splitPath(path));
+    pathComponents.addAll(MBPathUtil.splitPath(path));
 
     String attributeName = new String(pathComponents.lastElement());
     if (attributeName.startsWith("@"))

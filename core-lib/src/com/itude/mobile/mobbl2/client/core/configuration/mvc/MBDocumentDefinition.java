@@ -18,6 +18,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBUnknow
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBPathUtil;
 
 public class MBDocumentDefinition extends MBDefinition
 {
@@ -102,7 +103,7 @@ public class MBDocumentDefinition extends MBDefinition
 
   public MBElementDefinition getElementWithPath(String path)
   {
-    List<String> pathComponents = StringUtil.splitPath(path);
+    List<String> pathComponents = MBPathUtil.splitPath(path);
 
     // If there is a ':' in the name of the first component; we might need a different document than 'self'
     if (pathComponents.size() > 0)

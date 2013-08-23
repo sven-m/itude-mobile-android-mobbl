@@ -26,8 +26,8 @@ public class MBFileDataHandlerTest extends ApplicationTestCase<MBApplicationCore
   {
     createApplication();
     DataUtil.getInstance().setContext(getContext());
-    
-    MBMetadataService.setConfigName("testconfig/testconfig.xml");
+
+    MBMetadataService.setConfigName("config/config.xml");
   }
 
   public void testLoadDocumentString()

@@ -392,7 +392,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
             tabBar.getSelectedTab().setSelected(false);
           }
         }
-        invalidateOptionsMenu(resetHomeDialog);
+        invalidateOptionsMenu(resetHomeDialog, false);
         // throw away current MBActionBar and create a new one
         getActionBar().setCustomView(null);
 
@@ -403,8 +403,9 @@ public abstract class MBNextGenViewManager extends MBViewManager
         {
           if (showFirst)
           {
-            MBTab tab = tabBar.getTab(0);
-            tabBar.selectTab(tab, notifyListener);
+            tabBar.selectTab(null, false);
+
+            onHomeSelected();
           }
           else if (selectedTab >= 0)
           {

@@ -462,7 +462,7 @@ public class MBViewManager extends FragmentActivity
   }
 
   @SuppressLint("NewApi")
-  public void invalidateOptionsMenu(boolean resetHomeDialog)
+  public void invalidateOptionsMenu(boolean resetHomeDialog, final boolean selectHome)
   {
     if (DeviceUtil.getInstance().isPhoneV14() || DeviceUtil.isTablet())
     {
@@ -481,7 +481,8 @@ public class MBViewManager extends FragmentActivity
     {
       if (dialog.isPreConditionValid())
       {
-        if (resetHomeDialog)
+        String action = dialog.getAction();
+        if (resetHomeDialog && StringUtil.isNotBlank(action))
         {
           MBMetadataService.getInstance().setHomeDialogDefinition(dialog);
           resetHomeDialog = false;
@@ -496,13 +497,20 @@ public class MBViewManager extends FragmentActivity
 
     final MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
 
-    if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone())
+    if (selectHome && (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone()))
     {
       runOnUiThread(new Runnable()
       {
         @Override
         public void run()
         {
+          resetViewPreservingCurrentDialog();
+
+          if (getDialog(homeDialogDefinition.getName()) == null)
+          {
+            createDialogWithID(homeDialogDefinition);
+          }
+
           activateDialogWithName(homeDialogDefinition.getName());
         }
       });
