@@ -342,7 +342,16 @@ public class MBBasicViewController extends DialogFragment
   @Override
   public void onDestroy()
   {
-    MBDataManagerService.getInstance().unregisterOperationListener(getPage().getDocument().getDocumentName(), this);
+    MBPage page = getPage();
+    if (page != null && page.isReloadOnDocChange())
+    {
+      MBDocument pageDoc = page.getDocument();
+
+      if (pageDoc != null)
+      {
+        MBDataManagerService.getInstance().unregisterOperationListener(pageDoc.getDocumentName(), this);
+      }
+    }
 
     super.onDestroy();
   }
