@@ -334,6 +334,8 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       outcomeDef.setNoBackgroundProcessing(Boolean.parseBoolean(attributeDict.get("noBackgroundProcessing")));
       outcomeDef.setIndicator(attributeDict.get("indicator"));
 
+      outcomeDef.setCustom(extractCustomAttributes(attributeDict, _outcomeAttributes));
+
       notifyProcessed(outcomeDef);
     }
     else if (elementName.equals("Dialog"))

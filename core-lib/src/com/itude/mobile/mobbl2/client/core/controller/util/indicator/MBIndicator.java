@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
+import com.itude.mobile.mobbl2.client.core.util.MBCustomAttributeContainer;
 
 public class MBIndicator
 {
@@ -30,15 +31,15 @@ public class MBIndicator
     _activity = activity;
   }
 
-  private void showIndicator()
+  private void showIndicator(MBCustomAttributeContainer customAttributes)
   {
     switch (_type)
     {
       case indeterminate :
-        MBIndicatorController.getInstance().showIndeterminateProgressIndicator(_activity);
+        MBIndicatorController.getInstance().showIndeterminateProgressIndicator(_activity, customAttributes);
         break;
       case activity :
-        MBIndicatorController.getInstance().showActivityIndicator(_activity);
+        MBIndicatorController.getInstance().showActivityIndicator(_activity, customAttributes);
         break;
       case none :
         break;
@@ -75,15 +76,20 @@ public class MBIndicator
   public static MBIndicator show(Activity activity, Type type)
   {
     MBIndicator indicator = new MBIndicator(activity, type);
-    indicator.showIndicator();
+    indicator.showIndicator(MBCustomAttributeContainer.EMPTY);
     return indicator;
 
   }
 
   public static MBIndicator show(Type type)
   {
+    return show(type, MBCustomAttributeContainer.EMPTY);
+  }
+
+  public static MBIndicator show(Type type, MBCustomAttributeContainer customAttributes)
+  {
     MBIndicator indicator = new MBIndicator(type);
-    indicator.showIndicator();
+    indicator.showIndicator(customAttributes);
     return indicator;
   }
 }

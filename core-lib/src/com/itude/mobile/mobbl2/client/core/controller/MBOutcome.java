@@ -10,9 +10,10 @@ import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNot
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBCustomAttributeContainer;
 import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 
-public class MBOutcome implements Parcelable
+public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
 {
   private String     _originName;
   private String     _outcomeName;
@@ -149,6 +150,7 @@ public class MBOutcome implements Parcelable
 
   public MBOutcome(MBOutcome outcome)
   {
+    super(outcome);
     _originName = outcome.getOriginName();
     _outcomeName = outcome.getOutcomeName();
     _originDialogName = outcome.getOriginDialogName();
@@ -165,6 +167,7 @@ public class MBOutcome implements Parcelable
 
   public MBOutcome(MBOutcomeDefinition definition)
   {
+    super(definition);
     _originName = definition.getOrigin();
     _outcomeName = definition.getName();
     _dialogName = definition.getDialog();
@@ -239,6 +242,8 @@ public class MBOutcome implements Parcelable
     _noBackgroundProcessing = data.getBoolean("noBackgroundProcessing");
 
     _document = data.getParcelable("document");
+
+    readFromBundle(data);
   }
 
   @Override
@@ -265,6 +270,8 @@ public class MBOutcome implements Parcelable
     data.putBoolean("noBackgroundProcessing", _noBackgroundProcessing);
 
     data.putParcelable("document", _document);
+
+    writeToBundle(data);
 
     out.writeBundle(data);
   }
