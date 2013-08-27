@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
+import com.itude.mobile.mobbl2.client.core.util.MBCustomAttributeContainer;
 
 public final class MBActivityIndicator extends MBCountingIndicator
 {
@@ -16,7 +17,7 @@ public final class MBActivityIndicator extends MBCountingIndicator
   }
 
   @Override
-  protected void show(final Activity activity)
+  protected void show(final Activity activity, MBCustomAttributeContainer customAttributes)
   {
 
     _dialog = ProgressDialog.show(activity, MBLocalizationService.getInstance().getTextForKey("title_loading"), MBLocalizationService

@@ -70,7 +70,8 @@ public final class MBScriptService
     if (result != null) return result;
     Log.d(Constants.APPLICATION_NAME, "expression for ScriptService=" + expression);
 
-    String stub = "function x(){ var TRUE=true; var FALSE=false; try { return " + expression + "; } catch(e) { return '" + ERROR_MARKER + "'+e; } } x(); ";
+    String stub = "function x(){ var TRUE=true; var FALSE=false; try { return " + expression + "; } catch(e) { return '" + ERROR_MARKER
+                  + "'+e; } } x(); ";
     result = "";
 
     Context jsContext = ContextFactory.getGlobal().enterContext();
@@ -86,7 +87,7 @@ public final class MBScriptService
       }
       else result = jsResult.toString();
 
-      if (result.startsWith(ERROR_MARKER))
+      if (result != null && result.startsWith(ERROR_MARKER))
       {
         String message = "Error evaluating expression <" + expression + ">: " + result.substring(ERROR_MARKER.length());
         throw new MBScriptErrorException(message);

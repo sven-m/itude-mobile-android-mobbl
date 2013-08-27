@@ -80,17 +80,17 @@ public class MBOutcomeHandler extends Handler
     /*CH: Exception pages prepare in the background. Android has trouble if the
     activity indicator is shown. Somehow this problem does not occur when preparing 
     a normal page*/
-    if ("exception".equals(outcome.getOutcomeName())) return MBIndicator.show(Type.none);
+    if ("exception".equals(outcome.getOutcomeName())) return MBIndicator.show(Type.none, outcome);
 
     String indicator = outcome.getIndicator();
     if (indicator == null || "ACTIVITY".equals(indicator))
     {
-      return MBIndicator.show(Type.activity);
+      return MBIndicator.show(Type.activity, outcome);
 
     }
     else if ("PROGRESS".equals(indicator))
     {
-      return MBIndicator.show(Type.indeterminate);
+      return MBIndicator.show(Type.indeterminate, outcome);
 
     }
     else throw new MBException("Unknown indicator type " + indicator);

@@ -1,10 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.view;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.view.View;
 
@@ -12,8 +9,9 @@ import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBCustomAttributeContainer;
 
-public class MBComponent
+public class MBComponent extends MBCustomAttributeContainer
 
 {
   private MBDefinition         _definition;
@@ -22,10 +20,10 @@ public class MBComponent
   private boolean              _markedForDestruction;
   private MBDocument           _document;
   private View                 _view;
-  private Map<String, String>  _custom;
 
   public MBComponent(MBDefinition definition, MBDocument document, MBComponentContainer parent)
   {
+    super(definition);
     _definition = definition;
     _document = document;
     _parent = parent;
@@ -36,15 +34,6 @@ public class MBComponent
       String style = ((MBStylableDefinition) definition).getStyle();
       setStyle(substituteExpressions(style));
     }
-
-    if (definition.getCustom().isEmpty()) _custom = Collections.emptyMap();
-    else
-    {
-      _custom = new HashMap<String, String>();
-      for (Map.Entry<String, String> custom : definition.getCustom().entrySet())
-        _custom.put(custom.getKey(), substituteExpressions(custom.getValue()));
-    }
-
   }
 
   public MBDefinition getDefinition()
@@ -423,15 +412,10 @@ public class MBComponent
     return this.getClass().getSimpleName();
   }
 
-  public String getCustom(String attribute)
+  @Override
+  protected String parseCustomValue(String value)
   {
-    return _custom.get(attribute);
-  }
-
-  public void setCustom(String attribute, String value)
-  {
-    if (_custom.isEmpty()) _custom = new HashMap<String, String>();
-    _custom.put(attribute, value);
+    return substituteExpressions(value);
   }
 
 }
