@@ -7,7 +7,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBAction;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
@@ -57,9 +56,9 @@ public class MBFireInitialOutcomes implements MBAction
           continue;
         }
 
-        if (def != null && !def.isShowAsMenu())
+        if (def != null && def.isShowAsMenu())
         {
-          MBViewManager.getInstance().addSortedDialogName(dialog);
+          //MBViewManager.getInstance().addSortedDialogName(dialog);
           isMenu = true;
         }
       }

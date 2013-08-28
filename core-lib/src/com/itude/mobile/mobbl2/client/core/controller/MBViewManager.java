@@ -1,11 +1,8 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -16,7 +13,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuCompat;
 import android.util.Log;
@@ -25,13 +21,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewParent;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 
-import com.itude.mobile.android.util.CollectionUtilities;
 import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
@@ -51,7 +45,6 @@ import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowChangeType;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.helper.MBSecurityHelper;
-import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThreadHandler;
 import com.itude.mobile.mobbl2.client.core.view.MBAlert;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
@@ -68,21 +61,18 @@ public class MBViewManager extends FragmentActivity
     SHOW_FIRST, RESET_HOME_DIALOG, NOTIFY_LISTENER
   }
 
-  protected static MBViewManager          _instance;
+  protected static MBViewManager _instance;
 
-  private ArrayList<String>               _dialogControllers;
-  private ArrayList<String>               _sortedDialogNames;
-  private Map<String, MBDialogController> _controllerMap;
-  private MBDialogController              _menuController;
-  private Dialog                          _currentAlert;
-  private boolean                         _singlePageMode;
-  private String                          _activeDialog;
-  private boolean                         _showDialogTitle    = false;
+  private Dialog                 _currentAlert;
+  private boolean                _singlePageMode;
+  private boolean                _showDialogTitle    = false;
 
-  private boolean                         _activityExists     = false;
-  private boolean                         _optionsMenuInvalid = false;
+  private boolean                _activityExists     = false;
+  private boolean                _optionsMenuInvalid = false;
 
-  private int                             _defaultScreenOrientation;
+  private int                    _defaultScreenOrientation;
+
+  private MBDialogManager        _dialogManager;
 
   ///////////////////// Android lifecycle methods
 
@@ -96,6 +86,8 @@ public class MBViewManager extends FragmentActivity
   {
     onPreCreate();
 
+    _dialogManager = new MBDialogManager(this);
+
     /*
      *  We store our default orientation. This will be used to determine how pages should be shown by default
      *  See setOrientation
@@ -108,13 +100,14 @@ public class MBViewManager extends FragmentActivity
     FrameLayout container = new FrameLayout(this);
     LayoutParams layout = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     setContentView(container, layout);
-
-    _dialogControllers = new ArrayList<String>();
-    _sortedDialogNames = new ArrayList<String>();
-    _controllerMap = new HashMap<String, MBDialogController>();
     _instance = this;
 
     MBApplicationController.getInstance().startController();
+  }
+
+  public void prepareForApplicationStart()
+  {
+    _dialogManager.onCreate();
   }
 
   @Override
@@ -126,7 +119,7 @@ public class MBViewManager extends FragmentActivity
     }
     else
     {
-      getActiveDialog().activate();
+      _dialogManager.onResume();
     }
     super.onResume();
   }
@@ -155,9 +148,7 @@ public class MBViewManager extends FragmentActivity
     // Our application is closing so after this point our ApplicationState should return that the application is not started.
     MBApplicationController.getInstance().setApplicationState(ApplicationState.NOTSTARTED);
 
-    // signal the DialogControllers that we are closing down
-    for (MBDialogController controller : _controllerMap.values())
-      controller.shutdown();
+    _dialogManager.onDestroy();
 
     super.onDestroy();
   }
@@ -171,9 +162,7 @@ public class MBViewManager extends FragmentActivity
       MBSecurityHelper.getInstance().logOutIfCheckNotSelected();
     }
 
-    // Fix for https://mobiledev.itude.com/jira/browse/BINCKRETAILSLA-541
-    MBDialogController dc = getActiveDialog();
-    dc.removeOnBackStackChangedListenerOfCurrentDialog();
+    _dialogManager.onPause();
 
     super.onPause();
   }
@@ -272,7 +261,7 @@ public class MBViewManager extends FragmentActivity
     final String firstDialog = firstDialogDefinition.getName();
     if (!childController.getName().equals(firstDialog))
     {
-      if (getDialog(firstDialogDefinition.getName()) == null)
+      if (_dialogManager.getDialog(firstDialogDefinition.getName()) == null)
       {
         createDialogWithID(firstDialogDefinition);
       }
@@ -473,48 +462,7 @@ public class MBViewManager extends FragmentActivity
       _optionsMenuInvalid = true;
     }
 
-    _sortedDialogNames = new ArrayList<String>();
-
-    List<MBDialogDefinition> dialogs = MBMetadataService.getInstance().getDialogs();
-
-    for (MBDialogDefinition dialog : dialogs)
-    {
-      if (dialog.isPreConditionValid())
-      {
-        String action = dialog.getAction();
-        if (resetHomeDialog && StringUtil.isNotBlank(action))
-        {
-          MBMetadataService.getInstance().setHomeDialogDefinition(dialog);
-          resetHomeDialog = false;
-        }
-
-        if (dialog.isShowAsTab())
-        {
-          addSortedDialogName(dialog.getName());
-        }
-      }
-    }
-
-    final MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
-
-    if (selectHome && (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone()))
-    {
-      runOnUiThread(new Runnable()
-      {
-        @Override
-        public void run()
-        {
-          resetViewPreservingCurrentDialog();
-
-          if (getDialog(homeDialogDefinition.getName()) == null)
-          {
-            createDialogWithID(homeDialogDefinition);
-          }
-
-          activateDialogWithName(homeDialogDefinition.getName());
-        }
-      });
-    }
+    //_dialogManager.reset();
   }
 
   public Dialog getCurrentAlert()
@@ -535,11 +483,6 @@ public class MBViewManager extends FragmentActivity
   public void setSinglePageMode(boolean singlePageMode)
   {
     _singlePageMode = singlePageMode;
-  }
-
-  public void showPage(MBPage page, String mode)
-  {
-    showPage(page, mode, true, true);
   }
 
   public void showPage(MBPage page, String displayMode, boolean shouldSelectDialog, boolean addToBackStack)
@@ -707,7 +650,7 @@ public class MBViewManager extends FragmentActivity
   private void addPageToDialog(MBPage page, String displayMode, boolean shouldSelectDialog, boolean addToBackStack)
   {
     MBDialogDefinition topDefinition = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(page.getDialogName());
-    MBDialogController dialogController = getDialog(topDefinition.getName());
+    MBDialogController dialogController = _dialogManager.getDialog(topDefinition.getName());
     if (dialogController == null || dialogController.getTemporary())
     {
       activateDialogWithPage(page);
@@ -727,37 +670,19 @@ public class MBViewManager extends FragmentActivity
       String dialogName = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(page.getDialogName()).getName();
       Log.d(Constants.APPLICATION_NAME, "MBViewManager.activateDialogWithPage: dialogName=" + dialogName);
 
-      _dialogControllers.add(dialogName);
+      if (dialogName != null) _dialogManager.activateDialog(dialogName);
 
-      if (!CollectionUtilities.isEqualCollection(getViewControllers(dialogName), getViewControllers(getActiveDialogName())))
-      {
-        MBDialogController dialogController = getDialog(getActiveDialogName());
-        // skip if the DialogController is already activated or not created yet.
-        if (dialogController != null && dialogController != getActiveDialog())
-        {
-          // Some Android smartphone devices don't onPause an Activity when expected. 
-          // This is a workaround to make sure that all activities handle their stuff when leaving.
-          dialogController.handleAllOnLeavingWindow();
-        }
-      }
-
-      if (dialogName == null)
-      {
-        dialogName = getActiveDialogName();
-      }
+      MBDialogController dialog = _dialogManager.getActiveDialog();
 
       //
       String id = page.getDialogName() + page.getPageName();
       MBApplicationController.getInstance().setPage(id, page);
 
-      //
-      MBDialogController dc = startDialog(dialogName, id);
-      //View view = window.getDecorView();
-      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      setTitle(MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
+      // TODO: move to dialogManager 
+      setTitle(MBLocalizationService.getInstance().getTextForKey("Blerp" /*dialog.getTitle()*/));
       //setContentView(view);
 
-      MBBasicViewController vc = findViewController(dialogName, id);
+      MBBasicViewController vc = _dialogManager.getActiveDialog().findFragment(id);
 
       if (vc != null)
       {
@@ -767,104 +692,15 @@ public class MBViewManager extends FragmentActivity
     }
   }
 
-  private MBDialogController startDialog(String dialogName, String outcomeId)
-  {
-    MBDialogDefinition def = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-    MBDialogController controller = _controllerMap.get(dialogName);
-    if (controller == null)
-    {
-      controller = MBApplicationFactory.getInstance().createDialogController();
-      controller.init(dialogName, outcomeId);
-      _controllerMap.put(dialogName, controller);
-    }
-
-    if (_activeDialog == null && !def.isShowAsMenu())
-    {
-      controller.activate();
-      _activeDialog = dialogName;
-    }
-
-    if (def.isShowAsMenu()) _menuController = controller;
-
-    return controller;
-  }
-
   @Override
   public void supportInvalidateOptionsMenu()
   {
     ActivityCompatHoneycomb.invalidateOptionsMenu(this);
   }
 
-  private MBDialogController activateDialog(String dialogName)
-  {
-    final MBDialogController controller = startDialog(dialogName, null);
-
-    if (getActiveDialog() != null)
-    {
-      getActiveDialog().deactivate();
-    }
-
-    runOnUiThread(new MBThread()
-    {
-      @Override
-      public void runMethod() throws com.itude.mobile.mobbl2.client.core.util.threads.exception.MBInterruptedException
-      {
-        controller.activate();
-
-      };
-    });
-
-    _activeDialog = dialogName;
-    return controller;
-
-  }
-
   public boolean activateDialogWithName(String dialogName)
   {
-
-    boolean activated = false;
-    Log.d(Constants.APPLICATION_NAME, "MBViewManager.activateDialogWithName: dialogName=" + dialogName);
-
-    if (dialogName != null)
-    {
-
-      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      if (dialogDefinition.getParent() != null)
-      {
-        dialogName = dialogDefinition.getParent();
-        dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      }
-
-      addSortedDialogName(dialogName, dialogDefinition);
-
-      MBDialogController dialogController = getDialog(dialogName);
-      // skip if the DialogController is already activated or not created yet.
-      if (dialogController != null && dialogController != getActiveDialog())
-      {
-        activated = true;
-        String previousDialogName = getActiveDialogName();
-
-        if (!CollectionUtilities.isEqualCollection(getViewControllers(dialogName), getViewControllers(previousDialogName)))
-        {
-          MBDialogController previousDialogController = getDialog(previousDialogName);
-          if (previousDialogController != null)
-          {
-            // Some Android smartphone devices don't onPause an Activity when expected. 
-            // This is a workaround to make sure that all activities handle their stuff when leaving.
-            previousDialogController.handleAllOnLeavingWindow();
-          }
-        }
-
-        MBDialogController dc = activateDialog(dialogName);
-
-        if (getViewControllers(dialogName).size() > 0)
-        {
-          dialogController.handleAllOnWindowActivated();
-        }
-      }
-    }
-
-    return activated;
+    return _dialogManager.activateDialog(dialogName);
   }
 
   public void endDialog(String dialogName, boolean keepPosition)
@@ -873,7 +709,7 @@ public class MBViewManager extends FragmentActivity
 
   public void popPage(String dialogName)
   {
-    getDialog(dialogName).popView();
+    _dialogManager.getDialog(dialogName).popView();
   }
 
   public void makeKeyAndVisible()
@@ -882,7 +718,7 @@ public class MBViewManager extends FragmentActivity
 
   public String getActiveDialogName()
   {
-    return _activeDialog;
+    return _dialogManager.getActiveDialog() != null ? _dialogManager.getActiveDialog().getName() : null;
   }
 
   public void resetView()
@@ -892,7 +728,7 @@ public class MBViewManager extends FragmentActivity
   public void resetViewPreservingCurrentDialog()
   {
     // Walk trough all dialogControllers
-    for (MBDialogController dc : getDialogs())
+    for (MBDialogController dc : _dialogManager.getDialogs())
     {
       dc.clearAllViews();
     }
@@ -909,104 +745,21 @@ public class MBViewManager extends FragmentActivity
     endModalDialog(MBApplicationController.getInstance().getModalPageID());
   }
 
-  public MBViewState getCurrentViewState()
-  {
-    if (_dialogControllers.size() > 1)
-    {
-      return MBViewState.MBViewStateTabbed;
-    }
-    return MBViewState.MBViewStatePlain;
-  }
-
   public static MBViewManager getInstance()
   {
     return _instance;
   }
 
-  public void setSortedDialogNames(ArrayList<String> sortedDialogNames)
+  @Deprecated
+  public List<String> getSortedDialogNames()
   {
-    _sortedDialogNames = sortedDialogNames;
+    return _dialogManager.getSortedDialogNames();
   }
 
-  public ArrayList<String> getSortedDialogNames()
-  {
-    return _sortedDialogNames;
-  }
-
-  public void addSortedDialogName(String dialogName, MBDialogDefinition dialogDefinition)
-  {
-    if (StringUtil.isNotBlank(dialogDefinition.getShowAs()) && !_sortedDialogNames.contains(dialogName))
-    {
-      _sortedDialogNames.add(dialogName);
-    }
-  }
-
-  public void addSortedDialogName(String dialogName)
-  {
-    MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-    if (dialogDefinition.getParent() != null)
-    {
-      dialogName = dialogDefinition.getParent();
-      dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-    }
-
-    if (StringUtil.isNotBlank(dialogDefinition.getShowAs()) && !_sortedDialogNames.contains(dialogName))
-    {
-      _sortedDialogNames.add(dialogName);
-    }
-  }
-
-  /*  @Override
-    public boolean onSearchRequested()
-    {
-      return getCurrentDialog().onSearchRequested();
-    }
-  */
-  /**
-   * @param dialogName dialogName
-   */
   public void removeDialog(String dialogName)
   {
-    clearDialogFromStack(dialogName);
-    MBDialogController activeDialog = getActiveDialog();
-    if (activeDialog != null)
-    {
-      MBBasicViewController fragment = activeDialog.findFragment(dialogName);
-      if (fragment != null)
-      {
-        View root = fragment.getView();
-        if (root != null)
-        {
-          ViewParent parent = root.getParent();
-          if (parent instanceof FrameLayout)
-          {
-            final FrameLayout fragmentContainer = (FrameLayout) parent;
-            runOnUiThread(new Runnable()
-            {
-              @Override
-              public void run()
-              {
-                fragmentContainer.removeAllViews();
-              }
-            });
-          }
-        }
-      }
-    }
-  }
+    _dialogManager.removeDialog(dialogName);
 
-  /**
-   * @param dialogName dialogName
-   */
-  public void clearDialogFromStack(String dialogName)
-  {
-    MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-    if (dialogDefinition.getParent() != null)
-    {
-      dialogName = dialogDefinition.getParent();
-    }
-    MBDialogController controller = getDialog(dialogName);
-    if (controller != null) controller.clearAllViews();
   }
 
   public void hideSoftKeyBoard(View triggeringView)
@@ -1019,40 +772,6 @@ public class MBViewManager extends FragmentActivity
   {
     InputMethodManager imm = (InputMethodManager) triggeringView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-  }
-
-  public List<MBBasicViewController> getViewControllers(String dialogName)
-  {
-    Log.d(Constants.APPLICATION_NAME, "MBViewManager.getViewControllers: dialogName=" + dialogName);
-
-    List<MBBasicViewController> lijst = new ArrayList<MBBasicViewController>();
-
-    if (dialogName != null)
-    {
-      MBDialogController dc = getDialog(dialogName);
-      if (dc != null)
-      {
-        List<MBBasicViewController> fragments = dc.getAllFragments();
-        if (!fragments.isEmpty()) lijst.addAll(fragments);
-      }
-    }
-    return lijst;
-
-  }
-
-  public MBBasicViewController findViewController(String dialogName, String viewID)
-  {
-    MBBasicViewController controller = null;
-    Log.d(Constants.APPLICATION_NAME, "MBViewManager.findViewController: dialogName=" + dialogName + "' viewId=" + viewID);
-    if (dialogName != null && viewID != null)
-    {
-      MBDialogController dc = getDialog(dialogName);
-      if (dc != null)
-      {
-        controller = dc.findFragment(viewID);
-      }
-    }
-    return controller;
   }
 
   /**
@@ -1109,28 +828,14 @@ public class MBViewManager extends FragmentActivity
 
     super.onConfigurationChanged(newConfig);
 
-    final Configuration config = new Configuration(newConfig);
-    Runnable r = new Runnable()
-    {
-      @Override
-      public void run()
-      {
-        // Only handle orientationchanges when orientation changed, obviously
-        // Also, tell all Dialogs
-        for (MBDialogController dc : getDialogs())
-        {
-          dc.handleOrientationChange(config);
-        }
-      }
-    };
-    new Handler().post(r);
+    _dialogManager.onConfigurationChanged(newConfig);
   }
 
   public List<MBBasicViewController> getAllFragments()
   {
     List<MBBasicViewController> list = new ArrayList<MBBasicViewController>();
     // Walk trough all dialogControllers
-    for (MBDialogController dc : getDialogs())
+    for (MBDialogController dc : _dialogManager.getDialogs())
     {
 
       //TODO Duplicaten er nog eens uit halen.
@@ -1153,24 +858,14 @@ public class MBViewManager extends FragmentActivity
 
   ////// Dialog management ////////
 
-  private Collection<MBDialogController> getDialogs()
-  {
-    return _controllerMap.values();
-  }
-
-  protected MBDialogController getDialog(String name)
-  {
-    return _controllerMap.get(name);
-  }
-
   public MBDialogController getMenuDialog()
   {
-    return _menuController;
+    return _dialogManager.getMenuDialog();
   }
 
   public MBDialogController getActiveDialog()
   {
-    return getDialog(getActiveDialogName());
+    return _dialogManager.getActiveDialog();
   }
 
   public boolean isShowDialogTitle()
@@ -1295,4 +990,15 @@ public class MBViewManager extends FragmentActivity
   {
     return getMenuDialog() != null;
   }
+
+  public void reset()
+  {
+    MBOutcome initialOutcome = new MBOutcome();
+    initialOutcome.setOriginName("Controller");
+    initialOutcome.setOutcomeName("init");
+    initialOutcome.setDialogName(getActiveDialogName());
+    initialOutcome.setNoBackgroundProcessing(true);
+    MBApplicationController.getInstance().handleOutcome(initialOutcome);
+  }
+
 }

@@ -127,8 +127,7 @@ public class MBApplicationController extends Application
     // FIXME: there must be a better way of getting the root Activity
     _viewManager = MBViewManager.getInstance();
 
-    _viewManager.setSinglePageMode((MBMetadataService.getInstance().getDialogs().size() <= 1));
-
+    _viewManager.prepareForApplicationStart();
     ImageUtil.loadImageCache(getBaseContext().getCacheDir());
 
     fireInitialOutcomes();
@@ -296,25 +295,9 @@ public class MBApplicationController extends Application
     try
     {
       final String displayMode = causingOutcome.getDisplayMode();
-      MBViewState viewState = _viewManager.getCurrentViewState();
 
-      if ("MODAL".equals(displayMode) //
-          || "MODALWITHCLOSEBUTTON".equals(displayMode) //
-          || "MODALFORMSHEET".equals(displayMode) //
-          || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode) //
-          || "MODALPAGESHEET".equals(displayMode) //
-          || "MODALPAGESHEETWITHCLOSEBUTTON".equals(displayMode) //
-          || "MODALFULLSCREEN".equals(displayMode) //
-          || "MODALFULLSCREENWITHCLOSEBUTTON".equals(displayMode) //
-          || "MODALCURRENTCONTEXT".equals(displayMode) //
-          || "MODALCURRENTCONTEXTWITHCLOSEBUTTON".equals(displayMode) //
-          || "ENDMODAL_CONTINUE".equals(displayMode))
-      {
-        viewState = MBViewState.MBViewStateModal;
-      }
-
-      final MBPage page = _applicationFactory.getPageConstructor()
-          .createPage(pageDefinition, document, causingOutcome.getPath(), viewState);
+      final MBPage page = _applicationFactory.getPageConstructor().createPage(pageDefinition, document, causingOutcome.getPath(),
+                                                                              MBViewState.MBViewStatePlain);
       page.setController(this);
       page.setDialogName(causingOutcome.getDialogName());
       // Fallback on the lastly selected dialog if there is no dialog set in the outcome:
