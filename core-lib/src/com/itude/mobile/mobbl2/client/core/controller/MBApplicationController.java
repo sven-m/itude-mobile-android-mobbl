@@ -133,7 +133,7 @@ public class MBApplicationController extends Application
     fireInitialOutcomes();
   }
 
-  private void fireInitialOutcomes()
+  public void fireInitialOutcomes()
   {
     MBOutcome initialOutcome = new MBOutcome();
     initialOutcome.setOriginName("Controller");
@@ -178,7 +178,7 @@ public class MBApplicationController extends Application
         if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone()) {
           activateDialogWithName(homeDialogDefinition.getName());
         }*/
-        
+
         MessageQueue myQueue = Looper.myQueue();
         myQueue.addIdleHandler(new IdleHandler()
         {
@@ -253,7 +253,7 @@ public class MBApplicationController extends Application
 
   ////////////// PAGE HANDLING
 
-  public Object[] preparePage(MBOutcome causingOutcome, String pageName, String selectPageInDialog, Boolean backStackEnabled)
+  public Object[] preparePage(MBOutcome causingOutcome, String pageName, Boolean backStackEnabled)
   {
     Object[] result = null;
     try
@@ -265,12 +265,12 @@ public class MBApplicationController extends Application
       MBDocument document = prepareDocument(causingOutcome, pageDefinition.getDocumentName());
       if (causingOutcome.getNoBackgroundProcessing())
       {
-        showResultingPage(causingOutcome, pageDefinition, document, selectPageInDialog, backStackEnabled);
+        showResultingPage(causingOutcome, pageDefinition, document, backStackEnabled);
       }
       else
       {
         // calling AsyncTask calls showResultingPage in UI thread.
-        Object[] backgroundResult = {causingOutcome, pageDefinition, document, selectPageInDialog, backStackEnabled};
+        Object[] backgroundResult = {causingOutcome, pageDefinition, document, backStackEnabled};
         result = backgroundResult;
       }
     }
@@ -281,7 +281,7 @@ public class MBApplicationController extends Application
     return result;
   }
 
-  public void showResultingPage(MBOutcome causingOutcome, MBPageDefinition pageDefinition, MBDocument document, String selectPageInDialog,
+  public void showResultingPage(MBOutcome causingOutcome, MBPageDefinition pageDefinition, MBDocument document,
                                 final boolean backStackEnabled)
   {
     try
@@ -297,14 +297,13 @@ public class MBApplicationController extends Application
       {
         page.setDialogName(getActiveDialogName());
       }
-      final boolean doSelect = "yes".equals(selectPageInDialog) && !_suppressPageSelection;
       _viewManager.runOnUiThread(new MBThread(page)
       {
 
         @Override
         public void runMethod()
         {
-          _viewManager.showPage(page, displayMode, doSelect, backStackEnabled);
+          _viewManager.showPage(page, displayMode, backStackEnabled);
         }
       });
     }

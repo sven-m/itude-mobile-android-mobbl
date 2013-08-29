@@ -485,7 +485,7 @@ public class MBViewManager extends FragmentActivity
     _singlePageMode = singlePageMode;
   }
 
-  public void showPage(MBPage page, String displayMode, boolean shouldSelectDialog, boolean addToBackStack)
+  public void showPage(MBPage page, String displayMode, boolean addToBackStack)
   {
 
     Log.d(Constants.APPLICATION_NAME,
@@ -499,7 +499,7 @@ public class MBViewManager extends FragmentActivity
     }
     else
     {
-      addPageToDialog(page, displayMode, shouldSelectDialog, addToBackStack);
+      addPageToDialog(page, displayMode, addToBackStack);
     }
   }
 
@@ -647,7 +647,7 @@ public class MBViewManager extends FragmentActivity
 
   }
 
-  private void addPageToDialog(MBPage page, String displayMode, boolean shouldSelectDialog, boolean addToBackStack)
+  private void addPageToDialog(MBPage page, String displayMode, boolean addToBackStack)
   {
     MBDialogDefinition topDefinition = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(page.getDialogName());
     MBDialogController dialogController = _dialogManager.getDialog(topDefinition.getName());
@@ -659,8 +659,6 @@ public class MBViewManager extends FragmentActivity
     {
       dialogController.showPage(page, displayMode, page.getDialogName() + page.getPageName(), page.getDialogName(), addToBackStack);
     }
-
-    if (shouldSelectDialog) activateDialogWithName(topDefinition.getName());
   }
 
   public void activateDialogWithPage(MBPage page)
@@ -993,12 +991,10 @@ public class MBViewManager extends FragmentActivity
 
   public void reset()
   {
-    MBOutcome initialOutcome = new MBOutcome();
-    initialOutcome.setOriginName("Controller");
-    initialOutcome.setOutcomeName("init");
-    initialOutcome.setDialogName(getActiveDialogName());
-    initialOutcome.setNoBackgroundProcessing(true);
-    MBApplicationController.getInstance().handleOutcome(initialOutcome);
+    _dialogManager.reset();
+    EnumSet<MBActionBarInvalidationOption> options = EnumSet.of(MBActionBarInvalidationOption.SHOW_FIRST);
+    invalidateActionBar(options);
+    MBApplicationController.getInstance().fireInitialOutcomes();
   }
 
 }

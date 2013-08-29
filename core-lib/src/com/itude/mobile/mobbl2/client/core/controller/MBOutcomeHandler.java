@@ -3,7 +3,6 @@ package com.itude.mobile.mobbl2.client.core.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -275,24 +274,18 @@ public class MBOutcomeHandler extends Handler
   {
     Log.d(Constants.APPLICATION_NAME, "Going to page " + pageDef.getName());
 
-    //PT: Not sure why this is here; kept after refactoring until I figure out its use.. :')
-    final String selectPageInDialog = "yes";
-
     final MBApplicationController applicationController = MBApplicationController.getInstance();
 
     if (outcomeToProcess.getNoBackgroundProcessing())
     {
-      applicationController.preparePage(new MBOutcome(outcomeToProcess), pageDef.getName(), selectPageInDialog,
+      applicationController.preparePage(new MBOutcome(outcomeToProcess), pageDef.getName(),
                                         applicationController.getBackStackEnabled());
     }
     else
     {
       final MBIndicator indicator = showIndicatorForOutcome(outcomeToProcess);
       // AsyncTasks must be created and executed on the UI Thread!
-      Bundle bundle = new Bundle();
-      bundle.putString("selectPageInDialog", selectPageInDialog);
-
-      Runnable runnable = new MBThread(null, bundle)
+      Runnable runnable = new MBThread()
       {
         @Override
         public void runMethod()
@@ -301,7 +294,6 @@ public class MBOutcomeHandler extends Handler
           runner.setController(applicationController);
           runner.setOutcome(new MBOutcome(outcomeToProcess));
           runner.setPageName(pageDef.getName());
-          runner.setSelectPageInDialog(getStringParameter("selectPageInDialog"));
           runner.setBackStackEnabled(applicationController.getBackStackEnabled());
           runner.execute(new Object[0]);
         }

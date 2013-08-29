@@ -12,7 +12,6 @@ public class MBPreparePageInBackgroundRunner extends MBApplicationControllerBack
 {
   private final MBIndicator _indicator;
   private MBOutcome         _outcome            = null;
-  private String            _selectPageInDialog = null;
   private String            _pageName           = null;
   private boolean           _backStackEnabled   = true;
 
@@ -27,10 +26,6 @@ public class MBPreparePageInBackgroundRunner extends MBApplicationControllerBack
     _outcome = mbOutcome;
   }
 
-  public void setSelectPageInDialog(String selectPageInDialog)
-  {
-    _selectPageInDialog = selectPageInDialog;
-  }
 
   public void setPageName(String name)
   {
@@ -47,7 +42,7 @@ public class MBPreparePageInBackgroundRunner extends MBApplicationControllerBack
   {
     try
     {
-      Object[] result = getController().preparePage(_outcome, _pageName, _selectPageInDialog, _backStackEnabled);
+      Object[] result = getController().preparePage(_outcome, _pageName,  _backStackEnabled);
       return result;
     }
     finally
@@ -64,9 +59,8 @@ public class MBPreparePageInBackgroundRunner extends MBApplicationControllerBack
       MBOutcome outcome = (MBOutcome) result[0];
       MBPageDefinition pageDefinition = (MBPageDefinition) result[1];
       MBDocument document = (MBDocument) result[2];
-      String selectPageInDialog = (String) result[3];
-      boolean backStackEnabled = (Boolean) result[4];
-      getController().showResultingPage(outcome, pageDefinition, document, selectPageInDialog, backStackEnabled);
+      boolean backStackEnabled = (Boolean) result[3];
+      getController().showResultingPage(outcome, pageDefinition, document, backStackEnabled);
     }
     else
     {

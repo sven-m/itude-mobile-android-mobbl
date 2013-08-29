@@ -1,5 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.controller.util;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +78,8 @@ public class MBBasicViewController extends DialogFragment
   private boolean             _isDialogCancelable    = false;                   //i.e. back button dismisses dialog when true
   private final List<MBEvent> eventQueue             = new ArrayList<MBEvent>();
   private static boolean      _strictModeAvailable   = false;
-  private MBDialogController  _dialogController;
+  // avoid cyclical dependencies
+  private WeakReference<MBDialogController>  _dialogController;
   private boolean             _rebuildView;
 
   //use the StrictModeWrapper to see if we are running on Android 2.3 or higher and StrictMode is available
@@ -592,12 +594,12 @@ public class MBBasicViewController extends DialogFragment
 
   public void setDialogController(MBDialogController dialog)
   {
-    _dialogController = dialog;
+    _dialogController = new WeakReference<MBDialogController>(dialog);
   }
 
   public MBDialogController getDialogController()
   {
-    return _dialogController;
+    return _dialogController.get();
   }
 
   @Override
