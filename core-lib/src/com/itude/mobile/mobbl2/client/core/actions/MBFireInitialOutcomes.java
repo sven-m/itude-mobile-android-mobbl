@@ -86,6 +86,7 @@ public class MBFireInitialOutcomes implements MBAction
         else
         {
           MBApplicationController.getInstance().handleOutcome(oc);
+          oc.setDisplayMode("BACKGROUND");
         }
       }
 

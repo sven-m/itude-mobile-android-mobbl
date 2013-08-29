@@ -159,27 +159,11 @@ public class MBApplicationController extends Application
 
     final MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
 
-    EnumSet<MBActionBarInvalidationOption> actionBarRefreshOptions = EnumSet.noneOf(MBActionBarInvalidationOption.class);
+    final EnumSet<MBActionBarInvalidationOption> actionBarRefreshOptions = EnumSet.noneOf(MBActionBarInvalidationOption.class);
 
     if (homeDialogDefinition.isShowAsTab())
     {
       actionBarRefreshOptions.add(MBActionBarInvalidationOption.SHOW_FIRST);
-    }
-
-    MBViewManager.getInstance().invalidateActionBar(actionBarRefreshOptions);
-    MBViewManager.getInstance().buildSlidingMenu();
-
-    if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone())
-    {
-
-      _viewManager.runOnUiThread(new Runnable()
-      {
-        @Override
-        public void run()
-        {
-          activateDialogWithName(homeDialogDefinition.getName());
-        }
-      });
     }
 
     _viewManager.runOnUiThread(new Runnable()
@@ -187,6 +171,14 @@ public class MBApplicationController extends Application
       @Override
       public void run()
       {
+        MBViewManager.getInstance().invalidateActionBar(actionBarRefreshOptions);
+        MBViewManager.getInstance().buildSlidingMenu();
+
+        /*
+        if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone()) {
+          activateDialogWithName(homeDialogDefinition.getName());
+        }*/
+        
         MessageQueue myQueue = Looper.myQueue();
         myQueue.addIdleHandler(new IdleHandler()
         {

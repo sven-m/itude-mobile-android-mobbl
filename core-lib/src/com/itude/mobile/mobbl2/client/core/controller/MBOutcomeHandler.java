@@ -221,6 +221,10 @@ public class MBOutcomeHandler extends Handler
     {
       viewManager.endDialog(outcomeToProcess.getDialogName(), false);
     }
+    else if ("BACKGROUND".equals(outcomeToProcess.getDisplayMode()))
+    {
+      // noop
+    }
     else
     {
       viewManager.runOnUiThread(new Runnable()
