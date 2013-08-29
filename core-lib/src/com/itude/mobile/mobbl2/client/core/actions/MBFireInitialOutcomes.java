@@ -42,6 +42,7 @@ public class MBFireInitialOutcomes implements MBAction
       {
         String parentDialog = def.getParent();
 
+        // TODO: refactor this; the dialog manager should already know whether a dialog is visible
         if (parentDialog != null)
         {
           MBDialogDefinition parent = MBMetadataService.getInstance().getDefinitionForDialogName(parentDialog);
@@ -59,7 +60,7 @@ public class MBFireInitialOutcomes implements MBAction
         if (def != null && def.isShowAsMenu())
         {
           //MBViewManager.getInstance().addSortedDialogName(dialog);
-          isMenu = true;
+          //isMenu = true;
         }
       }
 
@@ -80,7 +81,7 @@ public class MBFireInitialOutcomes implements MBAction
             def = MBMetadataService.getInstance().getDefinitionForDialogName(def.getParent());
           }
 
-          MBMetadataService.getInstance().setHomeDialogDefinition(def);
+          if (!isMenu) MBMetadataService.getInstance().setHomeDialogDefinition(def);
           first = false;
         }
         else

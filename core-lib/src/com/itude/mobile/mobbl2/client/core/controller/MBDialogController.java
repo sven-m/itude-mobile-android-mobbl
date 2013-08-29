@@ -196,8 +196,8 @@ public class MBDialogController extends ContextWrapper
       _shown = true;
       for (ShowPageEntry entry : _queuedPages)
         showPage(entry);
-      
-      _queuedPages.clear ();      
+
+      _queuedPages.clear();
     }
 
     if (_clearDialog)
@@ -220,6 +220,7 @@ public class MBDialogController extends ContextWrapper
   public void deactivate()
   {
     getFragmentStack().emptyBackStack(true);
+    _shown = false;
   }
 
   public void clearAllViews()
@@ -237,10 +238,21 @@ public class MBDialogController extends ContextWrapper
 
   public void removeOnBackStackChangedListenerOfCurrentDialog()
   {
+    //_shown = false;
     if (_fragmentStack != null)
     {
       _fragmentStack.getFragmentManager().removeOnBackStackChangedListener(_fragmentStack);
     }
+  }
+
+  public void addOnBackStackChangedListener()
+  {
+
+    if (_fragmentStack != null)
+    {
+      _fragmentStack.getFragmentManager().addOnBackStackChangedListener(_fragmentStack);
+    }
+
   }
 
   private FragmentManager getSupportFragmentManager()
@@ -813,4 +825,5 @@ public class MBDialogController extends ContextWrapper
     }
 
   }
+
 }

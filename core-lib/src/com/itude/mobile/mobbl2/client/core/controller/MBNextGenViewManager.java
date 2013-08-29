@@ -412,6 +412,13 @@ public abstract class MBNextGenViewManager extends MBViewManager
     });
   }
 
+  @Override
+  public void reset()
+  {
+    super.reset();
+    //refreshSlidingMenu();
+  }
+
   protected void populateActionBar()
   {
     runOnUiThread(new Runnable()

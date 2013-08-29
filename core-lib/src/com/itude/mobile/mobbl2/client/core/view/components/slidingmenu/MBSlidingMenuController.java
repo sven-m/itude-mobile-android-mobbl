@@ -48,6 +48,7 @@ public class MBSlidingMenuController
     {
       ViewUtilities.detachView(menu.getMainContainer());
       menu.activateWithoutSwitching();
+      menu.removeOnBackStackChangedListenerOfCurrentDialog();
       _slidingMenu.setMenu(menu.getMainContainer());
     }
 

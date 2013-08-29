@@ -165,14 +165,16 @@ public class MBApplicationController extends Application
     {
       actionBarRefreshOptions.add(MBActionBarInvalidationOption.SHOW_FIRST);
     }
-
+    
+    MBViewManager.getInstance().buildSlidingMenu();
+    
+    
     _viewManager.runOnUiThread(new Runnable()
     {
       @Override
       public void run()
       {
         MBViewManager.getInstance().invalidateActionBar(actionBarRefreshOptions);
-        MBViewManager.getInstance().buildSlidingMenu();
 
         /*
         if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone()) {

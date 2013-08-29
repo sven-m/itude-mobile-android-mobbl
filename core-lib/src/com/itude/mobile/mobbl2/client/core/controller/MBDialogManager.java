@@ -50,7 +50,7 @@ public class MBDialogManager extends MBBaseLifecycleListener
   public void onResume()
   {
     super.onResume();
-    if (getActiveDialog() != null) getActiveDialog().activate();
+    if (getActiveDialog() != null) getActiveDialog().addOnBackStackChangedListener();
   }
 
   @Override
@@ -169,7 +169,8 @@ public class MBDialogManager extends MBBaseLifecycleListener
     controller.init(name, null);
     _controllerMap.put(name, controller);
     _sortedDialogNames.add(name);
-    if (definition.isShowAsMenu()) _menuController = controller;
+    if (definition.isShowAsMenu()) 
+      _menuController = controller;
   }
 
   public void removeDialog(String dialogName)
