@@ -165,10 +165,9 @@ public class MBApplicationController extends Application
     {
       actionBarRefreshOptions.add(MBActionBarInvalidationOption.SHOW_FIRST);
     }
-    
+
     MBViewManager.getInstance().buildSlidingMenu();
-    
-    
+
     _viewManager.runOnUiThread(new Runnable()
     {
       @Override
@@ -283,7 +282,7 @@ public class MBApplicationController extends Application
     return result;
   }
 
-  public void showResultingPage(MBOutcome causingOutcome, MBPageDefinition pageDefinition, MBDocument document,
+  public void showResultingPage(final MBOutcome causingOutcome, MBPageDefinition pageDefinition, MBDocument document,
                                 final boolean backStackEnabled)
   {
     try
@@ -305,6 +304,8 @@ public class MBApplicationController extends Application
         @Override
         public void runMethod()
         {
+          if (causingOutcome.getDialogName() != null && !"BACKGROUND".equals(causingOutcome.getDisplayMode())) _viewManager
+              .activateDialogWithName(causingOutcome.getDialogName());
           _viewManager.showPage(page, displayMode, backStackEnabled);
         }
       });

@@ -61,7 +61,7 @@ public class MBDialogController extends ContextWrapper
   private String                     _title;
   private boolean                    _clearDialog;
   private Configuration              _configurationChanged = null;
-  private Queue<ShowPageEntry>       _queuedPages          = new LinkedList<MBDialogController.ShowPageEntry>();
+  private final Queue<ShowPageEntry> _queuedPages          = new LinkedList<MBDialogController.ShowPageEntry>();
 
   public MBDialogController()
   {
@@ -232,7 +232,7 @@ public class MBDialogController extends ContextWrapper
     }
     else
     {
-      _clearDialog = true;
+      // _clearDialog = true;
     }
   }
 

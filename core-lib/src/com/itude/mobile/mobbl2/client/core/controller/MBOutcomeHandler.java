@@ -156,7 +156,10 @@ public class MBOutcomeHandler extends Handler
           if (actionDef != null) handleAction(outcomeToProcess, actionDef);
 
           MBPageDefinition pageDef = metadataService.getDefinitionForPageName(outcomeDef.getAction(), false);
-          if (pageDef != null) handlePageTransition(outcomeToProcess, pageDef);
+          if (pageDef != null)
+          {
+            handlePageTransition(outcomeToProcess, pageDef);
+          }
 
           MBAlertDefinition alertDef = metadataService.getDefinitionForAlertName(outcomeDef.getAction(), false);
           if (alertDef != null) handleAlert(outcomeToProcess, alertDef);
@@ -220,21 +223,6 @@ public class MBOutcomeHandler extends Handler
     {
       viewManager.endDialog(outcomeToProcess.getDialogName(), false);
     }
-    else if ("BACKGROUND".equals(outcomeToProcess.getDisplayMode()))
-    {
-      // noop
-    }
-    else
-    {
-      viewManager.runOnUiThread(new Runnable()
-      {
-        @Override
-        public void run()
-        {
-          viewManager.activateDialogWithName(outcomeToProcess.getDialogName());
-        }
-      });
-    }
   }
 
   private MBOutcome createOutcomeCopy(MBOutcome outcome, MBOutcomeDefinition outcomeDef)
@@ -278,8 +266,7 @@ public class MBOutcomeHandler extends Handler
 
     if (outcomeToProcess.getNoBackgroundProcessing())
     {
-      applicationController.preparePage(new MBOutcome(outcomeToProcess), pageDef.getName(),
-                                        applicationController.getBackStackEnabled());
+      applicationController.preparePage(new MBOutcome(outcomeToProcess), pageDef.getName(), applicationController.getBackStackEnabled());
     }
     else
     {

@@ -992,9 +992,8 @@ public class MBViewManager extends FragmentActivity
   public void reset()
   {
     _dialogManager.reset();
-    EnumSet<MBActionBarInvalidationOption> options = EnumSet.of(MBActionBarInvalidationOption.SHOW_FIRST);
+    EnumSet<MBActionBarInvalidationOption> options = EnumSet.noneOf(MBActionBarInvalidationOption.class);
     invalidateActionBar(options);
     MBApplicationController.getInstance().fireInitialOutcomes();
   }
-
 }

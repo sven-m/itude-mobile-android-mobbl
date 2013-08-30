@@ -8,12 +8,12 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.content.res.Configuration;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 import com.itude.mobile.android.util.ComparisonUtil;
-import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBaseLifecycleListener;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
@@ -122,8 +122,21 @@ public class MBDialogManager extends MBBaseLifecycleListener
 
   public void reset()
   {
-    clear();
-    build();
+    _activity.runOnUiThread(new MBThread()
+    {
+      @Override
+      public void runMethod() throws MBInterruptedException
+      {
+        clear();
+        while (((FragmentActivity) _activity).getSupportFragmentManager().popBackStackImmediate())
+        {
+          //noop
+        }
+
+        build();
+      }
+    });
+
   }
 
   ////////////// Actual management ////////
@@ -152,7 +165,7 @@ public class MBDialogManager extends MBBaseLifecycleListener
     if (ComparisonUtil.safeEquals(_activeDialog, dialogName)) return false;
 
     MBDialogController dialog = _controllerMap.get(dialogName);
-    if (dialog == null) throw new MBException("No dialog " + dialogName + " found!");
+    if (dialog == null) return false;// throw new MBException("No dialog " + dialogName + " found!");
 
     MBDialogController current = getActiveDialog();
     if (current != null) current.deactivate();
@@ -169,8 +182,7 @@ public class MBDialogManager extends MBBaseLifecycleListener
     controller.init(name, null);
     _controllerMap.put(name, controller);
     _sortedDialogNames.add(name);
-    if (definition.isShowAsMenu()) 
-      _menuController = controller;
+    if (definition.isShowAsMenu()) _menuController = controller;
   }
 
   public void removeDialog(String dialogName)
