@@ -261,15 +261,7 @@ public class MBViewManager extends FragmentActivity
     final String firstDialog = firstDialogDefinition.getName();
     if (!childController.getName().equals(firstDialog))
     {
-      if (_dialogManager.getDialog(firstDialogDefinition.getName()) == null)
-      {
-        createDialogWithID(firstDialogDefinition);
-      }
-      else
-      {
-        activateDialogWithName(firstDialog);
-      }
-      setTitle(MBLocalizationService.getInstance().getTextForKey(firstDialogDefinition.getTitle()));
+      getDialogManager().activateHome();
     }
     else
     {
@@ -431,25 +423,6 @@ public class MBViewManager extends FragmentActivity
     }
   }
 
-  // Activate a dialog based on the hashed Name
-  public void activateDialogWithID(int itemId)
-  {
-    for (MBDialogDefinition dialogDefinition : MBMetadataService.getInstance().getDialogs())
-    {
-      if (itemId == dialogDefinition.getName().hashCode())
-      {
-        if (!getActiveDialog().getName().equals(dialogDefinition.getName()))
-        {
-          activateDialogWithName(dialogDefinition.getName());
-        }
-        else
-        {
-          getActiveDialog().clearAllViews();
-        }
-      }
-    }
-  }
-
   @SuppressLint("NewApi")
   public void invalidateOptionsMenu(boolean resetHomeDialog, final boolean selectHome)
   {
@@ -462,7 +435,8 @@ public class MBViewManager extends FragmentActivity
       _optionsMenuInvalid = true;
     }
 
-    //_dialogManager.reset();
+    if (selectHome) getDialogManager().activateHome();
+
   }
 
   public Dialog getCurrentAlert()
@@ -661,7 +635,7 @@ public class MBViewManager extends FragmentActivity
     }
   }
 
-  public void activateDialogWithPage(MBPage page)
+  private void activateDialogWithPage(MBPage page)
   {
     if (page != null)
     {
@@ -992,8 +966,11 @@ public class MBViewManager extends FragmentActivity
   public void reset()
   {
     _dialogManager.reset();
-    EnumSet<MBActionBarInvalidationOption> options = EnumSet.noneOf(MBActionBarInvalidationOption.class);
-    invalidateActionBar(options);
     MBApplicationController.getInstance().fireInitialOutcomes();
+  }
+
+  public MBDialogManager getDialogManager()
+  {
+    return _dialogManager;
   }
 }

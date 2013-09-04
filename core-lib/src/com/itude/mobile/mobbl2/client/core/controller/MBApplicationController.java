@@ -29,7 +29,6 @@ import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
-import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBActionBarInvalidationOption;
@@ -157,14 +156,7 @@ public class MBApplicationController extends Application
     _suppressPageSelection = false;
     _backStackEnabled = true;
 
-    final MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
-
     final EnumSet<MBActionBarInvalidationOption> actionBarRefreshOptions = EnumSet.noneOf(MBActionBarInvalidationOption.class);
-
-    if (homeDialogDefinition.isShowAsTab())
-    {
-      actionBarRefreshOptions.add(MBActionBarInvalidationOption.SHOW_FIRST);
-    }
 
     MBViewManager.getInstance().buildSlidingMenu();
 
@@ -174,6 +166,8 @@ public class MBApplicationController extends Application
       public void run()
       {
         MBViewManager.getInstance().invalidateActionBar(actionBarRefreshOptions);
+        MBViewManager.getInstance().invalidateOptionsMenu(false, false);
+        MBViewManager.getInstance().getDialogManager().activateHome();
 
         /*
         if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone()) {
@@ -289,8 +283,24 @@ public class MBApplicationController extends Application
     {
       final String displayMode = causingOutcome.getDisplayMode();
 
-      final MBPage page = _applicationFactory.getPageConstructor().createPage(pageDefinition, document, causingOutcome.getPath(),
-                                                                              MBViewState.MBViewStatePlain);
+      MBViewState viewState = MBViewState.MBViewStatePlain;
+      if ("MODAL".equals(displayMode) //
+          || "MODALWITHCLOSEBUTTON".equals(displayMode) //
+          || "MODALFORMSHEET".equals(displayMode) //
+          || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode) //
+          || "MODALPAGESHEET".equals(displayMode) //
+          || "MODALPAGESHEETWITHCLOSEBUTTON".equals(displayMode) //
+          || "MODALFULLSCREEN".equals(displayMode) //
+          || "MODALFULLSCREENWITHCLOSEBUTTON".equals(displayMode) //
+          || "MODALCURRENTCONTEXT".equals(displayMode) //
+          || "MODALCURRENTCONTEXTWITHCLOSEBUTTON".equals(displayMode) //
+          || "ENDMODAL_CONTINUE".equals(displayMode))
+      {
+        viewState = MBViewState.MBViewStateModal;
+      }
+
+      final MBPage page = _applicationFactory.getPageConstructor()
+          .createPage(pageDefinition, document, causingOutcome.getPath(), viewState);
       page.setController(this);
       page.setDialogName(causingOutcome.getDialogName());
       // Fallback on the lastly selected dialog if there is no dialog set in the outcome:
@@ -304,7 +314,7 @@ public class MBApplicationController extends Application
         @Override
         public void runMethod()
         {
-          if (causingOutcome.getDialogName() != null && !"BACKGROUND".equals(causingOutcome.getDisplayMode())) _viewManager
+          if (!_suppressPageSelection && causingOutcome.getDialogName() != null && !"BACKGROUND".equals(causingOutcome.getDisplayMode())) _viewManager
               .activateDialogWithName(causingOutcome.getDialogName());
           _viewManager.showPage(page, displayMode, backStackEnabled);
         }
@@ -433,6 +443,8 @@ public class MBApplicationController extends Application
       }
       else
       {
+        if ("BACKGROUND".equals(causingOutcome.getDisplayMode())) causingOutcome.setDisplayMode("BACKGROUND");
+        
         // TODO difference between nonbackground or background processing should be implemented
         if (causingOutcome.getNoBackgroundProcessing())
         {

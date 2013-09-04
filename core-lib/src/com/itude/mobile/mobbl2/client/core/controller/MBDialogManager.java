@@ -23,16 +23,23 @@ import com.itude.mobile.mobbl2.client.core.util.threads.exception.MBInterruptedE
 
 public class MBDialogManager extends MBBaseLifecycleListener
 {
+  public static interface MBDialogChangeListener
+  {
+    public void onDialogSelected(String name);
+  }
+
   private final List<String>                    _sortedDialogNames;
   private final Map<String, MBDialogController> _controllerMap;
   private MBDialogController                    _menuController;
   private String                                _activeDialog;
   private final Activity                        _activity;
+  private final List<MBDialogChangeListener>    _listeners;
 
   public MBDialogManager(Activity activity)
   {
     _activity = activity;
     _sortedDialogNames = new ArrayList<String>();
+    _listeners = new ArrayList<MBDialogChangeListener>();
     _controllerMap = new HashMap<String, MBDialogController>();
   }
 
@@ -118,6 +125,16 @@ public class MBDialogManager extends MBBaseLifecycleListener
     return _controllerMap.get(name);
   }
 
+  public void addDialogChangeListener(MBDialogChangeListener listener)
+  {
+    _listeners.add(listener);
+  }
+
+  public void removeDialogChangeListener(MBDialogChangeListener listener)
+  {
+    _listeners.remove(listener);
+  }
+
   ///////////////
 
   public void reset()
@@ -134,6 +151,7 @@ public class MBDialogManager extends MBBaseLifecycleListener
         }
 
         build();
+
       }
     });
 
@@ -143,6 +161,10 @@ public class MBDialogManager extends MBBaseLifecycleListener
 
   private void clear()
   {
+    for (MBDialogController controller : _controllerMap.values())
+      for (MBBasicViewController bvc : controller.getAllFragments())
+        bvc.handleOnLeavingWindow();
+
     _sortedDialogNames.clear();
     _controllerMap.clear();
     _menuController = null;
@@ -154,10 +176,21 @@ public class MBDialogManager extends MBBaseLifecycleListener
     List<MBDialogDefinition> dialogs = MBMetadataService.getInstance().getDialogs();
 
     for (MBDialogDefinition dialog : dialogs)
-    {
-      if (dialog.isPreConditionValid()) createDialog(dialog);
+      if (dialog.isPreConditionValid())
+      {
+        if (dialog.getParent() == null) createDialog(dialog);
+        else
+        {
+          MBDialogController parent = _controllerMap.get(dialog.getParent());
+          _controllerMap.put(dialog.getName(), parent);
+        }
+      }
+  }
 
-    }
+  public boolean activateHome()
+  {
+    MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
+    return activateDialog(homeDialogDefinition.getName());
   }
 
   public boolean activateDialog(String dialogName)
@@ -168,10 +201,18 @@ public class MBDialogManager extends MBBaseLifecycleListener
     if (dialog == null) return false;// throw new MBException("No dialog " + dialogName + " found!");
 
     MBDialogController current = getActiveDialog();
-    if (current != null) current.deactivate();
+    if (current != null)
+    {
+      current.deactivate();
+      current.handleAllOnLeavingWindow();
+    }
+
+    for (MBDialogChangeListener listener : _listeners)
+      listener.onDialogSelected(dialogName);
 
     _activeDialog = dialogName;
     dialog.activate();
+    dialog.handleAllOnWindowActivated();
     return true;
   }
 

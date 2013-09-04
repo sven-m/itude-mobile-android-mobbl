@@ -117,7 +117,7 @@ public class MBPage extends MBPanel
   }
 
   @Override
-  public void setDocument(MBDocument document)
+  public synchronized void setDocument(MBDocument document)
   {
     _document = document;
   }

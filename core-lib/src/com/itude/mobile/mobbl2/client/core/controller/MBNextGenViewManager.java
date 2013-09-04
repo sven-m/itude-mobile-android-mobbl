@@ -10,6 +10,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -34,6 +35,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainValidatorDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBToolDefinition;
+import com.itude.mobile.mobbl2.client.core.controller.MBDialogManager.MBDialogChangeListener;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNotBooleanException;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
@@ -62,7 +64,7 @@ import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabSpinnerAd
  *
  */
 @TargetApi(11)
-public abstract class MBNextGenViewManager extends MBViewManager
+public abstract class MBNextGenViewManager extends MBViewManager implements MBDialogChangeListener
 {
   private Menu                    _menu           = null;
   private MBToolDefinition        _refreshToolDef = null;
@@ -78,6 +80,14 @@ public abstract class MBNextGenViewManager extends MBViewManager
 
     // https://mobiledev.itude.com/jira/browse/MOBBL-659
     setProgressBarIndeterminateVisibility(false);
+  }
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState)
+  {
+    super.onCreate(savedInstanceState);
+
+    getDialogManager().addDialogChangeListener(this);
   }
 
   @Override
@@ -298,10 +308,7 @@ public abstract class MBNextGenViewManager extends MBViewManager
     }
     else
     {
-      MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
-      resetViewPreservingCurrentDialog();
-
-      activateDialogWithName(homeDialogDefinition.getName());
+      getDialogManager().activateHome();
     }
   }
 
@@ -315,10 +322,8 @@ public abstract class MBNextGenViewManager extends MBViewManager
   }
 
   @Override
-  public boolean activateDialogWithName(String dialogName)
+  public void onDialogSelected(String dialogName)
   {
-    boolean activated = super.activateDialogWithName(dialogName);
-
     if (dialogName != null)
     {
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
@@ -337,8 +342,6 @@ public abstract class MBNextGenViewManager extends MBViewManager
     }
 
     if (getSlidingMenu() != null) getSlidingMenu().hide();
-
-    return activated;
   }
 
   @Override

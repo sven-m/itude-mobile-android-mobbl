@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -68,19 +69,19 @@ public class MBBasicViewController extends DialogFragment
       OperationListener
 {
 
-  private ViewGroup           _contentView;
-  private MBPage              _page;
-  private ScrollView          _mainScrollView        = null;
-  private View                _rootView              = null;
-  private View                _mainScrollViewContent = null;
-  private boolean             _isDialogClosable      = false;
-  private boolean             _isDialogFullscreen    = false;
-  private boolean             _isDialogCancelable    = false;                   //i.e. back button dismisses dialog when true
-  private final List<MBEvent> eventQueue             = new ArrayList<MBEvent>();
-  private static boolean      _strictModeAvailable   = false;
+  private ViewGroup                         _contentView;
+  private MBPage                            _page;
+  private ScrollView                        _mainScrollView        = null;
+  private View                              _rootView              = null;
+  private View                              _mainScrollViewContent = null;
+  private boolean                           _isDialogClosable      = false;
+  private boolean                           _isDialogFullscreen    = false;
+  private boolean                           _isDialogCancelable    = false;                   //i.e. back button dismisses dialog when true
+  private final List<MBEvent>               eventQueue             = new ArrayList<MBEvent>();
+  private static boolean                    _strictModeAvailable   = false;
   // avoid cyclical dependencies
-  private WeakReference<MBDialogController>  _dialogController;
-  private boolean             _rebuildView;
+  private WeakReference<MBDialogController> _dialogController;
+  private boolean                           _rebuildView;
 
   //use the StrictModeWrapper to see if we are running on Android 2.3 or higher and StrictMode is available
   static
@@ -373,7 +374,10 @@ public class MBBasicViewController extends DialogFragment
 
   public void rebuildView(final boolean contentViewNeedsToBeSet)
   {
-
+    // it is possible for the fragment to get detached in the meantime,
+    // so cache the activity
+    final Activity activity = getActivity();
+    if (activity == null) return;
     MBPage page = getPage();
     page.rebuildView();
 
@@ -390,7 +394,7 @@ public class MBBasicViewController extends DialogFragment
           {
             fragmentContainer.removeAllViews();
 
-            ViewGroup view = buildInitialView(LayoutInflater.from(getActivity()));
+            ViewGroup view = buildInitialView(LayoutInflater.from(activity));
 
             fragmentContainer.addView(view);
             _contentView = view;
@@ -400,7 +404,7 @@ public class MBBasicViewController extends DialogFragment
         }
       }
     };
-    getActivity().runOnUiThread(runnable);
+    activity.runOnUiThread(runnable);
   }
 
   public void handleException(Exception exception)
