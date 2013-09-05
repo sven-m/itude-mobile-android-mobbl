@@ -39,27 +39,31 @@ public class MBCacheWriter extends Thread
   {
     try
     {
-      Hashtable<String, String> combined = new Hashtable<String, String>();
-
-      for (String key : getRegistry().keySet())
+      synchronized (getRegistry())
       {
-        String value = getRegistry().get(key);
-        String docType = getDocumentTypes().get(key);
 
-        if (docType != null) value = value + ":" + docType;
-        combined.put(key, value);
+        Hashtable<String, String> combined = new Hashtable<String, String>();
+
+        for (String key : getRegistry().keySet())
+        {
+          String value = getRegistry().get(key);
+          String docType = getDocumentTypes().get(key);
+
+          if (docType != null) value = value + ":" + docType;
+          combined.put(key, value);
+        }
+
+        boolean success = FileUtil.getInstance().writeObjectToFile(getTtls(), getTtlsFileName());
+        success &= FileUtil.getInstance().writeObjectToFile(combined, getRegistryFileName());
+
+        if (success && getData() != null)
+        {
+          success = FileUtil.getInstance().writeToFile(getData(), getFileName(), null);
+          if (!success) Log.e(Constants.APPLICATION_NAME, "Error caching data in " + getFileName());
+        }
+        else if (!success) Log.w(Constants.APPLICATION_NAME, "Could not store the cache registry info in " + getRegistryFileName()
+                                                             + " and/or " + getTtlsFileName() + " skipping writing to the cache!");
       }
-
-      boolean success = FileUtil.getInstance().writeObjectToFile(getTtls(), getTtlsFileName());
-      success &= FileUtil.getInstance().writeObjectToFile(combined, getRegistryFileName());
-
-      if (success && getData() != null)
-      {
-        success = FileUtil.getInstance().writeToFile(getData(), getFileName(), null);
-        if (!success) Log.e(Constants.APPLICATION_NAME, "Error caching data in " + getFileName());
-      }
-      else if (!success) Log.w(Constants.APPLICATION_NAME, "Could not store the cache registry info in " + getRegistryFileName()
-                                                           + " and/or " + getTtlsFileName() + " skipping writing to the cache!");
 
     }
     finally
