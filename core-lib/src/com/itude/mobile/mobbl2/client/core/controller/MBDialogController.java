@@ -31,6 +31,7 @@ import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.UniqueIntegerGenerator;
+import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
@@ -190,10 +191,18 @@ public class MBDialogController extends ContextWrapper
       @Override
       public void runMethod() throws MBInterruptedException
       {
-        getActivity().setContentView(_mainContainer);
-        activateWithoutSwitching();
-        getSupportFragmentManager().executePendingTransactions();
-        getActivity().setTitle(_title);
+        try
+        {
+          getActivity().setContentView(_mainContainer);
+          activateWithoutSwitching();
+          getSupportFragmentManager().executePendingTransactions();
+          getActivity().setTitle(_title);
+        }
+        catch (Throwable t)
+        {
+          // panic?
+          throw new MBException("Meh!", t);
+        }
       }
     });
 
@@ -201,6 +210,7 @@ public class MBDialogController extends ContextWrapper
 
   public void activateWithoutSwitching()
   {
+    getFragmentStack().playBackStack();
 
     if (!_shown)
     {
@@ -218,8 +228,6 @@ public class MBDialogController extends ContextWrapper
       _clearDialog = false;
       _queuedPages.clear();
     }
-
-    getFragmentStack().playBackStack();
 
     if (_configurationChanged != null)
     {

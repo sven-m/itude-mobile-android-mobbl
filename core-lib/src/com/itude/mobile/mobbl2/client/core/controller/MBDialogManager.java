@@ -200,7 +200,12 @@ public class MBDialogManager extends MBBaseLifecycleListener
     MBDialogController dialog = _controllerMap.get(dialogName);
     if (dialog == null) return false;// throw new MBException("No dialog " + dialogName + " found!");
 
+    // since inner dialog names map to the encompassing dialogcontroller,
+    // it is possible the same controller is being activated, while having a
+    // different name
     MBDialogController current = getActiveDialog();
+    if (current == dialog) return false;
+
     if (current != null)
     {
       current.deactivate();

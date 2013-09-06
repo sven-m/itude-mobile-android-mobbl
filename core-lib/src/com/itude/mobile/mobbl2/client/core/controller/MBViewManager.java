@@ -709,7 +709,7 @@ public class MBViewManager extends FragmentActivity
 
   public void endModalDialog(String modalPageID)
   {
-    getActiveDialog().endModalPage(modalPageID);
+    if (getActiveDialog() != null) getActiveDialog().endModalPage(modalPageID);
   }
 
   public void endModalDialog()

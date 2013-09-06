@@ -231,10 +231,6 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
       }
 
       MBDocument document = getDocument();
-      if (document.getName().equals("MBEmpty"))
-      {
-        getDocument();
-      }
 
       if (def.isPreConditionValid(document, absoluteDataPath))
       {
