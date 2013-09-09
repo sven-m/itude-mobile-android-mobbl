@@ -42,7 +42,6 @@ import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
-import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowChangeType;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.helper.MBSecurityHelper;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThreadHandler;
@@ -627,40 +626,11 @@ public class MBViewManager extends FragmentActivity
     MBDialogController dialogController = _dialogManager.getDialog(topDefinition.getName());
     if (dialogController == null || dialogController.getTemporary())
     {
-      activateDialogWithPage(page);
+      //  activateDialogWithPage(page);
     }
     else
     {
       dialogController.showPage(page, displayMode, page.getDialogName() + page.getPageName(), page.getDialogName(), addToBackStack);
-    }
-  }
-
-  private void activateDialogWithPage(MBPage page)
-  {
-    if (page != null)
-    {
-      String dialogName = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(page.getDialogName()).getName();
-      Log.d(Constants.APPLICATION_NAME, "MBViewManager.activateDialogWithPage: dialogName=" + dialogName);
-
-      if (dialogName != null) _dialogManager.activateDialog(dialogName);
-
-      MBDialogController dialog = _dialogManager.getActiveDialog();
-
-      //
-      String id = page.getDialogName() + page.getPageName();
-      MBApplicationController.getInstance().setPage(id, page);
-
-      // TODO: move to dialogManager 
-      setTitle(MBLocalizationService.getInstance().getTextForKey("Blerp" /*dialog.getTitle()*/));
-      //setContentView(view);
-
-      MBBasicViewController vc = _dialogManager.getActiveDialog().findFragment(id);
-
-      if (vc != null)
-      {
-        MBApplicationController.getInstance().changedWindow(vc, WindowChangeType.ACTIVATE);
-      }
-
     }
   }
 

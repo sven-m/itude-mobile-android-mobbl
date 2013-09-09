@@ -67,7 +67,7 @@ public class MBDialogManager extends MBBaseLifecycleListener
 
     // Fix for https://mobiledev.itude.com/jira/browse/BINCKRETAILSLA-541
     MBDialogController dc = getActiveDialog();
-    dc.removeOnBackStackChangedListenerOfCurrentDialog();
+    if (dc != null) dc.removeOnBackStackChangedListenerOfCurrentDialog();
 
   }
 

@@ -32,10 +32,11 @@ import com.itude.mobile.mobbl2.client.core.util.MBPathUtil;
 
 public class MBElementContainer implements Parcelable
 {
-  private Map<String, List<MBElement>> _elements;       // Dictionaryoflistsofelements
+  private static final List<MBElement> EMPTY_LIST = Collections.emptyList();
+  private Map<String, List<MBElement>> _elements;                           // Dictionaryoflistsofelements
   private MBElementContainer           _parent;
 
-  private boolean                      _looping = false;
+  private boolean                      _looping   = false;
 
   public MBElementContainer()
   {
@@ -235,7 +236,7 @@ public class MBElementContainer implements Parcelable
     element.setParent(this);
 
     List<MBElement> elemContainer = getElementsWithName(name);
-    if (elemContainer == null)
+    if (elemContainer == EMPTY_LIST)
     {
       elemContainer = new ArrayList<MBElement>();
       _elements.put(name, elemContainer);
@@ -384,9 +385,7 @@ public class MBElementContainer implements Parcelable
       List<MBElement> result = _elements.get(name);
       if (result == null)
       {
-        if (_looping) throw new ConcurrentModificationException();
-        result = new ArrayList<MBElement>();
-        _elements.put(name, result);
+        return EMPTY_LIST;
       }
 
       return result;
