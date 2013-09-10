@@ -6,18 +6,46 @@ import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicator
 import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicator.Type;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 
-public abstract class MBOutcomeTask implements Runnable
+public abstract class MBOutcomeTask<Result> implements Runnable
 {
   private final MBOutcomeTaskManager _manager;
+
+  public static class ResultContainer<T>
+  {
+    private T result;
+
+    public void setResult(T result)
+    {
+      this.result = result;
+    }
+
+    public T getResult()
+    {
+      return result;
+    }
+  }
 
   protected static enum Threading {
     CURRENT, UI, BACKGROUND,
   };
 
+  private final ResultContainer<Result> _container;
+
   public MBOutcomeTask(MBOutcomeTaskManager manager)
   {
     AssertUtil.notNull("manager", manager);
     _manager = manager;
+    _container = new ResultContainer<Result>();
+  }
+
+  public ResultContainer<Result> getResultContainer()
+  {
+    return _container;
+  }
+
+  protected void setResult(Result result)
+  {
+    _container.setResult(result);
   }
 
   protected MBOutcome getOutcome()

@@ -137,7 +137,13 @@ public class MBOutcomeRunner
         if (actionDef != null) manager.addTask(new MBActionTask(manager, actionDef));
 
         MBPageDefinition pageDef = metadataService.getDefinitionForPageName(outcome.getAction(), false);
-        if (pageDef != null) manager.addTask(new MBPageTask(manager, pageDef));
+        if (pageDef != null)
+        {
+
+          MBPageTask pageTask = new MBPageTask(manager, pageDef);
+          manager.addTask(pageTask);
+          manager.addTask(new MBShowPageTask(manager, pageTask.getResultContainer()));
+        }
 
         MBAlertDefinition alertDef = metadataService.getDefinitionForAlertName(outcome.getAction(), false);
         if (alertDef != null) manager.addTask(new MBAlertTask(manager, alertDef));
