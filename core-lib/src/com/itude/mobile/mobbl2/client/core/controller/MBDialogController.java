@@ -184,7 +184,7 @@ public class MBDialogController extends ContextWrapper
 
   public void activate()
   {
-    // this is intentionally not done with runOnUIThread, to make sure the fragment transaction that gets commited in activateWithoutSwitching is run after
+    // this is intentionally not done with runOnUIThread, to make sure the fragment transaction that gets committed in activateWithoutSwitching is run after
     // the .setContentView call as soon as possible
     new Handler().post(new MBThread()
     {

@@ -1,5 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
+import static com.itude.mobile.android.util.ComparisonUtil.coalesce;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -27,6 +28,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
   private MBDocument _document;
   private String     _preCondition;
   private String     _indicator;
+  private String     _action;
 
   public String getOriginName()
   {
@@ -143,6 +145,16 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
     _indicator = indicator;
   }
 
+  public String getAction()
+  {
+    return _action;
+  }
+
+  public void setAction(String action)
+  {
+    _action = action;
+  }
+
   public String getIndicator()
   {
     return _indicator;
@@ -163,6 +175,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
     _preCondition = outcome.getPreCondition();
     _noBackgroundProcessing = outcome.getNoBackgroundProcessing();
     _indicator = outcome.getIndicator();
+    _action = outcome.getAction();
   }
 
   public MBOutcome(MBOutcomeDefinition definition)
@@ -179,6 +192,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
     _path = null;
     _preCondition = definition.getPreCondition();
     _indicator = definition.getIndicator();
+    _action = definition.getAction();
   }
 
   public MBOutcome(String outcomeName, MBDocument document)
@@ -240,6 +254,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
     _persist = data.getBoolean("persist");
     _transferDocument = data.getBoolean("transferDocument");
     _noBackgroundProcessing = data.getBoolean("noBackgroundProcessing");
+    _action = data.getString("action");
 
     _document = data.getParcelable("document");
 
@@ -268,6 +283,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
     data.putBoolean("persist", _persist);
     data.putBoolean("transferDocument", _transferDocument);
     data.putBoolean("noBackgroundProcessing", _noBackgroundProcessing);
+    data.putString("action", _action);
 
     data.putParcelable("document", _document);
 
@@ -298,6 +314,24 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
   {
     return "Outcome: dialog=" + getDialogName() + " originName=" + getOriginName() + " outcomeName=" + getOutcomeName() + " path="
            + getPath() + " persist=" + getPersist() + " displayMode=" + getDisplayMode() + " preCondition=" + getPreCondition()
-           + " noBackgroundProsessing=" + getNoBackgroundProcessing();
+           + " noBackgroundProsessing=" + getNoBackgroundProcessing() + " action = " + getAction();
+  }
+
+  public MBOutcome createCopy(MBOutcomeDefinition outcomeDef)
+  {
+    MBOutcome outcomeToProcess = new MBOutcome(outcomeDef);
+    outcomeToProcess.setPath(getPath());
+    outcomeToProcess.setDocument(getDocument());
+    outcomeToProcess.setNoBackgroundProcessing(getNoBackgroundProcessing() || outcomeDef.getNoBackgroundProcessing());
+    outcomeToProcess.setPersist(getPersist() || outcomeDef.getPersist());
+
+    // note that the precedence of either this' or outcomeDef's values are not identical; this is not a mistake
+    outcomeToProcess.setIndicator(coalesce(getIndicator(), outcomeDef.getIndicator()));
+    outcomeToProcess.setDialogName(coalesce(outcomeDef.getDialog(), getDialogName()));
+    outcomeToProcess.setDisplayMode(coalesce(getDisplayMode(), outcomeDef.getDisplayMode()));
+    outcomeToProcess.setOriginDialogName(coalesce(getOriginDialogName(), outcomeToProcess.getDialogName()));
+    outcomeToProcess.setAction(coalesce(getAction(), outcomeDef.getAction()));
+
+    return outcomeToProcess;
   }
 }

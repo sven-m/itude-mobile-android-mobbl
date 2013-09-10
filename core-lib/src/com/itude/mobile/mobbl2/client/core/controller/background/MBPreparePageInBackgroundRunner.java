@@ -1,23 +1,48 @@
 package com.itude.mobile.mobbl2.client.core.controller.background;
 
-import android.util.Log;
-
+import com.itude.mobile.android.util.AssertUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
+import com.itude.mobile.mobbl2.client.core.controller.background.MBPreparePageInBackgroundRunner.PageBuildResult;
 import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicator;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
-import com.itude.mobile.mobbl2.client.core.util.Constants;
 
-public class MBPreparePageInBackgroundRunner extends MBApplicationControllerBackgroundRunner
+public class MBPreparePageInBackgroundRunner extends MBApplicationControllerBackgroundRunner<PageBuildResult>
 {
-  private final MBIndicator _indicator;
-  private MBOutcome         _outcome            = null;
-  private String            _pageName           = null;
-  private boolean           _backStackEnabled   = true;
-
-  public MBPreparePageInBackgroundRunner(MBIndicator indicator)
+  public static interface Callback
   {
+    public void onPagePrepared(PageBuildResult result);
+  }
+
+  public static class PageBuildResult
+  {
+    public final MBOutcome        outcome;
+    public final MBPageDefinition pageDef;
+    public final MBDocument       document;
+    public final boolean          backstackEnabled;
+
+    public PageBuildResult(MBOutcome outcome, MBPageDefinition pageDef, MBDocument document, boolean backstackEnabled)
+    {
+      this.outcome = outcome;
+      this.pageDef = pageDef;
+      this.document = document;
+      this.backstackEnabled = backstackEnabled;
+
+    }
+  }
+
+  private final MBIndicator _indicator;
+  private MBOutcome         _outcome          = null;
+  private String            _pageName         = null;
+  private boolean           _backStackEnabled = true;
+  private final Callback    _callback;
+
+  public MBPreparePageInBackgroundRunner(MBIndicator indicator, Callback callback)
+  {
+    AssertUtil.notNull("indicator", indicator);
+    AssertUtil.notNull("callback", callback);
     _indicator = indicator;
+    _callback = callback;
 
   }
 
@@ -25,7 +50,6 @@ public class MBPreparePageInBackgroundRunner extends MBApplicationControllerBack
   {
     _outcome = mbOutcome;
   }
-
 
   public void setPageName(String name)
   {
@@ -38,33 +62,18 @@ public class MBPreparePageInBackgroundRunner extends MBApplicationControllerBack
   }
 
   @Override
-  protected Object[] doInBackground(Object[]... params)
+  protected PageBuildResult doInBackground(Object[]... params)
   {
     try
     {
-      Object[] result = getController().preparePage(_outcome, _pageName,  _backStackEnabled);
+      PageBuildResult result = getController().preparePage(_outcome, _pageName, _backStackEnabled);
+      _callback.onPagePrepared(result);
+
       return result;
     }
     finally
     {
       _indicator.release();
-    }
-  }
-
-  @Override
-  protected void onPostExecute(Object[] result)
-  {
-    if (result != null)
-    {
-      MBOutcome outcome = (MBOutcome) result[0];
-      MBPageDefinition pageDefinition = (MBPageDefinition) result[1];
-      MBDocument document = (MBDocument) result[2];
-      boolean backStackEnabled = (Boolean) result[3];
-      getController().showResultingPage(outcome, pageDefinition, document, backStackEnabled);
-    }
-    else
-    {
-      Log.d(Constants.APPLICATION_NAME, "Not showing page, since (presumably) an exception occurred while building it");
     }
   }
 

@@ -33,6 +33,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBActionBarInvalidationOption;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
+import com.itude.mobile.mobbl2.client.core.controller.background.MBPreparePageInBackgroundRunner.PageBuildResult;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBInvalidOutcomeException;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
@@ -248,9 +249,9 @@ public class MBApplicationController extends Application
 
   ////////////// PAGE HANDLING
 
-  public Object[] preparePage(MBOutcome causingOutcome, String pageName, Boolean backStackEnabled)
+  public PageBuildResult preparePage(MBOutcome causingOutcome, String pageName, Boolean backStackEnabled)
   {
-    Object[] result = null;
+    PageBuildResult result = null;
     try
     {
 
@@ -258,16 +259,7 @@ public class MBApplicationController extends Application
       MBPageDefinition pageDefinition = MBMetadataService.getInstance().getDefinitionForPageName(pageName);
 
       MBDocument document = prepareDocument(causingOutcome, pageDefinition.getDocumentName());
-      if (causingOutcome.getNoBackgroundProcessing())
-      {
-        showResultingPage(causingOutcome, pageDefinition, document, backStackEnabled);
-      }
-      else
-      {
-        // calling AsyncTask calls showResultingPage in UI thread.
-        Object[] backgroundResult = {causingOutcome, pageDefinition, document, backStackEnabled};
-        result = backgroundResult;
-      }
+      result = new PageBuildResult(causingOutcome, pageDefinition, document, backStackEnabled);
     }
     catch (Exception e)
     {
@@ -276,12 +268,11 @@ public class MBApplicationController extends Application
     return result;
   }
 
-  public void showResultingPage(final MBOutcome causingOutcome, MBPageDefinition pageDefinition, MBDocument document,
-                                final boolean backStackEnabled)
+  public void showResultingPage(final PageBuildResult result)
   {
     try
     {
-      final String displayMode = causingOutcome.getDisplayMode();
+      final String displayMode = result.outcome.getDisplayMode();
 
       MBViewState viewState = MBViewState.MBViewStatePlain;
       if ("MODAL".equals(displayMode) //
@@ -299,10 +290,10 @@ public class MBApplicationController extends Application
         viewState = MBViewState.MBViewStateModal;
       }
 
-      final MBPage page = _applicationFactory.getPageConstructor()
-          .createPage(pageDefinition, document, causingOutcome.getPath(), viewState);
+      final MBPage page = _applicationFactory.getPageConstructor().createPage(result.pageDef, result.document, result.outcome.getPath(),
+                                                                              viewState);
       page.setController(this);
-      page.setDialogName(causingOutcome.getDialogName());
+      page.setDialogName(result.outcome.getDialogName());
       // Fallback on the lastly selected dialog if there is no dialog set in the outcome:
       if (page.getDialogName() == null)
       {
@@ -314,15 +305,15 @@ public class MBApplicationController extends Application
         @Override
         public void runMethod()
         {
-          if (!_suppressPageSelection && causingOutcome.getDialogName() != null && !"BACKGROUND".equals(causingOutcome.getDisplayMode())) _viewManager
-              .activateDialogWithName(causingOutcome.getDialogName());
-          _viewManager.showPage(page, displayMode, backStackEnabled);
+          if (!_suppressPageSelection && result.outcome.getDialogName() != null && !"BACKGROUND".equals(result.outcome.getDisplayMode())) _viewManager
+              .activateDialogWithName(result.outcome.getDialogName());
+          _viewManager.showPage(page, displayMode, result.backstackEnabled);
         }
       });
     }
     catch (Exception e)
     {
-      handleException(e, causingOutcome);
+      handleException(e, result.outcome);
     }
   }
 
@@ -444,7 +435,7 @@ public class MBApplicationController extends Application
       else
       {
         if ("BACKGROUND".equals(causingOutcome.getDisplayMode())) causingOutcome.setDisplayMode("BACKGROUND");
-        
+
         // TODO difference between nonbackground or background processing should be implemented
         if (causingOutcome.getNoBackgroundProcessing())
         {

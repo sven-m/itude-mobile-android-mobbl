@@ -4,7 +4,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
 import com.itude.mobile.mobbl2.client.core.controller.util.indicator.MBIndicator;
 
-public class MBPerformActionInBackgroundRunner extends MBApplicationControllerBackgroundRunner
+public class MBPerformActionInBackgroundRunner extends MBApplicationControllerBackgroundRunner<Object[]>
 {
 
   final MBIndicator  _indicator;

@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 
-public class MBApplicationControllerBackgroundRunner extends AsyncTask<Object[], int[], Object[]>
+public class MBApplicationControllerBackgroundRunner<Result> extends AsyncTask<Object[], int[], Result>
 {
 
   private MBApplicationController _controller = null;
@@ -20,13 +20,13 @@ public class MBApplicationControllerBackgroundRunner extends AsyncTask<Object[],
   }
 
   @Override
-  protected void onPostExecute(Object[] result)
+  protected void onPostExecute(Result result)
   {
     super.onPostExecute(result);
   }
 
   @Override
-  protected Object[] doInBackground(Object[]... params)
+  protected Result doInBackground(Object[]... params)
   {
     return null;
   }
