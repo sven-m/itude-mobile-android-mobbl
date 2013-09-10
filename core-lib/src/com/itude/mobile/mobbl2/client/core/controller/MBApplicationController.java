@@ -33,7 +33,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBActionBarInvalidationOption;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBViewState;
-import com.itude.mobile.mobbl2.client.core.controller.background.MBPreparePageInBackgroundRunner.PageBuildResult;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBInvalidOutcomeException;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
@@ -46,7 +45,6 @@ import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowCha
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBNoDocumentException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.imagecache.ImageUtil;
-import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.MBAlert;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 
@@ -249,9 +247,23 @@ public class MBApplicationController extends Application
 
   ////////////// PAGE HANDLING
 
-  public PageBuildResult preparePage(MBOutcome causingOutcome, String pageName, Boolean backStackEnabled)
+  public static class PageBuildResult
   {
-    PageBuildResult result = null;
+    public final MBOutcome outcome;
+    public final MBPage    page;
+    public final boolean   backstackEnabled;
+
+    public PageBuildResult(MBOutcome outcome, MBPage page, boolean backstackEnabled)
+    {
+      this.outcome = outcome;
+      this.page = page;
+      this.backstackEnabled = backstackEnabled;
+
+    }
+  }
+
+  public PageBuildResult preparePage(MBOutcome causingOutcome, String pageName, boolean backStackEnabled)
+  {
     try
     {
 
@@ -259,20 +271,8 @@ public class MBApplicationController extends Application
       MBPageDefinition pageDefinition = MBMetadataService.getInstance().getDefinitionForPageName(pageName);
 
       MBDocument document = prepareDocument(causingOutcome, pageDefinition.getDocumentName());
-      result = new PageBuildResult(causingOutcome, pageDefinition, document, backStackEnabled);
-    }
-    catch (Exception e)
-    {
-      handleException(e, causingOutcome);
-    }
-    return result;
-  }
 
-  public void showResultingPage(final PageBuildResult result)
-  {
-    try
-    {
-      final String displayMode = result.outcome.getDisplayMode();
+      final String displayMode = causingOutcome.getDisplayMode();
 
       MBViewState viewState = MBViewState.MBViewStatePlain;
       if ("MODAL".equals(displayMode) //
@@ -290,26 +290,32 @@ public class MBApplicationController extends Application
         viewState = MBViewState.MBViewStateModal;
       }
 
-      final MBPage page = _applicationFactory.getPageConstructor().createPage(result.pageDef, result.document, result.outcome.getPath(),
-                                                                              viewState);
+      final MBPage page = _applicationFactory.getPageConstructor()
+          .createPage(pageDefinition, document, causingOutcome.getPath(), viewState);
       page.setController(this);
-      page.setDialogName(result.outcome.getDialogName());
+      page.setDialogName(causingOutcome.getDialogName());
       // Fallback on the lastly selected dialog if there is no dialog set in the outcome:
       if (page.getDialogName() == null)
       {
         page.setDialogName(getActiveDialogName());
       }
-      _viewManager.runOnUiThread(new MBThread(page)
-      {
 
-        @Override
-        public void runMethod()
-        {
-          if (!_suppressPageSelection && result.outcome.getDialogName() != null && !"BACKGROUND".equals(result.outcome.getDisplayMode())) _viewManager
-              .activateDialogWithName(result.outcome.getDialogName());
-          _viewManager.showPage(page, displayMode, result.backstackEnabled);
-        }
-      });
+      PageBuildResult result = new PageBuildResult(causingOutcome, page, backStackEnabled);
+      return result;
+    }
+    catch (Exception e)
+    {
+      handleException(e, causingOutcome);
+      return null;
+    }
+  }
+
+  public void showResultingPage(final PageBuildResult result)
+  {
+    try
+    {
+
+      _viewManager.showPage(result.page, result.outcome.getDisplayMode(), result.backstackEnabled);
     }
     catch (Exception e)
     {
@@ -434,7 +440,7 @@ public class MBApplicationController extends Application
       }
       else
       {
-        if ("BACKGROUND".equals(causingOutcome.getDisplayMode())) causingOutcome.setDisplayMode("BACKGROUND");
+        if ("BACKGROUND".equals(causingOutcome.getDisplayMode())) actionOutcome.setDisplayMode("BACKGROUND");
 
         // TODO difference between nonbackground or background processing should be implemented
         if (causingOutcome.getNoBackgroundProcessing())
@@ -818,5 +824,10 @@ public class MBApplicationController extends Application
   public void setApplicationState(ApplicationState state)
   {
     _currentApplicationState = state;
+  }
+
+  public boolean isSuppressPageSelection()
+  {
+    return _suppressPageSelection;
   }
 }

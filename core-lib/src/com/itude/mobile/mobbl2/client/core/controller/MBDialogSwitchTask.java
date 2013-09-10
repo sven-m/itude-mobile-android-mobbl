@@ -59,6 +59,10 @@ public class MBDialogSwitchTask extends MBOutcomeTask
     {
       viewManager.endDialog(getOutcome().getDialogName(), false);
     }
+    else if (getOutcome().getDialogName() != null && !"BACKGROUND".equals(getOutcome().getDisplayMode())
+             && !applicationController.isSuppressPageSelection()) viewManager.getDialogManager().activateDialog(getOutcome()
+                                                                                                                    .getDialogName());
+
   }
 
 }

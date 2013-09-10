@@ -3,7 +3,7 @@ package com.itude.mobile.mobbl2.client.core.controller;
 import android.util.Log;
 
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
-import com.itude.mobile.mobbl2.client.core.controller.background.MBPreparePageInBackgroundRunner.PageBuildResult;
+import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController.PageBuildResult;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBPageTask extends MBOutcomeTask<PageBuildResult>

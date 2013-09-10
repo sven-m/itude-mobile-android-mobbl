@@ -1,6 +1,6 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
-import com.itude.mobile.mobbl2.client.core.controller.background.MBPreparePageInBackgroundRunner.PageBuildResult;
+import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController.PageBuildResult;
 
 public class MBShowPageTask extends MBOutcomeTask<Object>
 {
