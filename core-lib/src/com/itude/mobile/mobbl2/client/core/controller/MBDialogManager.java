@@ -187,10 +187,12 @@ public class MBDialogManager extends MBBaseLifecycleListener
       }
   }
 
-  public boolean activateHome()
+  public void activateHome()
   {
     MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
-    return activateDialog(homeDialogDefinition.getName());
+    MBOutcome outcome = new MBOutcome(homeDialogDefinition.getName(), null);
+    outcome.setOriginName(homeDialogDefinition.getName());
+    MBApplicationController.getInstance().handleOutcome(outcome);
   }
 
   public boolean activateDialog(String dialogName)

@@ -31,7 +31,6 @@ import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
-import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPathException;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController.ApplicationState;
@@ -329,7 +328,7 @@ public class MBViewManager extends FragmentActivity
     if (getActiveDialog() != null) handled = getActiveDialog().onMenuItemSelected(featureId, item);
     if (!handled && !super.onMenuItemSelected(featureId, item))
     {
-      activateOrCreateDialogWithID(item.getItemId());
+      activateDialogWithID(item.getItemId());
 
     }
     return true;
@@ -373,53 +372,10 @@ public class MBViewManager extends FragmentActivity
   }
 
   // Activate a dialog based on the hashed Name
-  public void activateOrCreateDialogWithID(int itemId)
+  public void activateDialogWithID(int itemId)
   {
     for (MBDialogDefinition dialogDefinition : MBMetadataService.getInstance().getDialogs())
-    {
-      if (itemId == dialogDefinition.getName().hashCode())
-      {
-        if (!getActiveDialog().getName().equals(dialogDefinition.getName()))
-        {
-          boolean activated = activateDialogWithName(dialogDefinition.getName());
-          if (!activated)
-          {
-            if (dialogDefinition.isGroup())
-            {
-              MBDialogGroupDefinition dialogGroupDefinition = (MBDialogGroupDefinition) dialogDefinition;
-              for (MBDialogDefinition childDef : dialogGroupDefinition.getChildren())
-              {
-                createDialogWithID(childDef);
-              }
-
-            }
-            else
-            {
-              createDialogWithID(dialogDefinition);
-            }
-          }
-        }
-        else
-        {
-          getActiveDialog().clearAllViews();
-        }
-      }
-    }
-  }
-
-  protected void createDialogWithID(MBDialogDefinition dialogDefinition)
-  {
-    if (StringUtil.isNotBlank(dialogDefinition.getAction()))
-    {
-      MBOutcome oc = new MBOutcome();
-      oc.setOutcomeName(dialogDefinition.getAction());
-      oc.setDialogName(dialogDefinition.getName());
-      oc.setNoBackgroundProcessing(true);
-      oc.setTransferDocument(false);
-      oc.setDisplayMode(Constants.C_DISPLAY_MODE_REPLACE);
-
-      MBApplicationController.getInstance().getOutcomeHandler().handleOutcomeSynchronously(oc, false);
-    }
+      if (itemId == dialogDefinition.getName().hashCode()) activateDialogWithName(dialogDefinition.getName());
   }
 
   @SuppressLint("NewApi")
@@ -642,7 +598,10 @@ public class MBViewManager extends FragmentActivity
 
   public boolean activateDialogWithName(String dialogName)
   {
-    return _dialogManager.activateDialog(dialogName);
+    MBOutcome outcome = new MBOutcome(dialogName, null);
+    outcome.setOriginName(dialogName);
+    MBApplicationController.getInstance().handleOutcome(outcome);
+    return false;
   }
 
   public void endDialog(String dialogName, boolean keepPosition)

@@ -654,11 +654,6 @@ public class MBApplicationController extends Application
     return result;
   }
 
-  public void activateDialogWithName(String name)
-  {
-    _viewManager.activateDialogWithName(name);
-  }
-
   public void resetController()
   {
     _viewManager.resetView();

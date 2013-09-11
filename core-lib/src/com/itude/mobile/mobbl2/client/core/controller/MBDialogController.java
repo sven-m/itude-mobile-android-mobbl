@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.BackStackEntry;
@@ -41,7 +40,6 @@ import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
-import com.itude.mobile.mobbl2.client.core.util.threads.exception.MBInterruptedException;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBDialogViewBuilder.MBDialogType;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
@@ -184,28 +182,18 @@ public class MBDialogController extends ContextWrapper
 
   public void activate()
   {
-    // this is intentionally not done with runOnUIThread, to make sure the fragment transaction that gets committed in activateWithoutSwitching is run after
-    // the .setContentView call as soon as possible
-    new Handler().post(new MBThread()
+    try
     {
-      @Override
-      public void runMethod() throws MBInterruptedException
-      {
-        try
-        {
-          getActivity().setContentView(_mainContainer);
-          activateWithoutSwitching();
-          getSupportFragmentManager().executePendingTransactions();
-          getActivity().setTitle(_title);
-        }
-        catch (Throwable t)
-        {
-          // panic?
-          throw new MBException("Meh!", t);
-        }
-      }
-    });
-
+      getActivity().setContentView(_mainContainer);
+      activateWithoutSwitching();
+      getSupportFragmentManager().executePendingTransactions();
+      getActivity().setTitle(_title);
+    }
+    catch (Throwable t)
+    {
+      // panic?
+      throw new MBException("Meh!", t);
+    }
   }
 
   public void activateWithoutSwitching()

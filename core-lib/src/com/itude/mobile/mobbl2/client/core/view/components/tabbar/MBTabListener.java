@@ -22,13 +22,13 @@ public class MBTabListener implements MBTabListenerI
   @Override
   public void onTabReselected(MBTab tab)
   {
-    MBViewManager.getInstance().activateOrCreateDialogWithID(_dialogId);
+    MBViewManager.getInstance().activateDialogWithID(_dialogId);
   }
 
   @Override
   public void onTabSelected(MBTab tab)
   {
-    MBViewManager.getInstance().activateOrCreateDialogWithID(_dialogId);
+    MBViewManager.getInstance().activateDialogWithID(_dialogId);
   }
 
   @Override
