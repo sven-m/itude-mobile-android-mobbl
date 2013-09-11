@@ -71,6 +71,7 @@ public class MBViewManager extends FragmentActivity
   private int                    _defaultScreenOrientation;
 
   private MBDialogManager        _dialogManager;
+  private MBShutdownHandler      _shutdownHandler    = new MBDefaultShutdownHandler();
 
   ///////////////////// Android lifecycle methods
 
@@ -263,28 +264,7 @@ public class MBViewManager extends FragmentActivity
     }
     else
     {
-      String message = MBLocalizationService.getInstance().getTextForKey("close app message");
-      String positive = MBLocalizationService.getInstance().getTextForKey("close app positive button");
-      String negative = MBLocalizationService.getInstance().getTextForKey("close app negative button");
-      new AlertDialog.Builder(this).setMessage(message).setPositiveButton(positive, new OnClickListener()
-      {
-
-        @Override
-        public void onClick(DialogInterface dialog, int which)
-        {
-          MBSecurityHelper.getInstance().logOutIfCheckNotSelected();
-          finish();
-        }
-      }).setNegativeButton(negative, new OnClickListener()
-      {
-
-        @Override
-        public void onClick(DialogInterface dialog, int which)
-        {
-          dialog.dismiss();
-        }
-      }).show();
-
+      getShutdownHandler().onShutdown();
     }
 
   }
@@ -901,5 +881,15 @@ public class MBViewManager extends FragmentActivity
   public MBDialogManager getDialogManager()
   {
     return _dialogManager;
+  }
+
+  public MBShutdownHandler getShutdownHandler()
+  {
+    return _shutdownHandler;
+  }
+
+  public void setShutdownHandler(MBShutdownHandler shutdownHandler)
+  {
+    _shutdownHandler = shutdownHandler;
   }
 }

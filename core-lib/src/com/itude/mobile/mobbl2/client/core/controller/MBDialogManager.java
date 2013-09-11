@@ -195,7 +195,7 @@ public class MBDialogManager extends MBBaseLifecycleListener
     MBApplicationController.getInstance().handleOutcome(outcome);
   }
 
-  public boolean activateDialog(String dialogName)
+  boolean activateDialog(String dialogName)
   {
     if (ComparisonUtil.safeEquals(_activeDialog, dialogName)) return false;
 
