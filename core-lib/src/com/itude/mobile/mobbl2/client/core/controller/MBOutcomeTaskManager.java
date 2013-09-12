@@ -6,22 +6,22 @@ import java.util.Queue;
 public class MBOutcomeTaskManager
 {
 
-  private final Queue<MBOutcomeTask> _tasks;
-  private final MBOutcome            _outcome;
+  private final Queue<MBOutcomeTask<?>> _tasks;
+  private final MBOutcome               _outcome;
 
   public MBOutcomeTaskManager(MBOutcome outcome)
   {
     _outcome = outcome;
-    _tasks = new LinkedList<MBOutcomeTask>();
+    _tasks = new LinkedList<MBOutcomeTask<?>>();
   }
 
   public void run()
   {
-    MBOutcomeTask task = _tasks.poll();
+    MBOutcomeTask<?> task = _tasks.poll();
     if (task != null) task.start();
   }
 
-  public void addTask(MBOutcomeTask task)
+  public void addTask(MBOutcomeTask<?> task)
   {
     _tasks.add(task);
   }
@@ -31,7 +31,7 @@ public class MBOutcomeTaskManager
     return _outcome;
   }
 
-  public void finished(MBOutcomeTask task)
+  public void finished(MBOutcomeTask<?> task)
   {
     run();
   }

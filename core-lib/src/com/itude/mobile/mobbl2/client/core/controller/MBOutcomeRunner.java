@@ -131,7 +131,8 @@ public class MBOutcomeRunner
       if (outcome.isPreConditionValid())
       {
         MBActionDefinition actionDef = metadataService.getDefinitionForActionName(outcome.getAction(), false);
-        if (actionDef != null) manager.addTask(new MBActionTask(manager, actionDef));
+        MBActionTask actionTask = null;
+        if (actionDef != null) manager.addTask(actionTask = new MBActionTask(manager, actionDef));
 
         MBPageDefinition pageDef = metadataService.getDefinitionForPageName(outcome.getAction(), false);
         if (pageDef != null)
@@ -146,6 +147,11 @@ public class MBOutcomeRunner
 
         MBAlertDefinition alertDef = metadataService.getDefinitionForAlertName(outcome.getAction(), false);
         if (alertDef != null) manager.addTask(new MBAlertTask(manager, alertDef));
+
+        if (actionTask != null)
+        {
+          manager.addTask(new MBFollowUpActionTask(manager, actionTask.getResultContainer()));
+        }
 
       }
     }

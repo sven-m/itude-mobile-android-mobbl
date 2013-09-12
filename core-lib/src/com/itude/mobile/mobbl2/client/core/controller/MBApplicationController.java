@@ -23,6 +23,7 @@ import android.util.Log;
 
 import com.itude.mobile.android.util.AssertUtil;
 import com.itude.mobile.android.util.CollectionUtilities;
+import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.mobbl2.client.core.MBException;
@@ -418,7 +419,7 @@ public class MBApplicationController extends Application
 
   ////////ACTION HANDLING
 
-  public void performAction(MBOutcome causingOutcome, MBActionDefinition actionDef)
+  public MBOutcome performAction(MBOutcome causingOutcome, MBActionDefinition actionDef)
   {
     AssertUtil.notNull("causingOutcome", causingOutcome);
     AssertUtil.notNull("actionDef", actionDef);
@@ -441,38 +442,17 @@ public class MBApplicationController extends Application
       else
       {
         if ("BACKGROUND".equals(causingOutcome.getDisplayMode())) actionOutcome.setDisplayMode("BACKGROUND");
-
-        // TODO difference between nonbackground or background processing should be implemented
-        if (causingOutcome.getNoBackgroundProcessing())
-        {
-          handleActionResult(causingOutcome, actionDef, actionOutcome);
-        }
-        else
-        {
-          handleActionResult(causingOutcome, actionDef, actionOutcome);
-        }
+        actionOutcome.setDialogName(ComparisonUtil.coalesce(actionOutcome.getDialogName(), causingOutcome.getDialogName()));
+        actionOutcome.setOriginName(actionDef.getName());
+        return actionOutcome;
       }
     }
     catch (Exception e)
     {
       handleException(e, causingOutcome);
     }
+    return null;
 
-  }
-
-  private void handleActionResult(MBOutcome causingOutcome, MBActionDefinition actionDef, MBOutcome actionOutcome)
-  {
-    try
-    {
-      if (actionOutcome.getDialogName() == null) actionOutcome.setDialogName(causingOutcome.getDialogName());
-      actionOutcome.setOriginName(actionDef.getName());
-
-      _outcomeHandler.handleOutcomeSynchronously(actionOutcome, false);
-    }
-    catch (Exception e)
-    {
-      handleException(e, causingOutcome);
-    }
   }
 
   ////////END OF ACTION HANDLING
