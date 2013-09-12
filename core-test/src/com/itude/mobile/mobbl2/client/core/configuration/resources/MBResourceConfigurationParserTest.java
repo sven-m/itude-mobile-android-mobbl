@@ -1,6 +1,7 @@
 package com.itude.mobile.mobbl2.client.core.configuration.resources;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.test.ApplicationTestCase;
 
@@ -77,7 +78,7 @@ public class MBResourceConfigurationParserTest extends ApplicationTestCase<MBApp
     // Test bundles
     for (int j = 0; j < bundleIds.length; j++)
     {
-      ArrayList<MBBundleDefinition> bundles = (ArrayList<MBBundleDefinition>) configuration.getBundlesForLanguageCode(bundleIds[j]);
+      List<MBBundleDefinition> bundles = configuration.getBundlesForLanguageCode(bundleIds[j]);
       MBBundleDefinition bundle = bundles.get(0);
       assertEquals(bundleIds[j], bundle.getLanguageCode());
       assertEquals(bundleValues[j], bundle.getUrl());

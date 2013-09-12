@@ -2,6 +2,7 @@ package com.itude.mobile.mobbl2.client.core.view.builders.panel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -142,7 +143,7 @@ public class MatrixHeaderBuilder extends MBBasePanelBuilder
 
   private void groupChildren(MBPanel panel, ArrayList<MBComponent> matrixLabels, ArrayList<MBComponent> matrixTitles)
   {
-    ArrayList<MBComponent> children = panel.getChildren();
+    List<MBComponent> children = panel.getChildren();
     for (Iterator<MBComponent> iterator = children.iterator(); iterator.hasNext();)
     {
       MBComponent mbComponent = iterator.next();

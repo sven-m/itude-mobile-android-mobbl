@@ -139,6 +139,7 @@ public class MBDialogManager extends MBBaseLifecycleListener
 
   public void reset()
   {
+    _activeDialog = null;
     _activity.runOnUiThread(new MBThread()
     {
       @Override

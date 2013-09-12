@@ -224,7 +224,7 @@ public final class MBMetadataService
   //For now do not raise an exception if an outcome is not defined
   public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(String originName)
   {
-    ArrayList<MBOutcomeDefinition> list = (ArrayList<MBOutcomeDefinition>) _cfg.getOutcomeDefinitionsForOrigin(originName);
+    List<MBOutcomeDefinition> list = _cfg.getOutcomeDefinitionsForOrigin(originName);
     if (list == null || list.size() <= 0)
     {
       Log.w(Constants.APPLICATION_NAME, "WARNING No outcomes defined for origin " + originName + " ");
@@ -240,8 +240,7 @@ public final class MBMetadataService
 
   public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(String originName, String outcomeName, boolean doThrow)
   {
-    ArrayList<MBOutcomeDefinition> outcomeDefs = (ArrayList<MBOutcomeDefinition>) _cfg.getOutcomeDefinitionsForOrigin(originName,
-                                                                                                                      outcomeName);
+    List<MBOutcomeDefinition> outcomeDefs = _cfg.getOutcomeDefinitionsForOrigin(originName, outcomeName);
     if (outcomeDefs.size() == 0 && doThrow)
     {
       String message = "Outcome with originName=" + originName + " outcomeName=" + outcomeName + " not defined";

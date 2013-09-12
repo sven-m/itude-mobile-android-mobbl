@@ -1,10 +1,10 @@
 package com.itude.mobile.mobbl2.client.core.controller;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -589,8 +589,8 @@ public class MBApplicationController extends Application
     MBMetadataService metadataService = MBMetadataService.getInstance();
 
     // See if there is an outcome defined for this particular exception
-    ArrayList<MBOutcomeDefinition> outcomeDefinitions = (ArrayList<MBOutcomeDefinition>) metadataService
-        .getOutcomeDefinitionsForOrigin(outcome.getOriginName(), exception.getClass().getSimpleName(), false);
+    List<MBOutcomeDefinition> outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(outcome.getOriginName(), exception
+        .getClass().getSimpleName(), false);
     if (outcomeDefinitions.size() != 0)
     {
       MBOutcome specificExceptionHandler = new MBOutcome(outcome);
@@ -601,8 +601,7 @@ public class MBApplicationController extends Application
     else
     {
       // There is no specific exception handler defined. So fall back on the generic one
-      outcomeDefinitions = (ArrayList<MBOutcomeDefinition>) metadataService.getOutcomeDefinitionsForOrigin(outcome.getOriginName(),
-                                                                                                           "exception", false);
+      outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(outcome.getOriginName(), "exception", false);
       if (outcomeDefinitions.size() == 0)
       {
         Log.w(Constants.APPLICATION_NAME, "No outcome with origin=" + outcome.getOriginName()

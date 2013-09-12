@@ -10,7 +10,7 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 public class MBComponentContainer extends MBComponent
 {
 
-  private ArrayList<MBComponent> _children;
+  private List<MBComponent> _children;
 
   public MBComponentContainer(MBDefinition definition, MBDocument document, MBComponentContainer parent)
   {
@@ -18,12 +18,12 @@ public class MBComponentContainer extends MBComponent
     _children = new ArrayList<MBComponent>();
   }
 
-  public ArrayList<MBComponent> getChildren()
+  public List<MBComponent> getChildren()
   {
     return _children;
   }
 
-  public void setChildren(ArrayList<MBComponent> children)
+  public void setChildren(List<MBComponent> children)
   {
     _children = children;
   }

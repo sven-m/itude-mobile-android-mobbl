@@ -192,7 +192,7 @@ public class MBDialogController extends ContextWrapper
     catch (Throwable t)
     {
       // panic?
-      throw new MBException("Meh!", t);
+      throw new MBException("Error trying to activate dialog " + getName(), t);
     }
   }
 

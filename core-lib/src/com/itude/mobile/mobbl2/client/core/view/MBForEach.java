@@ -15,8 +15,8 @@ import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 
 public class MBForEach extends MBComponentContainer
 {
-  private ArrayList<MBForEachItem> _rows; // arrayofMBRows
-  private String                   _value;
+  private List<MBForEachItem> _rows; // arrayofMBRows
+  private String              _value;
 
   public MBForEach(MBForEachDefinition definition, MBDocument document, MBComponentContainer parent)
   {
@@ -50,7 +50,7 @@ public class MBForEach extends MBComponentContainer
           MBForEachItem item = new MBForEachItem(getDefinition(), getDocument(), this);
           addItem(item);
 
-          for (MBDefinition childDef : (ArrayList<MBDefinition>) def.getChildren())
+          for (MBDefinition childDef : def.getChildren())
           {
             if (childDef.isPreConditionValid(document, item.getAbsoluteDataPath()))
             {
@@ -78,12 +78,12 @@ public class MBForEach extends MBComponentContainer
 
   }
 
-  public ArrayList<MBForEachItem> getRows()
+  public List<MBForEachItem> getRows()
   {
     return _rows;
   }
 
-  public void setRows(ArrayList<MBForEachItem> rows)
+  public void setRows(List<MBForEachItem> rows)
   {
     _rows = rows;
   }
@@ -134,7 +134,7 @@ public class MBForEach extends MBComponentContainer
     List<T> result = super.getChildrenOfKind(clazz);
     for (MBForEachItem child : _rows)
     {
-      if (clazz.isInstance(child)) result.add((T)child);
+      if (clazz.isInstance(child)) result.add((T) child);
     }
     return result;
   }

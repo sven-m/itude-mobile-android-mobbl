@@ -2,6 +2,8 @@ package com.itude.mobile.mobbl2.client.core.actions;
 
 import java.util.List;
 
+import android.util.Log;
+
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBAction;
@@ -74,6 +76,7 @@ public class MBFireInitialOutcomes implements MBAction
 
         if (isMenu || (first && isFirstDialogSynchronized()))
         {
+          Log.d(this.getClass().getSimpleName(), "Firing in foreground: " + oc);
           MBApplicationController.getInstance().getOutcomeHandler().handleOutcomeSynchronously(oc, false);
 
           if (def.getParent() != null)
@@ -83,11 +86,14 @@ public class MBFireInitialOutcomes implements MBAction
 
           if (!isMenu) MBMetadataService.getInstance().setHomeDialogDefinition(def);
           first = false;
+
         }
         else
         {
-          MBApplicationController.getInstance().handleOutcome(oc);
+          Log.d(this.getClass().getSimpleName(), "Firing in background: " + oc);
           oc.setDisplayMode("BACKGROUND");
+          MBApplicationController.getInstance().handleOutcome(oc);
+
         }
       }
 
