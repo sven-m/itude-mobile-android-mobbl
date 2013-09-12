@@ -19,6 +19,8 @@ public class MBMetadataDataHandler extends MBDataHandlerBase
   @Override
   public MBDocument loadDocument(String documentName)
   {
+    // don't cache dialogs
+    if (documentName.equals(DIALOGS_DOCUMENT)) return loadDialogs();
     if (!_cache.containsKey(documentName)) _cache.put(documentName, loadFreshDocument(documentName));
     return _cache.get(documentName);
   }
@@ -36,7 +38,7 @@ public class MBMetadataDataHandler extends MBDataHandlerBase
     MBDocument doc = new MBDocument(docDef);
     MBMetadataService service = MBMetadataService.getInstance();
     for (MBDialogDefinition def : service.getDialogs())
-      if (def.isShowAsDocument())
+      if (def.isShowAsDocument() && def.isPreConditionValid())
       {
         MBElement element = new MBElement(docDef.getElementWithPath("/Dialog"));
         element.setAttributeValue(def.getName(), "name");

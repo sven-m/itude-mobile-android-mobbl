@@ -7,7 +7,6 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBAction;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
@@ -43,6 +42,7 @@ public class MBFireInitialOutcomes implements MBAction
       {
         String parentDialog = def.getParent();
 
+        // TODO: refactor this; the dialog manager should already know whether a dialog is visible
         if (parentDialog != null)
         {
           MBDialogDefinition parent = MBMetadataService.getInstance().getDefinitionForDialogName(parentDialog);
@@ -57,10 +57,10 @@ public class MBFireInitialOutcomes implements MBAction
           continue;
         }
 
-        if (def != null && !def.isShowAsMenu())
+        if (def != null && def.isShowAsMenu())
         {
-          MBViewManager.getInstance().addSortedDialogName(dialog);
-          isMenu = true;
+          //MBViewManager.getInstance().addSortedDialogName(dialog);
+          //isMenu = true;
         }
       }
 
@@ -81,12 +81,13 @@ public class MBFireInitialOutcomes implements MBAction
             def = MBMetadataService.getInstance().getDefinitionForDialogName(def.getParent());
           }
 
-          MBMetadataService.getInstance().setHomeDialogDefinition(def);
+          if (!isMenu) MBMetadataService.getInstance().setHomeDialogDefinition(def);
           first = false;
         }
         else
         {
           MBApplicationController.getInstance().handleOutcome(oc);
+          oc.setDisplayMode("BACKGROUND");
         }
       }
 

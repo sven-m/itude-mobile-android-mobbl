@@ -2,6 +2,7 @@ package com.itude.mobile.mobbl2.client.core.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +32,11 @@ import com.itude.mobile.mobbl2.client.core.util.MBPathUtil;
 
 public class MBElementContainer implements Parcelable
 {
-  private Map<String, List<MBElement>> _elements; // Dictionaryoflistsofelements
+  private static final List<MBElement> EMPTY_LIST = Collections.emptyList();
+  private Map<String, List<MBElement>> _elements;                           // Dictionaryoflistsofelements
   private MBElementContainer           _parent;
+
+  private boolean                      _looping   = false;
 
   public MBElementContainer()
   {
@@ -53,16 +57,18 @@ public class MBElementContainer implements Parcelable
 
   public void addAllPathsTo(Set<String> set, String currentPath)
   {
-    for (String elementName : _elements.keySet())
+    _looping = true;
+    for (Map.Entry<String, List<MBElement>> entry : _elements.entrySet())
     {
       int idx = 0;
-      String pathPrefix = currentPath + "/" + elementName + "[";
-      for (MBElement element : _elements.get(elementName))
+      String pathPrefix = currentPath + "/" + entry.getKey() + "[";
+      for (MBElement element : entry.getValue())
       {
         String path = pathPrefix + (idx++) + "]";
         element.addAllPathsTo(set, path);
       }
     }
+    _looping = false;
   }
 
   public int evaluateIndexExpression(String combinedExpression, String elementName)
@@ -211,11 +217,13 @@ public class MBElementContainer implements Parcelable
 
   public void deleteAllChildElements()
   {
+    if (_looping) throw new ConcurrentModificationException();
     _elements.clear();
   }
 
   public void addElement(MBElement element)
   {
+    if (_looping) throw new ConcurrentModificationException();
     List<MBElement> elemContainer = prepareAddElement(element);
 
     elemContainer.add(element);
@@ -223,11 +231,12 @@ public class MBElementContainer implements Parcelable
 
   private List<MBElement> prepareAddElement(MBElement element)
   {
+    if (_looping) throw new ConcurrentModificationException();
     String name = element.getDefinition().getName();
     element.setParent(this);
 
     List<MBElement> elemContainer = getElementsWithName(name);
-    if (elemContainer == null)
+    if (elemContainer == EMPTY_LIST)
     {
       elemContainer = new ArrayList<MBElement>();
       _elements.put(name, elemContainer);
@@ -376,8 +385,7 @@ public class MBElementContainer implements Parcelable
       List<MBElement> result = _elements.get(name);
       if (result == null)
       {
-        result = new ArrayList<MBElement>();
-        _elements.put(name, result);
+        return EMPTY_LIST;
       }
 
       return result;

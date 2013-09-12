@@ -65,7 +65,7 @@ public class InputFieldBuilder extends MBBaseFieldBuilder
 
       try
       {
-        Integer.parseInt(defaultValue);
+        if (!StringUtil.isEmpty(defaultValue)) Integer.parseInt(defaultValue);
         inputField.setText(defaultValue);
       }
       catch (Exception e)
@@ -82,7 +82,7 @@ public class InputFieldBuilder extends MBBaseFieldBuilder
 
       try
       {
-        Double.parseDouble(defaultValue);
+        if (!StringUtil.isEmpty(defaultValue)) Double.parseDouble(defaultValue);
         inputField.setText(defaultValue);
       }
       catch (Exception e)

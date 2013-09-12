@@ -29,7 +29,6 @@ import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
-import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBActionBarInvalidationOption;
@@ -46,7 +45,6 @@ import com.itude.mobile.mobbl2.client.core.services.MBWindowChangeType.WindowCha
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBNoDocumentException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.imagecache.ImageUtil;
-import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.MBAlert;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 
@@ -127,14 +125,13 @@ public class MBApplicationController extends Application
     // FIXME: there must be a better way of getting the root Activity
     _viewManager = MBViewManager.getInstance();
 
-    _viewManager.setSinglePageMode((MBMetadataService.getInstance().getDialogs().size() <= 1));
-
+    _viewManager.prepareForApplicationStart();
     ImageUtil.loadImageCache(getBaseContext().getCacheDir());
 
     fireInitialOutcomes();
   }
 
-  private void fireInitialOutcomes()
+  public void fireInitialOutcomes()
   {
     MBOutcome initialOutcome = new MBOutcome();
     initialOutcome.setOriginName("Controller");
@@ -158,36 +155,24 @@ public class MBApplicationController extends Application
     _suppressPageSelection = false;
     _backStackEnabled = true;
 
-    final MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
+    final EnumSet<MBActionBarInvalidationOption> actionBarRefreshOptions = EnumSet.noneOf(MBActionBarInvalidationOption.class);
 
-    EnumSet<MBActionBarInvalidationOption> actionBarRefreshOptions = EnumSet.noneOf(MBActionBarInvalidationOption.class);
-
-    if (homeDialogDefinition.isShowAsTab())
-    {
-      actionBarRefreshOptions.add(MBActionBarInvalidationOption.SHOW_FIRST);
-    }
-
-    MBViewManager.getInstance().invalidateActionBar(actionBarRefreshOptions);
     MBViewManager.getInstance().buildSlidingMenu();
-
-    if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone())
-    {
-
-      _viewManager.runOnUiThread(new Runnable()
-      {
-        @Override
-        public void run()
-        {
-          activateDialogWithName(homeDialogDefinition.getName());
-        }
-      });
-    }
 
     _viewManager.runOnUiThread(new Runnable()
     {
       @Override
       public void run()
       {
+        MBViewManager.getInstance().invalidateActionBar(actionBarRefreshOptions);
+        MBViewManager.getInstance().invalidateOptionsMenu(false, false);
+        MBViewManager.getInstance().getDialogManager().activateHome();
+
+        /*
+        if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone()) {
+          activateDialogWithName(homeDialogDefinition.getName());
+        }*/
+
         MessageQueue myQueue = Looper.myQueue();
         myQueue.addIdleHandler(new IdleHandler()
         {
@@ -262,9 +247,23 @@ public class MBApplicationController extends Application
 
   ////////////// PAGE HANDLING
 
-  public Object[] preparePage(MBOutcome causingOutcome, String pageName, String selectPageInDialog, Boolean backStackEnabled)
+  public static class PageBuildResult
   {
-    Object[] result = null;
+    public final MBOutcome outcome;
+    public final MBPage    page;
+    public final boolean   backstackEnabled;
+
+    public PageBuildResult(MBOutcome outcome, MBPage page, boolean backstackEnabled)
+    {
+      this.outcome = outcome;
+      this.page = page;
+      this.backstackEnabled = backstackEnabled;
+
+    }
+  }
+
+  public PageBuildResult preparePage(MBOutcome causingOutcome, String pageName, boolean backStackEnabled)
+  {
     try
     {
 
@@ -272,32 +271,10 @@ public class MBApplicationController extends Application
       MBPageDefinition pageDefinition = MBMetadataService.getInstance().getDefinitionForPageName(pageName);
 
       MBDocument document = prepareDocument(causingOutcome, pageDefinition.getDocumentName());
-      if (causingOutcome.getNoBackgroundProcessing())
-      {
-        showResultingPage(causingOutcome, pageDefinition, document, selectPageInDialog, backStackEnabled);
-      }
-      else
-      {
-        // calling AsyncTask calls showResultingPage in UI thread.
-        Object[] backgroundResult = {causingOutcome, pageDefinition, document, selectPageInDialog, backStackEnabled};
-        result = backgroundResult;
-      }
-    }
-    catch (Exception e)
-    {
-      handleException(e, causingOutcome);
-    }
-    return result;
-  }
 
-  public void showResultingPage(MBOutcome causingOutcome, MBPageDefinition pageDefinition, MBDocument document, String selectPageInDialog,
-                                final boolean backStackEnabled)
-  {
-    try
-    {
       final String displayMode = causingOutcome.getDisplayMode();
-      MBViewState viewState = _viewManager.getCurrentViewState();
 
+      MBViewState viewState = MBViewState.MBViewStatePlain;
       if ("MODAL".equals(displayMode) //
           || "MODALWITHCLOSEBUTTON".equals(displayMode) //
           || "MODALFORMSHEET".equals(displayMode) //
@@ -322,20 +299,27 @@ public class MBApplicationController extends Application
       {
         page.setDialogName(getActiveDialogName());
       }
-      final boolean doSelect = "yes".equals(selectPageInDialog) && !_suppressPageSelection;
-      _viewManager.runOnUiThread(new MBThread(page)
-      {
 
-        @Override
-        public void runMethod()
-        {
-          _viewManager.showPage(page, displayMode, doSelect, backStackEnabled);
-        }
-      });
+      PageBuildResult result = new PageBuildResult(causingOutcome, page, backStackEnabled);
+      return result;
     }
     catch (Exception e)
     {
       handleException(e, causingOutcome);
+      return null;
+    }
+  }
+
+  public void showResultingPage(final PageBuildResult result)
+  {
+    try
+    {
+
+      _viewManager.showPage(result.page, result.outcome.getDisplayMode(), result.backstackEnabled);
+    }
+    catch (Exception e)
+    {
+      handleException(e, result.outcome);
     }
   }
 
@@ -456,6 +440,8 @@ public class MBApplicationController extends Application
       }
       else
       {
+        if ("BACKGROUND".equals(causingOutcome.getDisplayMode())) actionOutcome.setDisplayMode("BACKGROUND");
+
         // TODO difference between nonbackground or background processing should be implemented
         if (causingOutcome.getNoBackgroundProcessing())
         {
@@ -668,11 +654,6 @@ public class MBApplicationController extends Application
     return result;
   }
 
-  public void activateDialogWithName(String name)
-  {
-    _viewManager.activateDialogWithName(name);
-  }
-
   public void resetController()
   {
     _viewManager.resetView();
@@ -838,5 +819,10 @@ public class MBApplicationController extends Application
   public void setApplicationState(ApplicationState state)
   {
     _currentApplicationState = state;
+  }
+
+  public boolean isSuppressPageSelection()
+  {
+    return _suppressPageSelection;
   }
 }

@@ -217,7 +217,7 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     return _path;
   }
 
-  public void rebuild()
+  public synchronized void rebuild()
   {
     getChildren().clear();
     MBPanelDefinition panelDef = (MBPanelDefinition) getDefinition();
@@ -230,9 +230,11 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
         absoluteDataPath = getParent().getAbsoluteDataPath();
       }
 
-      if (def.isPreConditionValid(getDocument(), absoluteDataPath))
+      MBDocument document = getDocument();
+
+      if (def.isPreConditionValid(document, absoluteDataPath))
       {
-        addChild(MBComponentFactory.getComponentFromDefinition(def, getDocument(), this));
+        addChild(MBComponentFactory.getComponentFromDefinition(def, document, this));
       }
     }
   }
@@ -257,7 +259,6 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     _focused = focused;
   }
 
-  
   public boolean isScrollable()
   {
     return _scrollable;
