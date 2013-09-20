@@ -70,11 +70,11 @@ public class MBTabBar extends LinearLayout
     return _selectedTab;
   }
 
-  public MBTab findTabById(int tabId)
+  public MBTab findTab(String name)
   {
     for (MBTab tab : _tabs)
     {
-      if (tabId == tab.getTabId())
+      if (name.equals(tab.getName()))
       {
         return tab;
       }
@@ -102,17 +102,11 @@ public class MBTabBar extends LinearLayout
     return _tabs.isEmpty();
   }
 
-  public void selectTabWithoutReselection(int id)
+  public void selectTabWithoutReselection(String name)
   {
-    MBTab tab = findTabById(id);
+    MBTab tab = findTab(name);
     if (tab != null && tab.equals(_selectedTab)) return;
     else selectTab(tab, false);
-  }
-
-  public void selectTab(int id, boolean notifyListener)
-  {
-    MBTab tab = findTabById(id);
-    selectTab(tab, notifyListener);
   }
 
   public void selectTab(MBTab tab, boolean notifyListener)

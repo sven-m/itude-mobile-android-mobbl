@@ -352,7 +352,7 @@ public class MBViewManager extends FragmentActivity
   }
 
   // Activate a dialog based on the hashed Name
-  public void activateDialogWithID(int itemId)
+  private void activateDialogWithID(int itemId)
   {
     for (MBDialogDefinition dialogDefinition : MBMetadataService.getInstance().getDialogs())
       if (itemId == dialogDefinition.getName().hashCode()) activateDialogWithName(dialogDefinition.getName());

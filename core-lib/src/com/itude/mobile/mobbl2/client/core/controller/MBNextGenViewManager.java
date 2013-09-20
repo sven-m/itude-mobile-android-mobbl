@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
+import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
@@ -336,7 +337,7 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
       MBTabBar tabBar = getTabBar();
       if (tabBar != null)
       {
-        tabBar.selectTabWithoutReselection(dialogName.hashCode());
+        tabBar.selectTabWithoutReselection(dialogName);
       }
 
     }
@@ -460,24 +461,28 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
               }
               setTabText(dialogDefinition, tab, tabBar);
 
-              tab.setTabId(dialogName.hashCode());
-              tab.setListener(new MBTabListener(dialogName.hashCode()));
+              tab.setName(dialogName);
+              tab.setListener(new MBTabListener(dialogName));
 
               tabBar.addTab(tab);
+
+              if (ComparisonUtil.safeEquals(dialogName, getActiveDialogName())) tabBar.selectTab(tab, true);
             }
             else
             {
               MBTab tab = new MBTab(MBNextGenViewManager.this);
               setTabText(dialogDefinition, tab, tabBar);
 
-              tab.setListener(new MBTabListener(dialogName.hashCode()));
-              tab.setTabId(dialogName.hashCode());
+              tab.setListener(new MBTabListener(dialogName));
+              tab.setName(dialogName);
 
               if (dialogDefinition.getIcon() != null)
               {
                 tab.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
               }
               tabBar.addTab(tab);
+
+              if (ComparisonUtil.safeEquals(dialogName, getActiveDialogName())) tabBar.selectTab(tab, true);
             }
           }
         }

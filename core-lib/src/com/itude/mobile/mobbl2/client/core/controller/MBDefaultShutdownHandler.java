@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
-import com.itude.mobile.mobbl2.client.core.util.helper.MBSecurityHelper;
 
 public class MBDefaultShutdownHandler extends MBShutdownHandler
 {
@@ -22,7 +21,6 @@ public class MBDefaultShutdownHandler extends MBShutdownHandler
       @Override
       public void onClick(DialogInterface dialog, int which)
       {
-        MBSecurityHelper.getInstance().logOutIfCheckNotSelected();
         finish();
       }
     }).setNegativeButton(negative, new OnClickListener()

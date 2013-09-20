@@ -39,7 +39,7 @@ import com.itude.mobile.mobbl2.client.core.view.listeners.MBTabListenerI;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MBTab extends RelativeLayout implements OnClickListener, OnItemClickListener, OnItemSelectedListener
 {
-  private int                    _tabId;
+  private String                 _name;
   private MBTabBar               _tabBar                 = null;
   private ImageView              _icon                   = null;
   private TextView               _textView               = null;
@@ -212,15 +212,15 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
     return this;
   }
 
-  public MBTab setTabId(int tabId)
+  public MBTab setName(String name)
   {
-    _tabId = tabId;
+    _name = name;
     return this;
   }
 
-  public int getTabId()
+  public String getName()
   {
-    return _tabId;
+    return _name;
   }
 
   void setTabBar(MBTabBar tabBar)
@@ -306,7 +306,7 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
     for (int i = 0; i < dialogs.size() && dialogDef == null; i++)
     {
       MBDialogDefinition dialog = dialogs.get(i);
-      if (dialog.getName().hashCode() == _tabId)
+      if (dialog.getName().equals(getName()))
       {
         dialogDef = dialog;
       }

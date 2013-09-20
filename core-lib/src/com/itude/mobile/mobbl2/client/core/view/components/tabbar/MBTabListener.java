@@ -12,23 +12,23 @@ import com.itude.mobile.mobbl2.client.core.view.listeners.MBTabListenerI;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MBTabListener implements MBTabListenerI
 {
-  private final int _dialogId;
+  private final String _dialog;
 
-  public MBTabListener(int hashedDialogName)
+  public MBTabListener(String dialogName)
   {
-    _dialogId = hashedDialogName;
+    _dialog = dialogName;
   }
 
   @Override
   public void onTabReselected(MBTab tab)
   {
-    MBViewManager.getInstance().activateDialogWithID(_dialogId);
+    MBViewManager.getInstance().activateDialogWithName(_dialog);
   }
 
   @Override
   public void onTabSelected(MBTab tab)
   {
-    MBViewManager.getInstance().activateDialogWithID(_dialogId);
+    MBViewManager.getInstance().activateDialogWithName(_dialog);
   }
 
   @Override

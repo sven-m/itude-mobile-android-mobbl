@@ -60,6 +60,7 @@ public class MBApplicationController extends Application
   private Map<String, HashMap<String, MBPage>> _pagesForName;
   private Stack<String>                        _modalPageStack;
   private MBOutcomeHandler                     _outcomeHandler;
+  private boolean                              _shuttingDown            = false;
 
   private static MBApplicationController       _instance                = null;
 
@@ -803,5 +804,15 @@ public class MBApplicationController extends Application
   public boolean isSuppressPageSelection()
   {
     return _suppressPageSelection;
+  }
+
+  public void setShuttingDown(boolean shuttingDown)
+  {
+    _shuttingDown = shuttingDown;
+  }
+
+  public boolean isShuttingDown()
+  {
+    return _shuttingDown;
   }
 }
