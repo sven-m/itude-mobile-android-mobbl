@@ -12,6 +12,7 @@ public abstract class MBShutdownHandler
     MBApplicationController.getInstance().setShuttingDown(true);
     MBSecurityHelper.getInstance().logOutIfCheckNotSelected();
     getActivity().finish();
+    MBApplicationController.getInstance().setShuttingDown(false);
   }
 
   protected Activity getActivity()
