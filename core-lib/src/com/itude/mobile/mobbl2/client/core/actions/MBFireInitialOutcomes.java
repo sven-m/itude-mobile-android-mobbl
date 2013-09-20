@@ -90,8 +90,8 @@ public class MBFireInitialOutcomes implements MBAction
         }
         else
         {
-          Log.d(this.getClass().getSimpleName(), "Firing in background: " + oc);
           oc.setDisplayMode("BACKGROUND");
+          Log.d(this.getClass().getSimpleName(), "Firing in background: " + oc);
           MBApplicationController.getInstance().handleOutcome(oc);
 
         }
