@@ -210,6 +210,16 @@ public class MBViewManager extends FragmentActivity
 
   }
 
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data)
+  {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (getActiveDialog() != null) for (MBBasicViewController controller : getActiveDialog().getAllFragments())
+    {
+      controller.onActivityResult(requestCode, resultCode, data);
+    }
+  }
+
   /***
    * Only sets a flag to invalidate the menu on first invocation. The menu is built in {@link #onPrepareOptionsMenu(Menu)}
    */
