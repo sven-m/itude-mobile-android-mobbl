@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.itude.mobile.android.mobbl</groupId>
 	<artifactId>mobbl-core</artifactId>
-	<version>3.0.1.4-SNAPSHOT</version>
+	<version>3.0.1.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Android Mobbl Core</name>
 	<description>Android Mobbl Core</description>
@@ -158,7 +158,7 @@
     <properties>
         <xml.obfuscator.version>0.0.2.0</xml.obfuscator.version>
         <core.lib.version>${project.version}</core.lib.version>
-        <util.lib.version>0.0.2.0-SNAPSHOT</util.lib.version>
+        <util.lib.version>0.0.2.0</util.lib.version>
         <widget.slidingmenu.version>0.0.1.0</widget.slidingmenu.version>
         <android.version>4.1</android.version>
     </properties>
