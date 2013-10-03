@@ -550,18 +550,6 @@ public class MBElementContainer implements Parcelable
     return getParent().getDocumentName();
   }
 
-  private static class NestedElement
-  {
-    final int           startIndex;
-    final StringBuilder expression;
-
-    public NestedElement(int startIndex)
-    {
-      this.startIndex = startIndex;
-      expression = new StringBuilder();
-    }
-  }
-
   public String substituteExpressions(String expression, String nilMarker, String currentPath)
   {
     String variableOpenTag = "${";
@@ -577,8 +565,8 @@ public class MBElementContainer implements Parcelable
       return expression;
     }
 
-    Stack<NestedElement> stack = new Stack<MBElementContainer.NestedElement>();
-    StringBuilder result = new StringBuilder();
+    Stack<StringBuilder> stack = new Stack<StringBuilder>();
+    stack.push(new StringBuilder());
 
     for (int i = 0; i < expression.length(); ++i)
     {
@@ -586,39 +574,30 @@ public class MBElementContainer implements Parcelable
       {
         // open tag
         i++;
-        stack.push(new NestedElement(i + 1));
+        stack.push(new StringBuilder());
       }
       else if (expression.charAt(i) == '}')
       {
-        NestedElement top = stack.pop();
-        String path = top.expression.toString();
-
-        if (path.startsWith(".") && currentPath != null && currentPath.length() > 0)
+        StringBuilder top = stack.pop();
+        if (top.charAt(0) == '.' && currentPath != null && currentPath.length() > 0)
         {
-
-          path = currentPath + "/" + path;
+          top.insert(0, '/').insert(0, currentPath);
         }
 
-        String evaluated = getValueForPath(path);
+        String evaluated = getValueForPath(top.toString());
         if (evaluated == null) evaluated = nilMarker;
 
-        if (stack.isEmpty()) result.append(evaluated);
-        else stack.peek().expression.append(evaluated);
+        stack.peek().append(evaluated);
 
-      }
-      else if (stack.isEmpty())
-      {
-        // not in subexpression
-        result.append(expression.charAt(i));
       }
       else
       {
-        stack.peek().expression.append(expression.charAt(i));
+        stack.peek().append(expression.charAt(i));
       }
 
     }
 
-    return result.toString();
+    return stack.peek().toString();
   }
 
   public String evaluateExpression(String expression)
