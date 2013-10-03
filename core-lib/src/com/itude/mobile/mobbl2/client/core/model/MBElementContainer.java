@@ -550,6 +550,18 @@ public class MBElementContainer implements Parcelable
     return getParent().getDocumentName();
   }
 
+  private static class NestedElement
+  {
+    final int           startIndex;
+    final StringBuilder expression;
+
+    public NestedElement(int startIndex)
+    {
+      this.startIndex = startIndex;
+      expression = new StringBuilder();
+    }
+  }
+
   public String substituteExpressions(String expression, String nilMarker, String currentPath)
   {
     String variableOpenTag = "${";
@@ -565,65 +577,48 @@ public class MBElementContainer implements Parcelable
       return expression;
     }
 
-    String subPart = "";
-    String singleExpression;
+    Stack<NestedElement> stack = new Stack<MBElementContainer.NestedElement>();
+    StringBuilder result = new StringBuilder();
 
-    String result = "";
-
-    int position = 0;
-    int subPartPosition = -1;
-
-    while ((position = expression.indexOf(variableOpenTag)) > -1)
+    for (int i = 0; i < expression.length(); ++i)
     {
-      result += expression.substring(0, position);
-      expression = expression.substring(position + variableOpenTag.length());
-
-      subPartPosition = expression.indexOf(variableCloseTag);
-
-      if (subPartPosition != -1)
+      if (expression.charAt(i) == '$' && expression.charAt(i + 1) == '{')
       {
-        String substring = expression.substring(0, subPartPosition);
-        if (substring.contains(variableOpenTag))
-        {
-          expression = substituteExpressions(expression, nilMarker, currentPath);
-          subPartPosition = expression.indexOf(variableCloseTag);
-        }
+        // open tag
+        i++;
+        stack.push(new NestedElement(i + 1));
+      }
+      else if (expression.charAt(i) == '}')
+      {
+        NestedElement top = stack.pop();
+        String path = top.expression.toString();
 
-        subPart = expression.substring(subPartPosition + 1);
-
-        singleExpression = expression.substring(0, subPartPosition);
-
-        if (singleExpression.startsWith(".") && currentPath != null && currentPath.length() > 0)
+        if (path.startsWith(".") && currentPath != null && currentPath.length() > 0)
         {
 
-          singleExpression = currentPath + "/" + singleExpression;
+          path = currentPath + "/" + path;
         }
 
-        if (expression.length() > subPartPosition + variableCloseTag.length() + 1)
-        {
-          expression = expression.substring(subPartPosition + variableCloseTag.length());
-        }
-        else
-        {
-          expression = "";
-        }
-        String value = (String) getValueForPath(singleExpression);
-        if (value != null)
-        {
-          result += value;
-        }
-        else
-        {
-          result += nilMarker;
-        }
+        String evaluated = getValueForPath(path);
+        if (evaluated == null) evaluated = nilMarker;
 
+        if (stack.isEmpty()) result.append(evaluated);
+        else stack.peek().expression.append(evaluated);
+
+      }
+      else if (stack.isEmpty())
+      {
+        // not in subexpression
+        result.append(expression.charAt(i));
+      }
+      else
+      {
+        stack.peek().expression.append(expression.charAt(i));
       }
 
     }
 
-    result += subPart;
-
-    return result;
+    return result.toString();
   }
 
   public String evaluateExpression(String expression)
