@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.itude.mobile.android.mobbl</groupId>
 	<artifactId>mobbl-core</artifactId>
-	<version>3.1.1.0</version>
+	<version>3.1.1.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Android Mobbl Core</name>
 	<description>Android Mobbl Core</description>
