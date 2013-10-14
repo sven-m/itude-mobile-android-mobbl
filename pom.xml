@@ -2,11 +2,6 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.itude.poms</groupId>
-		<artifactId>itude-jenkins</artifactId>
-		<version>1.7</version>
-	</parent>
 	<groupId>com.itude.mobile.android.mobbl</groupId>
 	<artifactId>mobbl-core</artifactId>
 	<version>3.0.1.5-SNAPSHOT</version>
@@ -14,7 +9,11 @@
 	<name>Android Mobbl Core</name>
 	<description>Android Mobbl Core</description>
 	<url>http://www.itude.com</url>
-	<inceptionYear>2011</inceptionYear>
+	<inceptionYear>2013</inceptionYear>
+	<organization>
+		<name>Itude</name>
+		<url>http://www.itude.com/</url>
+	</organization>
 	<developers>
 		<developer>
 			<name>Wiebe Elsinga</name>
@@ -34,11 +33,11 @@
 				<version>${android.version}</version>
 			</dependency>
             <dependency>
-                <groupId>com.google.android.compatibility</groupId>
-                <artifactId>android-support</artifactId>
-                <version>v4</version>
-            </dependency>
-			<dependency>
+				<groupId>com.android.support</groupId>
+				<artifactId>support-v4</artifactId>
+				<version>${android.support.version}</version>
+			</dependency>
+            <dependency>
 				<groupId>commons-codec</groupId>
 				<artifactId>commons-codec</artifactId>
 				<version>1.4</version>
@@ -75,6 +74,7 @@
 				<version>${widget.slidingmenu.version}</version>
 				<type>apklib</type>
 			</dependency>
+			
 		</dependencies>
 	</dependencyManagement>
     
@@ -156,12 +156,20 @@
     </build>
     
     <properties>
-        <xml.obfuscator.version>0.0.2.0</xml.obfuscator.version>
         <core.lib.version>${project.version}</core.lib.version>
-        <util.lib.version>0.0.2.0</util.lib.version>
-        <widget.slidingmenu.version>0.0.1.0</widget.slidingmenu.version>
+        <util.lib.version>0.0.2.1-SNAPSHOT</util.lib.version>
+        <widget.slidingmenu.version>0.0.1.1-SNAPSHOT</widget.slidingmenu.version>
         <android.version>4.1</android.version>
+        <android.support.version>13.0.0</android.support.version>
     </properties>
+
+	<repositories>
+		<repository>
+			<id>itudemobile-github-repository</id>
+			<name>ItudeMobile Github repository</name>
+			<url>http://itudemobile.github.io/maven-repository/releases</url>
+		</repository>
+	</repositories>
     
 </project>
 
