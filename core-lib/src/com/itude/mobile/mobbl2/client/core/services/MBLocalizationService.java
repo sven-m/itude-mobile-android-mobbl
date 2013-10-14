@@ -111,6 +111,11 @@ public class MBLocalizationService
     return text;
   }
 
+  public static String getLocalisedString(String key)
+  {
+    return getInstance().getTextForKey(key);
+  }
+
   /***
    * @see java.util.Formatter.format(String, Object ...)
    * @param key
