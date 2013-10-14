@@ -1,3 +1,18 @@
+/*
+ * (C) Copyright ItudeMobile.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.itude.mobile.mobbl2.client.core.model;
 
 import java.util.ArrayList;
@@ -550,65 +565,39 @@ public class MBElementContainer implements Parcelable
       return expression;
     }
 
-    String subPart = "";
-    String singleExpression;
+    Stack<StringBuilder> stack = new Stack<StringBuilder>();
+    stack.push(new StringBuilder());
 
-    String result = "";
-
-    int position = 0;
-    int subPartPosition = -1;
-
-    while ((position = expression.indexOf(variableOpenTag)) > -1)
+    for (int i = 0; i < expression.length(); ++i)
     {
-      result += expression.substring(0, position);
-      expression = expression.substring(position + variableOpenTag.length());
-
-      subPartPosition = expression.indexOf(variableCloseTag);
-
-      if (subPartPosition != -1)
+      if (expression.charAt(i) == '$' && expression.charAt(i + 1) == '{')
       {
-        String substring = expression.substring(0, subPartPosition);
-        if (substring.contains(variableOpenTag))
+        // open tag
+        i++;
+        stack.push(new StringBuilder());
+      }
+      else if (expression.charAt(i) == '}')
+      {
+        StringBuilder top = stack.pop();
+        if (top.charAt(0) == '.' && currentPath != null && currentPath.length() > 0)
         {
-          expression = substituteExpressions(expression, nilMarker, currentPath);
-          subPartPosition = expression.indexOf(variableCloseTag);
+          top.insert(0, '/').insert(0, currentPath);
         }
 
-        subPart = expression.substring(subPartPosition + 1);
+        String evaluated = getValueForPath(top.toString());
+        if (evaluated == null) evaluated = nilMarker;
 
-        singleExpression = expression.substring(0, subPartPosition);
+        stack.peek().append(evaluated);
 
-        if (singleExpression.startsWith(".") && currentPath != null && currentPath.length() > 0)
-        {
-
-          singleExpression = currentPath + "/" + singleExpression;
-        }
-
-        if (expression.length() > subPartPosition + variableCloseTag.length() + 1)
-        {
-          expression = expression.substring(subPartPosition + variableCloseTag.length());
-        }
-        else
-        {
-          expression = "";
-        }
-        String value = (String) getValueForPath(singleExpression);
-        if (value != null)
-        {
-          result += value;
-        }
-        else
-        {
-          result += nilMarker;
-        }
-
+      }
+      else
+      {
+        stack.peek().append(expression.charAt(i));
       }
 
     }
 
-    result += subPart;
-
-    return result;
+    return stack.peek().toString();
   }
 
   public String evaluateExpression(String expression)

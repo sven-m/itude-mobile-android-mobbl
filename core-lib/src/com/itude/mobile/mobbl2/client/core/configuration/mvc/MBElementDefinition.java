@@ -1,3 +1,18 @@
+/*
+ * (C) Copyright ItudeMobile.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.itude.mobile.mobbl2.client.core.configuration.mvc;
 
 import java.util.ArrayList;
@@ -34,8 +49,8 @@ public class MBElementDefinition extends MBDefinition
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
-    StringUtil.appendIndentString(appendToMe, level).append("<Element name='").append(getName()).append("' minOccurs='")
-        .append(_minOccurs).append("' maxOccurs='").append(_maxOccurs).append("'>\n");
+    StringUtil.appendIndentString(appendToMe, level).append("<Element name='").append(getName()).append("' minOccurs='").append(_minOccurs)
+        .append("' maxOccurs='").append(_maxOccurs).append("'>\n");
     for (MBAttributeDefinition attr : _attributesSorted)
     {
       attr.asXmlWithLevel(appendToMe, level + 2);
@@ -241,9 +256,8 @@ public class MBElementDefinition extends MBDefinition
   {
     super.writeToParcel(out, flags);
 
-    MBAttributeDefinition[] attributes = (MBAttributeDefinition[]) _attributesSorted.toArray(new MBAttributeDefinition[_attributesSorted
-        .size()]);
-    MBElementDefinition[] children = (MBElementDefinition[]) _childrenSorted.toArray(new MBElementDefinition[_childrenSorted.size()]);
+    MBAttributeDefinition[] attributes = _attributesSorted.toArray(new MBAttributeDefinition[_attributesSorted.size()]);
+    MBElementDefinition[] children = _childrenSorted.toArray(new MBElementDefinition[_childrenSorted.size()]);
 
     out.writeParcelableArray(attributes, flags);
     out.writeParcelableArray(children, flags);
