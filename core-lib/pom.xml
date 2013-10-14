@@ -34,10 +34,6 @@
 			<groupId>com.android.support</groupId>
   			<artifactId>support-v4</artifactId>
   		</dependency>
-		<!-- dependency>
-			<groupId>com.google.android.compatibility</groupId>
-			<artifactId>android-support</artifactId>
-		</dependency-->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
@@ -64,9 +60,9 @@
 	</dependencies>
 
 	<scm>
-		<connection>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git/core-lib</connection>
-		<developerConnection>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git/core-lib</developerConnection>
-		<url>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git/core-lib</url>
+		<url>https://github.com/ItudeMobile/itude-mobile-android-mobbl/core-lib</url>
+		<connection>scm:git:git://github.com/ItudeMobile/itude-mobile-android-mobbl.git/core-lib</connection>
+		<developerConnection>scm:git:git@github.com:ItudeMobile/itude-mobile-android-mobbl.git/core-lib</developerConnection>
 	</scm>
 
 	<build>

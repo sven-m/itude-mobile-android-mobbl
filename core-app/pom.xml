@@ -64,10 +64,10 @@
 		</dependency>
 	</dependencies>
 
-	<scm>
-		<connection>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git/core-app</connection>
-		<developerConnection>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git/core-app</developerConnection>
-		<url>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git/core-app</url>
+   	<scm>
+		<url>https://github.com/ItudeMobile/itude-mobile-android-mobbl/core-app</url>
+		<connection>scm:git:git://github.com/ItudeMobile/itude-mobile-android-mobbl.git/core-app</connection>
+		<developerConnection>scm:git:git@github.com:ItudeMobile/itude-mobile-android-mobbl.git/core-app</developerConnection>
 	</scm>
 
 	<build>

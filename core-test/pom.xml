@@ -66,9 +66,9 @@
 	</dependencies>
 
 	<scm>
-		<connection>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git/core-test</connection>
-		<developerConnection>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git/core-test</developerConnection>
-		<url>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git/core-test</url>
+		<url>https://github.com/ItudeMobile/itude-mobile-android-mobbl/core-test</url>
+		<connection>scm:git:git://github.com/ItudeMobile/itude-mobile-android-mobbl.git/core-test</connection>
+		<developerConnection>scm:git:git@github.com:ItudeMobile/itude-mobile-android-mobbl.git/core-test</developerConnection>
 	</scm>
 
 	<build>

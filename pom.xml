@@ -97,11 +97,16 @@
             </modules>
         </profile>
     </profiles>
-   
+    
+    <issueManagement>
+		<url>https://github.com/ItudeMobile/itude-mobile-android-mobbl/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+	
    	<scm>
-		<connection>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git</connection>
-		<developerConnection>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git</developerConnection>
-		<url>scm:git:git@127.0.0.1:itude-mobile-android-mobbl.git</url>
+		<url>https://github.com/ItudeMobile/itude-mobile-android-mobbl</url>
+		<connection>scm:git:git://github.com/ItudeMobile/itude-mobile-android-mobbl.git</connection>
+		<developerConnection>scm:git:git@github.com:ItudeMobile/itude-mobile-android-mobbl.git</developerConnection>
 	</scm>
 	
 	<build>
