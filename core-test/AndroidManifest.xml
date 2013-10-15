@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="2.0.1.0-SNAPSHOT" package="com.itude.mobile.mobbl2.client.core.tests">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:versionCode="1" 
+    android:versionName="2.0.1.0-SNAPSHOT" 
+    package="com.itude.mobile.mobbl2.client.core.tests">
+    
     <uses-sdk android:minSdkVersion="8"/>
-    <instrumentation android:label="Tests for Core Lib." android:name="android.test.InstrumentationTestRunner" android:targetPackage="com.itude.mobile.mobbl2.client.core"/>
+    
+    <instrumentation 
+        android:label="Tests for Core Lib." 
+        android:name="android.test.InstrumentationTestRunner" 
+        android:targetPackage="com.itude.mobile.mobbl2.client.core.tests"/>
+    
     <application android:debuggable="true">
-
-    <uses-library android:name="android.test.runner"/>
+	    <uses-library android:name="android.test.runner"/>
     </application>
 </manifest>
