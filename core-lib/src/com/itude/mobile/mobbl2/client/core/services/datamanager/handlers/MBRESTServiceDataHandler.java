@@ -15,6 +15,8 @@
  */
 package com.itude.mobile.mobbl2.client.core.services.datamanager.handlers;
 
+import static com.itude.mobile.mobbl2.client.core.services.MBLocalizationService.getLocalisedString;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,7 +68,6 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
-import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResultListener;
 import com.itude.mobile.mobbl2.client.core.services.MBResultListenerDefinition;
@@ -250,20 +251,20 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
       else if (e instanceof SocketException)
       {
         MBNetworkErrorException networkException = new MBNetworkErrorException("No internet connection");
-        networkException.setName(localizedString("Network error"));
+        networkException.setName(getLocalisedString("Network error"));
         throw networkException;
       }
       else if (e instanceof SocketTimeoutException)
       {
         MBNetworkErrorException networkException = new MBNetworkErrorException("Internet timeout");
-        networkException.setName(localizedString("Network error"));
+        networkException.setName(getLocalisedString("Network error"));
         throw networkException;
       }
       else if (e instanceof UnknownHostException
                || (e instanceof IOException && e.getMessage() != null && e.getMessage().contains("SSL handshake")))
       {
         MBServerErrorException serverException = new MBServerErrorException("Server unreachable");
-        serverException.setName(localizedString("Server message"));
+        serverException.setName(getLocalisedString("Server message"));
         throw serverException;
       }
       throw new RuntimeException(e);
@@ -549,11 +550,6 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     {
       return sslContext.getSocketFactory().createSocket();
     }
-  }
-
-  private String localizedString(String key)
-  {
-    return MBLocalizationService.getInstance().getTextForKey(key);
   }
 
 }
