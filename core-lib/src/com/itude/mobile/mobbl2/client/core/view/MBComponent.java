@@ -284,7 +284,7 @@ public class MBComponent extends MBCustomAttributeContainer
   {
     List<T> result = getDescendantsOfKind(clazz);
 
-    if (result.size() == 0)
+    if (result.isEmpty())
     {
       return null;
     }
@@ -312,7 +312,7 @@ public class MBComponent extends MBCustomAttributeContainer
   {
     List<T> result = getChildrenOfKind(clazz);
 
-    if (result.size() == 0)
+    if (result.isEmpty())
     {
       return null;
     }

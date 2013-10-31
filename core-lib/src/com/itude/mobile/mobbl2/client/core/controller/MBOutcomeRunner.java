@@ -87,7 +87,7 @@ public class MBOutcomeRunner
 
     List<MBOutcomeDefinition> outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(_outcome.getOriginName(),
                                                                                                   _outcome.getOutcomeName(), false);
-    if (outcomeDefinitions.size() == 0)
+    if (outcomeDefinitions.isEmpty())
     {
       String msg = "No outcome defined for origin=" + _outcome.getOriginName() + " outcome=" + _outcome.getOutcomeName();
       throw new MBNoOutcomesDefinedException(msg);

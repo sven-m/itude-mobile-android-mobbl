@@ -35,7 +35,7 @@ public class MBLayeredImageResourceBuilder implements MBResourceBuilder.Builder<
   {
     List<MBItem> items = resource.getSortedItemsReversed();
 
-    if (items.size() == 0)
+    if (items.isEmpty())
     {
       return null;
     }

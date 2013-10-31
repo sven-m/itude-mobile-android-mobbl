@@ -76,7 +76,7 @@ public final class MBPathUtil
     else if (component.length() == 2 && component.equals(".."))
     {
       // pop the previous path component
-      if (componentsInPath.size() == 0)
+      if (componentsInPath.isEmpty())
       {
         throw new MBInvalidRelativePathException(completePath);
       }
