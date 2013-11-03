@@ -1,14 +1,3 @@
-package com.itude.mobile.mobbl2.client.core.view.components;
-
-import android.content.Context;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.widget.Button;
-
-import com.itude.mobile.mobbl2.client.core.MBException;
-import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
-import com.itude.mobile.mobbl2.client.core.util.Constants;
-
 /*
  * (C) Copyright ItudeMobile.
  * 
@@ -24,6 +13,17 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.itude.mobile.mobbl2.client.core.view.components;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.widget.Button;
+
+import com.itude.mobile.mobbl2.client.core.MBException;
+import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
+
 public class MBLocalizedButton extends Button
 {
 
