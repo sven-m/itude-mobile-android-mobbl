@@ -147,7 +147,7 @@ public class MBElement extends MBElementContainer
       }
     }
 
-    if (_definition.getChildren().size() == 0 && !hasBodyText)
+    if (_definition.getChildren().isEmpty() && !hasBodyText)
     {
       appendToMe.append("/>\n");
     }

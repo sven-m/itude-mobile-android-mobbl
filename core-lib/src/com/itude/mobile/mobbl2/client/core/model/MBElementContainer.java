@@ -417,7 +417,7 @@ public class MBElementContainer implements Parcelable
   public <T> T getValueForPathComponents(List<String> pathComponents, String originalPath, boolean nillIfMissing,
                                          List<String> translatedPathComponents)
   {
-    if (pathComponents.size() == 0) return (T) this;
+    if (pathComponents.isEmpty()) return (T) this;
 
     String[] rootNameParts = splitPathOnBrackets(pathComponents.get(0));
     // hello
@@ -429,7 +429,7 @@ public class MBElementContainer implements Parcelable
     if (idx == -99)
     {
       // this was not an indexed path (just hello, not hello[1234])
-      if (pathComponents.size() == 0)
+      if (pathComponents.isEmpty())
       {
         return (T) allElementsWithSameNameAsChild;
       }
@@ -631,7 +631,7 @@ public class MBElementContainer implements Parcelable
   public void sortElements(String elementName, String attributeNames)
   {
     List<MBElement> elements = getElementsWithName(elementName);
-    if (elements.size() == 0)
+    if (elements.isEmpty())
     {
       return;
     }

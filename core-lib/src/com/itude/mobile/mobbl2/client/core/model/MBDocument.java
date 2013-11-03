@@ -195,8 +195,9 @@ public class MBDocument extends MBElementContainer
   @Override
   public String toString()
   {
-    StringBuffer rt = new StringBuffer();
-    return this.asXmlWithLevel(rt, 0).toString();
+    return "TODO: restore original functionality";
+    //    StringBuffer rt = new StringBuffer();
+    //    return this.asXmlWithLevel(rt, 0).toString();
   }
 
   public void clearAllCaches()
@@ -215,7 +216,7 @@ public class MBDocument extends MBElementContainer
     StringUtil.appendIndentString(appendToMe, level).append("<")
         .append((_definition.getRootElement() == null) ? _definition.getName() : _definition.getRootElement());
 
-    if (getElements().size() == 0)
+    if (getElements().isEmpty())
     {
       appendToMe.append("/>\n");
     }

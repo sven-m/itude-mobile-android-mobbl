@@ -435,7 +435,7 @@ public class MBField extends MBComponent
   public String getComponentDataPath()
   {
     String path = ((MBFieldDefinition) getDefinition()).getPath();
-    if (path == null || "".equals(path))
+    if (StringUtil.isEmpty(path))
     {
       return null;
     }

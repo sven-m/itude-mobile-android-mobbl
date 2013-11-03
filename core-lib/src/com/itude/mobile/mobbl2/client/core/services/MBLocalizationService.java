@@ -126,7 +126,7 @@ public class MBLocalizationService
     return text;
   }
 
-  public static String getLocalisedString(String key)
+  public static String getLocalizedString(String key)
   {
     return getInstance().getTextForKey(key);
   }

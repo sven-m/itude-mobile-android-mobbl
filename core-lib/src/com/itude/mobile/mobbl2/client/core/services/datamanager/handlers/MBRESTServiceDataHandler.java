@@ -15,7 +15,7 @@
  */
 package com.itude.mobile.mobbl2.client.core.services.datamanager.handlers;
 
-import static com.itude.mobile.mobbl2.client.core.services.MBLocalizationService.getLocalisedString;
+import static com.itude.mobile.mobbl2.client.core.services.MBLocalizationService.getLocalizedString;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -251,20 +251,20 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
       else if (e instanceof SocketException)
       {
         MBNetworkErrorException networkException = new MBNetworkErrorException("No internet connection");
-        networkException.setName(getLocalisedString("Network error"));
+        networkException.setName(getLocalizedString("Network error"));
         throw networkException;
       }
       else if (e instanceof SocketTimeoutException)
       {
         MBNetworkErrorException networkException = new MBNetworkErrorException("Internet timeout");
-        networkException.setName(getLocalisedString("Network error"));
+        networkException.setName(getLocalizedString("Network error"));
         throw networkException;
       }
       else if (e instanceof UnknownHostException
                || (e instanceof IOException && e.getMessage() != null && e.getMessage().contains("SSL handshake")))
       {
         MBServerErrorException serverException = new MBServerErrorException("Server unreachable");
-        serverException.setName(getLocalisedString("Server message"));
+        serverException.setName(getLocalizedString("Server message"));
         throw serverException;
       }
       throw new RuntimeException(e);

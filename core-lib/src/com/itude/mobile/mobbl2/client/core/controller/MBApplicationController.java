@@ -618,7 +618,7 @@ public class MBApplicationController extends Application
     {
       // There is no specific exception handler defined. So fall back on the generic one
       outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(outcome.getOriginName(), "exception", false);
-      if (outcomeDefinitions.size() == 0)
+      if (outcomeDefinitions.isEmpty())
       {
         Log.w(Constants.APPLICATION_NAME, "No outcome with origin=" + outcome.getOriginName()
                                           + " name=exception defined to handle errors; so re-throwing exception");
