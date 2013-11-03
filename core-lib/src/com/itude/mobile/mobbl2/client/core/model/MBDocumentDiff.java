@@ -76,7 +76,7 @@ public class MBDocumentDiff
 
   public boolean isChanged()
   {
-    return _modified.size() != 0;
+    return !_modified.isEmpty();
   }
 
   public boolean isChanged(String path)
