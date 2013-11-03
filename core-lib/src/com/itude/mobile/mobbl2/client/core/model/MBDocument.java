@@ -195,9 +195,8 @@ public class MBDocument extends MBElementContainer
   @Override
   public String toString()
   {
-    return "TODO: restore original functionality";
-    //    StringBuffer rt = new StringBuffer();
-    //    return this.asXmlWithLevel(rt, 0).toString();
+    StringBuffer rt = new StringBuffer();
+    return this.asXmlWithLevel(rt, 0).toString();
   }
 
   public void clearAllCaches()
