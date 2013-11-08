@@ -16,6 +16,7 @@
 package com.itude.mobile.mobbl2.client.core.controller.util.indicator;
 
 import android.app.Activity;
+import android.support.v7.app.ActionBarActivity;
 
 import com.itude.mobile.mobbl2.client.core.util.MBCustomAttributeContainer;
 
@@ -29,13 +30,27 @@ public final class MBIndeterminateProgressIndicator extends MBCountingIndicator
   @Override
   protected void show(final Activity activity, MBCustomAttributeContainer customAttributes)
   {
-    activity.setProgressBarIndeterminate(true);
-    activity.setProgressBarIndeterminateVisibility(true);
+    if (activity instanceof ActionBarActivity)
+    {
+      ((ActionBarActivity) activity).setSupportProgressBarIndeterminate(true);
+      ((ActionBarActivity) activity).setSupportProgressBarIndeterminateVisibility(true);
+    }
+    else
+    {
+
+      activity.setProgressBarIndeterminate(true);
+      activity.setProgressBarIndeterminateVisibility(true);
+    }
   }
 
   @Override
   protected void dismiss(final Activity activity)
   {
-    activity.setProgressBarIndeterminateVisibility(false);
+    if (activity instanceof ActionBarActivity)
+    {
+      ((ActionBarActivity) activity).setSupportProgressBarIndeterminateVisibility(true);
+
+    }
+    else activity.setProgressBarIndeterminateVisibility(false);
   }
 }

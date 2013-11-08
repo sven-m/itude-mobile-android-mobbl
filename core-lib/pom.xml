@@ -31,10 +31,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.google.android.compatibility</groupId>
-			<artifactId>android-support</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 		</dependency>
@@ -54,6 +50,20 @@
 		<dependency>
 			<groupId>com.itude.mobile.android.widget</groupId>
 			<artifactId>slidingmenu</artifactId>
+			<type>apklib</type>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>support-v4</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>appcompat-v7</artifactId>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>appcompat-v7</artifactId>
 			<type>apklib</type>
 		</dependency>
 	</dependencies>

@@ -18,9 +18,8 @@ package com.itude.mobile.mobbl2.client.core.view.components.tabbar;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
+import android.support.v4.view.ViewGroupCompat;
 import android.widget.LinearLayout;
 
 import com.itude.mobile.mobbl2.client.core.view.listeners.MBTabListenerI;
@@ -34,7 +33,6 @@ import com.itude.mobile.mobbl2.client.core.view.listeners.MBTabListenerI;
  * Basically, this is a {@link android.widget.LinearLayout} with a horizontal orientation. It maintains a list
  * of MBTab instances and is responsible for controlling tab bar-like functionality.
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MBTabBar extends LinearLayout
 {
   private List<MBTab> _tabs             = null;
@@ -50,7 +48,7 @@ public class MBTabBar extends LinearLayout
     super(context);
 
     setOrientation(HORIZONTAL);
-    setMotionEventSplittingEnabled(false);
+    ViewGroupCompat.setMotionEventSplittingEnabled(this, false);
 
     _tabs = new ArrayList<MBTab>();
   }

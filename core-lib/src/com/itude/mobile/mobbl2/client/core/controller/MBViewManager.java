@@ -28,8 +28,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.MenuCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -47,24 +46,30 @@ import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatH
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
+import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidPathException;
 import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController.ApplicationState;
+import com.itude.mobile.mobbl2.client.core.controller.MBDialogManager.MBDialogChangeListener;
+import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNotBooleanException;
 import com.itude.mobile.mobbl2.client.core.controller.helpers.MBActivityHelper;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
+import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
-import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 import com.itude.mobile.mobbl2.client.core.util.helper.MBSecurityHelper;
+import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThreadHandler;
 import com.itude.mobile.mobbl2.client.core.view.MBAlert;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPage.OrientationPermission;
-import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabBar;
+import com.itude.mobile.mobbl2.client.core.view.components.slidingmenu.MBSlidingMenuController;
+import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBActionBarBuilder;
 
-public class MBViewManager extends FragmentActivity
+public abstract class MBViewManager extends ActionBarActivity implements MBDialogChangeListener
 {
   public enum MBViewState {
     MBViewStateFullScreen, MBViewStatePlain, MBViewStateTabbed, MBViewStateModal
@@ -90,11 +95,6 @@ public class MBViewManager extends FragmentActivity
 
   ///////////////////// Android lifecycle methods
 
-  protected void onPreCreate()
-  {
-    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-  }
-
   @Override
   protected void onCreate(android.os.Bundle savedInstanceState)
   {
@@ -110,6 +110,14 @@ public class MBViewManager extends FragmentActivity
 
     // https://dev.itude.com/jira/browse/BINCKAPPS-1131
     super.onCreate(null);
+
+    // makes sure the action bar is initialized (otherwise, the setProgressBar.. doesn't work)
+    getSupportActionBar();
+
+    // https://mobiledev.itude.com/jira/browse/MOBBL-659
+    setSupportProgressBarIndeterminateVisibility(false);
+
+    getDialogManager().addDialogChangeListener(this);
 
     FrameLayout container = new FrameLayout(this);
     LayoutParams layout = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -242,7 +250,7 @@ public class MBViewManager extends FragmentActivity
   public boolean onCreateOptionsMenu(Menu menu)
   {
     _optionsMenuInvalid = true;
-    return false;
+    return buildOptionsMenu(menu);
   }
 
   @Override
@@ -260,23 +268,6 @@ public class MBViewManager extends FragmentActivity
     }
 
     return displayMenu;
-  }
-
-  protected boolean buildOptionsMenu(Menu menu)
-  {
-    for (String dialogName : getSortedDialogNames())
-    {
-      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      if (dialogDefinition.isPreConditionValid() && dialogDefinition.isShowAsTab())
-      {
-        MenuItem menuItem = menu.add(Menu.NONE, dialogName.hashCode(), Menu.NONE,
-                                     MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle()));
-        menuItem.setIcon(MBResourceService.getInstance().getImageByID(dialogDefinition.getIcon()));
-        MenuCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
-      }
-    }
-
-    return true;
   }
 
   public void finishFromChild(MBDialogController childController)
@@ -326,19 +317,6 @@ public class MBViewManager extends FragmentActivity
     }
   }
 
-  @Override
-  public boolean onMenuItemSelected(int featureId, MenuItem item)
-  {
-    boolean handled = false;
-    if (getActiveDialog() != null) handled = getActiveDialog().onMenuItemSelected(featureId, item);
-    if (!handled && !super.onMenuItemSelected(featureId, item))
-    {
-      activateDialogWithID(item.getItemId());
-
-    }
-    return true;
-  }
-
   public boolean onMenuKeyDown(int keyCode, KeyEvent event, View callingView)
   {
     boolean onKeyDown = super.onKeyDown(keyCode, event);
@@ -376,12 +354,6 @@ public class MBViewManager extends FragmentActivity
     alert.buildAlertDialog().show();
   }
 
-  // Activate a dialog based on the hashed Name
-  private void activateDialogWithID(int itemId)
-  {
-    for (MBDialogDefinition dialogDefinition : MBMetadataService.getInstance().getDialogs())
-      if (itemId == dialogDefinition.getName().hashCode()) activateDialogWithName(dialogDefinition.getName());
-  }
 
   @SuppressLint("NewApi")
   public void invalidateOptionsMenu(boolean resetHomeDialog, final boolean selectHome)
@@ -732,6 +704,10 @@ public class MBViewManager extends FragmentActivity
   {
     Log.d(Constants.APPLICATION_NAME, "MBViewManager.onConfigurationChanged");
 
+    invalidateActionBar();
+
+    refreshSlidingMenu();
+
     super.onConfigurationChanged(newConfig);
 
     _dialogManager.onConfigurationChanged(newConfig);
@@ -862,37 +838,12 @@ public class MBViewManager extends FragmentActivity
     invalidateActionBar(options);
   }
 
-  public void invalidateActionBar(EnumSet<MBActionBarInvalidationOption> flags)
-  {
-    //    throw new UnsupportedOperationException("This method is not supported on smartphone");
-  }
-
-  public void showProgressIndicatorInTool()
-  {
-    throw new UnsupportedOperationException("This method is not supported on smartphone");
-  }
-
-  public void hideProgressIndicatorInTool()
-  {
-    throw new UnsupportedOperationException("This method is not supported on smartphone");
-  }
-
-  public MBTabBar getTabBar()
-  {
-    throw new UnsupportedOperationException("This method is not supported on smartphone");
-  }
-
   public void hideSearchView()
   {
     throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
-  public void buildSlidingMenu()
-  {
-    //    throw new UnsupportedOperationException("This method is not supported on smartphone");
-  }
-
-  protected boolean needsSlidingMenu()
+  public boolean needsSlidingMenu()
   {
     return getMenuDialog() != null;
   }
@@ -916,5 +867,183 @@ public class MBViewManager extends FragmentActivity
   public void setShutdownHandler(MBShutdownHandler shutdownHandler)
   {
     _shutdownHandler = shutdownHandler;
+  }
+
+  /////// STUFF MERGED IN FROM MBNextGenViewManager ////////////
+
+  private Menu                    _menu             = null;
+
+  private MBSlidingMenuController _slidingMenu      = null;
+
+  private MBActionBarBuilder      _actionBarBuilder = getDefaultActionBar();
+
+  protected void onPreCreate()
+  {
+    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+  }
+
+  protected abstract MBActionBarBuilder getDefaultActionBar();
+
+  protected boolean buildOptionsMenu(Menu menu)
+  {
+    _menu = menu;
+
+    _actionBarBuilder.fillActionBar(getSupportActionBar(), menu);
+
+    return true;
+  }
+
+  private MBSlidingMenuController getSlidingMenu()
+  {
+    return _slidingMenu;
+  }
+
+  public void buildSlidingMenu()
+  {
+    // the needsSlidingMenu-check is placed on the UI thread, since it is possible that the actual initialization of the dialogs
+    // is still queued over there at the moment, which would result in the check failing if it would be fired now
+    runOnUiThread(new MBThread()
+    {
+      @Override
+      public void runMethod()
+      {
+        if (needsSlidingMenu())
+        {
+          _slidingMenu = new MBSlidingMenuController(MBViewManager.this);
+        }
+        else
+        {
+          Log.w(this.getClass().getSimpleName(), "No sliding menu needed");
+        }
+
+      }
+    });
+  }
+
+  protected void refreshSlidingMenu()
+  {
+    if (getSlidingMenu() != null)
+    {
+      runOnUiThread(new MBThread()
+      {
+
+        @Override
+        public void runMethod()
+        {
+
+          getSlidingMenu().rebuild();
+        }
+      });
+
+    }
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item)
+  {
+    if (item.getItemId() == android.R.id.home)
+    {
+      onHomeSelected();
+      return true;
+    }
+
+    for (MBToolDefinition def : MBMetadataService.getInstance().getTools())
+    {
+      if (item.getItemId() == def.getName().hashCode())
+      {
+        if (def.getOutcomeName() != null)
+        {
+          handleOutcome(def);
+          return true;
+        }
+        return false;
+      }
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  public void onHomeSelected()
+  {
+    if (getSlidingMenu() != null)
+    {
+      getSlidingMenu().toggle();
+    }
+    else
+    {
+      getDialogManager().activateHome();
+    }
+  }
+
+  protected void handleOutcome(MBToolDefinition def)
+  {
+    MBOutcome outcome = new MBOutcome();
+    outcome.setOriginName(def.getName());
+    outcome.setOutcomeName(def.getOutcomeName());
+
+    MBApplicationController.getInstance().handleOutcome(outcome);
+  }
+
+  @Override
+  public void onDialogSelected(String dialogName)
+  {
+    if (dialogName != null)
+    {
+      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+      if (dialogDefinition.getParent() != null)
+      {
+        dialogName = dialogDefinition.getParent();
+        dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+      }
+
+      _actionBarBuilder.selectTabWithoutReselection(dialogName);
+
+    }
+
+    if (getSlidingMenu() != null) getSlidingMenu().hide();
+  }
+
+  public void showProgressIndicatorInTool()
+  {
+    _actionBarBuilder.showProgressIndicatorInTool();
+  }
+
+  public void hideProgressIndicatorInTool()
+  {
+    _actionBarBuilder.hideProgressIndicatorInTool();
+  }
+
+  /***
+   * @deprecated please use {@link com.itude.mobile.mobbl2.client.core.configuration.MBConditionalDefinition#isPreConditionValid()
+   * 
+   * @param def
+   * @return
+   */
+  @Deprecated
+  protected final boolean isPreConditionValid(MBToolDefinition def)
+  {
+    if (def.getPreCondition() == null)
+    {
+      return true;
+    }
+
+    MBDocument doc = MBDataManagerService.getInstance().loadDocument(MBConfigurationDefinition.DOC_SYSTEM_EMPTY);
+
+    String result = doc.evaluateExpression(def.getPreCondition());
+    Boolean bool = MBParseUtil.strictBooleanValue(result);
+    if (bool != null) return bool;
+    String msg = "Expression of tool with name=" + def.getName() + " precondition=" + def.getPreCondition() + " is not boolean (result="
+                 + result + ")";
+    throw new MBExpressionNotBooleanException(msg);
+  }
+
+  protected Menu getMenu()
+  {
+    return _menu;
+  }
+
+  public void invalidateActionBar(EnumSet<MBActionBarInvalidationOption> flags)
+  {
+    _actionBarBuilder.invalidateActionBar(flags);
   }
 }

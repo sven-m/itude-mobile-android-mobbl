@@ -17,11 +17,10 @@ package com.itude.mobile.mobbl2.client.core.view.components.tabbar;
 
 import java.util.List;
 
-import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.support.v7.app.ActionBar;
+import android.support.v7.internal.widget.ListPopupWindow;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,7 +30,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListPopupWindow;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -51,7 +49,6 @@ import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl2.client.core.view.listeners.MBTabListenerI;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MBTab extends RelativeLayout implements OnClickListener, OnItemClickListener, OnItemSelectedListener
 {
   private String                 _name;
