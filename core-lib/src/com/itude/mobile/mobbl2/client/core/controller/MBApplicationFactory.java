@@ -31,6 +31,7 @@ import com.itude.mobile.mobbl2.client.core.view.MBAlert;
 import com.itude.mobile.mobbl2.client.core.view.MBField;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
+import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBActionBarBuilder;
 import com.itude.mobile.mobbl2.client.core.view.listeners.MBPageConstructionListener;
 
 /*
@@ -44,7 +45,8 @@ public class MBApplicationFactory
   private final ActionMappings        _actions;
   private final ControllerMappings    _controllers;
   private final PageConstructor       _pageConstructor;
-
+  private Class<? extends MBActionBarBuilder> _actionBarBuilder;
+  
   public MBApplicationFactory()
   {
     _actions = new ActionMappings(getActionRegistry());
@@ -101,6 +103,16 @@ public class MBApplicationFactory
     return new MBAlert(definition, document, rootPath);
   }
 
+  public Class<? extends MBActionBarBuilder> getActionBarBuilder()
+  {
+    return _actionBarBuilder;
+  }
+  
+  public void setActionBarBuilder(Class<? extends MBActionBarBuilder> actionBarBuilder)
+  {
+    _actionBarBuilder = actionBarBuilder;
+  }
+  
   protected ActionMappings.Registry getActionRegistry()
   {
     return null;
@@ -255,5 +267,6 @@ public class MBApplicationFactory
     }
 
   }
-
+  
+  
 }

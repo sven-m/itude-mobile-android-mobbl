@@ -15,6 +15,7 @@
  */
 package com.itude.mobile.mobbl2.client.core.controller;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -42,6 +43,7 @@ import android.widget.FrameLayout.LayoutParams;
 
 import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
@@ -99,6 +101,8 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   protected void onCreate(android.os.Bundle savedInstanceState)
   {
     onPreCreate();
+
+    _actionBarBuilder = constructActionBarBuilder();
 
     _dialogManager = new MBDialogManager(this);
 
@@ -353,7 +357,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   {
     alert.buildAlertDialog().show();
   }
-
 
   @SuppressLint("NewApi")
   public void invalidateOptionsMenu(boolean resetHomeDialog, final boolean selectHome)
@@ -871,15 +874,32 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   /////// STUFF MERGED IN FROM MBNextGenViewManager ////////////
 
-  private Menu                    _menu             = null;
+  private Menu                    _menu        = null;
 
-  private MBSlidingMenuController _slidingMenu      = null;
+  private MBSlidingMenuController _slidingMenu = null;
 
-  private MBActionBarBuilder      _actionBarBuilder = getDefaultActionBar();
+  private MBActionBarBuilder      _actionBarBuilder;
 
   protected void onPreCreate()
   {
     requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+  }
+
+  private MBActionBarBuilder constructActionBarBuilder()
+  {
+    Class<? extends MBActionBarBuilder> customBuilder = MBApplicationFactory.getInstance().getActionBarBuilder();
+    try
+    {
+
+      if (customBuilder == null) return getDefaultActionBar();
+      Constructor<? extends MBActionBarBuilder> constructor = customBuilder.getConstructor(Context.class);
+      return constructor.newInstance(this);
+    }
+    catch (Exception e)
+    {
+      throw new MBException("Error instantiating " + customBuilder.getName() + " with constructor " + customBuilder.getSimpleName()
+                            + "(Context)..", e);
+    }
   }
 
   protected abstract MBActionBarBuilder getDefaultActionBar();
