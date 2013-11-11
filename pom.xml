@@ -36,19 +36,19 @@
             <dependency>
                 <groupId>com.android.support</groupId>
                 <artifactId>support-v4</artifactId>
-                <version>${support.version}</version>
+                <version>${android.support.version}</version>
             </dependency>
 		<dependency>
 			<groupId>com.android.support</groupId>
 			<artifactId>appcompat-v7</artifactId>
 			<type>jar</type>
-			<version>${support.version}</version>
+			<version>${android.support.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.android.support</groupId>
 			<artifactId>appcompat-v7</artifactId>
 			<type>apklib</type>
-			<version>${support.version}</version>
+			<version>${android.support.version}</version>
 		</dependency>
 		
 			<dependency>
@@ -90,6 +90,17 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	   
+<repositories>
+    <repository>
+      <id>itudemobile-github-repository</id>
+      <name>MOBBL Github</name>
+      <url>http://itudemobile.github.com/maven-repository/releases</url>
+    </repository>
+</repositories>
+ 
+
     
     <profiles>
         <profile>
@@ -174,7 +185,7 @@
         <util.lib.version>0.1.0.1-SNAPSHOT</util.lib.version>
         <widget.slidingmenu.version>0.1.0.1-SNAPSHOT</widget.slidingmenu.version>
         <android.version>4.4</android.version>
-        <support.version>19.0.0</support.version>
+        <android.support.version>19.0.0</android.support.version>
     </properties>
     
 </project>
