@@ -15,35 +15,23 @@
  */
 package com.itude.mobile.mobbl2.client.core.view.components.tabbar;
 
-import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
-import com.itude.mobile.mobbl2.client.core.view.listeners.MBTabListenerI;
+import java.util.EnumSet;
 
-/**
- * @author Coen Houtman
- */
-public class MBTabListener implements MBTabListenerI
+import android.support.v7.app.ActionBar;
+import android.view.Menu;
+
+import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBActionBarInvalidationOption;
+
+public interface MBActionBarBuilder
 {
-  private final String _dialog;
+  public void fillActionBar(ActionBar actionBar, Menu menu);
 
-  public MBTabListener(String dialogName)
-  {
-    _dialog = dialogName;
-  }
+  public void showProgressIndicatorInTool();
 
-  @Override
-  public void onTabReselected(MBTab tab)
-  {
-    MBViewManager.getInstance().activateDialogWithName(_dialog);
-  }
+  public void hideProgressIndicatorInTool();
 
-  @Override
-  public void onTabSelected(MBTab tab)
-  {
-    MBViewManager.getInstance().activateDialogWithName(_dialog);
-  }
+  public void invalidateActionBar(EnumSet<MBActionBarInvalidationOption> flags);
 
-  @Override
-  public void onTabUnselected(MBTab tab)
-  {
-  }
+  public void selectTabWithoutReselection(String dialogName);
+
 }

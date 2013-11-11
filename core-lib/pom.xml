@@ -56,7 +56,20 @@
 			<artifactId>slidingmenu</artifactId>
 			<type>apklib</type>
 		</dependency>
-		
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>support-v4</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>appcompat-v7</artifactId>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>appcompat-v7</artifactId>
+			<type>apklib</type>
+		</dependency>
 	</dependencies>
 
 	<scm>

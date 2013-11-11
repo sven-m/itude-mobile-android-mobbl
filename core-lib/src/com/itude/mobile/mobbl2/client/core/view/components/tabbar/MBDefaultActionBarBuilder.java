@@ -13,26 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.itude.mobile.mobbl2.client.core.controller;
+package com.itude.mobile.mobbl2.client.core.view.components.tabbar;
 
 import java.util.EnumSet;
 import java.util.List;
 
-import android.R;
-import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -40,81 +38,44 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
 
 import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.android.util.StringUtil;
-import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
-import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDomainValidatorDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBToolDefinition;
-import com.itude.mobile.mobbl2.client.core.controller.MBDialogManager.MBDialogChangeListener;
-import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNotBooleanException;
-import com.itude.mobile.mobbl2.client.core.model.MBDocument;
-import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
+import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController;
+import com.itude.mobile.mobbl2.client.core.controller.MBOutcome;
+import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
+import com.itude.mobile.mobbl2.client.core.controller.MBViewManager.MBActionBarInvalidationOption;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.MBResourceService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
-import com.itude.mobile.mobbl2.client.core.util.MBParseUtil;
 import com.itude.mobile.mobbl2.client.core.util.ScreenConstants;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl2.client.core.view.components.MBHeader;
-import com.itude.mobile.mobbl2.client.core.view.components.slidingmenu.MBSlidingMenuController;
-import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTab;
-import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabBar;
-import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabListener;
-import com.itude.mobile.mobbl2.client.core.view.components.tabbar.MBTabSpinnerAdapter;
 
-/***
- * 
- * @author Coen Houtman
- * 
- * As of Android V11 and V14 a lot has changed. This abstract view manager is the place to adopt new Android
- * features that are both available for V11 (Honeycomb) and V14 (ICS).
- *
- */
-@TargetApi(11)
-public abstract class MBNextGenViewManager extends MBViewManager implements MBDialogChangeListener
+public abstract class MBDefaultActionBarBuilder implements MBActionBarBuilder
 {
-  private Menu                    _menu           = null;
-  private MBToolDefinition        _refreshToolDef = null;
-  private MBSlidingMenuController _slidingMenu    = null;
+  private final Context    _context;
+  private MBToolDefinition _refreshToolDef = null;
+  private ActionBar        _actionBar;
+  private Menu             _menu;
 
-  @Override
-  protected void onPreCreate()
+  public MBDefaultActionBarBuilder(Context context)
   {
-    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
-    // makes sure the action bar is initialized (otherwise, the setProgressBar.. doesn't work)
-    getActionBar();
-
-    // https://mobiledev.itude.com/jira/browse/MOBBL-659
-    setProgressBarIndeterminateVisibility(false);
+    _context = context;
   }
 
   @Override
-  protected void onCreate(Bundle savedInstanceState)
+  public void fillActionBar(ActionBar actionBar, Menu menu)
   {
-    super.onCreate(savedInstanceState);
-
-    getDialogManager().addDialogChangeListener(this);
-  }
-
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu)
-  {
-    return buildOptionsMenu(menu);
-  }
-
-  @Override
-  protected boolean buildOptionsMenu(Menu menu)
-  {
+    _actionBar = actionBar;
     _menu = menu;
 
     List<MBToolDefinition> tools = MBMetadataService.getInstance().getTools();
@@ -133,7 +94,7 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
           menuItem.setIcon(image);
         }
 
-        menuItem.setShowAsAction(getMenuItemActionFlags(def));
+        MenuItemCompat.setShowAsAction(menuItem, getMenuItemActionFlags(def));
 
         if ("REFRESH".equals(def.getType()))
         {
@@ -141,7 +102,7 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
         }
         else if ("SEARCH".equals(def.getType()))
         {
-          final SearchView searchView = new SearchView(MBViewManager.getInstance().getApplicationContext());
+          final SearchView searchView = new SearchView(_context);
           searchView.setTag(def);
           searchView.setOnQueryTextFocusChangeListener(new OnFocusChangeListener()
           {
@@ -169,88 +130,23 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
 
           changeSearchImage(image, searchView);
 
-          SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-          searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+          SearchManager searchManager = (SearchManager) _context.getSystemService(Context.SEARCH_SERVICE);
 
-          menuItem.setActionView(searchView);
+          searchView.setSearchableInfo(searchManager.getSearchableInfo(MBViewManager.getInstance().getComponentName()));
+
+          MenuItemCompat.setActionView(menuItem, searchView);
         }
       }
     }
-
-    return true;
   }
 
-  private MBSlidingMenuController getSlidingMenu()
+  protected void handleOutcome(MBToolDefinition def)
   {
-    return _slidingMenu;
-  }
+    MBOutcome outcome = new MBOutcome();
+    outcome.setOriginName(def.getName());
+    outcome.setOutcomeName(def.getOutcomeName());
 
-  @Override
-  public void buildSlidingMenu()
-  {
-    // the needsSlidingMenu-check is placed on the UI thread, since it is possible that the actual initialization of the dialogs
-    // is still queued over there at the moment, which would result in the check failing if it would be fired now
-    runOnUiThread(new MBThread()
-    {
-      @Override
-      public void runMethod()
-      {
-        if (needsSlidingMenu())
-        {
-          _slidingMenu = new MBSlidingMenuController(MBNextGenViewManager.this);
-        }
-        else
-        {
-          Log.w(this.getClass().getSimpleName(), "No sliding menu needed");
-        }
-
-      }
-    });
-  }
-
-  protected void refreshSlidingMenu()
-  {
-    if (getSlidingMenu() != null)
-    {
-      runOnUiThread(new MBThread()
-      {
-
-        @Override
-        public void runMethod()
-        {
-
-          getSlidingMenu().rebuild();
-        }
-      });
-
-    }
-  }
-
-  protected abstract void changeSearchImage(Drawable image, final SearchView searchView);
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item)
-  {
-    if (item.getItemId() == android.R.id.home)
-    {
-      onHomeSelected();
-      return true;
-    }
-
-    for (MBToolDefinition def : MBMetadataService.getInstance().getTools())
-    {
-      if (item.getItemId() == def.getName().hashCode())
-      {
-        if (def.getOutcomeName() != null)
-        {
-          handleOutcome(def);
-          return true;
-        }
-        return false;
-      }
-    }
-
-    return super.onOptionsItemSelected(item);
+    MBApplicationController.getInstance().handleOutcome(outcome);
   }
 
   protected void setSearchImage(Drawable image, LinearLayout linearLayout)
@@ -275,7 +171,7 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
     if (StringUtil.isBlank(visibility))
     {
       Log.w(Constants.APPLICATION_NAME, "No visibility specified for tool " + def.getName() + ": using default show as action if room");
-      return MenuItem.SHOW_AS_ACTION_IF_ROOM;
+      return MenuItemCompat.SHOW_AS_ACTION_IF_ROOM;
     }
 
     int flags = 0;
@@ -294,19 +190,19 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
     int resultFlag = -1;
     if ("ALWAYS".equals(flag))
     {
-      resultFlag = MenuItem.SHOW_AS_ACTION_ALWAYS;
+      resultFlag = MenuItemCompat.SHOW_AS_ACTION_ALWAYS;
     }
     else if ("IFROOM".equals(flag))
     {
-      resultFlag = MenuItem.SHOW_AS_ACTION_IF_ROOM;
+      resultFlag = MenuItemCompat.SHOW_AS_ACTION_IF_ROOM;
     }
     else if ("OVERFLOW".equals(flag))
     {
-      resultFlag = MenuItem.SHOW_AS_ACTION_NEVER;
+      resultFlag = MenuItemCompat.SHOW_AS_ACTION_NEVER;
     }
     else if ("SHOWTEXT".equals(flag))
     {
-      resultFlag = MenuItem.SHOW_AS_ACTION_WITH_TEXT;
+      resultFlag = MenuItemCompat.SHOW_AS_ACTION_WITH_TEXT;
     }
     else
     {
@@ -316,138 +212,16 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
     return resultFlag;
   }
 
-  protected void onHomeSelected()
+  private void populateActionBar(final ActionBar actionBar)
   {
-    if (getSlidingMenu() != null)
-    {
-      getSlidingMenu().toggle();
-    }
-    else
-    {
-      getDialogManager().activateHome();
-    }
-  }
-
-  protected void handleOutcome(MBToolDefinition def)
-  {
-    MBOutcome outcome = new MBOutcome();
-    outcome.setOriginName(def.getName());
-    outcome.setOutcomeName(def.getOutcomeName());
-
-    MBApplicationController.getInstance().handleOutcome(outcome);
-  }
-
-  @Override
-  public void onDialogSelected(String dialogName)
-  {
-    if (dialogName != null)
-    {
-      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      if (dialogDefinition.getParent() != null)
-      {
-        dialogName = dialogDefinition.getParent();
-        dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      }
-
-      MBTabBar tabBar = getTabBar();
-      if (tabBar != null)
-      {
-        tabBar.selectTabWithoutReselection(dialogName);
-      }
-
-    }
-
-    if (getSlidingMenu() != null) getSlidingMenu().hide();
-  }
-
-  @Override
-  public MBTabBar getTabBar()
-  {
-    ActionBar actionBar = getActionBar();
-    if (actionBar != null && actionBar.getCustomView() != null && actionBar.getCustomView() instanceof MBTabBar)
-    {
-      return (MBTabBar) actionBar.getCustomView();
-    }
-    return null;
-  }
-
-  @Override
-  public void invalidateActionBar(EnumSet<MBActionBarInvalidationOption> flags)
-  {
-    final boolean showFirst;
-    final boolean notifyListener;
-    final boolean resetHomeDialog;
-
-    if (flags == null)
-    {
-      showFirst = false;
-      notifyListener = false;
-      resetHomeDialog = false;
-    }
-    else
-    {
-      showFirst = flags.contains(MBActionBarInvalidationOption.SHOW_FIRST);
-      notifyListener = flags.contains(MBActionBarInvalidationOption.NOTIFY_LISTENER);
-      resetHomeDialog = flags.contains(MBActionBarInvalidationOption.RESET_HOME_DIALOG);
-    }
-
-    runOnUiThread(new MBThread()
-    {
-      @Override
-      public void runMethod()
-      {
-        MBTabBar tabBar = getTabBar();
-        int selectedTab = -1;
-        if (tabBar != null)
-        {
-          selectedTab = tabBar.indexOfSelectedTab();
-
-          if (tabBar.getSelectedTab() != null)
-          {
-            tabBar.getSelectedTab().setSelected(false);
-          }
-        }
-        invalidateOptionsMenu(resetHomeDialog, false);
-        // throw away current MBActionBar and create a new one
-        getActionBar().setCustomView(null);
-
-        populateActionBar();
-
-        tabBar = getTabBar();
-        if (tabBar != null)
-        {
-          if (showFirst)
-          {
-            tabBar.selectTab(null, false);
-
-            onHomeSelected();
-          }
-          else if (selectedTab >= 0)
-          {
-            tabBar.selectTab(tabBar.getTab(selectedTab), notifyListener);
-          }
-        }
-      }
-    });
-  }
-
-  @Override
-  public void reset()
-  {
-    super.reset();
-    //refreshSlidingMenu();
-  }
-
-  protected void populateActionBar()
-  {
-    runOnUiThread(new Runnable()
+    MBViewManager.getInstance().runOnUiThread(new Runnable()
     {
       @Override
       public void run()
       {
-        MBTabBar tabBar = new MBTabBar(MBNextGenViewManager.this);
+        MBTabBar tabBar = new MBTabBar(_context);
 
-        for (String dialogName : getSortedDialogNames())
+        for (String dialogName : MBViewManager.getInstance().getDialogManager().getSortedDialogNames())
         {
           MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
 
@@ -457,8 +231,7 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
             {
               MBDomainDefinition domainDef = MBMetadataService.getInstance().getDefinitionForDomainName(dialogDefinition.getDomain());
 
-              final MBTabSpinnerAdapter tabSpinnerAdapter = new MBTabSpinnerAdapter(MBNextGenViewManager.this,
-                  R.layout.simple_spinner_dropdown_item);
+              final MBTabSpinnerAdapter tabSpinnerAdapter = new MBTabSpinnerAdapter(_context, android.R.layout.simple_spinner_dropdown_item);
 
               for (MBDomainValidatorDefinition domDef : domainDef.getDomainValidators())
               {
@@ -467,7 +240,7 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
 
               Drawable drawable = MBResourceService.getInstance().getImageByID("tab-spinner-leaf");
 
-              MBTab tab = new MBTab(MBNextGenViewManager.this);
+              MBTab tab = new MBTab(_context);
               tab.setAdapter(tabSpinnerAdapter);
               tab.setSelectedBackground(drawable);
               if (dialogDefinition.getIcon() != null)
@@ -481,11 +254,11 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
 
               tabBar.addTab(tab);
 
-              if (ComparisonUtil.safeEquals(dialogName, getActiveDialogName())) tabBar.selectTab(tab, true);
+              if (ComparisonUtil.safeEquals(dialogName, MBViewManager.getInstance().getActiveDialogName())) tabBar.selectTab(tab, true);
             }
             else
             {
-              MBTab tab = new MBTab(MBNextGenViewManager.this);
+              MBTab tab = new MBTab(_context);
               setTabText(dialogDefinition, tab, tabBar);
 
               tab.setListener(new MBTabListener(dialogName));
@@ -497,28 +270,25 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
               }
               tabBar.addTab(tab);
 
-              if (ComparisonUtil.safeEquals(dialogName, getActiveDialogName())) tabBar.selectTab(tab, true);
+              if (ComparisonUtil.safeEquals(dialogName, MBViewManager.getInstance().getActiveDialogName())) tabBar.selectTab(tab, true);
             }
           }
         }
 
-        final ActionBar actionBar = getActionBar();
-
         MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
 
         //fix the Home icon padding
-        View homeIcon = findViewById(R.id.home);
+        View homeIcon = MBViewManager.getInstance().findViewById(android.support.v7.appcompat.R.id.home);
         if (homeIcon != null)
         {
           styleHandler.styleHomeIcon(homeIcon);
-          ActivityCompatHoneycomb.enableHomeButton(MBNextGenViewManager.this, actionBar);
-          //actionBar.setHomeButtonEnabled(true);
+          actionBar.setHomeButtonEnabled(true);
         }
 
         styleHandler.styleActionBar(actionBar);
 
         int actionBarDisplayOptions = ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO;
-        if (needsSlidingMenu())
+        if (MBViewManager.getInstance().needsSlidingMenu())
         {
           actionBarDisplayOptions |= ActionBar.DISPLAY_HOME_AS_UP;
         }
@@ -538,8 +308,8 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
           //          textView.setText(getTitle());
           //          linearLayout.addView(textView);
 
-          MBHeader header = new MBHeader(MBNextGenViewManager.this);
-          header.setTitleText((String) getTitle());
+          MBHeader header = new MBHeader(_context);
+          header.setTitleText((String) MBViewManager.getInstance().getTitle());
 
           styleHandler.styleActionBarHeader(header);
           styleHandler.styleActionBarHeaderTitle(header.getTitleView());
@@ -555,7 +325,7 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
       {
         String title;
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+        if (_context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
         {
           title = dialogDefinition.getTitlePortrait();
         }
@@ -581,7 +351,7 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
   public synchronized void showProgressIndicatorInTool()
   {
     MBToolDefinition refreshToolDef = getRefreshToolDef();
-    Menu menu = getMenu();
+    Menu menu = _menu;
 
     if (refreshToolDef != null && menu != null)
     {
@@ -590,22 +360,22 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
       ImageView rotationImage = getRotationImage();
 
       float imageWidth = rotationImage.getDrawable().getIntrinsicWidth();
-      int framePadding = (int) ((ScreenUtil.convertDimensionPixelsToPixels(getBaseContext(), 80) - imageWidth) / 2);
+      int framePadding = (int) ((ScreenUtil.convertDimensionPixelsToPixels(_context, 80) - imageWidth) / 2);
 
-      final FrameLayout frameLayout = new FrameLayout(this);
-      frameLayout.setLayoutParams(new FrameLayout.LayoutParams(ScreenUtil.convertDimensionPixelsToPixels(getBaseContext(), 80),
+      final FrameLayout frameLayout = new FrameLayout(_context);
+      frameLayout.setLayoutParams(new FrameLayout.LayoutParams(ScreenUtil.convertDimensionPixelsToPixels(_context, 80),
           LayoutParams.WRAP_CONTENT, Gravity.CENTER));
       frameLayout.setPadding(framePadding, 0, framePadding, 0);
 
       frameLayout.addView(rotationImage);
 
-      runOnUiThread(new MBThread()
+      MBViewManager.getInstance().runOnUiThread(new MBThread()
       {
         @Override
         public void runMethod()
         {
           //item.setIcon(null);
-          item.setActionView(frameLayout);
+          MenuItemCompat.setActionView(item, frameLayout);
           getRotationImage().getAnimation().startNow();
         }
       });
@@ -622,7 +392,7 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
     rotateAnimation.setInterpolator(new LinearInterpolator());
 
     Drawable drawable = MBResourceService.getInstance().getImageByID(_refreshToolDef.getIcon());
-    ImageView rotationImage = new ImageView(this);
+    ImageView rotationImage = new ImageView(_context);
     rotationImage.setImageDrawable(drawable);
     rotationImage.setAnimation(rotateAnimation);
 
@@ -633,64 +403,108 @@ public abstract class MBNextGenViewManager extends MBViewManager implements MBDi
   public synchronized void hideProgressIndicatorInTool()
   {
     MBToolDefinition refreshToolDef = getRefreshToolDef();
-    Menu menu = getMenu();
+    Menu menu = _menu;
 
     if (refreshToolDef != null && menu != null)
     {
       final MenuItem item = menu.findItem(refreshToolDef.getName().hashCode());
 
-      runOnUiThread(new MBThread()
+      MBViewManager.getInstance().runOnUiThread(new MBThread()
       {
         @Override
         public void runMethod()
         {
-          item.setActionView(null);
+          MenuItemCompat.setActionView(item, null);
         }
       });
     }
   }
 
-  /***
-   * @deprecated please use {@link com.itude.mobile.mobbl2.client.core.configuration.MBConditionalDefinition#isPreConditionValid()
-   * 
-   * @param def
-   * @return
-   */
-  @Deprecated
-  protected final boolean isPreConditionValid(MBToolDefinition def)
+  @Override
+  public void invalidateActionBar(EnumSet<MBActionBarInvalidationOption> flags)
   {
-    if (def.getPreCondition() == null)
+    final boolean showFirst;
+    final boolean notifyListener;
+    final boolean resetHomeDialog;
+
+    if (flags == null)
     {
-      return true;
+      showFirst = false;
+      notifyListener = false;
+      resetHomeDialog = false;
+    }
+    else
+    {
+      showFirst = flags.contains(MBActionBarInvalidationOption.SHOW_FIRST);
+      notifyListener = flags.contains(MBActionBarInvalidationOption.NOTIFY_LISTENER);
+      resetHomeDialog = flags.contains(MBActionBarInvalidationOption.RESET_HOME_DIALOG);
     }
 
-    MBDocument doc = MBDataManagerService.getInstance().loadDocument(MBConfigurationDefinition.DOC_SYSTEM_EMPTY);
+    MBViewManager.getInstance().runOnUiThread(new MBThread()
+    {
+      @Override
+      public void runMethod()
+      {
+        MBTabBar tabBar = getTabBar();
+        int selectedTab = -1;
+        if (tabBar != null)
+        {
+          selectedTab = tabBar.indexOfSelectedTab();
 
-    String result = doc.evaluateExpression(def.getPreCondition());
-    Boolean bool = MBParseUtil.strictBooleanValue(result);
-    if (bool != null) return bool;
-    String msg = "Expression of tool with name=" + def.getName() + " precondition=" + def.getPreCondition() + " is not boolean (result="
-                 + result + ")";
-    throw new MBExpressionNotBooleanException(msg);
-  }
+          if (tabBar.getSelectedTab() != null)
+          {
+            tabBar.getSelectedTab().setSelected(false);
+          }
+        }
+        MBViewManager.getInstance().invalidateOptionsMenu(resetHomeDialog, false);
+        // throw away current MBActionBar and create a new one
+        _actionBar.setCustomView(null);
 
-  @Override
-  public void onConfigurationChanged(Configuration newConfig)
-  {
-    invalidateActionBar();
+        populateActionBar(_actionBar);
 
-    refreshSlidingMenu();
+        tabBar = getTabBar();
+        if (tabBar != null)
+        {
+          if (showFirst)
+          {
+            tabBar.selectTab(null, false);
 
-    super.onConfigurationChanged(newConfig);
-  }
-
-  protected Menu getMenu()
-  {
-    return _menu;
+            MBViewManager.getInstance().onHomeSelected();
+          }
+          else if (selectedTab >= 0)
+          {
+            tabBar.selectTab(tabBar.getTab(selectedTab), notifyListener);
+          }
+        }
+      }
+    });
   }
 
   protected MBToolDefinition getRefreshToolDef()
   {
     return _refreshToolDef;
   }
+
+  private MBTabBar getTabBar()
+  {
+    ActionBar actionBar = _actionBar;
+    if (actionBar != null && actionBar.getCustomView() != null && actionBar.getCustomView() instanceof MBTabBar)
+    {
+      return (MBTabBar) actionBar.getCustomView();
+    }
+    return null;
+  }
+
+  @Override
+  public void selectTabWithoutReselection(String dialogName)
+  {
+    MBTabBar tabBar = getTabBar();
+    if (tabBar != null)
+    {
+      tabBar.selectTabWithoutReselection(dialogName);
+    }
+  }
+
+  protected abstract void changeSearchImage(Drawable image, final SearchView searchView);
+
 }

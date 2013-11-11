@@ -20,7 +20,6 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
 import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Build;
 
@@ -43,26 +42,6 @@ public final class ActivityCompatHoneycomb
       public void run()
       {
         activity.invalidateOptionsMenu();
-      }
-    });
-  }
-
-  @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-  public static void enableHomeButton(final Activity activity, final ActionBar actionBar)
-  {
-    activity.runOnUiThread(new Runnable()
-    {
-      @Override
-      public void run()
-      {
-        try
-        {
-          actionBar.setHomeButtonEnabled(true);
-        }
-        catch (NoSuchMethodError e)
-        {
-          // not running on ICS, so ignore
-        }
       }
     });
   }
