@@ -23,6 +23,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="/android-support-v7-appcompat"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/itude-mobile-android-tools-actionbar-compat"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

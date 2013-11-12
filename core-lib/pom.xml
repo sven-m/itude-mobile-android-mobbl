@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.itude.mobile.android.mobbl</groupId>
 		<artifactId>mobbl-core</artifactId>
-		<version>3.1.1.3-SNAPSHOT</version>
+		<version>3.2.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>mobbl-core-lib</artifactId>
 	<packaging>apklib</packaging>
