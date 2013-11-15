@@ -48,7 +48,7 @@ public final class MBIndeterminateProgressIndicator extends MBCountingIndicator
   {
     if (activity instanceof ActionBarActivity)
     {
-      ((ActionBarActivity) activity).setSupportProgressBarIndeterminateVisibility(true);
+      ((ActionBarActivity) activity).setSupportProgressBarIndeterminateVisibility(false);
 
     }
     else activity.setProgressBarIndeterminateVisibility(false);
