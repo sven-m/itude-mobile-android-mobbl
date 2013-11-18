@@ -116,10 +116,13 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
     super.onCreate(null);
 
     // makes sure the action bar is initialized (otherwise, the setProgressBar.. doesn't work)
-    getSupportActionBar();
-
     // https://mobiledev.itude.com/jira/browse/MOBBL-659
-    setSupportProgressBarIndeterminateVisibility(false);
+    if (getSupportActionBar() != null && getSupportActionBar().isShowing())
+    {
+      supportRequestWindowFeature(Window.FEATURE_PROGRESS);
+      supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+      setSupportProgressBarIndeterminateVisibility(false);
+    }
 
     getDialogManager().addDialogChangeListener(this);
 
@@ -883,8 +886,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   protected void onPreCreate()
   {
     requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-    supportRequestWindowFeature(Window.FEATURE_PROGRESS);
-    supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
   }
 
   private MBActionBarBuilder constructActionBarBuilder()
