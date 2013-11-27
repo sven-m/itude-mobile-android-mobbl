@@ -917,7 +917,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
     return true;
   }
 
-  private MBSlidingMenuController getSlidingMenu()
+  public MBSlidingMenuController getSlidingMenu()
   {
     return _slidingMenu;
   }
