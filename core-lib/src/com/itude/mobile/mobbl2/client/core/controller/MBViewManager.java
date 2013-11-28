@@ -29,6 +29,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -41,10 +42,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 
-import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.MBException;
-import com.itude.mobile.mobbl2.client.core.android.compatibility.ActivityCompatHoneycomb;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBPageDefinition;
@@ -85,15 +84,14 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   private Dialog                 _currentAlert;
   private boolean                _singlePageMode;
-  private boolean                _showDialogTitle    = false;
+  private boolean                _showDialogTitle = false;
 
-  private boolean                _activityExists     = false;
-  private boolean                _optionsMenuInvalid = false;
+  private boolean                _activityExists  = false;
 
   private int                    _defaultScreenOrientation;
 
   private MBDialogManager        _dialogManager;
-  private MBShutdownHandler      _shutdownHandler    = new MBDefaultShutdownHandler();
+  private MBShutdownHandler      _shutdownHandler = new MBDefaultShutdownHandler();
 
   ///////////////////// Android lifecycle methods
 
@@ -257,25 +255,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   @Override
   public boolean onCreateOptionsMenu(Menu menu)
   {
-    _optionsMenuInvalid = true;
     return buildOptionsMenu(menu);
-  }
-
-  @Override
-  public boolean onPrepareOptionsMenu(Menu menu)
-  {
-    boolean displayMenu = true;
-
-    if (_optionsMenuInvalid)
-    {
-      menu.clear();
-
-      displayMenu = buildOptionsMenu(menu);
-
-      _optionsMenuInvalid = false;
-    }
-
-    return displayMenu;
   }
 
   public void finishFromChild(MBDialogController childController)
@@ -365,14 +345,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   @SuppressLint("NewApi")
   public void invalidateOptionsMenu(boolean resetHomeDialog, final boolean selectHome)
   {
-    if (DeviceUtil.getInstance().isPhoneV14() || DeviceUtil.isTablet())
-    {
-      super.invalidateOptionsMenu();
-    }
-    else
-    {
-      _optionsMenuInvalid = true;
-    }
+    super.supportInvalidateOptionsMenu();
 
     if (selectHome) getDialogManager().activateHome();
 
@@ -577,7 +550,14 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   @Override
   public void supportInvalidateOptionsMenu()
   {
-    ActivityCompatHoneycomb.invalidateOptionsMenu(this);
+    runOnUiThread(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        ActivityCompat.invalidateOptionsMenu(MBViewManager.this);
+      }
+    });
   }
 
   public boolean activateDialogWithName(String dialogName)

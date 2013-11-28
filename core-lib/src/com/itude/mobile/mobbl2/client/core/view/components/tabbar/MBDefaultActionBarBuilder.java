@@ -423,61 +423,64 @@ public abstract class MBDefaultActionBarBuilder implements MBActionBarBuilder
   @Override
   public void invalidateActionBar(EnumSet<MBActionBarInvalidationOption> flags)
   {
-    final boolean showFirst;
-    final boolean notifyListener;
-    final boolean resetHomeDialog;
+    if (_actionBar != null)
+    {
+      final boolean showFirst;
+      final boolean notifyListener;
+      final boolean resetHomeDialog;
 
-    if (flags == null)
-    {
-      showFirst = false;
-      notifyListener = false;
-      resetHomeDialog = false;
-    }
-    else
-    {
-      showFirst = flags.contains(MBActionBarInvalidationOption.SHOW_FIRST);
-      notifyListener = flags.contains(MBActionBarInvalidationOption.NOTIFY_LISTENER);
-      resetHomeDialog = flags.contains(MBActionBarInvalidationOption.RESET_HOME_DIALOG);
-    }
-
-    MBViewManager.getInstance().runOnUiThread(new MBThread()
-    {
-      @Override
-      public void runMethod()
+      if (flags == null)
       {
-        MBTabBar tabBar = getTabBar();
-        int selectedTab = -1;
-        if (tabBar != null)
-        {
-          selectedTab = tabBar.indexOfSelectedTab();
-
-          if (tabBar.getSelectedTab() != null)
-          {
-            tabBar.getSelectedTab().setSelected(false);
-          }
-        }
-        MBViewManager.getInstance().invalidateOptionsMenu(resetHomeDialog, false);
-        // throw away current MBActionBar and create a new one
-        _actionBar.setCustomView(null);
-
-        populateActionBar(_actionBar);
-
-        tabBar = getTabBar();
-        if (tabBar != null)
-        {
-          if (showFirst)
-          {
-            tabBar.selectTab(null, false);
-
-            MBViewManager.getInstance().onHomeSelected();
-          }
-          else if (selectedTab >= 0)
-          {
-            tabBar.selectTab(tabBar.getTab(selectedTab), notifyListener);
-          }
-        }
+        showFirst = false;
+        notifyListener = false;
+        resetHomeDialog = false;
       }
-    });
+      else
+      {
+        showFirst = flags.contains(MBActionBarInvalidationOption.SHOW_FIRST);
+        notifyListener = flags.contains(MBActionBarInvalidationOption.NOTIFY_LISTENER);
+        resetHomeDialog = flags.contains(MBActionBarInvalidationOption.RESET_HOME_DIALOG);
+      }
+
+      MBViewManager.getInstance().runOnUiThread(new MBThread()
+      {
+        @Override
+        public void runMethod()
+        {
+          MBTabBar tabBar = getTabBar();
+          int selectedTab = -1;
+          if (tabBar != null)
+          {
+            selectedTab = tabBar.indexOfSelectedTab();
+
+            if (tabBar.getSelectedTab() != null)
+            {
+              tabBar.getSelectedTab().setSelected(false);
+            }
+          }
+          MBViewManager.getInstance().invalidateOptionsMenu(resetHomeDialog, false);
+          // throw away current MBActionBar and create a new one
+          _actionBar.setCustomView(null);
+
+          populateActionBar(_actionBar);
+
+          tabBar = getTabBar();
+          if (tabBar != null)
+          {
+            if (showFirst)
+            {
+              tabBar.selectTab(null, false);
+
+              MBViewManager.getInstance().onHomeSelected();
+            }
+            else if (selectedTab >= 0)
+            {
+              tabBar.selectTab(tabBar.getTab(selectedTab), notifyListener);
+            }
+          }
+        }
+      });
+    }
   }
 
   protected MBToolDefinition getRefreshToolDef()
