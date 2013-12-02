@@ -445,7 +445,8 @@ public class MBDialogController extends ContextWrapper
     {
       popView();
     }
-    else if ("REPLACE".equals(entry.getDisplayMode())
+    else if ((Constants.C_DISPLAY_MODE_REPLACE.equals(entry.getDisplayMode()) //
+             || Constants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE.equals(entry.getDisplayMode()))
              || ("SINGLE".equals(_childDialogModes.get(entry.getDialogName())) && entry.getPage().getCurrentViewState() != MBViewState.MBViewStateModal))
     {
       entry.setAddToBackStack(false);

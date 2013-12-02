@@ -15,6 +15,8 @@
  */
 package com.itude.mobile.mobbl2.client.core.controller;
 
+import com.itude.mobile.mobbl2.client.core.util.Constants;
+
 public class MBDialogSwitchTask extends MBOutcomeTask
 {
   private final String _dialogWhenCreated;
@@ -81,9 +83,16 @@ public class MBDialogSwitchTask extends MBOutcomeTask
     {
       viewManager.endDialog(getOutcome().getDialogName(), false);
     }
-    else if (getOutcome().getDialogName() != null && !"BACKGROUND".equals(getOutcome().getDisplayMode())
-             && !getOutcome().getDialogName().equals(_dialogWhenCreated) && !applicationController.isSuppressPageSelection()) viewManager
-        .getDialogManager().activateDialog(getOutcome().getDialogName());
+    else if (getOutcome().getDialogName() != null
+             && !Constants.C_DISPLAY_MODE_BACKGROUND.equals(getOutcome().getDisplayMode()) //
+             && getOutcome().getDialogName() != null
+             && !Constants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE.equals(getOutcome().getDisplayMode()) //
+             && !getOutcome().getDialogName().equals(_dialogWhenCreated) //
+             && !applicationController.isSuppressPageSelection())
+    {
+      viewManager.getDialogManager().activateDialog(getOutcome().getDialogName());
+
+    }
 
   }
 }

@@ -28,6 +28,7 @@ import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
 import com.itude.mobile.mobbl2.client.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
+import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBFireInitialOutcomes implements MBAction
 {
@@ -105,7 +106,7 @@ public class MBFireInitialOutcomes implements MBAction
         }
         else
         {
-          oc.setDisplayMode("BACKGROUND");
+          oc.setDisplayMode(Constants.C_DISPLAY_MODE_BACKGROUND);
           Log.d(this.getClass().getSimpleName(), "Firing in background: " + oc);
           MBApplicationController.getInstance().handleOutcome(oc);
 

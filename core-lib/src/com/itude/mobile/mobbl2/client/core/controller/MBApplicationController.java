@@ -457,7 +457,14 @@ public class MBApplicationController extends Application
       }
       else
       {
-        if ("BACKGROUND".equals(causingOutcome.getDisplayMode())) actionOutcome.setDisplayMode("BACKGROUND");
+        if (Constants.C_DISPLAY_MODE_BACKGROUND.equals(causingOutcome.getDisplayMode()))
+        {
+          actionOutcome.setDisplayMode(Constants.C_DISPLAY_MODE_BACKGROUND);
+        }
+        else if (Constants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE.equals(causingOutcome.getDisplayMode()))
+        {
+          actionOutcome.setDisplayMode(Constants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE);
+        }
         actionOutcome.setDialogName(ComparisonUtil.coalesce(actionOutcome.getDialogName(), causingOutcome.getDialogName()));
         actionOutcome.setOriginName(actionDef.getName());
         return actionOutcome;

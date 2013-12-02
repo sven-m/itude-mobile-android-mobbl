@@ -198,5 +198,9 @@ public interface Constants
 
   // Display modes
   public static String       C_DISPLAY_MODE_REPLACE                                    = "REPLACE";
+  public static String       C_DISPLAY_MODE_BACKGROUND                                 = "BACKGROUND";
+
+  //Needs refactoring
+  public static String       C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE                  = "BACKGROUND|REPLACE";
 
 }
