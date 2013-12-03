@@ -60,6 +60,7 @@ import com.itude.mobile.mobbl2.client.core.services.MBWindowChangedEventListener
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBProperties;
 import com.itude.mobile.mobbl2.client.core.util.threads.MBThread;
+import com.itude.mobile.mobbl2.client.core.view.MBOutcomeListenerProtocol;
 import com.itude.mobile.mobbl2.client.core.view.MBPage;
 import com.itude.mobile.mobbl2.client.core.view.MBPanel;
 import com.itude.mobile.mobbl2.client.core.view.builders.MBPanelViewBuilder;
@@ -84,19 +85,20 @@ public class MBBasicViewController extends DialogFragment
       OperationListener
 {
 
-  private ViewGroup                         _contentView;
-  private MBPage                            _page;
-  private ScrollView                        _mainScrollView        = null;
-  private View                              _rootView              = null;
-  private View                              _mainScrollViewContent = null;
-  private boolean                           _isDialogClosable      = false;
-  private boolean                           _isDialogFullscreen    = false;
-  private boolean                           _isDialogCancelable    = false;                   //i.e. back button dismisses dialog when true
-  private final List<MBEvent>               eventQueue             = new ArrayList<MBEvent>();
-  private static boolean                    _strictModeAvailable   = false;
+  private ViewGroup                             _contentView;
+  private MBPage                                _page;
+  private ScrollView                            _mainScrollView        = null;
+  private View                                  _rootView              = null;
+  private View                                  _mainScrollViewContent = null;
+  private boolean                               _isDialogClosable      = false;
+  private boolean                               _isDialogFullscreen    = false;
+  private boolean                               _isDialogCancelable    = false;                                     //i.e. back button dismisses dialog when true
+  private final List<MBEvent>                   eventQueue             = new ArrayList<MBEvent>();
+  private static boolean                        _strictModeAvailable   = false;
   // avoid cyclical dependencies
-  private WeakReference<MBDialogController> _dialogController;
-  private boolean                           _rebuildView;
+  private WeakReference<MBDialogController>     _dialogController;
+  private boolean                               _rebuildView;
+  private final List<MBOutcomeListenerProtocol> _outcomeListeners      = new ArrayList<MBOutcomeListenerProtocol>();
 
   //use the StrictModeWrapper to see if we are running on Android 2.3 or higher and StrictMode is available
   static
@@ -161,6 +163,13 @@ public class MBBasicViewController extends DialogFragment
   {
     super.onResume();
     handleOnWindowActivated();
+  }
+
+  @Override
+  public void onPause()
+  {
+    super.onPause();
+    handleOnLeavingWindow();
   }
 
   @Override
@@ -473,11 +482,16 @@ public class MBBasicViewController extends DialogFragment
 
     // Make sure orientation for the page is as expected
     MBViewManager.getInstance().setOrientation(getPage());
+
+    for (MBOutcomeListenerProtocol listener : _outcomeListeners)
+      MBApplicationController.getInstance().getOutcomeHandler().registerOutcomeListener(listener);
   }
 
   @Override
   public void handleOnLeavingWindow()
   {
+    for (MBOutcomeListenerProtocol listener : _outcomeListeners)
+      MBApplicationController.getInstance().getOutcomeHandler().unregisterOutcomeListener(listener);
   }
 
   public void setRootView(View rootView)
@@ -635,4 +649,18 @@ public class MBBasicViewController extends DialogFragment
     }
   }
 
+  public void registerOutcomeListener(MBOutcomeListenerProtocol listener)
+  {
+    if (!_outcomeListeners.contains(listener))
+    {
+      _outcomeListeners.add(listener);
+      MBApplicationController.getInstance().getOutcomeHandler().registerOutcomeListener(listener);
+    }
+  }
+
+  public void unregisterOutcomeListener(MBOutcomeListenerProtocol listener)
+  {
+    _outcomeListeners.remove(listener);
+    MBApplicationController.getInstance().getOutcomeHandler().unregisterOutcomeListener(listener);
+  }
 }
