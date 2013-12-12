@@ -53,7 +53,6 @@ public class MBPage extends MBPanel
   private List                                                   _childViewControllers;
   private MBDocumentDiff                                         _documentDiff;
   private final Map<String, List<MBValueChangeListenerProtocol>> _valueChangedListeners;
-  private final List<MBOutcomeListenerProtocol>                  _outcomeListeners;
   private MBPageDefinition.MBPageType                            _pageType;
   private Object                                                 _maxBounds;
   private final MBViewManager.MBViewState                        _viewState;
@@ -84,7 +83,6 @@ public class MBPage extends MBPanel
     setReloadOnDocChange(definition.isReloadOnDocChange());
 
     _viewState = viewState;
-    _outcomeListeners = new ArrayList<MBOutcomeListenerProtocol>();
     _valueChangedListeners = new Hashtable<String, List<MBValueChangeListenerProtocol>>();
 
     // Ok, now we can build the children
@@ -192,10 +190,6 @@ public class MBPage extends MBPanel
     outcome.setDialogName(getDialogName());
     outcome.setPath(path);
 
-    for (MBOutcomeListenerProtocol lsnr : _outcomeListeners)
-    {
-      lsnr.outcomeProduced(outcome);
-    }
     if (synchro)
     {
       _controller.handleOutcomeSynchronously(outcome);
@@ -204,11 +198,6 @@ public class MBPage extends MBPanel
     {
       _controller.handleOutcome(outcome);
     }
-    for (MBOutcomeListenerProtocol lsnr : _outcomeListeners)
-    {
-      lsnr.afterOutcomeHandled(outcome);
-    }
-
   }
 
   @Override
@@ -372,19 +361,6 @@ public class MBPage extends MBPanel
       lsnr.valueChanged(value, originalValue, path);
     }
 
-  }
-
-  public void registerOutcomeListener(MBOutcomeListenerProtocol listener)
-  {
-    if (!_outcomeListeners.contains(listener))
-    {
-      _outcomeListeners.add(listener);
-    }
-  }
-
-  public void unregisterOutcomeListener(MBOutcomeListenerProtocol listener)
-  {
-    _outcomeListeners.remove(listener);
   }
 
   @Override

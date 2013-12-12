@@ -135,6 +135,8 @@ public class MBOutcomeRunner
     MBOutcomeTaskManager manager = new MBOutcomeTaskManager(outcome);
     MBMetadataService metadataService = MBMetadataService.getInstance();
 
+    manager.addTask(new MBNotifyOutcomeListenersBeforeTask(manager));
+
     if ("RESET_CONTROLLER".equals(outcome.getAction()))
     {
       final MBApplicationController applicationController = MBApplicationController.getInstance();
@@ -145,6 +147,7 @@ public class MBOutcomeRunner
 
       if (outcome.isPreConditionValid())
       {
+
         MBActionDefinition actionDef = metadataService.getDefinitionForActionName(outcome.getAction(), false);
         MBActionTask actionTask = null;
         if (actionDef != null) manager.addTask(actionTask = new MBActionTask(manager, actionDef));
@@ -167,11 +170,10 @@ public class MBOutcomeRunner
         {
           manager.addTask(new MBFollowUpActionTask(manager, actionTask.getResultContainer()));
         }
-
+        manager.addTask(new MBNotifyOutcomeListenersAfterTask(manager));
       }
     }
 
     return manager;
   }
-
 }

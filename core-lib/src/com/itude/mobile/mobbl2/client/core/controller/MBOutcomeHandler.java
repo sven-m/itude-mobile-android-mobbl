@@ -15,6 +15,10 @@
  */
 package com.itude.mobile.mobbl2.client.core.controller;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.os.Handler;
@@ -25,6 +29,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
+import com.itude.mobile.mobbl2.client.core.view.MBOutcomeListenerProtocol;
 
 /**
  * @author Coen Houtman
@@ -32,6 +37,8 @@ import com.itude.mobile.mobbl2.client.core.util.Constants;
  */
 public class MBOutcomeHandler extends Handler
 {
+  private final LinkedList<WeakReference<MBOutcomeListenerProtocol>> _outcomeListeners = new LinkedList<WeakReference<MBOutcomeListenerProtocol>>();
+
   @Override
   public void handleMessage(Message msg)
   {
@@ -105,5 +112,50 @@ public class MBOutcomeHandler extends Handler
     }
 
     return newDialogName;
+  }
+
+  public void registerOutcomeListener(MBOutcomeListenerProtocol listener)
+  {
+    synchronized (_outcomeListeners)
+    {
+      for (Iterator<WeakReference<MBOutcomeListenerProtocol>> it = _outcomeListeners.iterator(); it.hasNext();)
+      {
+        WeakReference<MBOutcomeListenerProtocol> ref = it.next();
+        MBOutcomeListenerProtocol prot = ref.get();
+        if (prot == null) it.remove();
+        else if (prot.equals(listener)) return;
+      }
+      _outcomeListeners.add(new WeakReference<MBOutcomeListenerProtocol>(listener));
+    }
+  }
+
+  public void unregisterOutcomeListener(MBOutcomeListenerProtocol listener)
+  {
+    synchronized (_outcomeListeners)
+    {
+      for (Iterator<WeakReference<MBOutcomeListenerProtocol>> it = _outcomeListeners.iterator(); it.hasNext();)
+      {
+        WeakReference<MBOutcomeListenerProtocol> ref = it.next();
+        MBOutcomeListenerProtocol prot = ref.get();
+        if (prot == null) it.remove();
+        else if (prot.equals(listener)) it.remove();
+      }
+    }
+  }
+
+  public List<MBOutcomeListenerProtocol> getOutcomeListeners()
+  {
+    synchronized (_outcomeListeners)
+    {
+      List<MBOutcomeListenerProtocol> list = new ArrayList<MBOutcomeListenerProtocol>(_outcomeListeners.size());
+      for (Iterator<WeakReference<MBOutcomeListenerProtocol>> it = _outcomeListeners.iterator(); it.hasNext();)
+      {
+        WeakReference<MBOutcomeListenerProtocol> ref = it.next();
+        MBOutcomeListenerProtocol prot = ref.get();
+        if (prot == null) it.remove();
+        else list.add(prot);
+      }
+      return list;
+    }
   }
 }
