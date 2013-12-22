@@ -256,6 +256,12 @@ public class MBApplicationController extends Application
     data.putParcelable("outcome", outcome);
     data.putBoolean("throwException", throwException);
 
+    // This happens when handleOutcome is triggered before MBViewManager.onRestart is
+    if (_outcomeHandler == null)
+    {
+      startOutcomeHandler();
+    }
+
     final Message msg = _outcomeHandler.obtainMessage();
     msg.setData(data);
 

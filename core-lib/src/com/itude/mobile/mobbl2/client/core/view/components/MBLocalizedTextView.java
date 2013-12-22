@@ -17,12 +17,9 @@ package com.itude.mobile.mobbl2.client.core.view.components;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.TextView;
 
-import com.itude.mobile.mobbl2.client.core.MBException;
 import com.itude.mobile.mobbl2.client.core.services.MBLocalizationService;
-import com.itude.mobile.mobbl2.client.core.util.Constants;
 
 public class MBLocalizedTextView extends TextView
 {
@@ -50,18 +47,15 @@ public class MBLocalizedTextView extends TextView
 
   protected String getValue(String text)
   {
-    String mbText;
-    try
+    if (isInEditMode())
     {
-      mbText = MBLocalizationService.getInstance().getTextForKey(text.toString());
+      // We're previewing the XML file. Therefore, there is no MOBBL configuration loaded: just show the key
+      return text;
     }
-    catch (MBException mbe)
+    else
     {
-      // You are probably previewing the XML, and MOBBL isn't loaded at this point. 
-      Log.w(Constants.APPLICATION_NAME, mbe.getMessage());
-      mbText = text.toString();
+      return MBLocalizationService.getInstance().getTextForKey(text.toString());
     }
-    return mbText;
   }
 
 }
