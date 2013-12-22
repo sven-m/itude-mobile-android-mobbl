@@ -248,7 +248,9 @@ public class MBPage extends MBPanel
       {
         if (mustBe.equals("/"))
         {
-          Log.w(Constants.APPLICATION_NAME, "Ignoring path " + stripped + " because the document definition used root path " + mustBe);
+          Log.w(Constants.APPLICATION_NAME, "Ignoring path " + stripped + " because the document definition used root path " + mustBe
+                                            + ". Check your document attribute in your page definition. Maybe you meant: "
+                                            + ((MBPageDefinition) getDefinition()).getDocumentName() + "/" + stripped);
           ignorePath = true;
         }
         else
