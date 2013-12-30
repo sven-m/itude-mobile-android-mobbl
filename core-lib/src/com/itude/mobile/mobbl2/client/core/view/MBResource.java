@@ -56,7 +56,7 @@ public class MBResource extends MBComponentContainer
       int collectionSize = sortedItems.size();
 
       HashMap<String, MBItem> itemsTmp = new HashMap<String, MBItem>(collectionSize);
-      ArrayList<MBItem> sortedItemsTmp = new ArrayList<MBItem>(collectionSize);
+      List<MBItem> sortedItemsTmp = new ArrayList<MBItem>(collectionSize);
 
       for (MBItemDefinition itemDef : sortedItems)
       {
@@ -147,7 +147,7 @@ public class MBResource extends MBComponentContainer
   {
     if (_sortedItemsReversed == null)
     {
-      ArrayList<MBItem> sortedItems = new ArrayList<MBItem>(_sortedItems);
+      List<MBItem> sortedItems = new ArrayList<MBItem>(_sortedItems);
       Collections.reverse(sortedItems);
       _sortedItemsReversed = Collections.unmodifiableList(sortedItems);
     }

@@ -16,6 +16,7 @@
 package com.itude.mobile.mobbl2.client.core.view.components;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.view.View;
@@ -33,8 +34,8 @@ import com.itude.mobile.mobbl2.client.core.view.components.MBSegmentedControlBar
 public class MBSegmentedControlContainer extends RelativeLayout implements MBOnSelectedListener
 {
 
-  private final ArrayList<String>     _contentTitleStrings;
-  private final ArrayList<View>       _contentItems;
+  private final List<String>          _contentTitleStrings;
+  private final List<View>            _contentItems;
   private int                         _selectedIndex;
 
   private final LinearLayout          _contentContainer;
@@ -120,7 +121,7 @@ public class MBSegmentedControlContainer extends RelativeLayout implements MBOnS
     _contentContainer.addView(_contentItems.get(selectedIndex));
   }
 
-  public ArrayList<View> getContentItems()
+  public List<View> getContentItems()
   {
     return _contentItems;
   }

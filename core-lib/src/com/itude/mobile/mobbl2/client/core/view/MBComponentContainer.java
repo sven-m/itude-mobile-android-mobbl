@@ -124,7 +124,7 @@ public class MBComponentContainer extends MBComponent
   @Override
   public <T extends MBComponent> List<T> getDescendantsOfKind(Class<T> clazz)
   {
-    ArrayList<T> result = new ArrayList<T>();
+    List<T> result = new ArrayList<T>();
     for (MBComponent child : _children)
     {
 

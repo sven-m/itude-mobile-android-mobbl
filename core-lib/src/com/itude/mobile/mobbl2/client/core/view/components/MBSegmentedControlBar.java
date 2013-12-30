@@ -30,13 +30,13 @@ import com.itude.mobile.mobbl2.client.core.view.builders.MBViewBuilderFactory;
 public class MBSegmentedControlBar extends LinearLayout
 {
 
-  private final MBStyleHandler    _styleHandler;
-  private int                     _selectedIndex = 0;
+  private final MBStyleHandler _styleHandler;
+  private int                  _selectedIndex = 0;
 
-  private MBOnSelectedListener    _onSelectedListener;
-  private MBOnClickListener       _onClickListener;
+  private MBOnSelectedListener _onSelectedListener;
+  private MBOnClickListener    _onClickListener;
 
-  private final ArrayList<Button> _itemButtons;
+  private final List<Button>   _itemButtons;
 
   public MBSegmentedControlBar(Context context, List<String> titles, String style)
   {
