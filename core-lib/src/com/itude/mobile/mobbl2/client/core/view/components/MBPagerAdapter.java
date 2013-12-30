@@ -16,6 +16,7 @@
 package com.itude.mobile.mobbl2.client.core.view.components;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
@@ -24,7 +25,7 @@ import android.view.View;
 
 public class MBPagerAdapter<T extends View> extends PagerAdapter
 {
-  private final ArrayList<T> views;
+  private final List<T> views;
 
   public MBPagerAdapter()
   {
