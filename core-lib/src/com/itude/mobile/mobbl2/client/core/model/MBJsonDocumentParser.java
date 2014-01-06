@@ -61,16 +61,20 @@ public class MBJsonDocumentParser
       JSONObject jsonDoc = new JSONObject(jsonString);
       MBDocument document = new MBDocument(definition);
 
-      Object child = jsonDoc.get(jsonDoc.names().getString(0));
-
-      // Only parse it if the document exists in the jsonDoc
-      if (child instanceof JSONObject)
+      JSONArray names = jsonDoc.names();
+      for (int i = 0; i < names.length(); i++)
       {
-        // ignore the first Element, use its child as the root
-        JSONObject jsonRoot = (JSONObject) child;
+        Object child = jsonDoc.get(names.getString(i));
 
-        // kick off recursive construction, starting with root element
-        parseJsonValue(jsonRoot, definition, document);
+        // Only parse it if the document exists in the jsonDoc
+        if (child instanceof JSONObject)
+        {
+          // ignore the first Element, use its child as the root
+          JSONObject jsonRoot = (JSONObject) child;
+
+          // kick off recursive construction, starting with root element
+          parseJsonValue(jsonRoot, definition, document);
+        }
       }
 
       return document;
