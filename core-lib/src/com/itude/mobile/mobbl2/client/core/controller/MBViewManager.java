@@ -53,6 +53,7 @@ import com.itude.mobile.mobbl2.client.core.controller.MBApplicationController.Ap
 import com.itude.mobile.mobbl2.client.core.controller.MBDialogManager.MBDialogChangeListener;
 import com.itude.mobile.mobbl2.client.core.controller.exceptions.MBExpressionNotBooleanException;
 import com.itude.mobile.mobbl2.client.core.controller.helpers.MBActivityHelper;
+import com.itude.mobile.mobbl2.client.core.controller.util.DefaultHomeButtonHandler;
 import com.itude.mobile.mobbl2.client.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
@@ -93,6 +94,8 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   private MBDialogManager        _dialogManager;
   private MBShutdownHandler      _shutdownHandler = new MBDefaultShutdownHandler();
 
+  private HomeButtonHandler      _homeButtonHandler;
+
   ///////////////////// Android lifecycle methods
 
   @Override
@@ -103,6 +106,8 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
     _actionBarBuilder = constructActionBarBuilder();
 
     _dialogManager = new MBDialogManager(this);
+
+    _homeButtonHandler = new DefaultHomeButtonHandler();
 
     /*
      *  We store our default orientation. This will be used to determine how pages should be shown by default
@@ -301,7 +306,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
     if (!getActiveDialog().onBackPressed())
     {
       super.onBackPressed();
-
     }
   }
 
@@ -969,13 +973,9 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   public void onHomeSelected()
   {
-    if (getSlidingMenu() != null)
+    if (_homeButtonHandler != null)
     {
-      getSlidingMenu().toggle();
-    }
-    else
-    {
-      getDialogManager().activateHome();
+      _homeButtonHandler.handleButton();
     }
   }
 
@@ -1049,5 +1049,20 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   public void invalidateActionBar(EnumSet<MBActionBarInvalidationOption> flags)
   {
     _actionBarBuilder.invalidateActionBar(flags);
+  }
+
+  public void setHomeButtonHandler(HomeButtonHandler handler)
+  {
+    _homeButtonHandler = handler;
+  }
+
+  public void resetDefaultHomeButtonHandler()
+  {
+    _homeButtonHandler = new DefaultHomeButtonHandler();
+  }
+
+  public static interface HomeButtonHandler
+  {
+    public void handleButton();
   }
 }

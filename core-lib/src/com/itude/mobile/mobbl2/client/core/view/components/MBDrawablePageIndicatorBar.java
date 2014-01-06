@@ -16,6 +16,7 @@
 package com.itude.mobile.mobbl2.client.core.view.components;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -30,6 +31,11 @@ public class MBDrawablePageIndicatorBar extends MBAbstractPageIndicator
   public MBDrawablePageIndicatorBar(Context context)
   {
     super(context);
+  }
+
+  public MBDrawablePageIndicatorBar(Context context, AttributeSet attributes)
+  {
+    super(context, attributes);
   }
 
   @Override
