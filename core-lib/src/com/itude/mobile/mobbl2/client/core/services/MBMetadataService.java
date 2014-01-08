@@ -60,8 +60,14 @@ public final class MBMetadataService
   private MBMetadataService()
   {
     MBMvcConfigurationParser mvcParser = new MBMvcConfigurationParser();
-    if (_phoneConfigName != null && (DeviceUtil.getInstance().isPhone() || DeviceUtil.getInstance().isPhoneV14())) _configName = _phoneConfigName;
-    else if (_tabletConfigName != null && DeviceUtil.isTablet()) _configName = _tabletConfigName;
+    if (_phoneConfigName != null && !DeviceUtil.isTablet())
+    {
+      _configName = _phoneConfigName;
+    }
+    else if (_tabletConfigName != null && DeviceUtil.isTablet())
+    {
+      _configName = _tabletConfigName;
+    }
 
     // Configuration definition
     _cfg = (MBConfigurationDefinition) mvcParser.parseData(DataUtil.getInstance().readFromAssetOrFile(_configName), _configName);

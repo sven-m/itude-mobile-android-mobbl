@@ -15,6 +15,7 @@
  */
 package com.itude.mobile.mobbl2.client.core.view.components.tabbar;
 
+import com.itude.mobile.android.util.AssertUtil;
 import com.itude.mobile.mobbl2.client.core.controller.MBViewManager;
 import com.itude.mobile.mobbl2.client.core.view.listeners.MBTabListenerI;
 
@@ -27,13 +28,16 @@ public class MBTabListener implements MBTabListenerI
 
   public MBTabListener(String dialogName)
   {
+    AssertUtil.notEmpty("dialogName", dialogName);
     _dialog = dialogName;
   }
 
   @Override
   public void onTabReselected(MBTab tab)
   {
-    MBViewManager.getInstance().activateDialogWithName(_dialog);
+    MBViewManager viewManager = MBViewManager.getInstance();
+    if (_dialog.equals(viewManager.getActiveDialogName())) viewManager.getActiveDialog().clearAllViews();
+    else viewManager.activateDialogWithName(_dialog);
   }
 
   @Override

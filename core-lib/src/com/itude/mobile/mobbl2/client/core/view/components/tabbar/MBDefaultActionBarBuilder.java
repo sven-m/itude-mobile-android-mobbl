@@ -18,6 +18,7 @@ package com.itude.mobile.mobbl2.client.core.view.components.tabbar;
 import java.util.EnumSet;
 import java.util.List;
 
+import android.R;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -40,6 +41,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.itude.mobile.android.util.ComparisonUtil;
+import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDialogDefinition;
@@ -138,6 +140,7 @@ public abstract class MBDefaultActionBarBuilder implements MBActionBarBuilder
         }
       }
     }
+    populateActionBar(actionBar);
   }
 
   protected void handleOutcome(MBToolDefinition def)
@@ -278,7 +281,16 @@ public abstract class MBDefaultActionBarBuilder implements MBActionBarBuilder
         MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
 
         //fix the Home icon padding
-        View homeIcon = MBViewManager.getInstance().findViewById(android.support.v7.appcompat.R.id.home);
+        View homeIcon = null;
+        if (DeviceUtil.getInstance().hasNativeActionBarSupport())
+        {
+          homeIcon = MBViewManager.getInstance().findViewById(R.id.home);
+        }
+        else
+        {
+          homeIcon = MBViewManager.getInstance().findViewById(android.support.v7.appcompat.R.id.home);
+        }
+
         if (homeIcon != null)
         {
           styleHandler.styleHomeIcon(homeIcon);
