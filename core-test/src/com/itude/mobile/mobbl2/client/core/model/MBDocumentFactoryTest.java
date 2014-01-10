@@ -28,7 +28,6 @@ public class MBDocumentFactoryTest extends ApplicationTestCase<MBApplicationCore
 {
 
   private byte[]                    configData;
-  private byte[]                    mobbl1DocumentData;
   private byte[]                    jsonDocumentData;
   private byte[]                    xmlDocumentData;
   private MBConfigurationDefinition config;
@@ -42,7 +41,6 @@ public class MBDocumentFactoryTest extends ApplicationTestCase<MBApplicationCore
   protected void setUp() throws Exception
   {
     DataUtil.getInstance().setContext(getContext());
-    mobbl1DocumentData = AssetUtil.getInstance().getByteArray("unittests/testdocument2.xml");
     jsonDocumentData = AssetUtil.getInstance().getByteArray("unittests/testdocument.txt");
     xmlDocumentData = AssetUtil.getInstance().getByteArray("unittests/testdocument.xml");
     configData = AssetUtil.getInstance().getByteArray("unittests/config_unittests.xml");
@@ -51,26 +49,13 @@ public class MBDocumentFactoryTest extends ApplicationTestCase<MBApplicationCore
     config = (MBConfigurationDefinition) configParser.parseData(configData, "config");
   }
 
-  public void testMobbl1Parsing()
-  {
-    assertNotNull(mobbl1DocumentData);
-    assertNotNull(configData);
-    assertNotNull(config);
-
-    MBDocumentDefinition docDef = config.getDefinitionForDocumentName("EXT-GebruikersInstellingenGetResponse");
-    assertNotNull(docDef);
-
-    MBDocument document = MBDocumentFactory.getInstance().getDocumentWithData(mobbl1DocumentData, MBDocumentFactory.PARSER_MOBBL1, docDef);
-    assertNotNull(document);
-  }
-
   public void testJsonParsing()
   {
     assertNotNull(jsonDocumentData);
     assertNotNull(configData);
     assertNotNull(config);
 
-    MBDocumentDefinition docDef = config.getDefinitionForDocumentName("EXT-GebruikersInstellingenGetResponse");
+    MBDocumentDefinition docDef = config.getDefinitionForDocumentName("Books");
     assertNotNull(docDef);
 
     MBDocument document = MBDocumentFactory.getInstance().getDocumentWithData(jsonDocumentData, MBDocumentFactory.PARSER_JSON, docDef);
@@ -83,7 +68,7 @@ public class MBDocumentFactoryTest extends ApplicationTestCase<MBApplicationCore
     assertNotNull(configData);
     assertNotNull(config);
 
-    MBDocumentDefinition docDef = config.getDefinitionForDocumentName("EXT-GebruikersInstellingenGetResponse");
+    MBDocumentDefinition docDef = config.getDefinitionForDocumentName("Books");
     assertNotNull(docDef);
 
     MBDocument document = MBDocumentFactory.getInstance().getDocumentWithData(xmlDocumentData, MBDocumentFactory.PARSER_XML, docDef);

@@ -15,20 +15,33 @@
  */
 package com.itude.mobile.mobbl2.client.core.model;
 
+import java.util.Hashtable;
+import java.util.Map;
+
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBUnknownDataTypeException;
+import com.itude.mobile.mobbl2.client.core.model.parser.MBDocumentParser;
+import com.itude.mobile.mobbl2.client.core.model.parser.MBJsonDocumentParser;
+import com.itude.mobile.mobbl2.client.core.model.parser.MBXmlDocumentParser;
 
 public class MBDocumentFactory
 {
 
-  public static String             PARSER_XML    = "XML";
-  public static String             PARSER_JSON   = "JSON";
-  public static String             PARSER_MOBBL1 = "MOBBL1";
+  public static final String                  PARSER_XML  = "XML";
+  public static final String                  PARSER_JSON = "JSON";
+  //  public static final String                  PARSER_MOBBL1 = "MOBBL1";
 
-  private static MBDocumentFactory _instance;
+  private static MBDocumentFactory            _instance;
+
+  private final Map<String, MBDocumentParser> _registeredDocumentParsers;
 
   private MBDocumentFactory()
   {
+    _registeredDocumentParsers = new Hashtable<String, MBDocumentParser>();
+
+    registerDocumentParser(new MBXmlDocumentParser(), PARSER_XML);
+    registerDocumentParser(new MBJsonDocumentParser(), PARSER_JSON);
+    //    registerDocumentParser(new MBMobbl1DocumentParser(), PARSER_MOBBL1);
 
   }
 
@@ -42,24 +55,24 @@ public class MBDocumentFactory
     return _instance;
   }
 
-  public MBDocument getDocumentWithData(byte[] data, String type, MBDocumentDefinition definition)
+  private MBDocumentParser getParserForType(String type)
   {
-    if (type.equals(PARSER_XML))
-    {
-      return MBXmlDocumentParser.getDocumentWithData(data, definition);
-    }
-    else if (type.equals(PARSER_MOBBL1))
-    {
-      return MBMobbl1DocumentParser.getDocumentWithData(data, definition);
-    }
-    else if (type.equals(PARSER_JSON))
-    {
-      return MBJsonDocumentParser.getDocumentWithData(data, definition);
-    }
-    else
+    MBDocumentParser parser = _registeredDocumentParsers.get(type);
+    if (parser == null)
     {
       throw new MBUnknownDataTypeException(type);
     }
+    return parser;
+  }
+
+  public MBDocument getDocumentWithData(byte[] data, String type, MBDocumentDefinition definition)
+  {
+    return getParserForType(type).getDocumentWithData(data, definition);
+  }
+
+  public void registerDocumentParser(MBDocumentParser parser, String name)
+  {
+    _registeredDocumentParsers.put(name, parser);
   }
 
 }

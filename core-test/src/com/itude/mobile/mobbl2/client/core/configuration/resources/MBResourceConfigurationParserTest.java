@@ -30,10 +30,9 @@ public class MBResourceConfigurationParserTest extends ApplicationTestCase<MBApp
 
   private MBResourceConfigurationParser parser;
 
-  private final String[]                resourceIds    = {"config", "endpoints", "ICON-tab_home", "ICON-tab_shares"};
+  private final String[]                resourceIds    = {"config", "endpoints", "ICON-tab_1", "ICON-tab_2"};
 
-  private final String[]                resourceValues = {"file://config.xml", "file://endpoints.xml", "file://ic_menu_home.png",
-      "file://ic_menu_shares.png"                      };
+  private final String[]                resourceValues = {"file://config.xml", "file://endpoints.xml", "file://ic_1.png", "file://ic_2.png"};
   private final String[]                bundleIds      = {"nl", "fr"};
   private final String[]                bundleValues   = {"file://texts-nl.xml", "file://texts-nl.xml"};
 

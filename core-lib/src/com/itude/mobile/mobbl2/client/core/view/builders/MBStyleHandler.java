@@ -176,7 +176,6 @@ public class MBStyleHandler
   @Deprecated
   protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed, String stateDisabled, String stateSelected)
   {
-    // Fix for issue: http://dev.itude.com/jira/browse/BINCKAPPS-995
     // The order in which the states are being added is very important! 
     // See http://developer.android.com/guide/topics/resources/drawable-resource.html#StateList for more info
 

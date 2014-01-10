@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.itude.mobile.mobbl2.client.core.model;
+package com.itude.mobile.mobbl2.client.core.model.parser;
 
 import java.util.Collection;
 
@@ -24,13 +24,17 @@ import com.itude.mobile.mobbl2.client.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBAttributeDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition;
+import com.itude.mobile.mobbl2.client.core.model.MBDocument;
+import com.itude.mobile.mobbl2.client.core.model.MBElement;
+import com.itude.mobile.mobbl2.client.core.model.MBElementContainer;
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBParseErrorException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 
-public class MBJsonDocumentParser
+public class MBJsonDocumentParser implements MBDocumentParser
 {
 
-  public static MBDocument getDocumentWithData(byte[] data, MBDocumentDefinition definition)
+  @Override
+  public MBDocument getDocumentWithData(byte[] data, MBDocumentDefinition definition)
   {
     try
     {

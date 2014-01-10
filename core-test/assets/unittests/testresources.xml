@@ -6,58 +6,11 @@
 	<Resource id="whitelabel-splashscreen" url="file://whitelabel_splashscreen.png" />
 	<Resource id="arrow" url="file://images/arrow.png" />
 	<Resource id="leaf" url="file://images/leaf.png" />
-	<Resource id="button-delete" url="file://bt_delete.png" />
-
-	<Resource id="ICON-tab_favourites" url="file://Favorites_Icon.png" />
-
-	<Resource id="ICON-tab_home" url="file://ic_menu_home.png" />
-	<Resource id="ICON-tab_shares" url="file://ic_menu_shares.png" />
-	<Resource id="ICON-tab_my_account" url="file://ic_menu_portefeuille.png" />
-	<Resource id="ICON-tab_search_cis_name" url="file://ic_menu_search.png" />
-	<Resource id="ICON-tab_settings" url="file://ic_menu_settings.png" />
-	<Resource id="ICON-tab_order" url="file://ic_menu_order.png" />
-
-
-	<Resource id="itudelogo" url="http://www.itude.com/images/logo_itude.png"
-		cacheable="true" ttl="0" />
-
+	
+	<Resource id="ICON-tab_1" url="file://ic_1.png" />
+	<Resource id="ICON-tab_2" url="file://ic_2.png" />
+	
 	<Bundle languageCode="nl" url="file://texts-nl.xml" />
 	<Bundle languageCode="fr" url="file://texts-nl.xml" />
 
-	<!-- button background images -->
-	<Resource id="ALEX-button-default-normal" url="file://alex_default_normal.9.png" />
-	<Resource id="ALEX-button-default-pressed" url="file://alex_default_pressed.9.png" />
-	<Resource id="ALEX-button-default-disabled" url="file://alex_default_disabled.9.png" />
-	<Resource id="ALEX-button-kopen-normal" url="file://alex_kopen_normal.9.png" />
-	<Resource id="ALEX-button-kopen-pressed" url="file://alex_kopen_pressed.9.png" />
-	<Resource id="ALEX-button-kopen-disabled" url="file://alex_kopen_disabled.9.png" />
-	<Resource id="ALEX-button-verkopen-normal" url="file://alex_verkopen_normal.9.png" />
-	<Resource id="ALEX-button-verkopen-pressed" url="file://alex_verkopen_pressed.9.png" />
-	<Resource id="ALEX-button-verkopen-disabled" url="file://alex_verkopen_disabled.9.png" />
-	<Resource id="ALEX-button-favorieten-normal" url="file://alex_favorieten_normal.9.png" />
-	<Resource id="ALEX-button-favorieten-pressed" url="file://alex_favorieten_pressed.9.png" />
-	<Resource id="ALEX-button-favorieten-disabled" url="file://alex_favorieten_disabled.9.png" />
-	<Resource id="ALEX-button-sprinters-normal" url="file://alex_sprinters_normal.9.png" />
-	<Resource id="ALEX-button-sprinters-pressed" url="file://alex_sprinters_pressed.9.png" />
-	<Resource id="ALEX-button-sprinters-disabled" url="file://alex_sprinters_disabled.9.png" />
-	<Resource id="ALEX-button-opties-normal" url="file://alex_opties_normal.9.png" />
-	<Resource id="ALEX-button-opties-pressed" url="file://alex_opties_pressed.9.png" />
-	<Resource id="ALEX-button-opties-disabled" url="file://alex_opties_disabled.9.png" />
-	<Resource id="ALEX-button-agree-normal" url="file://alex_agree_normal.9.png" />
-	<Resource id="ALEX-button-agree-pressed" url="file://alex_agree_pressed.9.png" />
-	<Resource id="ALEX-button-agree-disabled" url="file://alex_agree_disabled.9.png" />
-	<Resource id="ALEX-button-disagree-normal" url="file://alex_disagree_normal.9.png" />
-	<Resource id="ALEX-button-disagree-pressed" url="file://alex_disagree_pressed.9.png" />
-	<Resource id="ALEX-button-disagree-disabled" url="file://alex_disagree_disabled.9.png" />
-	<Resource id="ALEX-button-read-order-normal" url="file://alex_verkopen_normal.9.png" />
-	<Resource id="ALEX-button-read-order-pressed" url="file://alex_verkopen_pressed.9.png" />
-	<Resource id="ALEX-button-read-order-disabled" url="file://alex_verkopen_pressed.9.png" />
-
-	<!-- Info bar related images -->
-	<Resource id="ALEX-infobar-logo" url="file://alex_logo.png" />
-	<Resource id="BINCK-infobar-logo" url="file://binck_logo.png" />
-	<Resource id="info-button" url="file://info_button.png" />
-
-	<Resource id="button-refresh" url="file://btn_refresh.9.png" />
-	<Resource id="button-refresh-pressed" url="file://btn_refresh_down.9.png" />
 </Resources>

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.itude.mobile.mobbl2.client.core.model;
+package com.itude.mobile.mobbl2.client.core.model.parser;
 
 import android.test.ApplicationTestCase;
 
@@ -23,6 +23,7 @@ import com.itude.mobile.mobbl2.client.core.MBApplicationCore;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBMvcConfigurationParser;
+import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 
 public class MBJsonDocumentParserTest extends ApplicationTestCase<MBApplicationCore>
 {
@@ -50,11 +51,11 @@ public class MBJsonDocumentParserTest extends ApplicationTestCase<MBApplicationC
 
     MBMvcConfigurationParser configParser = new MBMvcConfigurationParser();
     MBConfigurationDefinition config = (MBConfigurationDefinition) configParser.parseData(configData, "config");
-    MBDocumentDefinition docDef = config.getDefinitionForDocumentName("EXT-GebruikersInstellingenGetResponse");
+    MBDocumentDefinition docDef = config.getDefinitionForDocumentName("Books");
 
     assertNotNull(docDef);
-
-    MBDocument document = MBJsonDocumentParser.getDocumentWithData(documentData, docDef);
+    MBJsonDocumentParser parser = new MBJsonDocumentParser();
+    MBDocument document = parser.getDocumentWithData(documentData, docDef);
     assertNotNull(document);
 
   }

@@ -44,9 +44,6 @@ public final class MBPathUtil
     // performance tuned implementation of splitPath
     // measurements show this impl takes just 25% compared to the old
     // implementation (splitPathOldImplementation which uses expensive Regular Expressions).
-    // note that the AndroidBinckTest project has a testcase that checks splitPath performance
-    // against splitPathOldImplementation performance. if splitPath doesn't perform at least
-    // 4 times as fast, the test fails.
     List<String> components = new ArrayList<String>();
     int previousPosition = 0;
     int slashPosition;

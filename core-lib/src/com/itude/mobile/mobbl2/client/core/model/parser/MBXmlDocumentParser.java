@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.itude.mobile.mobbl2.client.core.model;
+package com.itude.mobile.mobbl2.client.core.model.parser;
 
 import java.io.ByteArrayInputStream;
 import java.util.HashSet;
@@ -34,12 +34,15 @@ import android.util.Log;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.exceptions.MBInvalidElementNameException;
+import com.itude.mobile.mobbl2.client.core.model.MBDocument;
+import com.itude.mobile.mobbl2.client.core.model.MBElement;
+import com.itude.mobile.mobbl2.client.core.model.MBElementContainer;
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBInvalidDocumentException;
 import com.itude.mobile.mobbl2.client.core.model.exceptions.MBParseErrorException;
 import com.itude.mobile.mobbl2.client.core.util.Constants;
 import com.itude.mobile.mobbl2.client.core.util.MBPathUtil;
 
-public class MBXmlDocumentParser extends DefaultHandler
+public class MBXmlDocumentParser extends DefaultHandler implements MBDocumentParser
 {
   private static final Pattern      NUMBERPATTERN = Pattern.compile("\\[[0-9]+\\]");
 
@@ -52,7 +55,8 @@ public class MBXmlDocumentParser extends DefaultHandler
   private boolean                   _copyRootAttributes;
   private HashSet<String>           _ignoredPaths;
 
-  public static MBDocument getDocumentWithData(byte[] data, MBDocumentDefinition definition)
+  @Override
+  public MBDocument getDocumentWithData(byte[] data, MBDocumentDefinition definition)
   {
     MBXmlDocumentParser documentParser = new MBXmlDocumentParser();
     MBDocument result = documentParser.parse(data, definition);

@@ -25,7 +25,7 @@ import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinitio
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
 import com.itude.mobile.mobbl2.client.core.model.MBDocumentFactory;
 import com.itude.mobile.mobbl2.client.core.model.MBElement;
-import com.itude.mobile.mobbl2.client.core.model.MBXmlDocumentParser;
+import com.itude.mobile.mobbl2.client.core.model.parser.MBXmlDocumentParser;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.MBDataHandlerBase;
 

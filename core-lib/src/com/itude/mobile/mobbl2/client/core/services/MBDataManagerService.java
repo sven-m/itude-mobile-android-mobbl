@@ -31,7 +31,6 @@ import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBMemor
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBMetadataDataHandler;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBRESTServiceDataHandler;
 import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.MBSystemDataHandler;
-import com.itude.mobile.mobbl2.client.core.services.datamanager.handlers.mobbl1.MBMobbl1ServerDataHandler;
 import com.itude.mobile.mobbl2.client.core.services.exceptions.MBNoDataManagerException;
 import com.itude.mobile.mobbl2.client.core.services.operation.MBDocumentOperation;
 import com.itude.mobile.mobbl2.client.core.services.operation.MBDocumentOperationDelegate;
@@ -39,15 +38,15 @@ import com.itude.mobile.mobbl2.client.core.services.operation.MBDocumentOperatio
 public class MBDataManagerService
 {
 
-  public static final String                                      DATA_HANDLER_MEMORY       = "MBMemoryDataHandler";
-  public static final String                                      DATA_HANDLER_FILE         = "MBFileDataHandler";
-  public static final String                                      DATA_HANDLER_SYSTEM       = "MBSystemDataHandler";
-  public static final String                                      DATA_HANDLER_WS_REST      = "MBRESTServiceDataHandler";
-  public static final String                                      DATA_HANDLER_WS_MOBBL     = "MBMobbl1ServerDataHandler";
-  public static final String                                      DATA_HANDLER_WS_MOBBL_XML = "MBMobbl1XmlServerDataHandler";
-  public static final String                                      DATA_HANDLER_METADATA     = "MBMetadataDataHandler";
+  public static final String                                      DATA_HANDLER_MEMORY   = "MBMemoryDataHandler";
+  public static final String                                      DATA_HANDLER_FILE     = "MBFileDataHandler";
+  public static final String                                      DATA_HANDLER_SYSTEM   = "MBSystemDataHandler";
+  public static final String                                      DATA_HANDLER_WS_REST  = "MBRESTServiceDataHandler";
+  //  public static final String                                      DATA_HANDLER_WS_MOBBL     = "MBMobbl1ServerDataHandler";
+  //  public static final String                                      DATA_HANDLER_WS_MOBBL_XML = "MBMobbl1XmlServerDataHandler";
+  public static final String                                      DATA_HANDLER_METADATA = "MBMetadataDataHandler";
 
-  private static MBDataManagerService                             _instance                 = null;
+  private static MBDataManagerService                             _instance             = null;
 
   private final Map<String, MBDataHandler>                        _registeredHandlers;
 
@@ -62,8 +61,8 @@ public class MBDataManagerService
     registerDataHandler(new MBSystemDataHandler(), DATA_HANDLER_SYSTEM);
     registerDataHandler(new MBMemoryDataHandler(), DATA_HANDLER_MEMORY);
     registerDataHandler(new MBRESTServiceDataHandler(), DATA_HANDLER_WS_REST);
-    registerDataHandler(new MBMobbl1ServerDataHandler(), DATA_HANDLER_WS_MOBBL);
-    registerDataHandler(new MBMobbl1ServerDataHandler(), DATA_HANDLER_WS_MOBBL_XML);
+    //    registerDataHandler(new MBMobbl1ServerDataHandler(), DATA_HANDLER_WS_MOBBL);
+    //    registerDataHandler(new MBMobbl1ServerDataHandler(), DATA_HANDLER_WS_MOBBL_XML);
     registerDataHandler(new MBMetadataDataHandler(), DATA_HANDLER_METADATA);
   }
 

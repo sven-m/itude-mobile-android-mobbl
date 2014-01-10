@@ -115,7 +115,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
      */
     _defaultScreenOrientation = getRequestedOrientation();
 
-    // https://dev.itude.com/jira/browse/BINCKAPPS-1131
     super.onCreate(null);
 
     supportRequestWindowFeature(Window.FEATURE_PROGRESS);
@@ -124,7 +123,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
     // makes sure the action bar is initialized (otherwise, the setProgressBar.. doesn't work)
     if (getSupportActionBar() != null)
     {
-      // https://mobiledev.itude.com/jira/browse/MOBBL-659
       setSupportProgressBarIndeterminateVisibility(false);
     }
 

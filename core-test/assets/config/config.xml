@@ -143,39 +143,6 @@
 			</Element>
 
 		</Document>
-		
-		
-		<Document autoCreate="TRUE" name="EXT-GebruikersInstellingenGetResponse"
-                dataManager="BinckDataHandler">
-                <Element name="EXT-GebruikersInstellingenGetResult">
-                    <Element name="Homeindices">
-                        <Element name="EXTGebruikersInstellingenGetReplyHomeindicesHomeindex">
-                            <Attribute name="Fondsid" type="string"/>
-                            <Element name="Fondslijstnummer">
-                                <Attribute name="text()" type="string"/>
-                            </Element>
-                            <Element name="Classificatie">
-                                <Attribute name="text()" type="string"/>
-                            </Element>
-                        </Element>
-                    </Element>
-                    <Element name="Indexlistindices">
-                        <Element
-                            name="EXTGebruikersInstellingenGetReplyIndexlistindicesIndexlistindex">
-                            <Attribute name="Fondsid" type="string"/>
-                        </Element>
-                    </Element>
-                    <Element name="Koersenmenuoptions">
-                        <Element
-                            name="EXTGebruikersInstellingenGetReplyKoersenmenuoptionsKoersenmenuoption">
-                            <Attribute name="Fondsenlijstnummer" type="string"/>
-                            <Attribute name="Naam" type="string"/>
-                            <Attribute name="HoofdfondstypeNr" type="string"/>
-                        </Element>
-                    </Element>
-                </Element>
-            </Document>
-
 	</Documents>
   
   </Model>
@@ -183,7 +150,6 @@
   <Controller>
 
 	<Actions>
-		<Action name="LoginAction" className="BinckLoginAction"/>
 	</Actions>
 	
 	<Wiring>

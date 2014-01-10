@@ -66,7 +66,6 @@ public class MBPage extends MBPanel
 
   public MBPage(MBPageDefinition definition, MBDocument document, String rootPath, MBViewState viewState)
   {
-    // https://dev.itude.com/jira/browse/BINCKMOBILE-320#action_15310
     // Make sure that the Panel does not start building the view based on the children OF THIS PAGE because that is too early
     // The children need the additional information that is set after the constructor of super. So pass buildViewStructure: FALSE
     // and build the children ourselves here

@@ -569,7 +569,6 @@ public class MBApplicationController extends Application
   {
     if (_outcomeHandler == null)
     {
-      // https://dev.itude.com/jira/browse/BINCKAPPS-831
       Log.w(Constants.APPLICATION_NAME, "Skipping handleException because outcomeHandler is null");
       return;
     }

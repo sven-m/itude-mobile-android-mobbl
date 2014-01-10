@@ -1,43 +1,6 @@
-<EXT-GebruikersInstellingenGetResponse xmlns="http://www.binck.com/">
-  <EXT-GebruikersInstellingenGetResult>
-    <Homeindices>
-      <EXTGebruikersInstellingenGetReplyHomeindicesHomeindex Fondsid='3829'>
-        <Fondslijstnummer>1</Fondslijstnummer>
-        <Classificatie>4350</Classificatie>
-      </EXTGebruikersInstellingenGetReplyHomeindicesHomeindex>
-      <EXTGebruikersInstellingenGetReplyHomeindicesHomeindex Fondsid='42054'>
-        <Fondslijstnummer>2</Fondslijstnummer>
-        <Classificatie>4351</Classificatie>
-      </EXTGebruikersInstellingenGetReplyHomeindicesHomeindex>
-      <EXTGebruikersInstellingenGetReplyHomeindicesHomeindex Fondsid='3831'>
-        <Fondslijstnummer>10</Fondslijstnummer>
-        <Classificatie>4356</Classificatie>
-      </EXTGebruikersInstellingenGetReplyHomeindicesHomeindex>
-      <EXTGebruikersInstellingenGetReplyHomeindicesHomeindex Fondsid='27463'>
-        <Fondslijstnummer>11</Fondslijstnummer>
-        <Classificatie>4357</Classificatie>
-      </EXTGebruikersInstellingenGetReplyHomeindicesHomeindex>
-    </Homeindices>
-    <Indexlistindices>
-      <EXTGebruikersInstellingenGetReplyIndexlistindicesIndexlistindex Fondsid='3829'/>
-      <EXTGebruikersInstellingenGetReplyIndexlistindicesIndexlistindex Fondsid='42054'/>
-      <EXTGebruikersInstellingenGetReplyIndexlistindicesIndexlistindex Fondsid='184689'/>
-      <EXTGebruikersInstellingenGetReplyIndexlistindicesIndexlistindex Fondsid='135380'/>
-      <EXTGebruikersInstellingenGetReplyIndexlistindicesIndexlistindex Fondsid='3831'/>
-      <EXTGebruikersInstellingenGetReplyIndexlistindicesIndexlistindex Fondsid='131813'/>
-      <EXTGebruikersInstellingenGetReplyIndexlistindicesIndexlistindex Fondsid='3832'/>
-      <EXTGebruikersInstellingenGetReplyIndexlistindicesIndexlistindex Fondsid='138074'/>
-      <EXTGebruikersInstellingenGetReplyIndexlistindicesIndexlistindex Fondsid='191264'/>
-      <EXTGebruikersInstellingenGetReplyIndexlistindicesIndexlistindex Fondsid='27463'/>
-      <EXTGebruikersInstellingenGetReplyIndexlistindicesIndexlistindex Fondsid='191263'/>
-      <EXTGebruikersInstellingenGetReplyIndexlistindicesIndexlistindex Fondsid='12573'/>
-      <EXTGebruikersInstellingenGetReplyIndexlistindicesIndexlistindex Fondsid='3830'/>
-    </Indexlistindices>
-    <Koersenmenuoptions>
-      <EXTGebruikersInstellingenGetReplyKoersenmenuoptionsKoersenmenuoption Fondsenlijstnummer='1' Naam='AEX Hoofdfondsen' HoofdfondstypeNr='1'/>
-      <EXTGebruikersInstellingenGetReplyKoersenmenuoptionsKoersenmenuoption Fondsenlijstnummer='2' Naam='AMX Hoofdfondsen' HoofdfondstypeNr='1'/>
-      <EXTGebruikersInstellingenGetReplyKoersenmenuoptionsKoersenmenuoption Fondsenlijstnummer='27' Naam='Opties Amsterdam' HoofdfondstypeNr='12'/>
-      <EXTGebruikersInstellingenGetReplyKoersenmenuoptionsKoersenmenuoption Fondsenlijstnummer='28' Naam='Futures Amsterdam' HoofdfondstypeNr='9'/>
-    </Koersenmenuoptions>
-  </EXT-GebruikersInstellingenGetResult>
-</EXT-GebruikersInstellingenGetResponse>
+<Books>
+	<Author name="">
+		<Book title="Title" isbn="1" summary="summary" />
+		<Book title="Fantasia IX" isbn="2" summary="summary"/>
+	</Author>
+</Books>

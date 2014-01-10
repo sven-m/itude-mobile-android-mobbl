@@ -30,7 +30,7 @@ import com.itude.mobile.android.util.FileUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl2.client.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl2.client.core.model.MBDocument;
-import com.itude.mobile.mobbl2.client.core.model.MBXmlDocumentParser;
+import com.itude.mobile.mobbl2.client.core.model.parser.MBXmlDocumentParser;
 import com.itude.mobile.mobbl2.client.core.services.MBMetadataService;
 
 public final class MBCacheManager
@@ -254,7 +254,8 @@ public final class MBCacheManager
 
     String documentName = _documentTypes.get(key);
     MBDocumentDefinition def = MBMetadataService.getInstance().getDefinitionForDocumentName(documentName);
-    return MBXmlDocumentParser.getDocumentWithData(data, def);
+    MBXmlDocumentParser parser = new MBXmlDocumentParser();
+    return parser.getDocumentWithData(data, def);
   }
 
   private void doSetDocument(MBDocument document, String key, int ttl)
