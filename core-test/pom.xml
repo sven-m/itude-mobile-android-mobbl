@@ -12,7 +12,7 @@
 	<packaging>apk</packaging>
 	<name>Android Mobbl Core Test</name>
 	<description>Android Mobbl Core Whitelabel test application</description>
-	<url>http://www.itude.com</url>
+	<url>http://mobbl.org/</url>
 	<inceptionYear>2011</inceptionYear>
 	<developers>
 		<developer>

@@ -1,0 +1,146 @@
+/*
+ * (C) Copyright Itude Mobile B.V., The Netherlands
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.itude.mobile.mobbl.core.view.builders;
+
+import java.util.List;
+
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout;
+
+import com.itude.mobile.android.util.ScreenUtil;
+import com.itude.mobile.mobbl.core.controller.MBApplicationController;
+
+/**
+ * @author Coen Houtman
+ *
+ * Base class for all DialogBuilders
+ */
+public class MBDialogViewBuilder
+{
+  public enum MBDialogType {
+    Single, Split
+  }
+
+  private static final int SPLIT_MARGIN                   = 0;
+  private static final int LEFT_FRAGMENT_WIDTH_PERCENTAGE = 33;
+
+  /**
+   * A list of integers which are ids for the views to be built. In case of a single Dialog,
+   * the list will contain one item. In the case of a DialogGroup, the list contains ids for each child
+   * Dialog in the order in which they are defined in the config.
+   */
+  private List<Integer>    _sortedDialogIds;
+
+  /**
+   * Method to build the view group(s) necessary for the type of dialog.
+   * There is a number possibilities for the implementation, which depend on the type of dialog:
+   *   1. only implement the build method. That view is then used for both portrait as landscape
+   *   2. implement all three build methods, where in the build method is determined when to build portrait
+   *      and when to build landscape
+   * @param dialogType 
+   * @return
+   */
+  public ViewGroup buildDialog(MBDialogType dialogType, List<Integer> sortedDialogIds)
+  {
+    _sortedDialogIds = sortedDialogIds;
+
+    RelativeLayout container = buildContainer();
+
+    if (dialogType == MBDialogType.Single)
+    {
+      buildSingleDialog(container);
+    }
+    else if (dialogType == MBDialogType.Split)
+    {
+      buildSplitDialog(container);
+    }
+
+    return container;
+  }
+
+  protected ViewGroup buildSingleDialog(RelativeLayout container)
+  {
+    if (_sortedDialogIds != null && !_sortedDialogIds.isEmpty())
+    {
+      FrameLayout fragmentContainer = new FrameLayout(container.getContext());
+      fragmentContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+      fragmentContainer.setId(_sortedDialogIds.get(0));
+
+      MBStyleHandler styleHandler = getStyleHandler();
+      styleHandler.styleFragmentPadding(fragmentContainer, 0);
+      styleHandler.styleBackground(fragmentContainer);
+
+      container.addView(fragmentContainer);
+    }
+
+    return container;
+  }
+
+  protected ViewGroup buildSplitDialog(RelativeLayout container)
+  {
+    MBStyleHandler styleHandler = getStyleHandler();
+
+    for (int i = 0; i < _sortedDialogIds.size(); i++)
+    {
+      FrameLayout fragmentContainer = new FrameLayout(MBApplicationController.getInstance().getBaseContext());
+      fragmentContainer.setId(_sortedDialogIds.get(i));
+
+      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+          ScreenUtil.getWidthPixelsForPercentage(MBApplicationController.getInstance().getBaseContext(), LEFT_FRAGMENT_WIDTH_PERCENTAGE),
+          RelativeLayout.LayoutParams.MATCH_PARENT);
+
+      // position fragment containers next to each other
+      if (i == 0)
+      {
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+      }
+      else if (i > 0)
+      {
+        layoutParams.addRule(RelativeLayout.RIGHT_OF, _sortedDialogIds.get(i - 1));
+        layoutParams.setMargins(SPLIT_MARGIN, 0, 0, 0);
+      }
+
+      if (i == _sortedDialogIds.size() - 1) layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+      fragmentContainer.setLayoutParams(layoutParams);
+      styleHandler.styleBackground(fragmentContainer);
+      styleHandler.styleFragmentPadding(fragmentContainer, i);
+      container.addView(fragmentContainer);
+    }
+
+    return container;
+  }
+
+  /**
+   * Build the container in which to place the fragments. A RelativeLayout should provide
+   * enough flexibility to build any possible view. The view ids can be retrieved from the {@link #__sortedDialogIds}.
+   * @return
+   */
+  protected RelativeLayout buildContainer()
+  {
+    RelativeLayout mainContainer = new RelativeLayout(MBApplicationController.getInstance().getBaseContext());
+    mainContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+    return mainContainer;
+  }
+
+  public MBStyleHandler getStyleHandler()
+  {
+    return MBViewBuilderFactory.getInstance().getStyleHandler();
+  }
+}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.itude.mobile.mobbl2.client.core">
+      package="com.itude.mobile.mobbl.core">
     <uses-sdk android:minSdkVersion="8" />
 
     <application>
