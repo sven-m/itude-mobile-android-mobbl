@@ -37,12 +37,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
 
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
@@ -68,6 +68,7 @@ import com.itude.mobile.mobbl.core.util.threads.MBThreadHandler;
 import com.itude.mobile.mobbl.core.view.MBAlert;
 import com.itude.mobile.mobbl.core.view.MBPage;
 import com.itude.mobile.mobbl.core.view.MBPage.OrientationPermission;
+import com.itude.mobile.mobbl.core.view.builders.MBContentViewWrapper;
 import com.itude.mobile.mobbl.core.view.components.slidingmenu.MBSlidingMenuController;
 import com.itude.mobile.mobbl.core.view.components.tabbar.MBActionBarBuilder;
 
@@ -95,6 +96,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   private MBShutdownHandler      _shutdownHandler = new MBDefaultShutdownHandler();
 
   private HomeButtonHandler      _homeButtonHandler;
+  private int                    _emplacementId;
 
   ///////////////////// Android lifecycle methods
 
@@ -128,9 +130,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
     getDialogManager().addDialogChangeListener(this);
 
-    FrameLayout container = new FrameLayout(this);
-    LayoutParams layout = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-    setContentView(container, layout);
     _instance = this;
 
     MBApplicationController.getInstance().startController();
@@ -139,6 +138,21 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   public void prepareForApplicationStart()
   {
     _dialogManager.onCreate();
+  }
+
+  @Override
+  public void setContentView(View view)
+  {
+    if (_emplacementId == 0)
+    {
+      _emplacementId = UniqueIntegerGenerator.getId();
+      MBContentViewWrapper wrapper = MBApplicationFactory.getInstance().createContentViewWrapper();
+      super.setContentView(wrapper.buildContentView(this, _emplacementId));
+    }
+
+    ViewGroup container = (ViewGroup) findViewById(_emplacementId);
+    container.removeAllViews();
+    container.addView(view);
   }
 
   @Override

@@ -31,6 +31,8 @@ import com.itude.mobile.mobbl.core.view.MBAlert;
 import com.itude.mobile.mobbl.core.view.MBField;
 import com.itude.mobile.mobbl.core.view.MBPage;
 import com.itude.mobile.mobbl.core.view.MBPanel;
+import com.itude.mobile.mobbl.core.view.builders.MBContentViewWrapper;
+import com.itude.mobile.mobbl.core.view.builders.contentview.MBDefaultContentViewWrapper;
 import com.itude.mobile.mobbl.core.view.components.tabbar.MBActionBarBuilder;
 import com.itude.mobile.mobbl.core.view.listeners.MBPageConstructionListener;
 
@@ -41,12 +43,12 @@ import com.itude.mobile.mobbl.core.view.listeners.MBPageConstructionListener;
 
 public class MBApplicationFactory
 {
-  private static MBApplicationFactory _instance = null;
-  private final ActionMappings        _actions;
-  private final ControllerMappings    _controllers;
-  private final PageConstructor       _pageConstructor;
+  private static MBApplicationFactory         _instance = null;
+  private final ActionMappings                _actions;
+  private final ControllerMappings            _controllers;
+  private final PageConstructor               _pageConstructor;
   private Class<? extends MBActionBarBuilder> _actionBarBuilder;
-  
+
   public MBApplicationFactory()
   {
     _actions = new ActionMappings(getActionRegistry());
@@ -98,6 +100,11 @@ public class MBApplicationFactory
     return new MBDialogController();
   }
 
+  public MBContentViewWrapper createContentViewWrapper()
+  {
+    return new MBDefaultContentViewWrapper();
+  }
+
   public final MBAlert createAlert(MBAlertDefinition definition, MBDocument document, String rootPath)
   {
     return new MBAlert(definition, document, rootPath);
@@ -107,12 +114,12 @@ public class MBApplicationFactory
   {
     return _actionBarBuilder;
   }
-  
+
   public void setActionBarBuilder(Class<? extends MBActionBarBuilder> actionBarBuilder)
   {
     _actionBarBuilder = actionBarBuilder;
   }
-  
+
   protected ActionMappings.Registry getActionRegistry()
   {
     return null;
@@ -267,6 +274,5 @@ public class MBApplicationFactory
     }
 
   }
-  
-  
+
 }
