@@ -90,15 +90,15 @@ public class MBCacheManagerTest extends ApplicationTestCase<MBApplicationCore>
   public void testCacheTimedExpiration()
   {
     String test = "Test string for testing the MBCacheManager";
-    doPutInCache("test", test.getBytes(), 3000); // cache for 3 seconds
+    doPutInCache("test", test.getBytes(), 3); // cache for 3 seconds
 
     // test successful caching
     doGetFromCache("test", test.getBytes());
 
-    // wait for 10 seconds
+    // wait for 5 seconds
     try
     {
-      Thread.sleep(10000);
+      Thread.sleep(5000);
     }
     catch (Exception e)
     {
@@ -137,15 +137,15 @@ public class MBCacheManagerTest extends ApplicationTestCase<MBApplicationCore>
   {
     MBDocument document = MBDataManagerService.getInstance().loadDocument(C_GENERIC_REST_REQUEST);
     assertNotNull(document);
-    doPutDocumentInCache(document.getUniqueId(), document, 3000); // cache for 3 seconds
+    doPutDocumentInCache(document.getUniqueId(), document, 3); // cache for 3 seconds
 
     // test successful caching
     doGetDocumentFromCache(document.getUniqueId(), document);
 
-    // wait for 10 seconds
+    // wait for 5 seconds
     try
     {
-      Thread.sleep(10000);
+      Thread.sleep(5000);
     }
     catch (Exception e)
     {
