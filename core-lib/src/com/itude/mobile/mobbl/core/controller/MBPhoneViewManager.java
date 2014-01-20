@@ -15,29 +15,11 @@
  */
 package com.itude.mobile.mobbl.core.controller;
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout.LayoutParams;
-
 import com.itude.mobile.mobbl.core.view.components.tabbar.MBActionBarBuilder;
 import com.itude.mobile.mobbl.core.view.components.tabbar.MBTabletActionBarBuilder;
 
 public class MBPhoneViewManager extends MBViewManager
 {
-  // End of Android hooks
-
-  @Override
-  public void setContentView(int id)
-  {
-    setContentView(getLayoutInflater().inflate(id, null));
-  }
-
-  @Override
-  public void setContentView(View v)
-  {
-    setContentView(v, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-  }
-
   @Override
   protected MBActionBarBuilder getDefaultActionBar()
   {

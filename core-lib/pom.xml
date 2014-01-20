@@ -52,11 +52,6 @@
 			<type>apklib</type>
 		</dependency>
 		<dependency>
-			<groupId>com.itude.mobile.android.widget</groupId>
-			<artifactId>slidingmenu</artifactId>
-			<type>apklib</type>
-		</dependency>
-		<dependency>
 			<groupId>com.android.support</groupId>
 			<artifactId>support-v4</artifactId>
 		</dependency>
