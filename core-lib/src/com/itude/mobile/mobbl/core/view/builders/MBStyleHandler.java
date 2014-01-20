@@ -56,7 +56,6 @@ import com.itude.mobile.mobbl.core.view.components.MBSegmentedControlBar;
 import com.itude.mobile.mobbl.core.view.components.MBSegmentedControlContainer;
 import com.itude.mobile.mobbl.core.view.components.MBSegmentedItem;
 import com.itude.mobile.mobbl.core.view.components.tabbar.MBTab;
-import com.itude.mobile.widget.slidingmenu.SlidingMenu;
 
 public class MBStyleHandler
 {
@@ -718,16 +717,6 @@ public class MBStyleHandler
 
   public void styleDialogHeader(MBHeader dialogHeader)
   {
-  }
-
-  public void styleSlidingMenu(SlidingMenu slidingMenu)
-  {
-    slidingMenu.setBehindWidth(ScreenConstants.TWOHUNDRED);
-  }
-
-  public void styleSlidingMenuContainer(LinearLayout slidingMenuMainContainer)
-  {
-    slidingMenuMainContainer.setOrientation(LinearLayout.VERTICAL);
   }
 
   public void styleActionBarHeader(MBHeader header)

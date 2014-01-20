@@ -176,7 +176,7 @@ public final class MBCacheManager
       long maxAge = 0;
       if (ttl > 0)
       {
-        maxAge = System.currentTimeMillis() + ttl;
+        maxAge = System.currentTimeMillis() + (ttl * 1000);
       }
       _ttls.put(key, "" + maxAge);
 
