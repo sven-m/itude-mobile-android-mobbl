@@ -40,9 +40,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
+import android.widget.FrameLayout.LayoutParams;
 
 import com.itude.mobile.android.util.StringUtil;
-import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
@@ -63,13 +64,11 @@ import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
 import com.itude.mobile.mobbl.core.util.helper.MBSecurityHelper;
-import com.itude.mobile.mobbl.core.util.threads.MBThread;
 import com.itude.mobile.mobbl.core.util.threads.MBThreadHandler;
 import com.itude.mobile.mobbl.core.view.MBAlert;
 import com.itude.mobile.mobbl.core.view.MBPage;
 import com.itude.mobile.mobbl.core.view.MBPage.OrientationPermission;
 import com.itude.mobile.mobbl.core.view.builders.MBContentViewWrapper;
-import com.itude.mobile.mobbl.core.view.components.slidingmenu.MBSlidingMenuController;
 import com.itude.mobile.mobbl.core.view.components.tabbar.MBActionBarBuilder;
 
 public abstract class MBViewManager extends ActionBarActivity implements MBDialogChangeListener
@@ -96,7 +95,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   private MBShutdownHandler      _shutdownHandler = new MBDefaultShutdownHandler();
 
   private HomeButtonHandler      _homeButtonHandler;
-  private int                    _emplacementId;
+  private ViewGroup              _container;
 
   ///////////////////// Android lifecycle methods
 
@@ -143,16 +142,21 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   @Override
   public void setContentView(View view)
   {
-    if (_emplacementId == 0)
+
+    if (_container == null)
     {
-      _emplacementId = UniqueIntegerGenerator.getId();
+      FrameLayout container = new FrameLayout(this);
+      LayoutParams layout = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+      container.setLayoutParams(layout);
+
       MBContentViewWrapper wrapper = MBApplicationFactory.getInstance().createContentViewWrapper();
-      super.setContentView(wrapper.buildContentView(this, _emplacementId));
+      super.setContentView(wrapper.buildContentView(this, container));
+
+      _container = container;
     }
 
-    ViewGroup container = (ViewGroup) findViewById(_emplacementId);
-    container.removeAllViews();
-    container.addView(view);
+    _container.removeAllViews();
+    _container.addView(view);
   }
 
   @Override
@@ -709,8 +713,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
     invalidateActionBar();
 
-    refreshSlidingMenu();
-
     super.onConfigurationChanged(newConfig);
 
     _dialogManager.onConfigurationChanged(newConfig);
@@ -874,11 +876,9 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   /////// STUFF MERGED IN FROM MBNextGenViewManager ////////////
 
-  private Menu                    _menu        = null;
+  private Menu               _menu = null;
 
-  private MBSlidingMenuController _slidingMenu = null;
-
-  private MBActionBarBuilder      _actionBarBuilder;
+  private MBActionBarBuilder _actionBarBuilder;
 
   protected void onPreCreate()
   {
@@ -911,51 +911,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
     _actionBarBuilder.fillActionBar(getSupportActionBar(), menu);
 
     return true;
-  }
-
-  public MBSlidingMenuController getSlidingMenu()
-  {
-    return _slidingMenu;
-  }
-
-  public void buildSlidingMenu()
-  {
-    // the needsSlidingMenu-check is placed on the UI thread, since it is possible that the actual initialization of the dialogs
-    // is still queued over there at the moment, which would result in the check failing if it would be fired now
-    runOnUiThread(new MBThread()
-    {
-      @Override
-      public void runMethod()
-      {
-        if (needsSlidingMenu())
-        {
-          _slidingMenu = new MBSlidingMenuController(MBViewManager.this);
-        }
-        else
-        {
-          Log.w(this.getClass().getSimpleName(), "No sliding menu needed");
-        }
-
-      }
-    });
-  }
-
-  protected void refreshSlidingMenu()
-  {
-    if (getSlidingMenu() != null)
-    {
-      runOnUiThread(new MBThread()
-      {
-
-        @Override
-        public void runMethod()
-        {
-
-          getSlidingMenu().rebuild();
-        }
-      });
-
-    }
   }
 
   @Override
@@ -1016,7 +971,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
     }
 
-    if (getSlidingMenu() != null) getSlidingMenu().hide();
   }
 
   public void showProgressIndicatorInTool()

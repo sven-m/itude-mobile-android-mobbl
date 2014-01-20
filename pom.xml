@@ -79,14 +79,7 @@
 				<artifactId>android-util-lib</artifactId>
 				<version>${util.lib.version}</version>
 				<type>apklib</type>
-			</dependency>
-			<dependency>
-				<groupId>com.itude.mobile.android.widget</groupId>
-				<artifactId>slidingmenu</artifactId>
-				<version>${widget.slidingmenu.version}</version>
-				<type>apklib</type>
-			</dependency>
-			
+			</dependency>			
 		</dependencies>
 	</dependencyManagement>
     
@@ -174,7 +167,6 @@
     <properties>
         <core.lib.version>${project.version}</core.lib.version>
         <util.lib.version>0.2.0.1</util.lib.version>
-        <widget.slidingmenu.version>0.2.1.0</widget.slidingmenu.version>
         <android.version>4.4</android.version>
         <android.support.version>19.0.0</android.support.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

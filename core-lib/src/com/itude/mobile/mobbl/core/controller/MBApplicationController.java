@@ -174,8 +174,6 @@ public class MBApplicationController extends Application
 
     final EnumSet<MBActionBarInvalidationOption> actionBarRefreshOptions = EnumSet.noneOf(MBActionBarInvalidationOption.class);
 
-    MBViewManager.getInstance().buildSlidingMenu();
-
     _viewManager.runOnUiThread(new Runnable()
     {
       @Override

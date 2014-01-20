@@ -17,7 +17,6 @@ package com.itude.mobile.mobbl.core.controller.util;
 
 import com.itude.mobile.mobbl.core.controller.MBViewManager;
 import com.itude.mobile.mobbl.core.controller.MBViewManager.HomeButtonHandler;
-import com.itude.mobile.mobbl.core.view.components.slidingmenu.MBSlidingMenuController;
 
 public class DefaultHomeButtonHandler implements HomeButtonHandler
 {
@@ -31,17 +30,8 @@ public class DefaultHomeButtonHandler implements HomeButtonHandler
     {
       return;
     }
+    viewManager.getDialogManager().activateHome();
 
-    MBSlidingMenuController slidingMenu = viewManager.getSlidingMenu();
-
-    if (slidingMenu != null)
-    {
-      slidingMenu.toggle();
-    }
-    else
-    {
-      viewManager.getDialogManager().activateHome();
-    }
   }
 
 }
