@@ -28,7 +28,6 @@ import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.Configuration;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.BackStackEntry;
@@ -48,7 +47,6 @@ import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
-import com.itude.mobile.mobbl.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl.core.controller.helpers.MBActivityHelper;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.services.MBLocalizationService;
@@ -65,7 +63,6 @@ public class MBDialogController extends ContextWrapper
   private String                                   _name;
   private String                                   _iconName;
   private String                                   _dialogMode;
-  private String                                   _outcomeId;
   private Object                                   _rootController;
   private boolean                                  _temporary;
   private final Map<String, MBPageStackController> _pageStacks           = new HashMap<String, MBPageStackController>();
@@ -155,7 +152,7 @@ public class MBDialogController extends ContextWrapper
    */
   private void addDialogChild(String name, int id, String mode)
   {
-    MBPageStackController pageStack = new MBPageStackController(id, name, mode);
+    MBPageStackController pageStack = new MBPageStackController(this, id, name, mode);
     _pageStacks.put(pageStack.getName(), pageStack);
     _sortedDialogIds.add(id);
   }
@@ -259,7 +256,7 @@ public class MBDialogController extends ContextWrapper
 
   }
 
-  private FragmentManager getSupportFragmentManager()
+  FragmentManager getSupportFragmentManager()
   {
     return getActivity().getSupportFragmentManager();
   }
@@ -336,7 +333,7 @@ public class MBDialogController extends ContextWrapper
     _temporary = temporary;
   }
 
-  private static class ShowPageEntry
+  static class ShowPageEntry
   {
     public MBPage getPage()
     {
@@ -413,110 +410,8 @@ public class MBDialogController extends ContextWrapper
   {
     MBPageStackController pageStack = _pageStacks.get(entry.getDialogName());
 
-    if ("POP".equals(entry.getDisplayMode()))
-    {
-      popView();
-    }
-    else if ((Constants.C_DISPLAY_MODE_REPLACE.equals(entry.getDisplayMode()) //
-             || Constants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE.equals(entry.getDisplayMode()))
-             || ("SINGLE".equals(pageStack.getMode()) && entry.getPage().getCurrentViewState() != MBViewState.MBViewStateModal))
-    {
-      entry.setAddToBackStack(false);
-    }
-    else if ("REPLACEDIALOG".equals(entry.getDisplayMode()) && !getFragmentStack().isBackStackEmpty())
-    {
-      getFragmentStack().emptyBackStack(false);
-    }
+    pageStack.showPage(entry);
 
-    MBBasicViewController fragment = MBApplicationFactory.getInstance().createFragment(entry.getPage().getPageName());
-    fragment.setPage(entry.getPage());
-    fragment.setDialogController(this);
-    Bundle args = new Bundle();
-    args.putString("id", entry.getId());
-    fragment.setArguments(args);
-
-    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-    if (entry.getPage().getCurrentViewState() == MBViewState.MBViewStateModal
-        || MBApplicationController.getInstance().getModalPageID() != null)
-    {
-      String modalPageId = MBApplicationController.getInstance().getModalPageID();
-
-      if (entry.isAddToBackStack())
-      {
-        transaction.addToBackStack(entry.getId());
-      }
-
-      if (modalPageId != null && MBApplicationController.getInstance().getOutcomeWhichCausedModal() != null)
-      {
-        entry.setDisplayMode(MBApplicationController.getInstance().getOutcomeWhichCausedModal().getDisplayMode());
-      }
-
-      boolean fullscreen = false;
-      boolean cancelable = false;
-
-      if ("MODAL".equals(entry.getDisplayMode()))
-      {
-        fullscreen = true;
-        cancelable = true;
-      }
-      if (entry.getDisplayMode() != null)
-      {
-        if (entry.getDisplayMode().contains("FULLSCREEN"))
-        {
-          fullscreen = true;
-        }
-
-        if (entry.getDisplayMode().contains("WITHCLOSEBUTTON"))
-        {
-          args.putBoolean("closable", true);
-          fragment.setArguments(args);
-        }
-      }
-      if (fullscreen)
-      {
-        args.putBoolean("fullscreen", true);
-        fragment.setArguments(args);
-      }
-
-      if (cancelable)
-      {
-        args.putBoolean("cancelable", true);
-        fragment.setArguments(args);
-      }
-
-      Fragment dialogFragment = getSupportFragmentManager().findFragmentByTag(modalPageId);
-      if (dialogFragment != null && !getFragmentStack().isBackStackEmpty())
-      {
-        getSupportFragmentManager().popBackStack();
-      }
-
-      transaction.add(fragment, entry.getId());
-    }
-    else
-    {
-      if (entry.isAddToBackStack())
-      {
-        transaction.addToBackStack(entry.getId());
-      }
-      else
-      {
-        if (!getFragmentStack().isBackStackEmpty())
-        {
-          getSupportFragmentManager().popBackStack();
-          transaction.addToBackStack(entry.getId());
-        }
-      }
-      transaction.replace(pageStack.getId(), fragment, entry.getId());
-    }
-
-    // commitAllowingStateLoss makes sure that the transaction is being
-    // commit,
-    // even when the target activity is stopped. For now, this comes with
-    // the price,
-    // that the page being displayed will lose its state after a
-    // configuration change (e.g. an orientation change)
-    transaction.commitAllowingStateLoss();
   }
 
   public List<MBBasicViewController> getAllFragments()
@@ -723,7 +618,7 @@ public class MBDialogController extends ContextWrapper
     return false;
   }
 
-  private static class FragmentStack implements OnBackStackChangedListener
+  static class FragmentStack implements OnBackStackChangedListener
   {
 
     private final FragmentManager _fragmentManager;
@@ -766,7 +661,7 @@ public class MBDialogController extends ContextWrapper
 
     }
 
-    private void playBackStack()
+    void playBackStack()
     {
       if (!_stack.isEmpty())
       {
@@ -788,7 +683,7 @@ public class MBDialogController extends ContextWrapper
       getFragmentManager().addOnBackStackChangedListener(this);
     }
 
-    private void emptyBackStack(boolean deactivate)
+    void emptyBackStack(boolean deactivate)
     {
       if (deactivate)
       {
