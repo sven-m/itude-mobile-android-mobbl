@@ -87,7 +87,6 @@ public class MBDialogController extends ContextWrapper
   {
     _fragmentStack = new FragmentStack(getSupportFragmentManager());
     setName(dialog);
-    setOutcomeId(outcomeId);
     if (controllerInit())
     {
       viewInit();
@@ -174,17 +173,6 @@ public class MBDialogController extends ContextWrapper
       _mainContainer = MBViewBuilderFactory.getInstance().getDialogViewBuilder().buildDialog(MBDialogType.Split, _sortedDialogIds);
     }
 
-    if (getOutcomeId() != null)
-    {
-      /*
-       * Log.d(Constants.APPLICATION_NAME,
-       * "MBDialogController.onCreate: found outcomeID=" +
-       * getOutcomeId()); MBPage page =
-       * MBApplicationController.getInstance().getPage(getOutcomeId());
-       * showPage(page, null, getOutcomeId(), page.getDialogName(),
-       * false);
-       */
-    }
   }
 
   // //////////////////////////
@@ -326,16 +314,6 @@ public class MBDialogController extends ContextWrapper
   public void setDialogMode(String dialogMode)
   {
     _dialogMode = dialogMode;
-  }
-
-  private String getOutcomeId()
-  {
-    return _outcomeId;
-  }
-
-  private void setOutcomeId(String outcomeId)
-  {
-    _outcomeId = outcomeId;
   }
 
   public Object getRootController()
