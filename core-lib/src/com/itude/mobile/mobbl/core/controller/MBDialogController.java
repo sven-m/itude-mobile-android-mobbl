@@ -56,28 +56,27 @@ import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.threads.MBThread;
 import com.itude.mobile.mobbl.core.view.MBPage;
-import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl.core.view.builders.MBDialogViewBuilder.MBDialogType;
+import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
 
 public class MBDialogController extends ContextWrapper
 {
 
-  private String                     _name;
-  private String                     _iconName;
-  private String                     _dialogMode;
-  private String                     _outcomeId;
-  private Object                     _rootController;
-  private boolean                    _temporary;
-  private final List<Integer>        _sortedDialogIds      = new ArrayList<Integer>();
-  private final Map<String, Integer> _dialogIds            = new HashMap<String, Integer>();
-  private final Map<String, String>  _childDialogModes     = new HashMap<String, String>();
-  private View                       _mainContainer;
-  private boolean                    _shown                = false;
-  private FragmentStack              _fragmentStack;
-  private String                     _title;
-  private boolean                    _clearDialog;
-  private Configuration              _configurationChanged = null;
-  private final Queue<ShowPageEntry> _queuedPages          = new LinkedList<MBDialogController.ShowPageEntry>();
+  private String                                   _name;
+  private String                                   _iconName;
+  private String                                   _dialogMode;
+  private String                                   _outcomeId;
+  private Object                                   _rootController;
+  private boolean                                  _temporary;
+  private final Map<String, MBPageStackController> _pageStacks           = new HashMap<String, MBPageStackController>();
+  private final List<Integer>                      _sortedDialogIds      = new ArrayList<Integer>();
+  private View                                     _mainContainer;
+  private boolean                                  _shown                = false;
+  private FragmentStack                            _fragmentStack;
+  private String                                   _title;
+  private boolean                                  _clearDialog;
+  private Configuration                            _configurationChanged = null;
+  private final Queue<ShowPageEntry>               _queuedPages          = new LinkedList<MBDialogController.ShowPageEntry>();
 
   public MBDialogController()
   {
@@ -157,25 +156,20 @@ public class MBDialogController extends ContextWrapper
    */
   private void addDialogChild(String name, int id, String mode)
   {
-    _dialogIds.put(name, id);
+    MBPageStackController pageStack = new MBPageStackController(id, name, mode);
+    _pageStacks.put(pageStack.getName(), pageStack);
     _sortedDialogIds.add(id);
-
-    // only add the modes of the children
-    if (!name.equals(_name))
-    {
-      _childDialogModes.put(name, mode);
-    }
   }
 
   private void viewInit()
   {
     // handle as a single dialog
-    if (_dialogIds.size() == 1)
+    if (_pageStacks.size() == 1)
     {
       _mainContainer = MBViewBuilderFactory.getInstance().getDialogViewBuilder().buildDialog(MBDialogType.Single, _sortedDialogIds);
     }
     // handle as a group of dialogs
-    else if (_dialogIds.size() > 1)
+    else if (_pageStacks.size() > 1)
     {
       _mainContainer = MBViewBuilderFactory.getInstance().getDialogViewBuilder().buildDialog(MBDialogType.Split, _sortedDialogIds);
     }
@@ -439,7 +433,7 @@ public class MBDialogController extends ContextWrapper
 
   public void showPage(ShowPageEntry entry)
   {
-    MBApplicationController.getInstance().setPage(entry.getId(), entry.getPage());
+    MBPageStackController pageStack = _pageStacks.get(entry.getDialogName());
 
     if ("POP".equals(entry.getDisplayMode()))
     {
@@ -447,7 +441,7 @@ public class MBDialogController extends ContextWrapper
     }
     else if ((Constants.C_DISPLAY_MODE_REPLACE.equals(entry.getDisplayMode()) //
              || Constants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE.equals(entry.getDisplayMode()))
-             || ("SINGLE".equals(_childDialogModes.get(entry.getDialogName())) && entry.getPage().getCurrentViewState() != MBViewState.MBViewStateModal))
+             || ("SINGLE".equals(pageStack.getMode()) && entry.getPage().getCurrentViewState() != MBViewState.MBViewStateModal))
     {
       entry.setAddToBackStack(false);
     }
@@ -457,6 +451,7 @@ public class MBDialogController extends ContextWrapper
     }
 
     MBBasicViewController fragment = MBApplicationFactory.getInstance().createFragment(entry.getPage().getPageName());
+    fragment.setPage(entry.getPage());
     fragment.setDialogController(this);
     Bundle args = new Bundle();
     args.putString("id", entry.getId());
@@ -534,7 +529,7 @@ public class MBDialogController extends ContextWrapper
           transaction.addToBackStack(entry.getId());
         }
       }
-      transaction.replace(_dialogIds.get(entry.getDialogName()), fragment, entry.getId());
+      transaction.replace(pageStack.getId(), fragment, entry.getId());
     }
 
     // commitAllowingStateLoss makes sure that the transaction is being
@@ -579,13 +574,10 @@ public class MBDialogController extends ContextWrapper
   {
     MBBasicViewController fragment = null;
 
-    if (!_dialogIds.isEmpty())
+    if (!_pageStacks.isEmpty())
     {
-      Integer frID = _dialogIds.get(name);
-      if (frID != null)
-      {
-        fragment = (MBBasicViewController) getSupportFragmentManager().findFragmentById(frID);
-      }
+      int frID = _pageStacks.get(name).getId();
+      fragment = (MBBasicViewController) getSupportFragmentManager().findFragmentById(frID);
     }
     return fragment;
   }
