@@ -594,12 +594,19 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
     }
     else if ("DialogGroup".equals(elementName))
     {
+      MBDefinition configDef = getStack().elementAt(getStack().size() - 2);
+      MBDialogGroupDefinition groupDef = (MBDialogGroupDefinition) getStack().peek();
+      if (groupDef.getChildren().isEmpty())
+      {
+        MBDialogDefinition dialogDef = new MBDialogDefinition();
+        dialogDef.setName(groupDef.getName());
+        groupDef.addDialog(dialogDef);
+      }
+
       // On tablets, we can have a split view in a tab. In XML they are defined as two dialogs in a dialogGroup.
       // This means that the dialogs are automatically added to a dialogGroup. 
       // That is why we need to make sure that the dialogs are also kept locally, like on the phone, because the local references are used to address the Dialogs
       // Thats why we copy them here after the group has been added.
-      MBDefinition configDef = getStack().elementAt(getStack().size() - 2);
-      MBDialogGroupDefinition groupDef = (MBDialogGroupDefinition) getStack().peek();
       for (MBDialogDefinition dialogDef : groupDef.getChildren())
         configDef.addChildElement(dialogDef);
     }

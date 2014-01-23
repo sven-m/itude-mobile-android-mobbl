@@ -32,28 +32,28 @@ import com.itude.mobile.mobbl.core.util.Constants;
 public class MBConfigurationDefinition extends MBDefinition implements MBIncludableDefinition
 {
 
-  private static final String                     ORIGIN_WILDCARD                   = "*";
-  public static final String                      DOC_SYSTEM_EMPTY                  = "MBEmpty";
-  public static final String                      DOC_SYSTEM_LANGUAGE               = "MBBundle";
-  public static final String                      DOC_SYSTEM_EXCEPTION              = "MBException";
-  public static final String                      PATH_SYSTEM_EXCEPTION_NAME        = "/Exception[0]/@name";
-  public static final String                      PATH_SYSTEM_EXCEPTION_DESCRIPTION = "/Exception[0]/@description";
-  public static final String                      PATH_SYSTEM_EXCEPTION_ORIGIN      = "/Exception[0]/@origin";
-  public static final String                      PATH_SYSTEM_EXCEPTION_OUTCOME     = "/Exception[0]/@outcome";
-  public static final String                      PATH_SYSTEM_EXCEPTION_PATH        = "/Exception[0]/@path";
+  private static final String                        ORIGIN_WILDCARD                   = "*";
+  public static final String                         DOC_SYSTEM_EMPTY                  = "MBEmpty";
+  public static final String                         DOC_SYSTEM_LANGUAGE               = "MBBundle";
+  public static final String                         DOC_SYSTEM_EXCEPTION              = "MBException";
+  public static final String                         PATH_SYSTEM_EXCEPTION_NAME        = "/Exception[0]/@name";
+  public static final String                         PATH_SYSTEM_EXCEPTION_DESCRIPTION = "/Exception[0]/@description";
+  public static final String                         PATH_SYSTEM_EXCEPTION_ORIGIN      = "/Exception[0]/@origin";
+  public static final String                         PATH_SYSTEM_EXCEPTION_OUTCOME     = "/Exception[0]/@outcome";
+  public static final String                         PATH_SYSTEM_EXCEPTION_PATH        = "/Exception[0]/@path";
 
-  public static final String                      DOC_SYSTEM_PROPERTIES             = "MBApplicationProperties";
-  public static final String                      DOC_SYSTEM_DEVICE                 = "MBDevice";
+  public static final String                         DOC_SYSTEM_PROPERTIES             = "MBApplicationProperties";
+  public static final String                         DOC_SYSTEM_DEVICE                 = "MBDevice";
 
-  private final Map<String, MBDomainDefinition>   _domainTypes;
-  private final Map<String, MBDocumentDefinition> _documentTypes;
-  private final Map<String, MBActionDefinition>   _actionTypes;
-  private final List<MBOutcomeDefinition>         _outcomeTypes;
-  private final Map<String, MBPageDefinition>     _pageTypes;
-  private final Map<String, MBDialogDefinition>   _dialogs;
-  private MBDialogDefinition                      _homeDialog;
-  private final Map<String, MBToolDefinition>     _tools;
-  private final Map<String, MBAlertDefinition>    _alerts;
+  private final Map<String, MBDomainDefinition>      _domainTypes;
+  private final Map<String, MBDocumentDefinition>    _documentTypes;
+  private final Map<String, MBActionDefinition>      _actionTypes;
+  private final List<MBOutcomeDefinition>            _outcomeTypes;
+  private final Map<String, MBPageDefinition>        _pageTypes;
+  private final Map<String, MBDialogGroupDefinition> _dialogs;
+  private MBDialogGroupDefinition                    _homeDialog;
+  private final Map<String, MBToolDefinition>        _tools;
+  private final Map<String, MBAlertDefinition>       _alerts;
 
   public MBConfigurationDefinition()
   {
@@ -61,7 +61,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     _documentTypes = new HashMap<String, MBDocumentDefinition>();
     _actionTypes = new HashMap<String, MBActionDefinition>();
     _outcomeTypes = new ArrayList<MBOutcomeDefinition>();
-    _dialogs = Collections.synchronizedMap(new LinkedHashMap<String, MBDialogDefinition>());
+    _dialogs = Collections.synchronizedMap(new LinkedHashMap<String, MBDialogGroupDefinition>());
     _pageTypes = new HashMap<String, MBPageDefinition>();
     _tools = new LinkedHashMap<String, MBToolDefinition>();
     _alerts = new HashMap<String, MBAlertDefinition>();
@@ -98,7 +98,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     {
       addOutcome(outcomeDef);
     }
-    for (MBDialogDefinition dialogDef : otherConfig.getDialogs().values())
+    for (MBDialogGroupDefinition dialogDef : otherConfig.getDialogs().values())
     {
       addDialog(dialogDef);
     }
@@ -188,7 +188,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   }
 
   @Override
-  public void addChildElement(MBDialogDefinition child)
+  public void addChildElement(MBDialogGroupDefinition child)
   {
     addDialog(child);
   }
@@ -270,7 +270,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     _pageTypes.put(page.getName(), page);
   }
 
-  public void addDialog(MBDialogDefinition dialog)
+  public void addDialog(MBDialogGroupDefinition dialog)
   {
     if (_dialogs.containsKey(dialog.getName()))
     {
@@ -341,7 +341,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return _documentTypes.get(documentName);
   }
 
-  public MBDialogDefinition getDefinitionForDialogName(String dialogName)
+  public MBDialogGroupDefinition getDefinitionForDialogName(String dialogName)
   {
     return _dialogs.get(dialogName);
   }
@@ -389,7 +389,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return result;
   }
 
-  public Map<String, MBDialogDefinition> getDialogs()
+  public Map<String, MBDialogGroupDefinition> getDialogs()
   {
     return _dialogs;
   }
@@ -419,7 +419,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return _pageTypes;
   }
 
-  public MBDialogDefinition getHomeDialogDefinition()
+  public MBDialogGroupDefinition getHomeDialogDefinition()
   {
     return _homeDialog;
   }

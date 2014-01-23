@@ -29,6 +29,7 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBMvcConfigurationParser;
@@ -190,14 +191,14 @@ public final class MBMetadataService
     return docDef;
   }
 
-  public MBDialogDefinition getDefinitionForDialogName(String dialogName)
+  public MBDialogGroupDefinition getDefinitionForDialogName(String dialogName)
   {
     return getDefinitionForDialogName(dialogName, true);
   }
 
-  public MBDialogDefinition getDefinitionForDialogName(String dialogName, boolean doThrow)
+  public MBDialogGroupDefinition getDefinitionForDialogName(String dialogName, boolean doThrow)
   {
-    MBDialogDefinition dialogDef = _cfg.getDefinitionForDialogName(dialogName);
+    MBDialogGroupDefinition dialogDef = _cfg.getDefinitionForDialogName(dialogName);
     if (dialogDef == null && doThrow)
     {
       String message = "Dialog with name " + dialogName + " not defined";
@@ -215,9 +216,9 @@ public final class MBMetadataService
    * @param dialogName
    * @return the dialog name of the Dialog or its parent, the DialogGroup (if there is one)
    */
-  public MBDialogDefinition getTopDialogDefinitionForDialogName(String dialogName)
+  public MBDialogGroupDefinition getTopDialogDefinitionForDialogName(String dialogName)
   {
-    MBDialogDefinition def = getDefinitionForDialogName(dialogName);
+    MBDialogGroupDefinition def = getDefinitionForDialogName(dialogName);
     if (def.getParent() != null) return getDefinitionForDialogName(def.getParent());
     return def;
   }
@@ -237,9 +238,9 @@ public final class MBMetadataService
     _homeDialog = dialogDef;
   }
 
-  public List<MBDialogDefinition> getDialogs()
+  public List<MBDialogGroupDefinition> getDialogs()
   {
-    return new ArrayList<MBDialogDefinition>(_cfg.getDialogs().values());
+    return new ArrayList<MBDialogGroupDefinition>(_cfg.getDialogs().values());
   }
 
   //For now do not raise an exception if an outcome is not defined

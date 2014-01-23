@@ -555,16 +555,10 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   private void addPageToDialog(MBPage page, String displayMode, boolean addToBackStack)
   {
-    MBDialogDefinition topDefinition = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(page.getDialogName());
-    MBDialogController dialogController = _dialogManager.getDialog(topDefinition.getName());
-    if (dialogController == null || dialogController.getTemporary())
-    {
-      //  activateDialogWithPage(page);
-    }
-    else
-    {
-      dialogController.showPage(page, displayMode, page.getDialogName() + page.getPageName(), page.getDialogName(), addToBackStack);
-    }
+    //MBDialogDefinition topDefinition = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(page.getDialogName());
+    MBPageStackController pageStack = _dialogManager.getPageStack(page.getDialogName());
+    MBDialogController dialogController = pageStack.getParent();
+    dialogController.showPage(page, displayMode, page.getDialogName() + page.getPageName(), page.getDialogName(), addToBackStack);
   }
 
   @Override

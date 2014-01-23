@@ -90,7 +90,7 @@ public class MBDialogSwitchTask extends MBOutcomeTask
              && !getOutcome().getDialogName().equals(_dialogWhenCreated) //
              && !applicationController.isSuppressPageSelection())
     {
-      viewManager.getDialogManager().activateDialog(getOutcome().getDialogName());
+      viewManager.getDialogManager().activatePageStack(getOutcome().getDialogName());
 
     }
 

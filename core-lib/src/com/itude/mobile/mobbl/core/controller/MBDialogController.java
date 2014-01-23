@@ -157,6 +157,11 @@ public class MBDialogController extends ContextWrapper
     _sortedDialogIds.add(id);
   }
 
+  public Map<String, MBPageStackController> getPageStacks()
+  {
+    return _pageStacks;
+  }
+
   private void viewInit()
   {
     // handle as a single dialog

@@ -28,8 +28,10 @@ import android.view.View;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 
+import com.itude.mobile.android.util.AssertUtil;
 import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl.core.controller.util.MBBaseLifecycleListener;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
@@ -43,12 +45,14 @@ public class MBDialogManager extends MBBaseLifecycleListener
     public void onDialogSelected(String name);
   }
 
-  private final List<String>                    _sortedDialogNames;
-  private final Map<String, MBDialogController> _controllerMap;
-  private MBDialogController                    _menuController;
-  private String                                _activeDialog;
-  private final Activity                        _activity;
-  private final List<MBDialogChangeListener>    _listeners;
+  private final List<String>                       _sortedDialogNames;
+  private final Map<String, MBDialogController>    _controllerMap;
+  private final Map<String, MBPageStackController> _pageStackControllers;
+  private MBDialogController                       _menuController;
+  private String                                   _activeDialog;
+  private final Activity                           _activity;
+  private final List<MBDialogChangeListener>       _listeners;
+  private MBPageStackController                    _activePageStack;
 
   public MBDialogManager(Activity activity)
   {
@@ -56,6 +60,7 @@ public class MBDialogManager extends MBBaseLifecycleListener
     _sortedDialogNames = new ArrayList<String>();
     _listeners = new ArrayList<MBDialogChangeListener>();
     _controllerMap = new HashMap<String, MBDialogController>();
+    _pageStackControllers = new HashMap<String, MBPageStackController>();
   }
 
   ///////////////// Lifecycle events ////////////
@@ -188,9 +193,9 @@ public class MBDialogManager extends MBBaseLifecycleListener
 
   private void build()
   {
-    List<MBDialogDefinition> dialogs = MBMetadataService.getInstance().getDialogs();
+    List<MBDialogGroupDefinition> dialogs = MBMetadataService.getInstance().getDialogs();
 
-    for (MBDialogDefinition dialog : dialogs)
+    for (MBDialogGroupDefinition dialog : dialogs)
       if (dialog.isPreConditionValid())
       {
         if (dialog.getParent() == null) createDialog(dialog);
@@ -238,12 +243,22 @@ public class MBDialogManager extends MBBaseLifecycleListener
     return true;
   }
 
-  private void createDialog(MBDialogDefinition definition)
+  void activatePageStack(String pageStackName)
+  {
+    MBPageStackController controller = _pageStackControllers.get(pageStackName);
+    AssertUtil.notNull("controller", controller);
+
+    activateDialog(controller.getParent().getName());
+    _activePageStack = controller;
+  }
+
+  private void createDialog(MBDialogGroupDefinition definition)
   {
     MBDialogController controller = MBApplicationFactory.getInstance().createDialogController();
     String name = definition.getName();
     controller.init(name, null);
     _controllerMap.put(name, controller);
+    _pageStackControllers.putAll(controller.getPageStacks());
     _sortedDialogNames.add(name);
     if (definition.isShowAsMenu()) _menuController = controller;
   }
@@ -275,6 +290,11 @@ public class MBDialogManager extends MBBaseLifecycleListener
         }
       }
     }
+  }
+
+  public MBPageStackController getPageStack(String dialogName)
+  {
+    return _pageStackControllers.get(dialogName);
   }
 
 }

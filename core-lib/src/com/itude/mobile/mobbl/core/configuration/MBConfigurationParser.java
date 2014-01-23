@@ -38,6 +38,7 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBAttributeDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBBundleDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainValidatorDefinition;
@@ -237,6 +238,12 @@ public abstract class MBConfigurationParser extends DefaultHandler
   }
 
   public void notifyProcessed(MBDialogDefinition definition)
+  {
+    getStack().peek().addChildElement(definition);
+    getStack().push(definition);
+  }
+
+  public void notifyProcessed(MBDialogGroupDefinition definition)
   {
     getStack().peek().addChildElement(definition);
     getStack().push(definition);
