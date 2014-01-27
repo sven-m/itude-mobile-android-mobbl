@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=" http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.itude.mobile.android.mobbl</groupId>
@@ -11,8 +12,12 @@
 	<packaging>apklib</packaging>
 	<name>Android Mobbl Core Lib</name>
 	<description>Android Mobbl Core Library</description>
-	<url>http://www.itude.com</url>
-	<inceptionYear>2011</inceptionYear>
+	<url>http://mobbl.org/</url>
+	<inceptionYear>2014</inceptionYear>
+	<organization>
+		<name>Itude Mobile B.V</name>
+		<url>http://www.itude.com/</url>
+	</organization>
 	<developers>
 		<developer>
 			<name>Wiebe Elsinga</name>
@@ -23,6 +28,12 @@
 			</roles>
 		</developer>
 	</developers>
+	<licenses>
+		<license>
+        	<name>The Apache Software License, Version 2.0</name>
+            <url>LICENSE</url>
+        </license>
+    </licenses>
 
 	<dependencies>
 		<dependency>
@@ -32,8 +43,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.android.support</groupId>
-  			<artifactId>support-v4</artifactId>
-  		</dependency>
+			<artifactId>support-v4</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
@@ -76,7 +87,44 @@
 	<build>
 		<defaultGoal>install</defaultGoal>
 		<finalName>${project.artifactId}-${project.version}</finalName>
-		<sourceDirectory>src</sourceDirectory> 
+		<sourceDirectory>src</sourceDirectory>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.jayway.maven.plugins.android.generation2
+										</groupId>
+										<artifactId>
+											android-maven-plugin
+										</artifactId>
+										<versionRange>
+											[3.7.0,)
+										</versionRange>
+										<goals>
+											<goal>proguard</goal>
+											<goal>generate-sources</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -86,21 +134,22 @@
 				<artifactId>android-maven-plugin</artifactId>
 				<executions>
 					<execution>
-                    	<id>lint</id>
-                        <goals>
-                        	<goal>lint</goal>
-                        </goals>
-                        <phase>install</phase>
-                    </execution>
+						<id>lint</id>
+						<goals>
+							<goal>lint</goal>
+						</goals>
+						<phase>install</phase>
+					</execution>
 				</executions>
 				<configuration>
 					<lint>
-                        <skip>false</skip>
-                    </lint>
+						<skip>false</skip>
+					</lint>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
 </project>
 
 
