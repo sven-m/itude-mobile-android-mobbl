@@ -46,7 +46,7 @@ import android.widget.FrameLayout.LayoutParams;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBConfigurationDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPathException;
@@ -281,7 +281,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   public void finishFromChild(MBDialogController childController)
   {
-    MBDialogDefinition firstDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
+    MBDialogGroupDefinition firstDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
     final String firstDialog = firstDialogDefinition.getName();
     if (!childController.getName().equals(firstDialog))
     {
@@ -954,13 +954,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   {
     if (dialogName != null)
     {
-      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      if (dialogDefinition.getParent() != null)
-      {
-        dialogName = dialogDefinition.getParent();
-        dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      }
-
       _actionBarBuilder.selectTabWithoutReselection(dialogName);
 
     }

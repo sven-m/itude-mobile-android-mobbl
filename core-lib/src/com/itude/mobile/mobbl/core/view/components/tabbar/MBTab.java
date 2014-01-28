@@ -36,7 +36,6 @@ import android.widget.TextView;
 
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.UniqueIntegerGenerator;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
@@ -313,12 +312,12 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
     //      return;
     //    }
 
-    MBDialogDefinition dialogDef = null;
+    MBDialogGroupDefinition dialogDef = null;
 
     List<MBDialogGroupDefinition> dialogs = MBMetadataService.getInstance().getDialogs();
     for (int i = 0; i < dialogs.size() && dialogDef == null; i++)
     {
-      MBDialogDefinition dialog = dialogs.get(i);
+      MBDialogGroupDefinition dialog = dialogs.get(i);
       if (dialog.getName().equals(getName()))
       {
         dialogDef = dialog;

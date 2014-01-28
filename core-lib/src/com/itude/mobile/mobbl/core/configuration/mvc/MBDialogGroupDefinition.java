@@ -23,13 +23,21 @@ import java.util.Map;
 import android.util.Log;
 
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.mobbl.core.configuration.MBConditionalDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidDialogDefinitionException;
 import com.itude.mobile.mobbl.core.util.Constants;
 
-public class MBDialogGroupDefinition extends MBDialogDefinition
+public class MBDialogGroupDefinition extends MBConditionalDefinition
 {
   private final List<MBDialogDefinition>        _children;
   private final Map<MBDialogDefinition, String> _childrenPreCondition;
+
+  private String                                _title;
+  private String                                _titlePortrait;
+  private String                                _mode;
+  private String                                _icon;
+  private String                                _showAs;
+  private String                                _domain;
 
   public MBDialogGroupDefinition()
   {
@@ -46,6 +54,7 @@ public class MBDialogGroupDefinition extends MBDialogDefinition
 
     _children.add(dialogDef);
     _childrenPreCondition.put(dialogDef, dialogDef.getPreCondition());
+    dialogDef.setParent(getName());
   }
 
   @Override
@@ -109,6 +118,8 @@ public class MBDialogGroupDefinition extends MBDialogDefinition
         .append(getAttributeAsXml("title", getTitle()))//
         .append(getAttributeAsXml("titlePortrait", getTitlePortrait()))//
         .append(getAttributeAsXml("icon", getIcon()))//
+        .append(getAttributeAsXml("showAs", _showAs))//
+        .append(getAttributeAsXml("domain", _domain))//
         .append(">\n");
 
     for (MBDialogDefinition dialog : _children)
@@ -126,10 +137,79 @@ public class MBDialogGroupDefinition extends MBDialogDefinition
     return _children;
   }
 
-  @Override
-  public boolean isGroup()
+  public String getTitle()
   {
-    return true;
+    return _title;
+  }
+
+  public void setTitle(String title)
+  {
+    _title = title;
+  }
+
+  public void setTitlePortrait(String titlePortrait)
+  {
+    _titlePortrait = titlePortrait;
+  }
+
+  public String getTitlePortrait()
+  {
+    return _titlePortrait != null ? _titlePortrait : getTitle();
+  }
+
+  public String getMode()
+  {
+    return _mode;
+  }
+
+  public void setMode(String mode)
+  {
+    _mode = mode;
+  }
+
+  public String getIcon()
+  {
+    return _icon;
+  }
+
+  public void setIcon(String icon)
+  {
+    _icon = icon;
+  }
+
+  public String getShowAs()
+  {
+    return _showAs;
+  }
+
+  public void setShowAs(String showAs)
+  {
+    _showAs = showAs;
+  }
+
+  public boolean isShowAsTab()
+  {
+    return Constants.C_SHOW_AS_TAB.equals(_showAs);
+  }
+
+  public boolean isShowAsMenu()
+  {
+    return Constants.C_SHOW_AS_MENU.equals(_showAs);
+  }
+
+  public boolean isShowAsDocument()
+  {
+    return Constants.C_SHOW_AS_DOCUMENT.equals(_showAs);
+  }
+
+  public void setDomain(String domain)
+  {
+    _domain = domain;
+  }
+
+  public String getDomain()
+  {
+    return _domain;
   }
 
 }

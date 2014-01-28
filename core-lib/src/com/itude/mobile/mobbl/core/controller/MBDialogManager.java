@@ -30,7 +30,6 @@ import android.widget.FrameLayout;
 
 import com.itude.mobile.android.util.AssertUtil;
 import com.itude.mobile.android.util.ComparisonUtil;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl.core.controller.util.MBBaseLifecycleListener;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
@@ -198,18 +197,13 @@ public class MBDialogManager extends MBBaseLifecycleListener
     for (MBDialogGroupDefinition dialog : dialogs)
       if (dialog.isPreConditionValid())
       {
-        if (dialog.getParent() == null) createDialog(dialog);
-        else
-        {
-          MBDialogController parent = _controllerMap.get(dialog.getParent());
-          _controllerMap.put(dialog.getName(), parent);
-        }
+        createDialog(dialog);
       }
   }
 
   public void activateHome()
   {
-    MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
+    MBDialogGroupDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
     MBOutcome outcome = new MBOutcome(homeDialogDefinition.getName(), null);
     outcome.setOriginName(homeDialogDefinition.getName());
     MBApplicationController.getInstance().handleOutcome(outcome);

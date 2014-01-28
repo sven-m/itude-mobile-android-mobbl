@@ -51,6 +51,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   private final List<MBOutcomeDefinition>            _outcomeTypes;
   private final Map<String, MBPageDefinition>        _pageTypes;
   private final Map<String, MBDialogGroupDefinition> _dialogs;
+  private final Map<String, MBDialogDefinition>      _pageStacks;
   private MBDialogGroupDefinition                    _homeDialog;
   private final Map<String, MBToolDefinition>        _tools;
   private final Map<String, MBAlertDefinition>       _alerts;
@@ -65,6 +66,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     _pageTypes = new HashMap<String, MBPageDefinition>();
     _tools = new LinkedHashMap<String, MBToolDefinition>();
     _alerts = new HashMap<String, MBAlertDefinition>();
+    _pageStacks = new HashMap<String, MBDialogDefinition>();
   }
 
   @Override
@@ -101,6 +103,10 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     for (MBDialogGroupDefinition dialogDef : otherConfig.getDialogs().values())
     {
       addDialog(dialogDef);
+    }
+    for (MBDialogDefinition pageStackDef : otherConfig.getPageStacks().values())
+    {
+      addPageStack(pageStackDef);
     }
     for (MBPageDefinition pageDef : otherConfig.getPages().values())
     {
@@ -148,7 +154,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
         .append(StringUtil.getIndentStringWithLevel(level + 2)).append("</Controller>\n")
         .append(StringUtil.getIndentStringWithLevel(level + 2)).append("<View>\n").append(StringUtil.getIndentStringWithLevel(level + 4))
         .append("<Dialogs>\n");
-    for (MBDialogDefinition dialog : _dialogs.values())
+    for (MBDialogGroupDefinition dialog : _dialogs.values())
     {
       dialog.asXmlWithLevel(appendToMe, level + 6);
     }
@@ -191,6 +197,12 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   public void addChildElement(MBDialogGroupDefinition child)
   {
     addDialog(child);
+  }
+
+  @Override
+  public void addChildElement(MBDialogDefinition child)
+  {
+    addPageStack(child);
   }
 
   @Override
@@ -274,19 +286,23 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   {
     if (_dialogs.containsKey(dialog.getName()))
     {
-      Log.w(Constants.APPLICATION_NAME, "Dialog definition overridden: multiple definitions for action with name " + dialog.getName());
+      Log.w(Constants.APPLICATION_NAME, "Dialog definition overridden: multiple definitions for dialog with name " + dialog.getName());
     }
 
     if (_homeDialog == null)
     {
       _homeDialog = dialog;
     }
-    _dialogs.put(dialog.getName(), dialog);
-
     createImplicitOutcomeForDialog(dialog);
+    _dialogs.put(dialog.getName(), dialog);
   }
 
-  private void createImplicitOutcomeForDialog(MBDialogDefinition dialog)
+  public void addPageStack(MBDialogDefinition dialog)
+  {
+    _pageStacks.put(dialog.getName(), dialog);
+  }
+
+  private void createImplicitOutcomeForDialog(MBDialogGroupDefinition dialog)
   {
     List<MBOutcomeDefinition> def = getOutcomeDefinitionsForOrigin(ORIGIN_WILDCARD, dialog.getName());
     if (def.isEmpty())
@@ -429,6 +445,11 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return _tools;
   }
 
+  public Map<String, MBDialogDefinition> getPageStacks()
+  {
+    return _pageStacks;
+  }
+
   public List<MBToolDefinition> getToolDefinitionsForType(String type)
   {
     ArrayList<MBToolDefinition> result = new ArrayList<MBToolDefinition>();
@@ -453,4 +474,8 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return _alerts.get(name);
   }
 
+  public MBDialogDefinition getDefinitionForPageStackName(String pageStack)
+  {
+    return _pageStacks.get(pageStack);
+  }
 }

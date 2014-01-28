@@ -44,7 +44,7 @@ import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.android.util.StringUtil;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainValidatorDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBToolDefinition;
@@ -229,7 +229,7 @@ public abstract class MBDefaultActionBarBuilder implements MBActionBarBuilder
 
         for (String dialogName : MBViewManager.getInstance().getDialogManager().getSortedDialogNames())
         {
-          MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
+          MBDialogGroupDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
 
           if (dialogDefinition.isPreConditionValid() && dialogDefinition.isShowAsTab())
           {
@@ -332,7 +332,7 @@ public abstract class MBDefaultActionBarBuilder implements MBActionBarBuilder
             ActionBar.LayoutParams.MATCH_PARENT, Gravity.LEFT));
       }
 
-      private void setTabText(MBDialogDefinition dialogDefinition, MBTab tab, MBTabBar tabBar)
+      private void setTabText(MBDialogGroupDefinition dialogDefinition, MBTab tab, MBTabBar tabBar)
       {
         String title;
 

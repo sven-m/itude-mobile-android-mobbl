@@ -118,22 +118,15 @@ public class MBDialogController extends ContextWrapper
 
     if (getName() != null)
     {
-      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(getName());
+      MBDialogGroupDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(getName());
       setIconName(dialogDefinition.getIcon());
       setDialogMode(dialogDefinition.getMode());
 
       _title = MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle());
-      if (dialogDefinition.isGroup())
+      List<MBDialogDefinition> children = dialogDefinition.getChildren();
+      for (MBDialogDefinition dialogDef : children)
       {
-        List<MBDialogDefinition> children = ((MBDialogGroupDefinition) dialogDefinition).getChildren();
-        for (MBDialogDefinition dialogDef : children)
-        {
-          addDialogChild(dialogDef.getName(), UniqueIntegerGenerator.getId(), dialogDef.getMode());
-        }
-      }
-      else
-      {
-        addDialogChild(_name, UniqueIntegerGenerator.getId(), _dialogMode);
+        addDialogChild(dialogDef.getName(), UniqueIntegerGenerator.getId(), dialogDef.getMode());
       }
       return true;
     }

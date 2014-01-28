@@ -21,6 +21,7 @@ import android.util.Log;
 
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl.core.controller.MBAction;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.controller.MBOutcome;
@@ -55,64 +56,56 @@ public class MBFireInitialOutcomes implements MBAction
       String dialog = element.getValueForAttribute("dialog");
       boolean isMenu = false;
 
-      MBDialogDefinition def = MBMetadataService.getInstance().getDefinitionForDialogName(dialog);
-      if (StringUtil.isNotBlank(dialog))
+      MBDialogDefinition def = MBMetadataService.getInstance().getDefinitionForPageStackName(dialog);
+      if (def != null)
       {
         String parentDialog = def.getParent();
+        MBDialogGroupDefinition parent = MBMetadataService.getInstance().getDefinitionForDialogName(parentDialog);
 
-        // TODO: refactor this; the dialog manager should already know whether a dialog is visible
-        if (parentDialog != null)
-        {
-          MBDialogDefinition parent = MBMetadataService.getInstance().getDefinitionForDialogName(parentDialog);
-
-          if (!parent.isPreConditionValid())
-          {
-            continue;
-          }
-        }
-        else if (!def.isPreConditionValid())
+        if (!parent.isPreConditionValid())
         {
           continue;
         }
 
-        if (def != null && def.isShowAsMenu())
+        if (!def.isPreConditionValid())
         {
-          //MBViewManager.getInstance().addSortedDialogName(dialog);
-          //isMenu = true;
+          continue;
         }
-      }
 
-      if (StringUtil.isNotBlank(action))
-      {
-        MBOutcome oc = new MBOutcome();
-        oc.setOutcomeName(action);
-        oc.setDialogName(dialog);
-        oc.setNoBackgroundProcessing(true);
-        oc.setTransferDocument(false);
-
-        if (isMenu || (first && isFirstDialogSynchronized()))
+        if (StringUtil.isNotBlank(action))
         {
-          Log.d(this.getClass().getSimpleName(), "Firing in foreground: " + oc);
-          MBApplicationController.getInstance().getOutcomeHandler().handleOutcomeSynchronously(oc, false);
+          MBOutcome oc = new MBOutcome();
+          oc.setOutcomeName(action);
+          oc.setDialogName(dialog);
+          oc.setNoBackgroundProcessing(true);
+          oc.setTransferDocument(false);
 
-          if (def.getParent() != null)
+          if (isMenu || (first && isFirstDialogSynchronized()))
           {
-            def = MBMetadataService.getInstance().getDefinitionForDialogName(def.getParent());
+            Log.d(this.getClass().getSimpleName(), "Firing in foreground: " + oc);
+            MBApplicationController.getInstance().getOutcomeHandler().handleOutcomeSynchronously(oc, false);
+
+            if (!isMenu)
+            {
+
+              MBMetadataService.getInstance().setHomeDialogDefinition(parent);
+            }
+            first = false;
+
           }
+          else
+          {
+            oc.setDisplayMode(Constants.C_DISPLAY_MODE_BACKGROUND);
+            Log.d(this.getClass().getSimpleName(), "Firing in background: " + oc);
+            MBApplicationController.getInstance().handleOutcome(oc);
 
-          if (!isMenu) MBMetadataService.getInstance().setHomeDialogDefinition(def);
-          first = false;
-
-        }
-        else
-        {
-          oc.setDisplayMode(Constants.C_DISPLAY_MODE_BACKGROUND);
-          Log.d(this.getClass().getSimpleName(), "Firing in background: " + oc);
-          MBApplicationController.getInstance().handleOutcome(oc);
-
+          }
         }
       }
-
+      else
+      {
+        Log.e(this.getClass().getSimpleName(), "Could not find dialog " + dialog);
+      }
     }
 
     return null;

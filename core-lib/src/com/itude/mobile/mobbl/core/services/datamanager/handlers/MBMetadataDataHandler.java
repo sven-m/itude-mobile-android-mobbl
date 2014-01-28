@@ -18,7 +18,7 @@ package com.itude.mobile.mobbl.core.services.datamanager.handlers;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.model.MBElement;
@@ -52,7 +52,7 @@ public class MBMetadataDataHandler extends MBDataHandlerBase
     MBDocumentDefinition docDef = MBMetadataService.getInstance().getDefinitionForDocumentName(DIALOGS_DOCUMENT);
     MBDocument doc = new MBDocument(docDef);
     MBMetadataService service = MBMetadataService.getInstance();
-    for (MBDialogDefinition def : service.getDialogs())
+    for (MBDialogGroupDefinition def : service.getDialogs())
       if (def.isShowAsDocument() && def.isPreConditionValid())
       {
         MBElement element = new MBElement(docDef.getElementWithPath("/Dialog"));

@@ -125,7 +125,7 @@ public class MBOutcomeRunner
   private void resolveDialogNames()
   {
     for (MBOutcome outcome : _toProcess)
-      outcome.setDialogName(MBOutcomeHandler.resolveDialogName(outcome.getDialogName()));
+      outcome.setDialogName(MBOutcomeHandler.resolvePageStackName(outcome.getDialogName()));
   }
 
   private MBOutcomeTaskManager setupTaskManager(MBOutcome outcome)

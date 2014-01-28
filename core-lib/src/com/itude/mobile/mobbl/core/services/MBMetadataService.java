@@ -56,7 +56,7 @@ public final class MBMetadataService
   private static String                   _tabletConfigName = null;
   private static String                   _endpointsName    = "endpoints.xml";
 
-  private MBDialogDefinition              _homeDialog       = null;
+  private MBDialogGroupDefinition         _homeDialog       = null;
 
   private MBMetadataService()
   {
@@ -208,6 +208,23 @@ public final class MBMetadataService
     return dialogDef;
   }
 
+  public MBDialogDefinition getDefinitionForPageStackName(String pageStack)
+  {
+    return getDefinitionForPageStackName(pageStack, true);
+  }
+
+  public MBDialogDefinition getDefinitionForPageStackName(String pageStack, boolean doThrow)
+  {
+    MBDialogDefinition dialogDef = _cfg.getDefinitionForPageStackName(pageStack);
+    if (dialogDef == null && doThrow)
+    {
+      String message = "Pagestack with name " + pageStack + " not defined";
+      throw new MBDialogNotDefinedException(message);
+    }
+
+    return dialogDef;
+  }
+
   /**
    * A dialog can either be part of a DialogGroup or exist on its own. In some cases it is
    * desirable to get the name of the top dialog. This could either be just the dialog name,
@@ -219,11 +236,10 @@ public final class MBMetadataService
   public MBDialogGroupDefinition getTopDialogDefinitionForDialogName(String dialogName)
   {
     MBDialogGroupDefinition def = getDefinitionForDialogName(dialogName);
-    if (def.getParent() != null) return getDefinitionForDialogName(def.getParent());
     return def;
   }
 
-  public MBDialogDefinition getHomeDialogDefinition()
+  public MBDialogGroupDefinition getHomeDialogDefinition()
   {
     if (_homeDialog == null)
     {
@@ -233,7 +249,7 @@ public final class MBMetadataService
     return _homeDialog;
   }
 
-  public void setHomeDialogDefinition(MBDialogDefinition dialogDef)
+  public void setHomeDialogDefinition(MBDialogGroupDefinition dialogDef)
   {
     _homeDialog = dialogDef;
   }

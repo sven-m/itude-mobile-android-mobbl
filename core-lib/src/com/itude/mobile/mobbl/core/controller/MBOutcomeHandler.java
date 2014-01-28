@@ -76,42 +76,46 @@ public class MBOutcomeHandler extends Handler
    * @param dialogName
    * @return the dialog name to place the page in
    */
-  static String resolveDialogName(String dialogName)
+  static String resolvePageStackName(String pageStackName)
   {
-    if (!"RIGHT".equals(dialogName) && !"LEFT".equals(dialogName))
+    // find out if the page stack to resolve is actually a dialog..
+    MBDialogGroupDefinition dialogDef = MBMetadataService.getInstance().getDefinitionForDialogName(pageStackName, false);
+    if (dialogDef != null)
     {
-      return dialogName;
+      return dialogDef.getChildren().get(0).getName();
     }
 
-    String newDialogName = null;
+    if (!"RIGHT".equals(pageStackName) && !"LEFT".equals(pageStackName))
+    {
+      return pageStackName;
+    }
+
+    String newPageStackName = null;
 
     String activeDialogName = MBApplicationController.getInstance().activeDialogName();
-    MBDialogDefinition activeDialogDef = MBMetadataService.getInstance().getDefinitionForDialogName(activeDialogName);
+    MBDialogGroupDefinition activeDialogDef = MBMetadataService.getInstance().getDefinitionForDialogName(activeDialogName);
 
-    if (activeDialogDef.isGroup())
+    MBDialogGroupDefinition activeDialogGroupDef = activeDialogDef;
+    List<MBDialogDefinition> children = activeDialogGroupDef.getChildren();
+
+    MBDialogDefinition pageStackDef = null;
+    if ("RIGHT".equals(pageStackName))
     {
-      MBDialogGroupDefinition activeDialogGroupDef = (MBDialogGroupDefinition) activeDialogDef;
-      List<MBDialogDefinition> children = activeDialogGroupDef.getChildren();
-
-      MBDialogDefinition dialogDef = null;
-      if ("RIGHT".equals(dialogName))
-      {
-        dialogDef = children.get(children.size() - 1);
-      }
-      else if ("LEFT".equals(dialogName))
-      {
-        dialogDef = children.get(0);
-      }
-
-      if (dialogDef != null)
-      {
-        newDialogName = dialogDef.getName();
-
-        Log.d(Constants.APPLICATION_NAME, "Dialog name '" + dialogName + "' resolved to '" + newDialogName + "'");
-      }
+      pageStackDef = children.get(children.size() - 1);
+    }
+    else if ("LEFT".equals(pageStackName))
+    {
+      pageStackDef = children.get(0);
     }
 
-    return newDialogName;
+    if (pageStackDef != null)
+    {
+      newPageStackName = pageStackDef.getName();
+
+      Log.d(Constants.APPLICATION_NAME, "Dialog name '" + pageStackName + "' resolved to '" + newPageStackName + "'");
+    }
+
+    return newPageStackName;
   }
 
   public void registerOutcomeListener(MBOutcomeListenerProtocol listener)
