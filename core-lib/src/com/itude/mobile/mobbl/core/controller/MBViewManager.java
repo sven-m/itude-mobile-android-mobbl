@@ -577,7 +577,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   public boolean activateDialogWithName(String dialogName)
   {
     MBOutcome outcome = new MBOutcome(dialogName, null);
-    outcome.setOriginName(dialogName);
+    outcome.setOrigin(new MBOutcome.Origin().withDialog(dialogName));
     MBApplicationController.getInstance().handleOutcome(outcome);
     return false;
   }
@@ -943,7 +943,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   protected void handleOutcome(MBToolDefinition def)
   {
     MBOutcome outcome = new MBOutcome();
-    outcome.setOriginName(def.getName());
+    outcome.setOrigin(new MBOutcome.Origin().withAction(def.getName()));
     outcome.setOutcomeName(def.getOutcomeName());
 
     MBApplicationController.getInstance().handleOutcome(outcome);

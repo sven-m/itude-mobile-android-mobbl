@@ -85,11 +85,11 @@ public class MBOutcomeRunner
 
     MBMetadataService metadataService = MBMetadataService.getInstance();
 
-    List<MBOutcomeDefinition> outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(_outcome.getOriginName(),
+    List<MBOutcomeDefinition> outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(_outcome.getOrigin(),
                                                                                                   _outcome.getOutcomeName(), false);
     if (outcomeDefinitions.isEmpty())
     {
-      String msg = "No outcome defined for origin=" + _outcome.getOriginName() + " outcome=" + _outcome.getOutcomeName();
+      String msg = "No outcome defined for origin=" + _outcome.getOrigin() + " outcome=" + _outcome.getOutcomeName();
       throw new MBNoOutcomesDefinedException(msg);
     }
 
@@ -113,7 +113,7 @@ public class MBOutcomeRunner
         if (_outcome.getDocument() == null) Log
             .w(Constants.APPLICATION_NAME,
                "MBApplicationController.doHandleOutcome: origin="
-                   + _outcome.getOriginName()
+                   + _outcome.getOrigin()
                    + "and name="
                    + _outcome.getOutcomeName()
                    + " has persistDocument=TRUE but there is no document (probably the outcome originates from an action; which cannot have a document)");
@@ -125,7 +125,7 @@ public class MBOutcomeRunner
   private void resolveDialogNames()
   {
     for (MBOutcome outcome : _toProcess)
-      outcome.setDialogName(MBOutcomeHandler.resolvePageStackName(outcome.getDialogName()));
+      outcome.setPageStackName(MBOutcomeHandler.resolvePageStackName(outcome.getPageStackName()));
   }
 
   private MBOutcomeTaskManager setupTaskManager(MBOutcome outcome)

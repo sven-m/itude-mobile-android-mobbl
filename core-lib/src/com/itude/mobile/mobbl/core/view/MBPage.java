@@ -169,10 +169,11 @@ public class MBPage extends MBPanel
   public void handleTheOutcome(String outcomeName, String path, boolean synchro)
   {
     MBOutcome outcome = new MBOutcome();
-    outcome.setOriginName(getPageName());
+    MBOutcome.Origin origin = new MBOutcome.Origin();
+    origin.withPage(getPageName()).withPageStack(getPageStackName());
     outcome.setOutcomeName(outcomeName);
     outcome.setDocument(getDocument());
-    outcome.setDialogName(getPageStackName());
+    outcome.setPageStackName(getPageStackName());
     outcome.setPath(path);
 
     if (synchro)

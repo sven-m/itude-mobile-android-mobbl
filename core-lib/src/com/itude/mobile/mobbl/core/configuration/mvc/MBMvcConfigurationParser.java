@@ -27,6 +27,7 @@ import com.itude.mobile.mobbl.core.configuration.MBConfigurationParser;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition.MBPageType;
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPageTypeException;
+import com.itude.mobile.mobbl.core.controller.MBOutcome;
 import com.itude.mobile.mobbl.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl.core.services.datamanager.handlers.MBMetadataDataHandler;
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
@@ -609,8 +610,8 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
 
   private void createImplicitOutcomeForDialog(MBDialogGroupDefinition dialog)
   {
-    List<MBOutcomeDefinition> def = ((MBConfigurationDefinition) getRootConfig())
-        .getOutcomeDefinitionsForOrigin(MBConfigurationDefinition.ORIGIN_WILDCARD, dialog.getName());
+    List<MBOutcomeDefinition> def = ((MBConfigurationDefinition) getRootConfig()).getOutcomeDefinitionsForOrigin(MBOutcome.Origin.WILDCARD,
+                                                                                                                 dialog.getName());
     if (def.isEmpty())
     {
       MBOutcomeDefinition definition = new MBOutcomeDefinition();

@@ -27,6 +27,7 @@ import android.util.Log;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl.core.configuration.MBIncludableDefinition;
+import com.itude.mobile.mobbl.core.controller.MBOutcome.Origin;
 import com.itude.mobile.mobbl.core.util.Constants;
 
 public class MBConfigurationDefinition extends MBDefinition implements MBIncludableDefinition
@@ -361,16 +362,19 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return result;
   }
 
-  public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(String originName, String outcomeName)
+  public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(Origin origin, String outcomeName)
   {
     List<MBOutcomeDefinition> result = new ArrayList<MBOutcomeDefinition>();
 
     // First look for specific matches
-    for (MBOutcomeDefinition outcomeDef : _outcomeTypes)
+    if (origin != null)
     {
-      if (outcomeDef.getOrigin().equals(originName) && outcomeDef.getName().equals(outcomeName))
+      for (MBOutcomeDefinition outcomeDef : _outcomeTypes)
       {
-        result.add(outcomeDef);
+        if (origin.matches(outcomeDef.getOrigin()) && outcomeDef.getName().equals(outcomeName))
+        {
+          result.add(outcomeDef);
+        }
       }
     }
 

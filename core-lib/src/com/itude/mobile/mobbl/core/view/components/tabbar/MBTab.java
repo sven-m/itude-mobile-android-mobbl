@@ -332,7 +332,7 @@ public class MBTab extends RelativeLayout implements OnClickListener, OnItemClic
       if (value != null)
       {
         MBOutcome outcome = new MBOutcome(value, null);
-        outcome.setOriginName(dialogDef.getName());
+        outcome.setOrigin(new MBOutcome.Origin().withDialog(dialogDef.getName()));
         MBApplicationController.getInstance().handleOutcome(outcome);
       }
     }

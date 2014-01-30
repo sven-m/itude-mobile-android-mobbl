@@ -18,8 +18,6 @@ package com.itude.mobile.mobbl.core.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.util.Log;
-
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndPointDefinition;
@@ -28,14 +26,15 @@ import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndpointsConfigurat
 import com.itude.mobile.mobbl.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBConfigurationDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBMvcConfigurationParser;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBToolDefinition;
+import com.itude.mobile.mobbl.core.controller.MBOutcome;
 import com.itude.mobile.mobbl.core.services.exceptions.MBActionNotDefinedException;
 import com.itude.mobile.mobbl.core.services.exceptions.MBAlertNotDefinedException;
 import com.itude.mobile.mobbl.core.services.exceptions.MBDialogNotDefinedException;
@@ -43,7 +42,6 @@ import com.itude.mobile.mobbl.core.services.exceptions.MBDocumentNotDefinedExcep
 import com.itude.mobile.mobbl.core.services.exceptions.MBDomainNotDefinedException;
 import com.itude.mobile.mobbl.core.services.exceptions.MBPageNotDefinedException;
 import com.itude.mobile.mobbl.core.services.exceptions.MBToolNotDefinedException;
-import com.itude.mobile.mobbl.core.util.Constants;
 
 public final class MBMetadataService
 {
@@ -259,29 +257,17 @@ public final class MBMetadataService
     return new ArrayList<MBDialogGroupDefinition>(_cfg.getDialogs().values());
   }
 
-  //For now do not raise an exception if an outcome is not defined
-  public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(String originName)
+  public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(MBOutcome.Origin origin, String outcomeName)
   {
-    List<MBOutcomeDefinition> list = _cfg.getOutcomeDefinitionsForOrigin(originName);
-    if (list == null || list.size() <= 0)
-    {
-      Log.w(Constants.APPLICATION_NAME, "WARNING No outcomes defined for origin " + originName + " ");
-    }
-
-    return list;
+    return getOutcomeDefinitionsForOrigin(origin, outcomeName, true);
   }
 
-  public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(String originName, String outcomeName)
+  public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(MBOutcome.Origin origin, String outcomeName, boolean doThrow)
   {
-    return getOutcomeDefinitionsForOrigin(originName, outcomeName, true);
-  }
-
-  public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(String originName, String outcomeName, boolean doThrow)
-  {
-    List<MBOutcomeDefinition> outcomeDefs = _cfg.getOutcomeDefinitionsForOrigin(originName, outcomeName);
+    List<MBOutcomeDefinition> outcomeDefs = _cfg.getOutcomeDefinitionsForOrigin(origin, outcomeName);
     if (outcomeDefs.size() == 0 && doThrow)
     {
-      String message = "Outcome with originName=" + originName + " outcomeName=" + outcomeName + " not defined";
+      String message = "Outcome with originName=" + origin + " outcomeName=" + outcomeName + " not defined";
       throw new MBActionNotDefinedException(message);
     }
     return outcomeDefs;

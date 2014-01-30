@@ -31,10 +31,8 @@ import com.itude.mobile.mobbl.core.util.MBParseUtil;
 
 public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
 {
-  private String     _originName;
   private String     _outcomeName;
   private String     _pageStackName;
-  private String     _originDialogName;
   private String     _displayMode;
   private String     _path;
   private boolean    _persist;
@@ -44,15 +42,16 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
   private String     _preCondition;
   private String     _indicator;
   private String     _action;
+  private Origin     _origin;
 
-  public String getOriginName()
+  public Origin getOrigin()
   {
-    return _originName;
+    return _origin;
   }
 
-  public void setOriginName(String originName)
+  public void setOrigin(Origin origin)
   {
-    _originName = originName;
+    _origin = origin;
   }
 
   public String getOutcomeName()
@@ -91,16 +90,6 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
   public void setPageStackName(String pageStackName)
   {
     _pageStackName = pageStackName;
-  }
-
-  public String getOriginDialogName()
-  {
-    return _originDialogName;
-  }
-
-  public void setOriginDialogName(String originDialogName)
-  {
-    _originDialogName = originDialogName;
   }
 
   public String getPath()
@@ -196,9 +185,8 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
   public MBOutcome(MBOutcome outcome)
   {
     super(outcome);
-    _originName = outcome.getOriginName();
+    _origin = new Origin(outcome.getOrigin());
     _outcomeName = outcome.getOutcomeName();
-    _originDialogName = outcome.getOriginDialogName();
     _pageStackName = outcome.getPageStackName();
     _displayMode = outcome.getDisplayMode();
     _document = outcome.getDocument();
@@ -214,7 +202,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
   public MBOutcome(MBOutcomeDefinition definition)
   {
     super(definition);
-    _originName = definition.getOrigin();
+    _origin = new Origin().withOutcome(definition.getOrigin());
     _outcomeName = definition.getName();
     _pageStackName = definition.getPageStack();
     _displayMode = definition.getDisplayMode();
@@ -257,8 +245,8 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
       String result = doc.evaluateExpression(this.getPreCondition());
       Boolean bool = MBParseUtil.strictBooleanValue(result);
       if (bool != null) return bool;
-      String msg = "Expression of outcome with origin=" + getOriginName() + " name=" + getOutcomeName() + " precondition="
-                   + getPreCondition() + " is not boolean (result=" + result + ")";
+      String msg = "Expression of outcome with origin=" + getOrigin() + " name=" + getOutcomeName() + " precondition=" + getPreCondition()
+                   + " is not boolean (result=" + result + ")";
       throw new MBExpressionNotBooleanException(msg);
     }
 
@@ -276,10 +264,8 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
   {
     Bundle data = in.readBundle();
 
-    _originName = data.getString("originName");
     _outcomeName = data.getString("outcomeName");
     _pageStackName = data.getString("pageStackName");
-    _originDialogName = data.getString("originDialogName");
     _displayMode = data.getString("displayMode");
     _path = data.getString("path");
     _preCondition = data.getString("preCondition");
@@ -291,6 +277,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
 
     _document = data.getParcelable("document");
 
+    _origin = data.getParcelable("origin");
     readFromBundle(data);
   }
 
@@ -305,10 +292,8 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
   {
     Bundle data = new Bundle();
 
-    data.putString("originName", _originName);
     data.putString("outcomeName", _outcomeName);
     data.putString("pageStackName", _pageStackName);
-    data.putString("originDialogName", _originDialogName);
     data.putString("displayMode", _displayMode);
     data.putString("path", _path);
     data.putString("preCondition", _preCondition);
@@ -319,6 +304,8 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
     data.putString("action", _action);
 
     data.putParcelable("document", _document);
+
+    data.putParcelable("origin", _origin);
 
     writeToBundle(data);
 
@@ -345,7 +332,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
   @Override
   public String toString()
   {
-    return "Outcome: pageStack=" + getPageStackName() + " originName=" + getOriginName() + " outcomeName=" + getOutcomeName() + " path="
+    return "Outcome: pageStack=" + getPageStackName() + " origin=" + getOrigin() + " outcomeName=" + getOutcomeName() + " path="
            + getPath() + " persist=" + getPersist() + " displayMode=" + getDisplayMode() + " preCondition=" + getPreCondition()
            + " noBackgroundProsessing=" + getNoBackgroundProcessing() + " action = " + getAction();
   }
@@ -362,9 +349,181 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
     outcomeToProcess.setIndicator(coalesce(getIndicator(), outcomeDef.getIndicator()));
     outcomeToProcess.setPageStackName(coalesce(outcomeDef.getPageStack(), getPageStackName()));
     outcomeToProcess.setDisplayMode(coalesce(getDisplayMode(), outcomeDef.getDisplayMode()));
-    outcomeToProcess.setOriginDialogName(coalesce(getOriginDialogName(), outcomeToProcess.getDialogName()));
+    outcomeToProcess.setOrigin(new Origin(getOrigin()).fillBlanks(outcomeDef));
     outcomeToProcess.setAction(coalesce(getAction(), outcomeDef.getAction()));
 
     return outcomeToProcess;
+  }
+
+  public static class Origin implements Parcelable
+  {
+    private String _dialog;
+    private String _pageStack;
+    private String _outcome;
+    private String _action;
+    private String _page;
+
+    public Origin()
+    {
+      _dialog = _pageStack = _outcome = _action = _page = null;
+    }
+
+    public Origin(Origin toCopy)
+    {
+      if (toCopy != null)
+      {
+        _dialog = toCopy.getOutcome();
+        _pageStack = toCopy.getPageStack();
+        _outcome = toCopy.getOutcome();
+        _action = toCopy.getAction();
+        _page = toCopy.getPage();
+      }
+    }
+
+    private Origin(Parcel in)
+    {
+      Bundle data = in.readBundle();
+
+      _dialog = data.getString("dialog");
+      _pageStack = data.getString("pageStack");
+      _outcome = data.getString("outcome");
+      _action = data.getString("action");
+      _page = data.getString("page");
+    }
+
+    public String getDialog()
+    {
+      return _dialog;
+    }
+
+    public String getPageStack()
+    {
+      return _pageStack;
+    }
+
+    public String getOutcome()
+    {
+      return _outcome;
+    }
+
+    public String getAction()
+    {
+      return _action;
+    }
+
+    public String getPage()
+    {
+      return _page;
+    }
+
+    public Origin withDialog(String name)
+    {
+      _dialog = name;
+      return this;
+    }
+
+    public Origin withPageStack(String name)
+    {
+      _pageStack = name;
+      return this;
+    }
+
+    public Origin withOutcome(String name)
+    {
+      _outcome = name;
+      return this;
+    }
+
+    public Origin withAction(String name)
+    {
+      _action = name;
+      return this;
+    }
+
+    public Origin withPage(String pageName)
+    {
+      _page = pageName;
+      return this;
+    }
+
+    public Origin fillBlanks(MBOutcomeDefinition def)
+    {
+      _pageStack = coalesce(getPageStack(), def.getPageStack());
+      return this;
+    }
+
+    public boolean matches(String whatever)
+    {
+      boolean result = false;
+      if (getDialog() != null) result |= getDialog().equalsIgnoreCase(whatever);
+      if (getPageStack() != null) result |= getPageStack().equalsIgnoreCase(whatever);
+      if (getOutcome() != null) result |= getOutcome().equalsIgnoreCase(whatever);
+      if (getAction() != null) result |= getAction().equalsIgnoreCase(whatever);
+      if (getPage() != null) result |= getPage().equalsIgnoreCase(whatever);
+      return result;
+    }
+
+    @Override
+    public String toString()
+    {
+      StringBuilder description = new StringBuilder("(dialog: ");
+      description.append(_dialog);
+      description.append(" pageStack: ").append(_pageStack);
+      description.append(" outcome: ").append(_outcome);
+      description.append(" action: ").append(_action);
+      description.append(" page: ").append(_page);
+      description.append(")");
+      return description.toString();
+    }
+
+    @Override
+    public int describeContents()
+    {
+      return Constants.C_PARCELABLE_TYPE_ORIGIN;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+      Bundle data = new Bundle();
+
+      data.putString("dialog", _dialog);
+      data.putString("pageStack", _pageStack);
+      data.putString("outcome", _outcome);
+      data.putString("action", _action);
+      data.putString("page", _page);
+
+      dest.writeBundle(data);
+    }
+
+    public static final Parcelable.Creator<Origin> CREATOR  = new Creator<Origin>()
+                                                            {
+                                                              @Override
+                                                              public Origin[] newArray(int size)
+                                                              {
+                                                                return new Origin[size];
+                                                              }
+
+                                                              @Override
+                                                              public Origin createFromParcel(Parcel in)
+                                                              {
+                                                                return new Origin(in);
+                                                              }
+                                                            };
+    public static final Origin                     WILDCARD = new Origin()
+                                                            {
+                                                              @Override
+                                                              public String toString()
+                                                              {
+                                                                return "WILDCARD";
+                                                              }
+
+                                                              @Override
+                                                              public boolean matches(String whatever)
+                                                              {
+                                                                return true;
+                                                              }
+                                                            };
+
   }
 }

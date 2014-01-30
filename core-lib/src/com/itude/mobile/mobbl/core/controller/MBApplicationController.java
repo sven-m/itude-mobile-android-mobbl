@@ -144,9 +144,9 @@ public class MBApplicationController extends Application
   public void fireInitialOutcomes()
   {
     MBOutcome initialOutcome = new MBOutcome();
-    initialOutcome.setOriginName("Controller");
+    initialOutcome.setOrigin(new MBOutcome.Origin().withDialog("Controller"));
     initialOutcome.setOutcomeName("init");
-    initialOutcome.setDialogName(getActiveDialogName());
+    initialOutcome.setPageStackName(getActiveDialogName());
     initialOutcome.setNoBackgroundProcessing(true);
 
     _suppressPageSelection = true;
@@ -349,14 +349,14 @@ public class MBApplicationController extends Application
     {
       if (causingOutcome.getDocument() == null)
       {
-        String msg = "No document provided (null) in outcome by action/page/alert=" + causingOutcome.getOriginName()
+        String msg = "No document provided (null) in outcome by action/page/alert=" + causingOutcome.getOrigin()
                      + " but transferDocument='TRUE' in outcome definition";
         throw new MBInvalidOutcomeException(msg);
       }
       String actualType = causingOutcome.getDocument().getDefinition().getName();
       if (!actualType.equals(documentName))
       {
-        String msg = "Document provided via outcome by action/page/alert=" + causingOutcome.getOriginName()
+        String msg = "Document provided via outcome by action/page/alert=" + causingOutcome.getOrigin()
                      + " (transferDocument='TRUE') is of type " + actualType + " but must be of type " + documentName;
         throw new MBInvalidOutcomeException(msg);
       }
@@ -462,8 +462,13 @@ public class MBApplicationController extends Application
         {
           actionOutcome.setDisplayMode(Constants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE);
         }
-        actionOutcome.setDialogName(ComparisonUtil.coalesce(actionOutcome.getDialogName(), causingOutcome.getDialogName()));
-        actionOutcome.setOriginName(actionDef.getName());
+        actionOutcome.setPageStackName(ComparisonUtil.coalesce(actionOutcome.getPageStackName(), causingOutcome.getPageStackName()));
+        MBOutcome.Origin origin = new MBOutcome.Origin();
+        origin.withAction(actionDef.getName());
+        origin.withPageStack(actionOutcome.getPageStackName());
+        origin.withOutcome(causingOutcome.getOutcomeName());
+        origin.withDialog(causingOutcome.getOrigin().getDialog());
+        actionOutcome.setOrigin(origin);
         return actionOutcome;
       }
     }
@@ -568,7 +573,7 @@ public class MBApplicationController extends Application
 
     exceptionDocument.setValue(name, MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_NAME);
     exceptionDocument.setValue(description, MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_DESCRIPTION);
-    exceptionDocument.setValue(outcome.getOriginName(), MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_ORIGIN);
+    exceptionDocument.setValue(outcome.getOrigin().toString(), MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_ORIGIN);
     exceptionDocument.setValue(outcome.getOutcomeName(), MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_OUTCOME);
     for (StackTraceElement traceElement : exception.getStackTrace())
     {
@@ -583,8 +588,8 @@ public class MBApplicationController extends Application
     MBMetadataService metadataService = MBMetadataService.getInstance();
 
     // See if there is an outcome defined for this particular exception
-    List<MBOutcomeDefinition> outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(outcome.getOriginName(), exception
-        .getClass().getSimpleName(), false);
+    List<MBOutcomeDefinition> outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(outcome.getOrigin(), exception.getClass()
+        .getSimpleName(), false);
     if (outcomeDefinitions.size() != 0)
     {
       MBOutcome specificExceptionHandler = new MBOutcome(outcome);
@@ -595,10 +600,10 @@ public class MBApplicationController extends Application
     else
     {
       // There is no specific exception handler defined. So fall back on the generic one
-      outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(outcome.getOriginName(), "exception", false);
+      outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(outcome.getOrigin(), "exception", false);
       if (outcomeDefinitions.isEmpty())
       {
-        Log.w(Constants.APPLICATION_NAME, "No outcome with origin=" + outcome.getOriginName()
+        Log.w(Constants.APPLICATION_NAME, "No outcome with origin=" + outcome
                                           + " name=exception defined to handle errors; so re-throwing exception");
         throw new RuntimeException(exception);
       }
@@ -610,7 +615,7 @@ public class MBApplicationController extends Application
       }
 
       MBOutcome genericExceptionHandler = new MBOutcome("exception", exceptionDocument);
-      genericExceptionHandler.setDialogName(outcome.getDialogName());
+      genericExceptionHandler.setPageStackName(outcome.getPageStackName());
       genericExceptionHandler.setPath(outcome.getPath());
 
       _outcomeHandler.handleOutcomeSynchronously(genericExceptionHandler, false);
@@ -709,7 +714,7 @@ public class MBApplicationController extends Application
                                                      + Constants.C_EL_SEARCH_REQUEST_ATTR_PROGRESSIVE_SEARCH_OUTCOME);
 
     MBOutcome searchOutcome = new MBOutcome();
-    searchOutcome.setOriginName(Constants.C_MOBBL_ORIGIN_NAME_CONTROLLER);
+    searchOutcome.setOrigin(new MBOutcome.Origin().withDialog(Constants.C_MOBBL_ORIGIN_NAME_CONTROLLER));
     searchOutcome.setOutcomeName(Constants.C_MOBBL_ORIGIN_CONTROLLER_NAME_SEARCH);
     searchOutcome.setDocument(searchRequest);
     searchOutcome.setPath((path != null) ? path + searchPath : null);
