@@ -307,11 +307,11 @@ public class MBApplicationController extends Application
       final MBPage page = _applicationFactory.getPageConstructor()
           .createPage(pageDefinition, document, causingOutcome.getPath(), viewState);
       page.setController(this);
-      page.setDialogName(causingOutcome.getDialogName());
+      page.setPageStackName(causingOutcome.getDialogName());
       // Fallback on the lastly selected dialog if there is no dialog set in the outcome:
-      if (page.getDialogName() == null)
+      if (page.getPageStackName() == null)
       {
-        page.setDialogName(getActiveDialogName());
+        page.setPageStackName(getActiveDialogName());
       }
 
       PageBuildResult result = new PageBuildResult(causingOutcome, page, backStackEnabled);

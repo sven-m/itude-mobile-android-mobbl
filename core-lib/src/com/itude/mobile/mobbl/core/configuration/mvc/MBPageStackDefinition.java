@@ -17,9 +17,9 @@ package com.itude.mobile.mobbl.core.configuration.mvc;
 
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBConditionalDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidDialogDefinitionException;
+import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPageStackDefinitionException;
 
-public class MBDialogDefinition extends MBConditionalDefinition
+public class MBPageStackDefinition extends MBConditionalDefinition
 {
 
   private String _mode;
@@ -29,7 +29,7 @@ public class MBDialogDefinition extends MBConditionalDefinition
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
     return StringUtil.appendIndentString(appendToMe, level)//
-        .append("<Dialog name='")//
+        .append("<PageStack name='")//
         .append(getName())//
         .append('\'')//
         .append(getAttributeAsXml("mode", _mode))//
@@ -41,8 +41,8 @@ public class MBDialogDefinition extends MBConditionalDefinition
   {
     if (getName() == null)
     {
-      String message = "no name set for dialog";
-      throw new MBInvalidDialogDefinitionException(message);
+      String message = "no name set for pagestack";
+      throw new MBInvalidPageStackDefinitionException(message);
     }
   }
 

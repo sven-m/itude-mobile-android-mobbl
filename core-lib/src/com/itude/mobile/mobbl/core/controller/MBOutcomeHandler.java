@@ -25,7 +25,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.util.Constants;
@@ -96,9 +96,9 @@ public class MBOutcomeHandler extends Handler
     MBDialogGroupDefinition activeDialogDef = MBMetadataService.getInstance().getDefinitionForDialogName(activeDialogName);
 
     MBDialogGroupDefinition activeDialogGroupDef = activeDialogDef;
-    List<MBDialogDefinition> children = activeDialogGroupDef.getChildren();
+    List<MBPageStackDefinition> children = activeDialogGroupDef.getChildren();
 
-    MBDialogDefinition pageStackDef = null;
+    MBPageStackDefinition pageStackDef = null;
     if ("RIGHT".equals(pageStackName))
     {
       pageStackDef = children.get(children.size() - 1);

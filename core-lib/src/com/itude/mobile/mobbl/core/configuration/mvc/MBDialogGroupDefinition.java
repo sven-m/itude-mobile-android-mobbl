@@ -24,50 +24,51 @@ import android.util.Log;
 
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBConditionalDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidDialogDefinitionException;
+import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPageStackDefinitionException;
 import com.itude.mobile.mobbl.core.util.Constants;
 
 public class MBDialogGroupDefinition extends MBConditionalDefinition
 {
-  private final List<MBDialogDefinition>        _children;
-  private final Map<MBDialogDefinition, String> _childrenPreCondition;
+  private final List<MBPageStackDefinition>        _children;
+  private final Map<MBPageStackDefinition, String> _childrenPreCondition;
 
-  private String                                _title;
-  private String                                _titlePortrait;
-  private String                                _mode;
-  private String                                _icon;
-  private String                                _showAs;
-  private String                                _domain;
+  private String                                   _title;
+  private String                                   _titlePortrait;
+  private String                                   _mode;
+  private String                                   _icon;
+  private String                                   _showAs;
+  private String                                   _domain;
 
   public MBDialogGroupDefinition()
   {
-    _children = new ArrayList<MBDialogDefinition>();
-    _childrenPreCondition = new HashMap<MBDialogDefinition, String>();
+    _children = new ArrayList<MBPageStackDefinition>();
+    _childrenPreCondition = new HashMap<MBPageStackDefinition, String>();
   }
 
-  public void addDialog(MBDialogDefinition dialogDef)
+  public void addPageStack(MBPageStackDefinition pageStackDef)
   {
-    if (_children.contains(dialogDef))
+    if (_children.contains(pageStackDef))
     {
-      Log.w(Constants.APPLICATION_NAME, "Group contains duplicate definitions for dialog " + dialogDef.getName() + " in group " + getName());
+      Log.w(Constants.APPLICATION_NAME, "Group contains duplicate definitions for pagestack " + pageStackDef.getName() + " in dialog "
+                                        + getName());
     }
 
-    _children.add(dialogDef);
-    _childrenPreCondition.put(dialogDef, dialogDef.getPreCondition());
-    dialogDef.setParent(getName());
+    _children.add(pageStackDef);
+    _childrenPreCondition.put(pageStackDef, pageStackDef.getPreCondition());
+    pageStackDef.setParent(getName());
   }
 
   @Override
-  public void addChildElement(MBDialogDefinition child)
+  public void addChildElement(MBPageStackDefinition child)
   {
-    addDialog(child);
+    addPageStack(child);
   }
 
-  public MBDialogDefinition getDialogDefinition(String name)
+  public MBPageStackDefinition getPageStackDefinition(String name)
   {
-    for (MBDialogDefinition dialogDef : _children)
+    for (MBPageStackDefinition pageStackDef : _children)
     {
-      if (dialogDef.getName().equals(name)) return dialogDef;
+      if (pageStackDef.getName().equals(name)) return pageStackDef;
     }
 
     return null;
@@ -78,7 +79,7 @@ public class MBDialogGroupDefinition extends MBConditionalDefinition
   {
     if (getName() == null)
     {
-      throw new MBInvalidDialogDefinitionException("no name set for dialogGroup");
+      throw new MBInvalidPageStackDefinitionException("no name set for dialogGroup");
     }
   }
 
@@ -90,7 +91,7 @@ public class MBDialogGroupDefinition extends MBConditionalDefinition
     if (valid)
     {
       // then reset pre conditions
-      for (MBDialogDefinition child : getChildren())
+      for (MBPageStackDefinition child : getChildren())
       {
         child.setPreCondition(_childrenPreCondition.get(child));
       }
@@ -98,7 +99,7 @@ public class MBDialogGroupDefinition extends MBConditionalDefinition
     else
     {
       // then override children to also be invalid
-      for (MBDialogDefinition child : getChildren())
+      for (MBPageStackDefinition child : getChildren())
       {
         child.setPreCondition(Constants.C_FALSE);
       }
@@ -122,7 +123,7 @@ public class MBDialogGroupDefinition extends MBConditionalDefinition
         .append(getAttributeAsXml("domain", _domain))//
         .append(">\n");
 
-    for (MBDialogDefinition dialog : _children)
+    for (MBPageStackDefinition dialog : _children)
     {
       dialog.asXmlWithLevel(appendToMe, level + 2);
     }
@@ -132,7 +133,7 @@ public class MBDialogGroupDefinition extends MBConditionalDefinition
     return appendToMe;
   }
 
-  public List<MBDialogDefinition> getChildren()
+  public List<MBPageStackDefinition> getChildren()
   {
     return _children;
   }

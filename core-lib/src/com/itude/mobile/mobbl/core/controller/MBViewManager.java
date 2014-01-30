@@ -395,8 +395,8 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   {
 
     Log.d(Constants.APPLICATION_NAME,
-          "MBViewManager: showPage name=" + page.getPageName() + " dialog=" + page.getDialogName() + " mode=" + displayMode + " type="
-              + page.getPageType() + " orientation=" + ((MBPageDefinition) page.getDefinition()).getOrientationPermissions()
+          "MBViewManager: showPage name=" + page.getPageName() + " pagestackName=" + page.getPageStackName() + " mode=" + displayMode
+              + " type=" + page.getPageType() + " orientation=" + ((MBPageDefinition) page.getDefinition()).getOrientationPermissions()
               + " backStack=" + addToBackStack);
 
     if (page.getPageType() == MBPageDefinition.MBPageType.MBPageTypesErrorPage || "POPUP".equals(displayMode))
@@ -405,7 +405,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
     }
     else
     {
-      addPageToDialog(page, displayMode, addToBackStack);
+      addPageToPageStack(page, displayMode, addToBackStack);
     }
   }
 
@@ -553,12 +553,12 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   }
 
-  private void addPageToDialog(MBPage page, String displayMode, boolean addToBackStack)
+  private void addPageToPageStack(MBPage page, String displayMode, boolean addToBackStack)
   {
     //MBDialogDefinition topDefinition = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(page.getDialogName());
-    MBPageStackController pageStack = _dialogManager.getPageStack(page.getDialogName());
+    MBPageStackController pageStack = _dialogManager.getPageStack(page.getPageStackName());
     MBDialogController dialogController = pageStack.getParent();
-    dialogController.showPage(page, displayMode, page.getDialogName() + page.getPageName(), page.getDialogName(), addToBackStack);
+    dialogController.showPage(page, displayMode, page.getPageStackName() + page.getPageName(), page.getPageStackName(), addToBackStack);
   }
 
   @Override

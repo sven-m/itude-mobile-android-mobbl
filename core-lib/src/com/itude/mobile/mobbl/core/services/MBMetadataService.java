@@ -28,7 +28,7 @@ import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndpointsConfigurat
 import com.itude.mobile.mobbl.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBConfigurationDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainDefinition;
@@ -208,14 +208,14 @@ public final class MBMetadataService
     return dialogDef;
   }
 
-  public MBDialogDefinition getDefinitionForPageStackName(String pageStack)
+  public MBPageStackDefinition getDefinitionForPageStackName(String pageStack)
   {
     return getDefinitionForPageStackName(pageStack, true);
   }
 
-  public MBDialogDefinition getDefinitionForPageStackName(String pageStack, boolean doThrow)
+  public MBPageStackDefinition getDefinitionForPageStackName(String pageStack, boolean doThrow)
   {
-    MBDialogDefinition dialogDef = _cfg.getDefinitionForPageStackName(pageStack);
+    MBPageStackDefinition dialogDef = _cfg.getDefinitionForPageStackName(pageStack);
     if (dialogDef == null && doThrow)
     {
       String message = "Pagestack with name " + pageStack + " not defined";

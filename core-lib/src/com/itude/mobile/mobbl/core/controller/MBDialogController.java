@@ -45,7 +45,7 @@ import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl.core.MBException;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl.core.controller.helpers.MBActivityHelper;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
@@ -123,10 +123,10 @@ public class MBDialogController extends ContextWrapper
       setDialogMode(dialogDefinition.getMode());
 
       _title = MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle());
-      List<MBDialogDefinition> children = dialogDefinition.getChildren();
-      for (MBDialogDefinition dialogDef : children)
+      List<MBPageStackDefinition> children = dialogDefinition.getChildren();
+      for (MBPageStackDefinition pageStackDef : children)
       {
-        addDialogChild(dialogDef.getName(), UniqueIntegerGenerator.getId(), dialogDef.getMode());
+        addPageStack(pageStackDef.getName(), UniqueIntegerGenerator.getId(), pageStackDef.getMode());
       }
       return true;
     }
@@ -143,7 +143,7 @@ public class MBDialogController extends ContextWrapper
    * @param name
    * @param id
    */
-  private void addDialogChild(String name, int id, String mode)
+  private void addPageStack(String name, int id, String mode)
   {
     MBPageStackController pageStack = new MBPageStackController(this, id, name, mode);
     _pageStacks.put(pageStack.getName(), pageStack);

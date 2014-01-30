@@ -32,7 +32,7 @@ import com.itude.mobile.mobbl.core.util.Constants;
 public class MBConfigurationDefinition extends MBDefinition implements MBIncludableDefinition
 {
 
-  private static final String                        ORIGIN_WILDCARD                   = "*";
+  public static final String                         ORIGIN_WILDCARD                   = "*";
   public static final String                         DOC_SYSTEM_EMPTY                  = "MBEmpty";
   public static final String                         DOC_SYSTEM_LANGUAGE               = "MBBundle";
   public static final String                         DOC_SYSTEM_EXCEPTION              = "MBException";
@@ -51,7 +51,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   private final List<MBOutcomeDefinition>            _outcomeTypes;
   private final Map<String, MBPageDefinition>        _pageTypes;
   private final Map<String, MBDialogGroupDefinition> _dialogs;
-  private final Map<String, MBDialogDefinition>      _pageStacks;
+  private final Map<String, MBPageStackDefinition>   _pageStacks;
   private MBDialogGroupDefinition                    _homeDialog;
   private final Map<String, MBToolDefinition>        _tools;
   private final Map<String, MBAlertDefinition>       _alerts;
@@ -66,7 +66,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     _pageTypes = new HashMap<String, MBPageDefinition>();
     _tools = new LinkedHashMap<String, MBToolDefinition>();
     _alerts = new HashMap<String, MBAlertDefinition>();
-    _pageStacks = new HashMap<String, MBDialogDefinition>();
+    _pageStacks = new HashMap<String, MBPageStackDefinition>();
   }
 
   @Override
@@ -104,7 +104,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     {
       addDialog(dialogDef);
     }
-    for (MBDialogDefinition pageStackDef : otherConfig.getPageStacks().values())
+    for (MBPageStackDefinition pageStackDef : otherConfig.getPageStacks().values())
     {
       addPageStack(pageStackDef);
     }
@@ -200,7 +200,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   }
 
   @Override
-  public void addChildElement(MBDialogDefinition child)
+  public void addChildElement(MBPageStackDefinition child)
   {
     addPageStack(child);
   }
@@ -293,28 +293,12 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     {
       _homeDialog = dialog;
     }
-    createImplicitOutcomeForDialog(dialog);
     _dialogs.put(dialog.getName(), dialog);
   }
 
-  public void addPageStack(MBDialogDefinition dialog)
+  public void addPageStack(MBPageStackDefinition dialog)
   {
     _pageStacks.put(dialog.getName(), dialog);
-  }
-
-  private void createImplicitOutcomeForDialog(MBDialogGroupDefinition dialog)
-  {
-    List<MBOutcomeDefinition> def = getOutcomeDefinitionsForOrigin(ORIGIN_WILDCARD, dialog.getName());
-    if (def.isEmpty())
-    {
-      MBOutcomeDefinition definition = new MBOutcomeDefinition();
-      definition.setAction("none");
-      definition.setDialog(dialog.getName());
-      definition.setName(dialog.getName());
-      definition.setNoBackgroundProcessing(true);
-      definition.setOrigin(ORIGIN_WILDCARD);
-      addOutcome(definition);
-    }
   }
 
   public void addTool(MBToolDefinition tool)
@@ -445,7 +429,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return _tools;
   }
 
-  public Map<String, MBDialogDefinition> getPageStacks()
+  public Map<String, MBPageStackDefinition> getPageStacks()
   {
     return _pageStacks;
   }
@@ -474,7 +458,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return _alerts.get(name);
   }
 
-  public MBDialogDefinition getDefinitionForPageStackName(String pageStack)
+  public MBPageStackDefinition getDefinitionForPageStackName(String pageStack)
   {
     return _pageStacks.get(pageStack);
   }

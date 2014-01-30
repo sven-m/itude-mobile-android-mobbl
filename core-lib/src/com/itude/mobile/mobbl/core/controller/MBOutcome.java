@@ -33,7 +33,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
 {
   private String     _originName;
   private String     _outcomeName;
-  private String     _dialogName;
+  private String     _pageStackName;
   private String     _originDialogName;
   private String     _displayMode;
   private String     _path;
@@ -65,14 +65,32 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
     _outcomeName = outcomeName;
   }
 
+  /**
+   * @deprecated - Use getPageStackName () instead
+   */
+  @Deprecated
   public String getDialogName()
   {
-    return _dialogName;
+    return _pageStackName;
   }
 
-  public void setDialogName(String dialogName)
+  /*
+   * @deprecated - Use setPageStackName instead
+   */
+  @Deprecated
+  public void setDialogName(String pageStackName)
   {
-    _dialogName = dialogName;
+    _pageStackName = pageStackName;
+  }
+
+  public String getPageStackName()
+  {
+    return _pageStackName;
+  }
+
+  public void setPageStackName(String pageStackName)
+  {
+    _pageStackName = pageStackName;
   }
 
   public String getOriginDialogName()
@@ -181,7 +199,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
     _originName = outcome.getOriginName();
     _outcomeName = outcome.getOutcomeName();
     _originDialogName = outcome.getOriginDialogName();
-    _dialogName = outcome.getDialogName();
+    _pageStackName = outcome.getPageStackName();
     _displayMode = outcome.getDisplayMode();
     _document = outcome.getDocument();
     _path = outcome.getPath();
@@ -198,7 +216,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
     super(definition);
     _originName = definition.getOrigin();
     _outcomeName = definition.getName();
-    _dialogName = definition.getDialog();
+    _pageStackName = definition.getPageStack();
     _displayMode = definition.getDisplayMode();
     _persist = definition.getPersist();
     _transferDocument = definition.getTransferDocument();
@@ -216,10 +234,10 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
     _document = document;
   }
 
-  public MBOutcome(String outcomeName, MBDocument document, String dialogName)
+  public MBOutcome(String outcomeName, MBDocument document, String pageStackName)
   {
     this(outcomeName, document);
-    _dialogName = dialogName;
+    _pageStackName = pageStackName;
   }
 
   public MBOutcome()
@@ -260,7 +278,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
 
     _originName = data.getString("originName");
     _outcomeName = data.getString("outcomeName");
-    _dialogName = data.getString("dialogName");
+    _pageStackName = data.getString("pageStackName");
     _originDialogName = data.getString("originDialogName");
     _displayMode = data.getString("displayMode");
     _path = data.getString("path");
@@ -289,7 +307,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
 
     data.putString("originName", _originName);
     data.putString("outcomeName", _outcomeName);
-    data.putString("dialogName", _dialogName);
+    data.putString("pageStackName", _pageStackName);
     data.putString("originDialogName", _originDialogName);
     data.putString("displayMode", _displayMode);
     data.putString("path", _path);
@@ -327,7 +345,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
   @Override
   public String toString()
   {
-    return "Outcome: dialog=" + getDialogName() + " originName=" + getOriginName() + " outcomeName=" + getOutcomeName() + " path="
+    return "Outcome: pageStack=" + getPageStackName() + " originName=" + getOriginName() + " outcomeName=" + getOutcomeName() + " path="
            + getPath() + " persist=" + getPersist() + " displayMode=" + getDisplayMode() + " preCondition=" + getPreCondition()
            + " noBackgroundProsessing=" + getNoBackgroundProcessing() + " action = " + getAction();
   }
@@ -342,7 +360,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
 
     // note that the precedence of either this' or outcomeDef's values are not identical; this is not a mistake
     outcomeToProcess.setIndicator(coalesce(getIndicator(), outcomeDef.getIndicator()));
-    outcomeToProcess.setDialogName(coalesce(outcomeDef.getDialog(), getDialogName()));
+    outcomeToProcess.setPageStackName(coalesce(outcomeDef.getPageStack(), getPageStackName()));
     outcomeToProcess.setDisplayMode(coalesce(getDisplayMode(), outcomeDef.getDisplayMode()));
     outcomeToProcess.setOriginDialogName(coalesce(getOriginDialogName(), outcomeToProcess.getDialogName()));
     outcomeToProcess.setAction(coalesce(getAction(), outcomeDef.getAction()));

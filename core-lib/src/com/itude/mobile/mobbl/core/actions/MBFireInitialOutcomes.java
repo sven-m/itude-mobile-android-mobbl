@@ -20,7 +20,7 @@ import java.util.List;
 import android.util.Log;
 
 import com.itude.mobile.android.util.StringUtil;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl.core.controller.MBAction;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
@@ -56,7 +56,7 @@ public class MBFireInitialOutcomes implements MBAction
       String dialog = element.getValueForAttribute("dialog");
       boolean isMenu = false;
 
-      MBDialogDefinition def = MBMetadataService.getInstance().getDefinitionForPageStackName(dialog);
+      MBPageStackDefinition def = MBMetadataService.getInstance().getDefinitionForPageStackName(dialog);
       if (def != null)
       {
         String parentDialog = def.getParent();

@@ -27,7 +27,7 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBAttributeDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBBundleDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainDefinition;
@@ -123,7 +123,7 @@ public class MBDefinition implements Parcelable
   {
   }
 
-  public void addChildElement(MBDialogDefinition child)
+  public void addChildElement(MBPageStackDefinition child)
   {
   }
 
