@@ -47,7 +47,7 @@ Please note, if you have a pull request, make sure to use the [develop branch](h
 
 #### Formatting
 
-For contributors using Eclipse there's a formatter available at the [download section](http://mobbl.org/downloads/code-format.xml).
+For contributors using Eclipse there's a [formatter](http://mobbl.org/downloads/code-format.xml) available.
 
 ## License
 The code in this project is licensed under the Apache Software License 2.0, per the terms of the included LICENSE file.
