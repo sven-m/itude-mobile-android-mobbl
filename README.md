@@ -10,6 +10,8 @@ Most current app development is about connecting consumers and employees to back
 
 Generic documentation can be found at [Mobbl.org](http://mobbl.org/doc.html).
 Documentation about how to get started can be [here](http://mobbl.org/android.html).
+For Api documentation, see the [Android API Reference](http://mobbl.org/apis/androi/index.html).
+
 
 ## [Changelog](https://github.com/ItudeMobile/itude-mobile-android-mobbl/wiki/Changelog)
 Current version: 3.2.0.11
