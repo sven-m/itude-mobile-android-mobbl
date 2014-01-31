@@ -8,7 +8,8 @@ Most current app development is about connecting consumers and employees to back
 
 ## Documentation
 
-Generic documentation can be found at [Mobbl.org](http://mobbl.org/doc.html)
+Generic documentation can be found at [Mobbl.org](http://mobbl.org/doc.html).
+Documentation about how to get started can be [here](http://mobbl.org/android.html).
 
 ## [Changelog](https://github.com/ItudeMobile/itude-mobile-android-mobbl/wiki/Changelog)
 Current version: 3.2.0.11
@@ -16,27 +17,36 @@ Current version: 3.2.0.11
 ## Build
 #### Maven
 
-To use Android Mobbl within your maven build simply add
+First add the [ItudeMobile repository](https://github.com/ItudeMobile/maven-repository) to your pom.xml
+
+```xml
+<repository>
+	<id>itudemobile-github-repository</id>
+	<name>ItudeMobile Github repository</name>
+	<url>http://mobbl.org/maven-repository/releases</url>
+</repository>
+```
+
+Now add Android Mobbl
 
 ```xml
 <dependency>
-  <groupId>com.itude.mobile.android.mobbl</groupId>
-  <artifactId>mobbl-core-lib</artifactId>
-  <version>${core.lib.version}</version>
-  <type>apklib</type>
+	<groupId>com.itude.mobile.android.mobbl</groupId>
+	<artifactId>mobbl-core-lib</artifactId>
+	<version>${core.lib.version}</version>
+	<type>apklib</type>
 </dependency>
 ```
 and the [Android Util](https://github.com/ItudeMobile/itude-mobile-android-util)
 
 ```xml
 <dependency>
-  <groupId>com.itude.mobile.android.util</groupId>
+	<groupId>com.itude.mobile.android.util</groupId>
 	<artifactId>android-util-lib</artifactId>
 	<version>${util.lib.version}</version>
 	<type>apklib</type>
-</dependency
+</dependency>
 ```
-
 to your pom.xml.
 
 ## Contribute
