@@ -38,11 +38,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.FrameLayout;
 
-import com.itude.mobile.android.util.DeviceUtil;
-import com.itude.mobile.android.util.ScreenUtil;
-import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
@@ -54,7 +50,10 @@ import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.threads.MBThread;
 import com.itude.mobile.mobbl.core.view.MBPage;
+import com.itude.mobile.mobbl.core.view.builders.MBDialogDecorator;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
+import com.itude.mobile.mobbl.core.view.builders.dialog.DefaultDialogDecorator;
+import com.itude.mobile.mobbl.core.view.builders.dialog.ModalDialogDecorator;
 
 public class MBDialogController extends ContextWrapper
 {
@@ -75,6 +74,7 @@ public class MBDialogController extends ContextWrapper
   private final Queue<ShowPageEntry>               _queuedPages          = new LinkedList<MBDialogController.ShowPageEntry>();
   private String                                   _defaultPageStack     = null;
   private String                                   _contentType;
+  private MBDialogDecorator                        _decorator;
 
   public MBDialogController()
   {
@@ -131,6 +131,10 @@ public class MBDialogController extends ContextWrapper
         if (_defaultPageStack == null) _defaultPageStack = pageStackDef.getName();
         addPageStack(pageStackDef.getName(), UniqueIntegerGenerator.getId(), pageStackDef.getMode());
       }
+
+      // TODO: HACK
+      if (getName().equals("DIALOG-modal")) _decorator = new ModalDialogDecorator();
+      else _decorator = new DefaultDialogDecorator();
       return true;
     }
     else
@@ -170,10 +174,11 @@ public class MBDialogController extends ContextWrapper
   {
     try
     {
-      getActivity().setContentView(_mainContainer);
+      _decorator.show(this);
+
       activateWithoutSwitching();
       getSupportFragmentManager().executePendingTransactions();
-      getActivity().setTitle(_title);
+
     }
     catch (Throwable t)
     {
@@ -213,6 +218,7 @@ public class MBDialogController extends ContextWrapper
   public void deactivate()
   {
     getFragmentStack().emptyBackStack(true);
+    _decorator.hide();
     _shown = false;
   }
 
@@ -486,7 +492,7 @@ public class MBDialogController extends ContextWrapper
     {
 
       MBViewBuilderFactory.getInstance().getDialogViewBuilder().handleConfigurationChanged(newConfig, this);
-      
+
       for (MBBasicViewController controller : getAllFragments())
       {
         controller.handleOrientationChange(newConfig);
@@ -577,12 +583,12 @@ public class MBDialogController extends ContextWrapper
     return false;
   }
 
-  static class FragmentStack implements OnBackStackChangedListener
+  class FragmentStack implements OnBackStackChangedListener
   {
 
     private final FragmentManager _fragmentManager;
 
-    private static class SavedStackEntry
+    private class SavedStackEntry
     {
       public String   id;
       public int      dialogId;
@@ -618,6 +624,10 @@ public class MBDialogController extends ContextWrapper
         _stack.push(entry);
       }
 
+      if (count == 0)
+      {
+        onEmptiedBackStack();
+      }
     }
 
     void playBackStack()
@@ -665,7 +675,8 @@ public class MBDialogController extends ContextWrapper
 
     public boolean isBackStackEmpty()
     {
-      return getFragmentManager().getBackStackEntryCount() == 0;
+      int count = getFragmentManager().getBackStackEntryCount();
+      return count == 0;
     }
 
   }
@@ -680,4 +691,29 @@ public class MBDialogController extends ContextWrapper
     return _contentType;
   }
 
+  public String getTitle()
+  {
+    return _title;
+  }
+
+  public MBDialogDecorator getDecorator()
+  {
+    return _decorator;
+  }
+
+  public void popAll()
+  {
+    getFragmentStack().emptyBackStack(false);
+  }
+
+  public void dismiss()
+  {
+    popAll();
+    deactivate();
+  }
+
+  public void onEmptiedBackStack()
+  {
+    if (_shown) _decorator.emptiedBackStack();
+  }
 }

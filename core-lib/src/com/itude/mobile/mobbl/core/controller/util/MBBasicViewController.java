@@ -168,7 +168,7 @@ public class MBBasicViewController extends DialogFragment
     _isDialogFullscreen = getArguments().getBoolean("fullscreen", false);
     _isDialogCancelable = getArguments().getBoolean("cancelable", false) || _isDialogCancelable;
 
-    if (_isDialogClosable && DeviceUtil.isTablet())
+    if (_isDialogClosable)
     {
       ViewGroup view = buildInitialView(LayoutInflater.from(getActivity()));
 
@@ -246,7 +246,7 @@ public class MBBasicViewController extends DialogFragment
       @Override
       public void onClick(View v)
       {
-        dialogToCloseOnclick.dismiss();
+        MBViewManager.getInstance().endDialog(getDialogController().getName(), false);
       }
     });
 
@@ -264,7 +264,7 @@ public class MBBasicViewController extends DialogFragment
       setCancelable(_isDialogClosable || _isDialogCancelable);
 
       // view is already set in onCreateDialog for closable dialogs
-      if (_isDialogClosable && DeviceUtil.isTablet())
+      if (_isDialogClosable)
       {
         return super.onCreateView(inflater, container, savedInstanceState);
       }
@@ -313,10 +313,7 @@ public class MBBasicViewController extends DialogFragment
       FrameLayout layout = (FrameLayout) getDialog().findViewById(android.R.id.custom);
       if (layout != null) layout.setPadding(0, 0, 0, 0);
 
-      if (DeviceUtil.getInstance().isTablet())
-      {
-        styleCloseButton();
-      }
+      styleCloseButton();
 
       if (_isDialogFullscreen)
       {

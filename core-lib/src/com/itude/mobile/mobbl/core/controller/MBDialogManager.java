@@ -229,8 +229,8 @@ public class MBDialogManager extends MBBaseLifecycleListener
     for (MBDialogChangeListener listener : _listeners)
       listener.onDialogSelected(dialogName);
 
-    _activeDialog = dialogName;
     dialog.activate();
+    _activeDialog = dialogName;
     dialog.handleAllOnWindowActivated();
     return true;
   }

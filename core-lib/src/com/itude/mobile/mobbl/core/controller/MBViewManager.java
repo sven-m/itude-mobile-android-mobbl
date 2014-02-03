@@ -580,7 +580,8 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   public void endDialog(String dialogName, boolean keepPosition)
   {
-    // TODO: do something.. :')
+    if (keepPosition) _dialogManager.getDialog(dialogName).popAll();
+    else _dialogManager.getDialog(dialogName).dismiss();
   }
 
   public void popPage(String dialogName)
@@ -611,7 +612,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   }
 
- public static MBViewManager getInstance()
+  public static MBViewManager getInstance()
   {
     return _instance;
   }

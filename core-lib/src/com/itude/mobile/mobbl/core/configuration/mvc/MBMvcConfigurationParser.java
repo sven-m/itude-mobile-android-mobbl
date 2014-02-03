@@ -103,6 +103,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _outcomeAttributes.add("name");
       _outcomeAttributes.add("action");
       _outcomeAttributes.add("dialog");
+      _outcomeAttributes.add("stack");
       _outcomeAttributes.add("displayMode");
       _outcomeAttributes.add("persist");
       _outcomeAttributes.add("transferDocument");
@@ -341,7 +342,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       outcomeDef.setOrigin(attributeDict.get("origin"));
       outcomeDef.setName(attributeDict.get("name"));
       outcomeDef.setAction(attributeDict.get("action"));
-      outcomeDef.setPageStack(ComparisonUtil.coalesce(attributeDict.get("pageStack"), attributeDict.get("dialog")));
+      outcomeDef.setPageStack(ComparisonUtil.coalesce(attributeDict.get("stack"), attributeDict.get("dialog")));
       outcomeDef.setDisplayMode(attributeDict.get("displayMode"));
       outcomeDef.setPreCondition(attributeDict.get("preCondition"));
       outcomeDef.setPersist(Boolean.parseBoolean(attributeDict.get("persist")));
@@ -379,6 +380,8 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       dialogDef.setPreCondition(attributeDict.get("preCondition"));
       dialogDef.setContentType(attributeDict.get("contentType"));
 
+      dialogDef.setCustom(extractCustomAttributes(attributeDict, _dialogAttributes));
+      
       notifyProcessed(dialogDef);
     }
     else if (elementName.equals("Page"))

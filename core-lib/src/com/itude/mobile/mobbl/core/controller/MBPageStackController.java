@@ -44,7 +44,6 @@ public class MBPageStackController
 
   void showPage(MBDialogController.ShowPageEntry entry)
   {
-
     if ("POP".equals(entry.getDisplayMode()))
     {
       getParent().popView();
@@ -67,89 +66,7 @@ public class MBPageStackController
     args.putString("id", entry.getId());
     fragment.setArguments(args);
 
-    FragmentTransaction transaction = getParent().getSupportFragmentManager().beginTransaction();
-    /*
-        if (entry.getPage().getCurrentViewState() == MBViewState.MBViewStateModal
-            || MBApplicationController.getInstance().getModalPageID() != null)
-        {
-          String modalPageId = MBApplicationController.getInstance().getModalPageID();
-
-          if (entry.isAddToBackStack())
-          {
-            transaction.addToBackStack(entry.getId());
-          }
-
-          if (modalPageId != null && MBApplicationController.getInstance().getOutcomeWhichCausedModal() != null)
-          {
-            entry.setDisplayMode(MBApplicationController.getInstance().getOutcomeWhichCausedModal().getDisplayMode());
-          }
-
-          boolean fullscreen = false;
-          boolean cancelable = false;
-
-          if ("MODAL".equals(entry.getDisplayMode()))
-          {
-            fullscreen = true;
-            cancelable = true;
-          }
-          if (entry.getDisplayMode() != null)
-          {
-            if (entry.getDisplayMode().contains("FULLSCREEN"))
-            {
-              fullscreen = true;
-            }
-
-            if (entry.getDisplayMode().contains("WITHCLOSEBUTTON"))
-            {
-              args.putBoolean("closable", true);
-              fragment.setArguments(args);
-            }
-          }
-          if (fullscreen)
-          {
-            args.putBoolean("fullscreen", true);
-            fragment.setArguments(args);
-          }
-
-          if (cancelable)
-          {
-            args.putBoolean("cancelable", true);
-            fragment.setArguments(args);
-          }
-
-          Fragment dialogFragment = getParent().getSupportFragmentManager().findFragmentByTag(modalPageId);
-          if (dialogFragment != null && !getParent().getFragmentStack().isBackStackEmpty())
-          {
-            getParent().getSupportFragmentManager().popBackStack();
-          }
-
-          transaction.add(fragment, entry.getId());
-        }
-        else*/
-    {
-      if (entry.isAddToBackStack())
-      {
-        transaction.addToBackStack(entry.getId());
-      }
-      else
-      {
-        if (!getParent().getFragmentStack().isBackStackEmpty())
-        {
-          getParent().getSupportFragmentManager().popBackStack();
-          transaction.addToBackStack(entry.getId());
-        }
-      }
-      transaction.replace(getId(), fragment, entry.getId());
-    }
-
-    // commitAllowingStateLoss makes sure that the transaction is being
-    // commit,
-    // even when the target activity is stopped. For now, this comes with
-    // the price,
-    // that the page being displayed will lose its state after a
-    // configuration change (e.g. an orientation change)
-    transaction.commitAllowingStateLoss();
-
+    getParent().getDecorator().presentFragment(fragment, getId(), entry.getId(), entry.isAddToBackStack());
   }
 
 }

@@ -1,0 +1,88 @@
+package com.itude.mobile.mobbl.core.view.builders.dialog;
+
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+
+import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl.core.controller.MBDialogController;
+import com.itude.mobile.mobbl.core.controller.MBViewManager;
+import com.itude.mobile.mobbl.core.services.MBMetadataService;
+import com.itude.mobile.mobbl.core.view.builders.MBDialogDecorator;
+
+public class ModalDialogDecorator implements MBDialogDecorator
+{
+  private boolean            _fullscreen;
+  private boolean            _cancelable;
+  private boolean            _closable;
+  private String             _previousDialog;
+  private MBDialogController _dialog;
+
+  @Override
+  public void show(MBDialogController dialog)
+  {
+    _dialog = dialog;
+    _previousDialog = MBViewManager.getInstance().getActiveDialogName();
+    MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialog.getName());
+    _fullscreen = Boolean.parseBoolean(dialogDefinition.getCustom().get("fullscreen"));
+    _cancelable = dialogDefinition.getCustom().containsKey("cancelable") ? Boolean.parseBoolean(dialogDefinition.getCustom()
+        .get("cancelable")) : true;
+    _closable = Boolean.parseBoolean(dialogDefinition.getCustom().get("closable"));
+
+  }
+
+  @Override
+  public void hide()
+  {
+    MBViewManager.getInstance().activateDialogWithName(_previousDialog);
+  }
+
+  @Override
+  public void presentFragment(final Fragment fragment, int containerId, String name, boolean addToBackStack)
+  {
+    FragmentManager manager = MBViewManager.getInstance().getSupportFragmentManager();
+    FragmentTransaction transaction = manager.beginTransaction();
+
+    Bundle args = fragment.getArguments();
+    if (addToBackStack)
+    {
+      transaction.addToBackStack(name);
+    }
+
+    if (_fullscreen)
+    {
+      args.putBoolean("fullscreen", true);
+      fragment.setArguments(args);
+    }
+
+    if (_cancelable)
+    {
+      args.putBoolean("cancelable", true);
+      fragment.setArguments(args);
+    }
+
+    if (_closable)
+    {
+      args.putBoolean("closable", true);
+      fragment.setArguments(args);
+    }
+
+    ((DialogFragment) fragment).show(transaction, name);
+
+  }
+
+  @Override
+  public void emptiedBackStack()
+  {
+    if (_dialog != null)
+    {
+      MBDialogController dialog = _dialog;
+      _dialog = null;
+      dialog.deactivate();
+    }
+
+  }
+
+}
