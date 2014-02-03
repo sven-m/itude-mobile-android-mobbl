@@ -45,8 +45,8 @@ import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl.core.MBException;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.controller.helpers.MBActivityHelper;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.services.MBLocalizationService;
@@ -54,7 +54,6 @@ import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.threads.MBThread;
 import com.itude.mobile.mobbl.core.view.MBPage;
-import com.itude.mobile.mobbl.core.view.builders.MBDialogViewBuilder.MBDialogType;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
 
 public class MBDialogController extends ContextWrapper
@@ -75,6 +74,7 @@ public class MBDialogController extends ContextWrapper
   private Configuration                            _configurationChanged = null;
   private final Queue<ShowPageEntry>               _queuedPages          = new LinkedList<MBDialogController.ShowPageEntry>();
   private String                                   _defaultPageStack     = null;
+  private String _contentType;
 
   public MBDialogController()
   {
@@ -122,6 +122,7 @@ public class MBDialogController extends ContextWrapper
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(getName());
       setIconName(dialogDefinition.getIcon());
       setDialogMode(dialogDefinition.getMode());
+      _contentType = dialogDefinition.getContentType ();
 
       _title = MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle());
       List<MBPageStackDefinition> children = dialogDefinition.getChildren();
@@ -159,16 +160,7 @@ public class MBDialogController extends ContextWrapper
 
   private void viewInit()
   {
-    // handle as a single dialog
-    if (_pageStacks.size() == 1)
-    {
-      _mainContainer = MBViewBuilderFactory.getInstance().getDialogViewBuilder().buildDialog(MBDialogType.Single, _sortedDialogIds);
-    }
-    // handle as a group of dialogs
-    else if (_pageStacks.size() > 1)
-    {
-      _mainContainer = MBViewBuilderFactory.getInstance().getDialogViewBuilder().buildDialog(MBDialogType.Split, _sortedDialogIds);
-    }
+      _mainContainer = MBViewBuilderFactory.getInstance().getDialogViewBuilder().buildDialog(_contentType, _sortedDialogIds);
 
   }
 

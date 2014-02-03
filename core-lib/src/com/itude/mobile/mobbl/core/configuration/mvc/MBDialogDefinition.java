@@ -38,6 +38,7 @@ public class MBDialogDefinition extends MBConditionalDefinition
   private String                                   _icon;
   private String                                   _showAs;
   private String                                   _domain;
+  private String                                   _contentType;
 
   public MBDialogDefinition()
   {
@@ -211,6 +212,16 @@ public class MBDialogDefinition extends MBConditionalDefinition
   public String getDomain()
   {
     return _domain;
+  }
+
+  public String getContentType()
+  {
+    return _contentType;
+  }
+  
+  public void setContentType(String contentType)
+  {
+    _contentType = contentType;
   }
 
 }

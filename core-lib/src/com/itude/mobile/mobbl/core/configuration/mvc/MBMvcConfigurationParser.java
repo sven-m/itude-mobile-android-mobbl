@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.itude.mobile.android.util.ComparisonUtil;
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.configuration.MBConfigurationParser;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
@@ -31,6 +32,7 @@ import com.itude.mobile.mobbl.core.controller.MBOutcome;
 import com.itude.mobile.mobbl.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl.core.services.datamanager.handlers.MBMetadataDataHandler;
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
+import com.itude.mobile.mobbl.core.view.builders.MBDialogContentBuilder;
 
 public class MBMvcConfigurationParser extends MBConfigurationParser
 {
@@ -127,6 +129,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _dialogAttributes.add("showAs");
       _dialogAttributes.add("domain");
       _dialogAttributes.add("preCondition");
+      _dialogAttributes.add("contentType");
     }
     if (_pageAttributes == null)
     {
@@ -374,6 +377,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       dialogDef.setShowAs(attributeDict.get("showAs"));
       dialogDef.setDomain(attributeDict.get("domain"));
       dialogDef.setPreCondition(attributeDict.get("preCondition"));
+      dialogDef.setContentType(attributeDict.get("contentType"));
 
       notifyProcessed(dialogDef);
     }
@@ -591,10 +595,12 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
         groupDef.addPageStack(dialogDef);
       }
 
-      // On tablets, we can have a split view in a tab. In XML they are defined as two dialogs in a dialogGroup.
-      // This means that the dialogs are automatically added to a dialogGroup. 
-      // That is why we need to make sure that the dialogs are also kept locally, like on the phone, because the local references are used to address the Dialogs
-      // Thats why we copy them here after the group has been added.
+      if (StringUtil.isEmpty(groupDef.getContentType()))
+      {
+        groupDef
+            .setContentType(groupDef.getChildren().size() == 1 ? MBDialogContentBuilder.DEFAULT_SINGLE : MBDialogContentBuilder.DEFAULT_SPLIT);
+      }
+
       for (MBPageStackDefinition dialogDef : groupDef.getChildren())
         configDef.addChildElement(dialogDef);
 
