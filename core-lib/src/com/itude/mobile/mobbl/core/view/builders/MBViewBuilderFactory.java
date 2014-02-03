@@ -17,16 +17,17 @@ package com.itude.mobile.mobbl.core.view.builders;
 
 public class MBViewBuilderFactory
 {
-  private static MBViewBuilderFactory _instance;
+  private static MBViewBuilderFactory    _instance;
 
-  private final MBPanelViewBuilder    _panelViewBuilder;
-  private MBPageViewBuilder           _pageViewBuilder;
-  private MBForEachViewBuilder        _forEachViewBuilder;
-  private MBForEachItemViewBuilder    _forEachItemViewBuilder;
-  private final MBFieldViewBuilder    _fieldViewBuilder;
-  private MBStyleHandler              _styleHandler;
+  private final MBPanelViewBuilder       _panelViewBuilder;
+  private MBPageViewBuilder              _pageViewBuilder;
+  private MBForEachViewBuilder           _forEachViewBuilder;
+  private MBForEachItemViewBuilder       _forEachItemViewBuilder;
+  private final MBFieldViewBuilder       _fieldViewBuilder;
+  private MBStyleHandler                 _styleHandler;
   private MBDialogContentBuilder         _dialogViewBuilder;
-  private final MBAlertDialogBuilder  _alertViewBuilder;
+  private final MBAlertDialogBuilder     _alertViewBuilder;
+  private final MBDialogDecoratorBuilder _dialogDecoratorBuilder;
 
   private MBViewBuilderFactory()
   {
@@ -38,6 +39,7 @@ public class MBViewBuilderFactory
     _styleHandler = new MBStyleHandler();
     _dialogViewBuilder = new MBDialogContentBuilder();
     _alertViewBuilder = new MBAlertDialogBuilder();
+    _dialogDecoratorBuilder = new MBDialogDecoratorBuilder();
   }
 
   public static MBViewBuilderFactory getInstance()
@@ -122,6 +124,11 @@ public class MBViewBuilderFactory
   public MBAlertDialogBuilder getAlertViewBuilder()
   {
     return _alertViewBuilder;
+  }
+
+  public MBDialogDecoratorBuilder getDialogDecoratorBuilder()
+  {
+    return _dialogDecoratorBuilder;
   }
 
 }

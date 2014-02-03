@@ -25,8 +25,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
+import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.view.MBOutcomeListenerProtocol;
@@ -85,36 +86,26 @@ public class MBOutcomeHandler extends Handler
       return dialogDef.getChildren().get(0).getName();
     }
 
-    if (!"RIGHT".equals(pageStackName) && !"LEFT".equals(pageStackName))
-    {
-      return pageStackName;
-    }
-
-    String newPageStackName = null;
-
     String activeDialogName = MBViewManager.getInstance().getActiveDialogName();
+    if (activeDialogName == null) return pageStackName;
     MBDialogDefinition activeDialogDef = MBMetadataService.getInstance().getDefinitionForDialogName(activeDialogName);
 
-    List<MBPageStackDefinition> children = activeDialogDef.getChildren();
-
     MBPageStackDefinition pageStackDef = null;
-    if ("RIGHT".equals(pageStackName))
-    {
-      pageStackDef = children.get(children.size() - 1);
-    }
-    else if ("LEFT".equals(pageStackName))
-    {
-      pageStackDef = children.get(0);
-    }
+    for (MBPageStackDefinition pageStack : activeDialogDef.getChildren())
+      if (ComparisonUtil.safeEquals(pageStackName, pageStack.getLocalName()))
+      {
+        pageStackDef = pageStack;
+        break;
+      }
 
     if (pageStackDef != null)
     {
-      newPageStackName = pageStackDef.getName();
 
-      Log.d(Constants.APPLICATION_NAME, "Dialog name '" + pageStackName + "' resolved to '" + newPageStackName + "'");
+      Log.d(Constants.APPLICATION_NAME, "Dialog name '" + pageStackName + "' resolved to '" + pageStackDef.getName() + "'");
+      return pageStackDef.getName();
     }
 
-    return newPageStackName;
+    return pageStackName;
   }
 
   public void registerOutcomeListener(MBOutcomeListenerProtocol listener)

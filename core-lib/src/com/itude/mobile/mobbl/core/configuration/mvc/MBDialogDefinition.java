@@ -39,6 +39,7 @@ public class MBDialogDefinition extends MBConditionalDefinition
   private String                                   _showAs;
   private String                                   _domain;
   private String                                   _contentType;
+  private String                                   _decorator;
 
   public MBDialogDefinition()
   {
@@ -194,11 +195,6 @@ public class MBDialogDefinition extends MBConditionalDefinition
     return Constants.C_SHOW_AS_TAB.equals(_showAs);
   }
 
-  public boolean isShowAsMenu()
-  {
-    return Constants.C_SHOW_AS_MENU.equals(_showAs);
-  }
-
   public boolean isShowAsDocument()
   {
     return Constants.C_SHOW_AS_DOCUMENT.equals(_showAs);
@@ -218,10 +214,19 @@ public class MBDialogDefinition extends MBConditionalDefinition
   {
     return _contentType;
   }
-  
+
   public void setContentType(String contentType)
   {
     _contentType = contentType;
   }
 
+  public void setDecorator(String decorator)
+  {
+    _decorator = decorator;
+  }
+
+  public String getDecorator()
+  {
+    return _decorator;
+  }
 }

@@ -12,30 +12,36 @@ import com.itude.mobile.mobbl.core.controller.MBViewManager;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.view.builders.MBDialogDecorator;
 
-public class ModalDialogDecorator implements MBDialogDecorator
+public class ModalDialogDecorator extends MBDialogDecorator
 {
-  private boolean            _fullscreen;
-  private boolean            _cancelable;
-  private boolean            _closable;
-  private String             _previousDialog;
-  private MBDialogController _dialog;
+
+  private boolean _fullscreen;
+  private boolean _cancelable;
+  private boolean _closable;
+  private String  _previousDialog;
+  private boolean _shown;
+
+  public ModalDialogDecorator(MBDialogController dialog)
+  {
+    super(dialog);
+  }
 
   @Override
-  public void show(MBDialogController dialog)
+  public void show()
   {
-    _dialog = dialog;
     _previousDialog = MBViewManager.getInstance().getActiveDialogName();
-    MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialog.getName());
+    MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(getDialog().getName());
     _fullscreen = Boolean.parseBoolean(dialogDefinition.getCustom().get("fullscreen"));
     _cancelable = dialogDefinition.getCustom().containsKey("cancelable") ? Boolean.parseBoolean(dialogDefinition.getCustom()
         .get("cancelable")) : true;
     _closable = Boolean.parseBoolean(dialogDefinition.getCustom().get("closable"));
-
+    _shown = true;
   }
 
   @Override
   public void hide()
   {
+    _shown = false;
     MBViewManager.getInstance().activateDialogWithName(_previousDialog);
   }
 
@@ -76,11 +82,10 @@ public class ModalDialogDecorator implements MBDialogDecorator
   @Override
   public void emptiedBackStack()
   {
-    if (_dialog != null)
+    if (_shown)
     {
-      MBDialogController dialog = _dialog;
-      _dialog = null;
-      dialog.deactivate();
+      _shown = false;
+      getDialog().deactivate();
     }
 
   }

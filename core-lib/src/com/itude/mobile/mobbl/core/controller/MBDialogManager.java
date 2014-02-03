@@ -47,7 +47,6 @@ public class MBDialogManager extends MBBaseLifecycleListener
   private final List<String>                       _sortedDialogNames;
   private final Map<String, MBDialogController>    _controllerMap;
   private final Map<String, MBPageStackController> _pageStackControllers;
-  private MBDialogController                       _menuController;
   private String                                   _activeDialog;
   private final Activity                           _activity;
   private final List<MBDialogChangeListener>       _listeners;
@@ -128,11 +127,6 @@ public class MBDialogManager extends MBBaseLifecycleListener
     return _controllerMap.values();
   }
 
-  public MBDialogController getMenuDialog()
-  {
-    return _menuController;
-  }
-
   public List<String> getSortedDialogNames()
   {
     return _sortedDialogNames;
@@ -186,7 +180,6 @@ public class MBDialogManager extends MBBaseLifecycleListener
 
     _sortedDialogNames.clear();
     _controllerMap.clear();
-    _menuController = null;
     _activeDialog = null;
   }
 
@@ -252,7 +245,6 @@ public class MBDialogManager extends MBBaseLifecycleListener
     _controllerMap.put(name, controller);
     _pageStackControllers.putAll(controller.getPageStacks());
     _sortedDialogNames.add(name);
-    if (definition.isShowAsMenu()) _menuController = controller;
   }
 
   public void removeDialog(String dialogName)

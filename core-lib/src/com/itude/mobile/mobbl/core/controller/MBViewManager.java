@@ -727,11 +727,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   ////// Dialog management ////////
 
-  public MBDialogController getMenuDialog()
-  {
-    return _dialogManager.getMenuDialog();
-  }
-
   public MBDialogController getActiveDialog()
   {
     return _dialogManager.getActiveDialog();
@@ -828,11 +823,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   public void hideSearchView()
   {
     throw new UnsupportedOperationException("This method is not supported on smartphone");
-  }
-
-  public boolean needsSlidingMenu()
-  {
-    return getMenuDialog() != null;
   }
 
   public void reset()

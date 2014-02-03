@@ -24,6 +24,7 @@ public class MBPageStackDefinition extends MBConditionalDefinition
 
   private String _mode;
   private String _parent;
+  private String _localName;
 
   @Override
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
@@ -33,6 +34,7 @@ public class MBPageStackDefinition extends MBConditionalDefinition
         .append(getName())//
         .append('\'')//
         .append(getAttributeAsXml("mode", _mode))//
+        .append(getAttributeAsXml("localName", _localName))//
         .append("/>\n");
   }
 
@@ -64,6 +66,16 @@ public class MBPageStackDefinition extends MBConditionalDefinition
   public void setParent(String parent)
   {
     _parent = parent;
+  }
+
+  public String getLocalName()
+  {
+    return _localName;
+  }
+
+  public void setLocalName(String localName)
+  {
+    _localName = localName;
   }
 
 }

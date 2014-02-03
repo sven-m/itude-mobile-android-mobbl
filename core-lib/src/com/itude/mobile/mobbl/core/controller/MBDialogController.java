@@ -132,9 +132,7 @@ public class MBDialogController extends ContextWrapper
         addPageStack(pageStackDef.getName(), UniqueIntegerGenerator.getId(), pageStackDef.getMode());
       }
 
-      // TODO: HACK
-      if (getName().equals("DIALOG-modal")) _decorator = new ModalDialogDecorator();
-      else _decorator = new DefaultDialogDecorator();
+      _decorator = MBViewBuilderFactory.getInstance().getDialogDecoratorBuilder().createDecorator(dialogDefinition.getDecorator(), this);
       return true;
     }
     else
@@ -174,7 +172,7 @@ public class MBDialogController extends ContextWrapper
   {
     try
     {
-      _decorator.show(this);
+      _decorator.show();
 
       activateWithoutSwitching();
       getSupportFragmentManager().executePendingTransactions();

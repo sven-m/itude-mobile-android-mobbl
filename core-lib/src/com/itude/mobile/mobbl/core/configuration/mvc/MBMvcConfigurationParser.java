@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.itude.mobile.android.util.CollectionUtilities;
 import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.MBException;
@@ -118,6 +119,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _pageStackAttributes.add("name");
       _pageStackAttributes.add("mode");
       _pageStackAttributes.add("preCondition");
+      _pageStackAttributes.add("localName");
     }
     if (_dialogAttributes == null)
     {
@@ -131,6 +133,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _dialogAttributes.add("domain");
       _dialogAttributes.add("preCondition");
       _dialogAttributes.add("contentType");
+      _dialogAttributes.add("decorator");
     }
     if (_pageAttributes == null)
     {
@@ -362,6 +365,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       pagestackDef.setName(attributeDict.get("name"));
       pagestackDef.setMode(attributeDict.get("mode"));
       pagestackDef.setPreCondition(attributeDict.get("preCondition"));
+      pagestackDef.setLocalName(attributeDict.get("localName"));
 
       notifyProcessed(pagestackDef);
     }
@@ -379,7 +383,8 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       dialogDef.setDomain(attributeDict.get("domain"));
       dialogDef.setPreCondition(attributeDict.get("preCondition"));
       dialogDef.setContentType(attributeDict.get("contentType"));
-
+      dialogDef.setDecorator(ComparisonUtil.coalesce(attributeDict.get("decorator"), "DEFAULT"));
+      
       dialogDef.setCustom(extractCustomAttributes(attributeDict, _dialogAttributes));
       
       notifyProcessed(dialogDef);

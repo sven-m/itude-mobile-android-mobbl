@@ -4,48 +4,39 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import com.itude.mobile.mobbl.core.controller.MBApplicationController;
+import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.controller.MBDialogController;
 import com.itude.mobile.mobbl.core.controller.MBViewManager;
 import com.itude.mobile.mobbl.core.view.builders.MBDialogDecorator;
 
-public class DefaultDialogDecorator extends MBDialogDecorator
+public class MenuDialogDecorator extends MBDialogDecorator
 {
-
-  public DefaultDialogDecorator(MBDialogController dialog)
+  public MenuDialogDecorator(MBDialogController dialog)
   {
     super(dialog);
+    if (_controller != null) throw new MBException("Trying to load multiple dialogs with menu; this is not supported yet!");
+    _controller = dialog;
   }
 
-  @Override
-  public void show()
+
+  private static MBDialogController _controller;
+
+  
+  public static MBDialogController getMenuDialog()
   {
-    MBViewManager.getInstance().setContentView(getDialog().getMainContainer());
-    MBViewManager.getInstance().setTitle(getDialog().getTitle());
+    return _controller;
   }
+
 
   @Override
   public void presentFragment(Fragment fragment, int containerId, String name, boolean addToBackStack)
   {
-
     FragmentManager manager = MBViewManager.getInstance().getSupportFragmentManager();
     FragmentTransaction transaction = manager.beginTransaction();
-    if (addToBackStack)
-    {
-      transaction.addToBackStack(name);
-    }
-    else
-    {
-      if (manager.getBackStackEntryCount() != 0)
-      {
-        manager.popBackStack();
-        transaction.addToBackStack(name);
-      }
-    }
+
     transaction.replace(containerId, fragment, name);
 
     transaction.commitAllowingStateLoss();
-
   }
 
 }

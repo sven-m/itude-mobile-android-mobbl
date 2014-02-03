@@ -4,13 +4,31 @@ import android.support.v4.app.Fragment;
 
 import com.itude.mobile.mobbl.core.controller.MBDialogController;
 
-public interface MBDialogDecorator
+public abstract class MBDialogDecorator
 {
-  public void show (MBDialogController dialog);
-  
-  public void presentFragment (Fragment fragment, int containerId, String name, boolean addToBackStack);
-  
-  public void hide ();
+  private MBDialogController _dialog;
 
-  public void emptiedBackStack();
+  public MBDialogDecorator(MBDialogController dialog)
+  {
+    _dialog = dialog;
+  }
+
+  public MBDialogController getDialog()
+  {
+    return _dialog;
+  }
+
+  public void show()
+  {
+  }
+
+  public abstract void presentFragment(Fragment fragment, int containerId, String name, boolean addToBackStack);
+
+  public void hide()
+  {
+  }
+
+  public void emptiedBackStack()
+  {
+  }
 }
