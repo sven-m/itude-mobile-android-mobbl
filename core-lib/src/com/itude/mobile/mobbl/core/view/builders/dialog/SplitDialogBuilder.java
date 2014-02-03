@@ -2,12 +2,17 @@ package com.itude.mobile.mobbl.core.view.builders.dialog;
 
 import java.util.List;
 
+import android.content.res.Configuration;
+import android.support.v4.app.Fragment;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.itude.mobile.android.util.ScreenUtil;
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
+import com.itude.mobile.mobbl.core.controller.MBDialogController;
+import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.view.builders.MBDialogContentBuilder;
 import com.itude.mobile.mobbl.core.view.builders.MBStyleHandler;
 
@@ -52,6 +57,23 @@ public class SplitDialogBuilder extends MBDialogContentBuilder.Builder
     }
 
     return container;
+  }
+
+  @Override
+  public void configurationChanged(Configuration newConfig, MBDialogController dialog)
+  {
+    List<MBBasicViewController> fragments = dialog.getAllFragments();
+    for (int i = 0; i < fragments.size() - 1; ++i)
+    {
+      Fragment fragment = fragments.get(i);
+      // if the fragment didn't load correctly (e.g. a network
+      // error occurred), we don't want to crash the app
+      if (fragment != null)
+      {
+        FrameLayout fragmentContainer = (FrameLayout) fragment.getView().getParent();
+        fragmentContainer.getLayoutParams().width = ScreenUtil.getWidthPixelsForPercentage(dialog.getBaseContext(), LEFT_FRAGMENT_WIDTH_PERCENTAGE);
+      }
+    }
   }
 
 }

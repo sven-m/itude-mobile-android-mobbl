@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.content.res.Configuration;
 import android.view.ViewGroup;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
@@ -26,6 +27,7 @@ import android.widget.RelativeLayout;
 import com.itude.mobile.android.util.AssertUtil;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
+import com.itude.mobile.mobbl.core.controller.MBDialogController;
 import com.itude.mobile.mobbl.core.view.builders.dialog.SingleDialogBuilder;
 import com.itude.mobile.mobbl.core.view.builders.dialog.SplitDialogBuilder;
 
@@ -39,6 +41,10 @@ public class MBDialogContentBuilder
   public static abstract class Builder
   {
     public abstract ViewGroup buildDialog(List<Integer> sortedDialogIds);
+
+    public void configurationChanged(Configuration newConfig, MBDialogController dialog)
+    {
+    }
 
     /**
      * Build the container in which to place the fragments. A RelativeLayout should provide
@@ -83,6 +89,13 @@ public class MBDialogContentBuilder
     Builder builder = _registry.get(dialogType);
     if (builder == null) throw new MBException("No dialog content builder for " + dialogType + " registered!");
     return builder.buildDialog(sortedDialogIds);
+  }
+
+  public void handleConfigurationChanged(Configuration configuration, MBDialogController dialog)
+  {
+    Builder builder = _registry.get(dialog.getContentType());
+    if (builder == null) throw new MBException("No dialog content builder for " + dialog.getContentType() + " registered!");
+    builder.configurationChanged(configuration, dialog);
   }
 
 }

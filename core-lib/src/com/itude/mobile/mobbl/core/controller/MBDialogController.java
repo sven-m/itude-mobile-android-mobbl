@@ -74,7 +74,7 @@ public class MBDialogController extends ContextWrapper
   private Configuration                            _configurationChanged = null;
   private final Queue<ShowPageEntry>               _queuedPages          = new LinkedList<MBDialogController.ShowPageEntry>();
   private String                                   _defaultPageStack     = null;
-  private String _contentType;
+  private String                                   _contentType;
 
   public MBDialogController()
   {
@@ -122,7 +122,7 @@ public class MBDialogController extends ContextWrapper
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(getName());
       setIconName(dialogDefinition.getIcon());
       setDialogMode(dialogDefinition.getMode());
-      _contentType = dialogDefinition.getContentType ();
+      _contentType = dialogDefinition.getContentType();
 
       _title = MBLocalizationService.getInstance().getTextForKey(dialogDefinition.getTitle());
       List<MBPageStackDefinition> children = dialogDefinition.getChildren();
@@ -160,7 +160,7 @@ public class MBDialogController extends ContextWrapper
 
   private void viewInit()
   {
-      _mainContainer = MBViewBuilderFactory.getInstance().getDialogViewBuilder().buildDialog(_contentType, _sortedDialogIds);
+    _mainContainer = MBViewBuilderFactory.getInstance().getDialogViewBuilder().buildDialog(_contentType, _sortedDialogIds);
 
   }
 
@@ -495,21 +495,9 @@ public class MBDialogController extends ContextWrapper
   {
     if (getName().equals(MBViewManager.getInstance().getActiveDialogName()))
     {
-      if (DeviceUtil.isTablet() && "SPLIT".equals(_dialogMode))
-      {
-        for (int i = 0; i < _sortedDialogIds.size() - 1; i++)
-        {
-          Fragment fragment = getSupportFragmentManager().findFragmentById(_sortedDialogIds.get(i));
-          // if the fragment didn't load correctly (e.g. a network
-          // error occurred), we don't want to crash the app
-          if (fragment != null)
-          {
-            FrameLayout fragmentContainer = (FrameLayout) fragment.getView().getParent();
-            fragmentContainer.getLayoutParams().width = ScreenUtil.getWidthPixelsForPercentage(getBaseContext(), 33);
-          }
-        }
-      }
 
+      MBViewBuilderFactory.getInstance().getDialogViewBuilder().handleConfigurationChanged(newConfig, this);
+      
       for (MBBasicViewController controller : getAllFragments())
       {
         controller.handleOrientationChange(newConfig);
@@ -706,6 +694,11 @@ public class MBDialogController extends ContextWrapper
   public String getDefaultPageStack()
   {
     return _defaultPageStack;
+  }
+
+  public String getContentType()
+  {
+    return _contentType;
   }
 
 }
