@@ -44,24 +44,13 @@ public class MBDialogSwitchTask extends MBOutcomeTask
     final MBApplicationController applicationController = MBApplicationController.getInstance();
     final MBViewManager viewManager = applicationController.getViewManager();
 
-    if ("MODAL".equals(getOutcome().getDisplayMode()) || "MODALWITHCLOSEBUTTON".equals(getOutcome().getDisplayMode())
-        || "MODALFORMSHEET".equals(getOutcome().getDisplayMode()) || "MODALFORMSHEETWITHCLOSEBUTTON".equals(getOutcome().getDisplayMode())
-        || "MODALPAGESHEET".equals(getOutcome().getDisplayMode()) || "MODALPAGESHEETWITHCLOSEBUTTON".equals(getOutcome().getDisplayMode())
-        || "MODALFULLSCREEN".equals(getOutcome().getDisplayMode())
-        || "MODALFULLSCREENWITHCLOSEBUTTON".equals(getOutcome().getDisplayMode())
-        || "MODALCURRENTCONTEXT".equals(getOutcome().getDisplayMode())
-        || "MODALCURRENTCONTEXTWITHCLOSEBUTTON".equals(getOutcome().getDisplayMode()))
-    {
-      applicationController.setOutcomeWhichCausedModal(getOutcome());
-    }
-    else if ("ENDMODAL".equals(getOutcome().getDisplayMode()))
+    if ("ENDMODAL".equals(getOutcome().getDisplayMode()))
     {
       viewManager.endDialog(getOutcome().getDialogName(), false);
     }
     else if ("ENDMODAL_CONTINUE".equals(getOutcome().getDisplayMode()))
     {
-      viewManager.endDialog(getOutcome().getDialogName(), false);
-      applicationController.setOutcomeWhichCausedModal(getOutcome());
+      viewManager.endDialog(getOutcome().getDialogName(), true);
     }
     else if ("POP".equals(getOutcome().getDisplayMode()))
     {

@@ -505,16 +505,6 @@ public class MBApplicationController extends Application
 
   ////////END OF WINDOW CHANGED HANDLING
 
-  public synchronized MBOutcome getOutcomeWhichCausedModal()
-  {
-    return _outcomeWhichCausedModal;
-  }
-
-  public synchronized void setOutcomeWhichCausedModal(MBOutcome outcomeWhichCausedModal)
-  {
-    _outcomeWhichCausedModal = outcomeWhichCausedModal;
-  }
-
   public void handleException(Exception exception, MBOutcome outcome)
   {
     if (_outcomeHandler == null)
