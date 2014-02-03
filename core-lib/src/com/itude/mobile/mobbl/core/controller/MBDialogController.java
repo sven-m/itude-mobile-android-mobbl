@@ -264,17 +264,6 @@ public class MBDialogController extends ContextWrapper
     else getSupportFragmentManager().popBackStack();
   }
 
-  public void endModalPage(String pageName)
-  {
-    if (pageName != null)
-    {
-      getSupportFragmentManager().popBackStack(pageName, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-      // Make sure no unnecessary views are being popped
-      MBApplicationController.getInstance().removeLastModalPageID();
-    }
-  }
-
   public String getName()
   {
     return _name;
@@ -501,16 +490,6 @@ public class MBDialogController extends ContextWrapper
       for (MBBasicViewController controller : getAllFragments())
       {
         controller.handleOrientationChange(newConfig);
-      }
-
-      String modalPageID = MBApplicationController.getInstance().getModalPageID();
-      if (StringUtil.isNotBlank(modalPageID))
-      {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(modalPageID);
-        if (fragment != null && fragment instanceof MBBasicViewController)
-        {
-          ((MBBasicViewController) fragment).handleOrientationChange(newConfig);
-        }
       }
 
       _configurationChanged = null;

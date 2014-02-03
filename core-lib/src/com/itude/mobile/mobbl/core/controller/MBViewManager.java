@@ -73,10 +73,6 @@ import com.itude.mobile.mobbl.core.view.components.tabbar.MBActionBarBuilder;
 
 public abstract class MBViewManager extends ActionBarActivity implements MBDialogChangeListener
 {
-  public enum MBViewState {
-    MBViewStateFullScreen, MBViewStatePlain, MBViewStateTabbed, MBViewStateModal
-  };
-
   public enum MBActionBarInvalidationOption {
     SHOW_FIRST, RESET_HOME_DIALOG, NOTIFY_LISTENER
   }
@@ -584,6 +580,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   public void endDialog(String dialogName, boolean keepPosition)
   {
+    // TODO: do something.. :')
   }
 
   public void popPage(String dialogName)
@@ -614,17 +611,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   }
 
-  public void endModalDialog(String modalPageID)
-  {
-    if (getActiveDialog() != null) getActiveDialog().endModalPage(modalPageID);
-  }
-
-  public void endModalDialog()
-  {
-    endModalDialog(MBApplicationController.getInstance().getModalPageID());
-  }
-
-  public static MBViewManager getInstance()
+ public static MBViewManager getInstance()
   {
     return _instance;
   }

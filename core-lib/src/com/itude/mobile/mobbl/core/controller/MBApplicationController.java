@@ -45,7 +45,6 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl.core.controller.MBViewManager.MBActionBarInvalidationOption;
-import com.itude.mobile.mobbl.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl.core.controller.exceptions.MBInvalidOutcomeException;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.model.MBDocument;
@@ -68,7 +67,6 @@ public class MBApplicationController extends Application
   private boolean                        _suppressPageSelection;
   private boolean                        _backStackEnabled;
   private MBOutcome                      _outcomeWhichCausedModal;
-  private Stack<String>                  _modalPageStack;
   private MBOutcomeHandler               _outcomeHandler;
   private boolean                        _shuttingDown            = false;
 
@@ -91,7 +89,6 @@ public class MBApplicationController extends Application
     DeviceUtil.getInstance().setContext(context);
     super.onCreate();
     _instance = this;
-    _modalPageStack = new Stack<String>();
 
     //    Looper.getMainLooper().setMessageLogging(new LogPrinter(Log.VERBOSE, "uithread"));
   }
@@ -287,24 +284,7 @@ public class MBApplicationController extends Application
 
       final String displayMode = causingOutcome.getDisplayMode();
 
-      MBViewState viewState = MBViewState.MBViewStatePlain;
-      if ("MODAL".equals(displayMode) //
-          || "MODALWITHCLOSEBUTTON".equals(displayMode) //
-          || "MODALFORMSHEET".equals(displayMode) //
-          || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode) //
-          || "MODALPAGESHEET".equals(displayMode) //
-          || "MODALPAGESHEETWITHCLOSEBUTTON".equals(displayMode) //
-          || "MODALFULLSCREEN".equals(displayMode) //
-          || "MODALFULLSCREENWITHCLOSEBUTTON".equals(displayMode) //
-          || "MODALCURRENTCONTEXT".equals(displayMode) //
-          || "MODALCURRENTCONTEXTWITHCLOSEBUTTON".equals(displayMode) //
-          || "ENDMODAL_CONTINUE".equals(displayMode))
-      {
-        viewState = MBViewState.MBViewStateModal;
-      }
-
-      final MBPage page = _applicationFactory.getPageConstructor()
-          .createPage(pageDefinition, document, causingOutcome.getPath(), viewState);
+      final MBPage page = _applicationFactory.getPageConstructor().createPage(pageDefinition, document, causingOutcome.getPath());
       page.setController(this);
       page.setPageStackName(causingOutcome.getPageStackName());
       // Fallback on the lastly selected dialog if there is no dialog set in the outcome:
@@ -709,16 +689,6 @@ public class MBApplicationController extends Application
 
     handleOutcome(searchOutcome);
 
-  }
-
-  public String getModalPageID()
-  {
-    return CollectionUtilities.isNotEmpty(_modalPageStack) ? _modalPageStack.peek() : null;
-  }
-
-  public void removeLastModalPageID()
-  {
-    _modalPageStack.pop();
   }
 
   public boolean getBackStackEnabled()

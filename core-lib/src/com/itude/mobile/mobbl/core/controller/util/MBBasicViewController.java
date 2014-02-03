@@ -48,7 +48,6 @@ import com.itude.mobile.android.util.ViewUtilities;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.controller.MBDialogController;
 import com.itude.mobile.mobbl.core.controller.MBViewManager;
-import com.itude.mobile.mobbl.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl.core.controller.util.trace.StrictModeWrapper;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.services.MBDataManagerService;
@@ -136,11 +135,6 @@ public class MBBasicViewController extends DialogFragment
       if (StringUtil.isNotBlank(outcomeID))
       {
         Log.d(Constants.APPLICATION_NAME, "MBBasicViewController.onCreate: found id=" + outcomeID);
-
-        if (getShowsDialog() && outcomeID != MBApplicationController.getInstance().getModalPageID())
-        {
-          _isDialogCancelable = true;
-        }
 
         MBDocument pageDoc = getPage().getDocument();
         if (getPage().isReloadOnDocChange() && pageDoc != null)
@@ -295,7 +289,7 @@ public class MBBasicViewController extends DialogFragment
    */
   protected ViewGroup buildInitialView(LayoutInflater inflater)
   {
-    ViewGroup view = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(_page, MBViewState.MBViewStatePlain);
+    ViewGroup view = MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(_page);
     MBViewBuilderFactory.getInstance().getStyleHandler().styleBackground(view);
 
     return view;
@@ -601,7 +595,7 @@ public class MBBasicViewController extends DialogFragment
   // onClick listener for closing all modal dialogs
   public void onClick(DialogInterface arg0, int arg1)
   {
-    MBViewManager.getInstance().endModalDialog(MBApplicationController.getInstance().getModalPageID());
+    MBViewManager.getInstance().endDialog(getDialogController().getName(), false);
   }
 
   // Intercepting the back button

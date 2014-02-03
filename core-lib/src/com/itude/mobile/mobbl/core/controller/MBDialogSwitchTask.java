@@ -56,14 +56,11 @@ public class MBDialogSwitchTask extends MBOutcomeTask
     }
     else if ("ENDMODAL".equals(getOutcome().getDisplayMode()))
     {
-      if (applicationController.getModalPageID() != null)
-      {
-        viewManager.endModalDialog(applicationController.getModalPageID());
-      }
+      viewManager.endDialog(getOutcome().getDialogName(), false);
     }
     else if ("ENDMODAL_CONTINUE".equals(getOutcome().getDisplayMode()))
     {
-      viewManager.endModalDialog();
+      viewManager.endDialog(getOutcome().getDialogName(), false);
       applicationController.setOutcomeWhichCausedModal(getOutcome());
     }
     else if ("POP".equals(getOutcome().getDisplayMode()))

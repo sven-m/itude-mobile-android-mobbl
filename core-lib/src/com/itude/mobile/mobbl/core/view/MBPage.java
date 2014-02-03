@@ -32,7 +32,6 @@ import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPathExc
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.controller.MBOutcome;
 import com.itude.mobile.mobbl.core.controller.MBViewManager;
-import com.itude.mobile.mobbl.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.model.MBDocumentDiff;
@@ -53,14 +52,13 @@ public class MBPage extends MBPanel
   private MBDocumentDiff                                         _documentDiff;
   private final Map<String, List<MBValueChangeListenerProtocol>> _valueChangedListeners;
   private MBPageDefinition.MBPageType                            _pageType;
-  private final MBViewManager.MBViewState                        _viewState;
   private boolean                                                _scrollable;
   private boolean                                                _reloadOnDocChange;
   private View                                                   _selectedView;
 
   private OrientationPermission                                  _orientationPermission;
 
-  public MBPage(MBPageDefinition definition, MBDocument document, String rootPath, MBViewState viewState)
+  public MBPage(MBPageDefinition definition, MBDocument document, String rootPath)
   {
     // Make sure that the Panel does not start building the view based on the children OF THIS PAGE because that is too early
     // The children need the additional information that is set after the constructor of super. So pass buildViewStructure: FALSE
@@ -77,7 +75,6 @@ public class MBPage extends MBPanel
     setScrollable(definition.isScrollable());
     setReloadOnDocChange(definition.isReloadOnDocChange());
 
-    _viewState = viewState;
     _valueChangedListeners = new Hashtable<String, List<MBValueChangeListenerProtocol>>();
 
     // Ok, now we can build the children
@@ -418,18 +415,13 @@ public class MBPage extends MBPanel
   @Override
   public ViewGroup buildView()
   {
-    return MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(this, null);
+    return MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(this);
   }
 
   public void handleException(Exception exception)
   {
     MBOutcome outcome = new MBOutcome(getPageName(), _document);
     _controller.handleException(exception, outcome);
-  }
-
-  public MBViewState getCurrentViewState()
-  {
-    return _viewState;
   }
 
   @Override

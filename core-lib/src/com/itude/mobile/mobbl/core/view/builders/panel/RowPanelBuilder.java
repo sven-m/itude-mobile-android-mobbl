@@ -51,7 +51,7 @@ public class RowPanelBuilder extends MBBasePanelBuilder
     rowPanel.setTag(childIds);
 
     // Content view
-    buildChildrenForRowPanel(panel.getChildren(), rowPanel, null);
+    buildChildrenForRowPanel(panel.getChildren(), rowPanel);
 
     // Arrow and clickable style of row
     MBStyleHandler styleHandler = getStyleHandler();
@@ -76,7 +76,7 @@ public class RowPanelBuilder extends MBBasePanelBuilder
   /*
    * FIXME needs refactoring. Implementation too specific
    */
-  private void buildChildrenForRowPanel(List<? extends MBComponent> children, ViewGroup parent, MBViewManager.MBViewState viewState)
+  private void buildChildrenForRowPanel(List<? extends MBComponent> children, ViewGroup parent)
   {
     final Context context = parent.getContext();
     final MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();

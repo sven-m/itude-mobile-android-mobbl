@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
-import com.itude.mobile.mobbl.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.util.Constants;
 
@@ -52,7 +51,7 @@ public class MBPageStackController
     }
     else if ((Constants.C_DISPLAY_MODE_REPLACE.equals(entry.getDisplayMode()) //
              || Constants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE.equals(entry.getDisplayMode()))
-             || ("SINGLE".equals(getMode()) && entry.getPage().getCurrentViewState() != MBViewState.MBViewStateModal))
+             || ("SINGLE".equals(getMode())))
     {
       entry.setAddToBackStack(false);
     }
@@ -69,64 +68,64 @@ public class MBPageStackController
     fragment.setArguments(args);
 
     FragmentTransaction transaction = getParent().getSupportFragmentManager().beginTransaction();
-
-    if (entry.getPage().getCurrentViewState() == MBViewState.MBViewStateModal
-        || MBApplicationController.getInstance().getModalPageID() != null)
-    {
-      String modalPageId = MBApplicationController.getInstance().getModalPageID();
-
-      if (entry.isAddToBackStack())
-      {
-        transaction.addToBackStack(entry.getId());
-      }
-
-      if (modalPageId != null && MBApplicationController.getInstance().getOutcomeWhichCausedModal() != null)
-      {
-        entry.setDisplayMode(MBApplicationController.getInstance().getOutcomeWhichCausedModal().getDisplayMode());
-      }
-
-      boolean fullscreen = false;
-      boolean cancelable = false;
-
-      if ("MODAL".equals(entry.getDisplayMode()))
-      {
-        fullscreen = true;
-        cancelable = true;
-      }
-      if (entry.getDisplayMode() != null)
-      {
-        if (entry.getDisplayMode().contains("FULLSCREEN"))
+    /*
+        if (entry.getPage().getCurrentViewState() == MBViewState.MBViewStateModal
+            || MBApplicationController.getInstance().getModalPageID() != null)
         {
-          fullscreen = true;
+          String modalPageId = MBApplicationController.getInstance().getModalPageID();
+
+          if (entry.isAddToBackStack())
+          {
+            transaction.addToBackStack(entry.getId());
+          }
+
+          if (modalPageId != null && MBApplicationController.getInstance().getOutcomeWhichCausedModal() != null)
+          {
+            entry.setDisplayMode(MBApplicationController.getInstance().getOutcomeWhichCausedModal().getDisplayMode());
+          }
+
+          boolean fullscreen = false;
+          boolean cancelable = false;
+
+          if ("MODAL".equals(entry.getDisplayMode()))
+          {
+            fullscreen = true;
+            cancelable = true;
+          }
+          if (entry.getDisplayMode() != null)
+          {
+            if (entry.getDisplayMode().contains("FULLSCREEN"))
+            {
+              fullscreen = true;
+            }
+
+            if (entry.getDisplayMode().contains("WITHCLOSEBUTTON"))
+            {
+              args.putBoolean("closable", true);
+              fragment.setArguments(args);
+            }
+          }
+          if (fullscreen)
+          {
+            args.putBoolean("fullscreen", true);
+            fragment.setArguments(args);
+          }
+
+          if (cancelable)
+          {
+            args.putBoolean("cancelable", true);
+            fragment.setArguments(args);
+          }
+
+          Fragment dialogFragment = getParent().getSupportFragmentManager().findFragmentByTag(modalPageId);
+          if (dialogFragment != null && !getParent().getFragmentStack().isBackStackEmpty())
+          {
+            getParent().getSupportFragmentManager().popBackStack();
+          }
+
+          transaction.add(fragment, entry.getId());
         }
-
-        if (entry.getDisplayMode().contains("WITHCLOSEBUTTON"))
-        {
-          args.putBoolean("closable", true);
-          fragment.setArguments(args);
-        }
-      }
-      if (fullscreen)
-      {
-        args.putBoolean("fullscreen", true);
-        fragment.setArguments(args);
-      }
-
-      if (cancelable)
-      {
-        args.putBoolean("cancelable", true);
-        fragment.setArguments(args);
-      }
-
-      Fragment dialogFragment = getParent().getSupportFragmentManager().findFragmentByTag(modalPageId);
-      if (dialogFragment != null && !getParent().getFragmentStack().isBackStackEmpty())
-      {
-        getParent().getSupportFragmentManager().popBackStack();
-      }
-
-      transaction.add(fragment, entry.getId());
-    }
-    else
+        else*/
     {
       if (entry.isAddToBackStack())
       {
