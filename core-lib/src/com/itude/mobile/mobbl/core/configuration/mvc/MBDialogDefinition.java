@@ -27,7 +27,7 @@ import com.itude.mobile.mobbl.core.configuration.MBConditionalDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPageStackDefinitionException;
 import com.itude.mobile.mobbl.core.util.Constants;
 
-public class MBDialogGroupDefinition extends MBConditionalDefinition
+public class MBDialogDefinition extends MBConditionalDefinition
 {
   private final List<MBPageStackDefinition>        _children;
   private final Map<MBPageStackDefinition, String> _childrenPreCondition;
@@ -39,7 +39,7 @@ public class MBDialogGroupDefinition extends MBConditionalDefinition
   private String                                   _showAs;
   private String                                   _domain;
 
-  public MBDialogGroupDefinition()
+  public MBDialogDefinition()
   {
     _children = new ArrayList<MBPageStackDefinition>();
     _childrenPreCondition = new HashMap<MBPageStackDefinition, String>();
@@ -112,7 +112,7 @@ public class MBDialogGroupDefinition extends MBConditionalDefinition
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
     StringUtil.appendIndentString(appendToMe, level)//
-        .append("<DialogGroup name='")//
+        .append("<Dialog name='")//
         .append(getName())//
         .append('\'')//
         .append(getAttributeAsXml("mode", getMode()))//
@@ -128,7 +128,7 @@ public class MBDialogGroupDefinition extends MBConditionalDefinition
       dialog.asXmlWithLevel(appendToMe, level + 2);
     }
 
-    StringUtil.appendIndentString(appendToMe, level).append("<DialogGroup/>");
+    StringUtil.appendIndentString(appendToMe, level).append("<Dialog/>");
 
     return appendToMe;
   }

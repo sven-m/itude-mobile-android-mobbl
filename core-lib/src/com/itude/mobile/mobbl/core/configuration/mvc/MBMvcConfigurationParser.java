@@ -41,7 +41,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
   private List<String> _actionAttributes;
   private List<String> _outcomeAttributes;
   private List<String> _pageStackAttributes;
-  private List<String> _dialogGroupAttributes;
+  private List<String> _dialogAttributes;
   private List<String> _pageAttributes;
   private List<String> _panelAttributes;
   private List<String> _forEachAttributes;
@@ -116,17 +116,17 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _pageStackAttributes.add("mode");
       _pageStackAttributes.add("preCondition");
     }
-    if (_dialogGroupAttributes == null)
+    if (_dialogAttributes == null)
     {
-      _dialogGroupAttributes = new ArrayList<String>();
-      _dialogGroupAttributes.add("xmlns");
-      _dialogGroupAttributes.add("name");
-      _dialogGroupAttributes.add("title");
-      _dialogGroupAttributes.add("mode");
-      _dialogGroupAttributes.add("icon");
-      _dialogGroupAttributes.add("showAs");
-      _dialogGroupAttributes.add("domain");
-      _dialogGroupAttributes.add("preCondition");
+      _dialogAttributes = new ArrayList<String>();
+      _dialogAttributes.add("xmlns");
+      _dialogAttributes.add("name");
+      _dialogAttributes.add("title");
+      _dialogAttributes.add("mode");
+      _dialogAttributes.add("icon");
+      _dialogAttributes.add("showAs");
+      _dialogAttributes.add("domain");
+      _dialogAttributes.add("preCondition");
     }
     if (_pageAttributes == null)
     {
@@ -361,11 +361,11 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
 
       notifyProcessed(pagestackDef);
     }
-    else if (elementName.equals("DialogGroup"))
+    else if (elementName.equals("Dialog"))
     {
-      checkAttributesForElement(elementName, attributeDict, _dialogGroupAttributes);
+      checkAttributesForElement(elementName, attributeDict, _dialogAttributes);
 
-      MBDialogGroupDefinition dialogDef = new MBDialogGroupDefinition();
+      MBDialogDefinition dialogDef = new MBDialogDefinition();
       dialogDef.setName(attributeDict.get("name"));
       dialogDef.setTitle(attributeDict.get("title"));
       dialogDef.setTitlePortrait(attributeDict.get("titlePortrait"));
@@ -580,10 +580,10 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       MBFieldDefinition fieldDef = (MBFieldDefinition) getStack().get(getStack().size() - 1);
       fieldDef.setText(getCharacters());
     }
-    else if ("DialogGroup".equals(elementName))
+    else if ("Dialog".equals(elementName))
     {
       MBDefinition configDef = getStack().elementAt(getStack().size() - 2);
-      MBDialogGroupDefinition groupDef = (MBDialogGroupDefinition) getStack().peek();
+      MBDialogDefinition groupDef = (MBDialogDefinition) getStack().peek();
       if (groupDef.getChildren().isEmpty())
       {
         MBPageStackDefinition dialogDef = new MBPageStackDefinition();
@@ -608,7 +608,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
 
   }
 
-  private void createImplicitOutcomeForDialog(MBDialogGroupDefinition dialog)
+  private void createImplicitOutcomeForDialog(MBDialogDefinition dialog)
   {
     List<MBOutcomeDefinition> def = ((MBConfigurationDefinition) getRootConfig()).getOutcomeDefinitionsForOrigin(MBOutcome.Origin.WILDCARD,
                                                                                                                  dialog.getName());
@@ -629,7 +629,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
   {
     return super.isConcreteElement(element) || element.equals("Configuration") || element.equals("Document") || element.equals("Element")
            || element.equals("Attribute") || element.equals("Action") || element.equals("Outcome") || element.equals("Page")
-           || element.equals("PageStack") || element.equals("DialogGroup") || element.equals("ForEach") || element.equals("Variable")
+           || element.equals("PageStack") || element.equals("Dialog") || element.equals("ForEach") || element.equals("Variable")
            || element.equals("Panel") || element.equals("Field") || element.equals("Domain") || element.equals("DomainValidator")
            || element.equals("Tool") || element.equals("Alert");
   }

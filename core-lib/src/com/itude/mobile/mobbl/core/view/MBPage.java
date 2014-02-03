@@ -171,6 +171,7 @@ public class MBPage extends MBPanel
     MBOutcome outcome = new MBOutcome();
     MBOutcome.Origin origin = new MBOutcome.Origin();
     origin.withPage(getPageName()).withPageStack(getPageStackName());
+    origin.withDialog(MBViewManager.getInstance().getActiveDialogName());
     outcome.setOutcomeName(outcomeName);
     outcome.setDocument(getDocument());
     outcome.setPageStackName(getPageStackName());

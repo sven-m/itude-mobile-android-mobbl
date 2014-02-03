@@ -26,7 +26,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.view.MBOutcomeListenerProtocol;
@@ -79,7 +79,7 @@ public class MBOutcomeHandler extends Handler
   static String resolvePageStackName(String pageStackName)
   {
     // find out if the page stack to resolve is actually a dialog..
-    MBDialogGroupDefinition dialogDef = MBMetadataService.getInstance().getDefinitionForDialogName(pageStackName, false);
+    MBDialogDefinition dialogDef = MBMetadataService.getInstance().getDefinitionForDialogName(pageStackName, false);
     if (dialogDef != null)
     {
       return dialogDef.getChildren().get(0).getName();
@@ -92,11 +92,10 @@ public class MBOutcomeHandler extends Handler
 
     String newPageStackName = null;
 
-    String activeDialogName = MBApplicationController.getInstance().activeDialogName();
-    MBDialogGroupDefinition activeDialogDef = MBMetadataService.getInstance().getDefinitionForDialogName(activeDialogName);
+    String activeDialogName = MBViewManager.getInstance().getActiveDialogName();
+    MBDialogDefinition activeDialogDef = MBMetadataService.getInstance().getDefinitionForDialogName(activeDialogName);
 
-    MBDialogGroupDefinition activeDialogGroupDef = activeDialogDef;
-    List<MBPageStackDefinition> children = activeDialogGroupDef.getChildren();
+    List<MBPageStackDefinition> children = activeDialogDef.getChildren();
 
     MBPageStackDefinition pageStackDef = null;
     if ("RIGHT".equals(pageStackName))

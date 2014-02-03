@@ -51,9 +51,9 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   private final Map<String, MBActionDefinition>      _actionTypes;
   private final List<MBOutcomeDefinition>            _outcomeTypes;
   private final Map<String, MBPageDefinition>        _pageTypes;
-  private final Map<String, MBDialogGroupDefinition> _dialogs;
+  private final Map<String, MBDialogDefinition> _dialogs;
   private final Map<String, MBPageStackDefinition>   _pageStacks;
-  private MBDialogGroupDefinition                    _homeDialog;
+  private MBDialogDefinition                    _homeDialog;
   private final Map<String, MBToolDefinition>        _tools;
   private final Map<String, MBAlertDefinition>       _alerts;
 
@@ -63,7 +63,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     _documentTypes = new HashMap<String, MBDocumentDefinition>();
     _actionTypes = new HashMap<String, MBActionDefinition>();
     _outcomeTypes = new ArrayList<MBOutcomeDefinition>();
-    _dialogs = Collections.synchronizedMap(new LinkedHashMap<String, MBDialogGroupDefinition>());
+    _dialogs = Collections.synchronizedMap(new LinkedHashMap<String, MBDialogDefinition>());
     _pageTypes = new HashMap<String, MBPageDefinition>();
     _tools = new LinkedHashMap<String, MBToolDefinition>();
     _alerts = new HashMap<String, MBAlertDefinition>();
@@ -101,7 +101,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     {
       addOutcome(outcomeDef);
     }
-    for (MBDialogGroupDefinition dialogDef : otherConfig.getDialogs().values())
+    for (MBDialogDefinition dialogDef : otherConfig.getDialogs().values())
     {
       addDialog(dialogDef);
     }
@@ -155,7 +155,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
         .append(StringUtil.getIndentStringWithLevel(level + 2)).append("</Controller>\n")
         .append(StringUtil.getIndentStringWithLevel(level + 2)).append("<View>\n").append(StringUtil.getIndentStringWithLevel(level + 4))
         .append("<Dialogs>\n");
-    for (MBDialogGroupDefinition dialog : _dialogs.values())
+    for (MBDialogDefinition dialog : _dialogs.values())
     {
       dialog.asXmlWithLevel(appendToMe, level + 6);
     }
@@ -195,7 +195,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   }
 
   @Override
-  public void addChildElement(MBDialogGroupDefinition child)
+  public void addChildElement(MBDialogDefinition child)
   {
     addDialog(child);
   }
@@ -283,7 +283,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     _pageTypes.put(page.getName(), page);
   }
 
-  public void addDialog(MBDialogGroupDefinition dialog)
+  public void addDialog(MBDialogDefinition dialog)
   {
     if (_dialogs.containsKey(dialog.getName()))
     {
@@ -342,7 +342,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return _documentTypes.get(documentName);
   }
 
-  public MBDialogGroupDefinition getDefinitionForDialogName(String dialogName)
+  public MBDialogDefinition getDefinitionForDialogName(String dialogName)
   {
     return _dialogs.get(dialogName);
   }
@@ -393,7 +393,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return result;
   }
 
-  public Map<String, MBDialogGroupDefinition> getDialogs()
+  public Map<String, MBDialogDefinition> getDialogs()
   {
     return _dialogs;
   }
@@ -423,7 +423,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return _pageTypes;
   }
 
-  public MBDialogGroupDefinition getHomeDialogDefinition()
+  public MBDialogDefinition getHomeDialogDefinition()
   {
     return _homeDialog;
   }

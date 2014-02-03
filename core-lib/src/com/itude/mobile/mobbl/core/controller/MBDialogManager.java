@@ -30,7 +30,7 @@ import android.widget.FrameLayout;
 
 import com.itude.mobile.android.util.AssertUtil;
 import com.itude.mobile.android.util.ComparisonUtil;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.controller.util.MBBaseLifecycleListener;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
@@ -192,9 +192,9 @@ public class MBDialogManager extends MBBaseLifecycleListener
 
   private void build()
   {
-    List<MBDialogGroupDefinition> dialogs = MBMetadataService.getInstance().getDialogs();
+    List<MBDialogDefinition> dialogs = MBMetadataService.getInstance().getDialogs();
 
-    for (MBDialogGroupDefinition dialog : dialogs)
+    for (MBDialogDefinition dialog : dialogs)
       if (dialog.isPreConditionValid())
       {
         createDialog(dialog);
@@ -203,7 +203,7 @@ public class MBDialogManager extends MBBaseLifecycleListener
 
   public void activateHome()
   {
-    MBDialogGroupDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
+    MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
     MBViewManager.getInstance().activateDialogWithName(homeDialogDefinition.getName());
   }
 
@@ -244,7 +244,7 @@ public class MBDialogManager extends MBBaseLifecycleListener
     _activePageStack = controller;
   }
 
-  private void createDialog(MBDialogGroupDefinition definition)
+  private void createDialog(MBDialogDefinition definition)
   {
     MBDialogController controller = MBApplicationFactory.getInstance().createDialogController();
     String name = definition.getName();

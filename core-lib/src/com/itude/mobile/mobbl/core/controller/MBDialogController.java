@@ -46,7 +46,7 @@ import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.controller.helpers.MBActivityHelper;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.services.MBLocalizationService;
@@ -74,6 +74,7 @@ public class MBDialogController extends ContextWrapper
   private boolean                                  _clearDialog;
   private Configuration                            _configurationChanged = null;
   private final Queue<ShowPageEntry>               _queuedPages          = new LinkedList<MBDialogController.ShowPageEntry>();
+  private String                                   _defaultPageStack     = null;
 
   public MBDialogController()
   {
@@ -118,7 +119,7 @@ public class MBDialogController extends ContextWrapper
 
     if (getName() != null)
     {
-      MBDialogGroupDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(getName());
+      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(getName());
       setIconName(dialogDefinition.getIcon());
       setDialogMode(dialogDefinition.getMode());
 
@@ -126,6 +127,7 @@ public class MBDialogController extends ContextWrapper
       List<MBPageStackDefinition> children = dialogDefinition.getChildren();
       for (MBPageStackDefinition pageStackDef : children)
       {
+        if (_defaultPageStack == null) _defaultPageStack = pageStackDef.getName();
         addPageStack(pageStackDef.getName(), UniqueIntegerGenerator.getId(), pageStackDef.getMode());
       }
       return true;
@@ -707,6 +709,11 @@ public class MBDialogController extends ContextWrapper
       return getFragmentManager().getBackStackEntryCount() == 0;
     }
 
+  }
+
+  public String getDefaultPageStack()
+  {
+    return _defaultPageStack;
   }
 
 }

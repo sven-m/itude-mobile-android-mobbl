@@ -26,7 +26,7 @@ import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndpointsConfigurat
 import com.itude.mobile.mobbl.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBConfigurationDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBMvcConfigurationParser;
@@ -54,7 +54,7 @@ public final class MBMetadataService
   private static String                   _tabletConfigName = null;
   private static String                   _endpointsName    = "endpoints.xml";
 
-  private MBDialogGroupDefinition         _homeDialog       = null;
+  private MBDialogDefinition         _homeDialog       = null;
 
   private MBMetadataService()
   {
@@ -189,14 +189,14 @@ public final class MBMetadataService
     return docDef;
   }
 
-  public MBDialogGroupDefinition getDefinitionForDialogName(String dialogName)
+  public MBDialogDefinition getDefinitionForDialogName(String dialogName)
   {
     return getDefinitionForDialogName(dialogName, true);
   }
 
-  public MBDialogGroupDefinition getDefinitionForDialogName(String dialogName, boolean doThrow)
+  public MBDialogDefinition getDefinitionForDialogName(String dialogName, boolean doThrow)
   {
-    MBDialogGroupDefinition dialogDef = _cfg.getDefinitionForDialogName(dialogName);
+    MBDialogDefinition dialogDef = _cfg.getDefinitionForDialogName(dialogName);
     if (dialogDef == null && doThrow)
     {
       String message = "Dialog with name " + dialogName + " not defined";
@@ -223,21 +223,7 @@ public final class MBMetadataService
     return dialogDef;
   }
 
-  /**
-   * A dialog can either be part of a DialogGroup or exist on its own. In some cases it is
-   * desirable to get the name of the top dialog. This could either be just the dialog name,
-   * or it can be the name of its parent; which is a DialogGroup.
-   * 
-   * @param dialogName
-   * @return the dialog name of the Dialog or its parent, the DialogGroup (if there is one)
-   */
-  public MBDialogGroupDefinition getTopDialogDefinitionForDialogName(String dialogName)
-  {
-    MBDialogGroupDefinition def = getDefinitionForDialogName(dialogName);
-    return def;
-  }
-
-  public MBDialogGroupDefinition getHomeDialogDefinition()
+  public MBDialogDefinition getHomeDialogDefinition()
   {
     if (_homeDialog == null)
     {
@@ -247,14 +233,14 @@ public final class MBMetadataService
     return _homeDialog;
   }
 
-  public void setHomeDialogDefinition(MBDialogGroupDefinition dialogDef)
+  public void setHomeDialogDefinition(MBDialogDefinition dialogDef)
   {
     _homeDialog = dialogDef;
   }
 
-  public List<MBDialogGroupDefinition> getDialogs()
+  public List<MBDialogDefinition> getDialogs()
   {
-    return new ArrayList<MBDialogGroupDefinition>(_cfg.getDialogs().values());
+    return new ArrayList<MBDialogDefinition>(_cfg.getDialogs().values());
   }
 
   public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(MBOutcome.Origin origin, String outcomeName)

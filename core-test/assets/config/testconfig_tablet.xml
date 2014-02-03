@@ -183,10 +183,10 @@
 
   <View>
       <Dialogs>
-	     <DialogGroup name="dialog1" mode="STACK" icon="icon1" title="1">
-	     	<Dialog name="dialog1panel1" />
-	     	<Dialog name="dialog1panel2" />
-	     </DialogGroup>
+	     <Dialog name="dialog1" mode="STACK" icon="icon1" title="1">
+	     	<PageStack name="dialog1panel1" />
+	     	<PageStack name="dialog1panel2" />
+	     </Dialog>
 	     <Dialog name="dialog2" mode="STACK" icon="icon2" title="2"/>
 	     <Dialog name="dialog3" mode="STACK" icon="icon3" title="3"/>
 	  </Dialogs>

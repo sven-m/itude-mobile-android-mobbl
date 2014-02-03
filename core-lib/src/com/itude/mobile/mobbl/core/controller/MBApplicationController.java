@@ -146,7 +146,6 @@ public class MBApplicationController extends Application
     MBOutcome initialOutcome = new MBOutcome();
     initialOutcome.setOrigin(new MBOutcome.Origin().withDialog("Controller"));
     initialOutcome.setOutcomeName("init");
-    initialOutcome.setPageStackName(getActiveDialogName());
     initialOutcome.setNoBackgroundProcessing(true);
 
     _suppressPageSelection = true;
@@ -216,12 +215,12 @@ public class MBApplicationController extends Application
     }
   }
 
-  public String getActiveDialogName()
+  private String getActivePageStack()
   {
     String result = null;
-    if (_viewManager != null)
+    if (_viewManager != null && _viewManager.getActiveDialog() != null)
     {
-      result = _viewManager.getActiveDialogName();
+      result = _viewManager.getActiveDialog().getDefaultPageStack();
     }
     return result;
   }
@@ -307,11 +306,11 @@ public class MBApplicationController extends Application
       final MBPage page = _applicationFactory.getPageConstructor()
           .createPage(pageDefinition, document, causingOutcome.getPath(), viewState);
       page.setController(this);
-      page.setPageStackName(causingOutcome.getDialogName());
+      page.setPageStackName(causingOutcome.getPageStackName());
       // Fallback on the lastly selected dialog if there is no dialog set in the outcome:
       if (page.getPageStackName() == null)
       {
-        page.setPageStackName(getActiveDialogName());
+        page.setPageStackName(getActivePageStack());
       }
 
       PageBuildResult result = new PageBuildResult(causingOutcome, page, backStackEnabled);
@@ -622,21 +621,10 @@ public class MBApplicationController extends Application
     }
   }
 
-  public String activeDialogName()
-  {
-    String result = null;
-    if (_viewManager != null)
-    {
-      result = _viewManager.getActiveDialogName();
-    }
-    return result;
-  }
-
   public void resetController()
   {
     _viewManager.resetView();
     fireInitialOutcomes();
-
   }
 
   public void resetControllerPreservingCurrentDialog()

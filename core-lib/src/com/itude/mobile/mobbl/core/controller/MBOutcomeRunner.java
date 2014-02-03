@@ -20,6 +20,7 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBOutcomeDefinition;
@@ -59,6 +60,7 @@ public class MBOutcomeRunner
 
   private void actuallyHandle()
   {
+    supplementOrigin();
     clearCaches();
     prepareOutcomeCopies();
     persistIfNeeded();
@@ -69,6 +71,13 @@ public class MBOutcomeRunner
       MBOutcomeTaskManager manager = setupTaskManager(outcome);
       manager.run();
     }
+  }
+
+  private void supplementOrigin()
+  {
+    if (_outcome.getOrigin() == null) _outcome.setOrigin(new MBOutcome.Origin());
+    if (StringUtil.isEmpty(_outcome.getOrigin().getDialog())) _outcome.getOrigin().withDialog(MBViewManager.getInstance()
+                                                                                                  .getActiveDialogName());
   }
 
   private void clearCaches()
