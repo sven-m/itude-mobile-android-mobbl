@@ -18,7 +18,6 @@ package com.itude.mobile.mobbl.core.controller;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Stack;
 
 import android.app.Application;
 import android.app.SearchManager;
@@ -34,7 +33,6 @@ import android.os.MessageQueue.IdleHandler;
 import android.util.Log;
 
 import com.itude.mobile.android.util.AssertUtil;
-import com.itude.mobile.android.util.CollectionUtilities;
 import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.DeviceUtil;
@@ -66,7 +64,6 @@ public class MBApplicationController extends Application
   private MBViewManager                  _viewManager;
   private boolean                        _suppressPageSelection;
   private boolean                        _backStackEnabled;
-  private MBOutcome                      _outcomeWhichCausedModal;
   private MBOutcomeHandler               _outcomeHandler;
   private boolean                        _shuttingDown            = false;
 

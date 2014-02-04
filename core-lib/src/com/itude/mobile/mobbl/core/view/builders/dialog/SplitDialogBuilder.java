@@ -9,7 +9,6 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.itude.mobile.android.util.ScreenUtil;
-import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.controller.MBDialogController;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;

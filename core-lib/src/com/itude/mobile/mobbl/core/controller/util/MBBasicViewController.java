@@ -42,7 +42,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
-import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.ViewUtilities;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;

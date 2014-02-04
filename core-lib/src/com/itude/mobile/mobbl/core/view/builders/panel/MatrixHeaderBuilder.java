@@ -32,8 +32,8 @@ import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.view.MBComponent;
 import com.itude.mobile.mobbl.core.view.MBField;
 import com.itude.mobile.mobbl.core.view.MBPanel;
-import com.itude.mobile.mobbl.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl.core.view.builders.MBPanelViewBuilder.BuildState;
+import com.itude.mobile.mobbl.core.view.builders.MBStyleHandler;
 
 public class MatrixHeaderBuilder extends MBBasePanelBuilder
 {

@@ -28,13 +28,12 @@ import android.widget.RelativeLayout;
 
 import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
-import com.itude.mobile.mobbl.core.controller.MBViewManager;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.view.MBComponent;
 import com.itude.mobile.mobbl.core.view.MBPanel;
+import com.itude.mobile.mobbl.core.view.builders.MBPanelViewBuilder.BuildState;
 import com.itude.mobile.mobbl.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
-import com.itude.mobile.mobbl.core.view.builders.MBPanelViewBuilder.BuildState;
 
 public class RowPanelBuilder extends MBBasePanelBuilder
 {
