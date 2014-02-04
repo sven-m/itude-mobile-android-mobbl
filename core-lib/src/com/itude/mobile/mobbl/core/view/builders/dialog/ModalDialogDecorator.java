@@ -5,6 +5,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.controller.MBDialogController;
@@ -29,20 +30,30 @@ public class ModalDialogDecorator extends MBDialogDecorator
   @Override
   public void show()
   {
-    _previousDialog = MBViewManager.getInstance().getActiveDialogName();
-    MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(getDialog().getName());
-    _fullscreen = Boolean.parseBoolean(dialogDefinition.getCustom().get("fullscreen"));
-    _cancelable = dialogDefinition.getCustom().containsKey("cancelable") ? Boolean.parseBoolean(dialogDefinition.getCustom()
-        .get("cancelable")) : true;
-    _closable = Boolean.parseBoolean(dialogDefinition.getCustom().get("closable"));
-    _shown = true;
+    if (!_shown)
+    {
+      _previousDialog = MBViewManager.getInstance().getActiveDialogName();
+      Log.d("ModalDialogDecorator", "Grabbed previous " + _previousDialog);
+      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(getDialog().getName());
+      _fullscreen = Boolean.parseBoolean(dialogDefinition.getCustom().get("fullscreen"));
+      _cancelable = dialogDefinition.getCustom().containsKey("cancelable") ? Boolean.parseBoolean(dialogDefinition.getCustom()
+          .get("cancelable")) : true;
+      _closable = Boolean.parseBoolean(dialogDefinition.getCustom().get("closable"));
+      _shown = true;
+    }
+    else Log.d("ModalDialogDecorator", "Already grabbed previous " + _previousDialog);
+
   }
 
   @Override
   public void hide()
   {
     _shown = false;
-    MBViewManager.getInstance().activateDialogWithName(_previousDialog);
+    if (_previousDialog != null)
+    {
+      Log.d("ModalDialogDecorator", "Enqueueing " + _previousDialog);
+      MBViewManager.getInstance().getDialogManager().enqueueDialog(_previousDialog);
+    }
   }
 
   @Override
@@ -85,9 +96,20 @@ public class ModalDialogDecorator extends MBDialogDecorator
     if (_shown)
     {
       _shown = false;
-      getDialog().deactivate();
+      getDialog().dismiss();
     }
 
   }
 
+  @Override
+  public boolean handlesOwnDismiss()
+  {
+    return true;
+  }
+
+  @Override
+  public boolean maintainPreviousStack()
+  {
+    return true;
+  }
 }

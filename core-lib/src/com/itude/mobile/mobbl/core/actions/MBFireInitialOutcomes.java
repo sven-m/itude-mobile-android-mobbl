@@ -76,7 +76,7 @@ public class MBFireInitialOutcomes implements MBAction
         {
           MBOutcome oc = new MBOutcome();
           oc.setOutcomeName(action);
-          oc.setDialogName(dialog);
+          oc.setPageStackName(dialog);
           oc.setNoBackgroundProcessing(true);
           oc.setTransferDocument(false);
           oc.setOrigin(new MBOutcome.Origin().withAction("FireInitialOutcomes"));
@@ -108,7 +108,6 @@ public class MBFireInitialOutcomes implements MBAction
         Log.e(this.getClass().getSimpleName(), "Could not find dialog " + dialog);
       }
     }
-
     return null;
   }
 

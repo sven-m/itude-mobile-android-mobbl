@@ -46,20 +46,23 @@ public class MBDialogSwitchTask extends MBOutcomeTask
 
     if ("ENDMODAL".equals(getOutcome().getDisplayMode()))
     {
-      viewManager.endDialog(getOutcome().getDialogName(), false);
+      viewManager.endDialog(getOutcome().getPageStackName(), false);
+      getOutcome().setPageStackName(null);
     }
     else if ("ENDMODAL_CONTINUE".equals(getOutcome().getDisplayMode()))
     {
-      viewManager.endDialog(getOutcome().getDialogName(), true);
+      viewManager.endDialog(getOutcome().getPageStackName(), true);
+      getOutcome().setPageStackName(null);
     }
     else if ("POP".equals(getOutcome().getDisplayMode()))
     {
-      viewManager.popPage(getOutcome().getDialogName());
-      getOutcome().setDialogName(null);
+      viewManager.popPage(getOutcome().getPageStackName());
+      getOutcome().setPageStackName(null);
     }
     else if ("POPALL".equals(getOutcome().getDisplayMode()))
     {
-      viewManager.endDialog(getOutcome().getDialogName(), true);
+      viewManager.endDialog(getOutcome().getPageStackName(), true);
+      getOutcome().setPageStackName(null);
     }
     else if ("CLEAR".equals(getOutcome().getDisplayMode()))
     {
@@ -67,16 +70,16 @@ public class MBDialogSwitchTask extends MBOutcomeTask
     }
     else if ("END".equals(getOutcome().getDisplayMode()))
     {
-      viewManager.endDialog(getOutcome().getDialogName(), false);
+      viewManager.endDialog(getOutcome().getPageStackName(), false);
     }
-    else if (getOutcome().getDialogName() != null
+    else if (getOutcome().getPageStackName() != null
              && !Constants.C_DISPLAY_MODE_BACKGROUND.equals(getOutcome().getDisplayMode()) //
-             && getOutcome().getDialogName() != null
+             && getOutcome().getPageStackName() != null
              && !Constants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE.equals(getOutcome().getDisplayMode()) //
-             && !getOutcome().getDialogName().equals(_dialogWhenCreated) //
+             && !getOutcome().getPageStackName().equals(_dialogWhenCreated) //
              && !applicationController.isSuppressPageSelection())
     {
-      viewManager.getDialogManager().activatePageStack(getOutcome().getDialogName());
+      viewManager.getDialogManager().activatePageStack(getOutcome().getPageStackName());
 
     }
 

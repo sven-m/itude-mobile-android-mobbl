@@ -25,7 +25,7 @@ public class MBViewBuilderFactory
   private MBForEachItemViewBuilder       _forEachItemViewBuilder;
   private final MBFieldViewBuilder       _fieldViewBuilder;
   private MBStyleHandler                 _styleHandler;
-  private MBDialogContentBuilder         _dialogViewBuilder;
+  private MBDialogContentBuilder         _dialogContentBuilder;
   private final MBAlertDialogBuilder     _alertViewBuilder;
   private final MBDialogDecoratorBuilder _dialogDecoratorBuilder;
 
@@ -37,7 +37,7 @@ public class MBViewBuilderFactory
     _forEachItemViewBuilder = new MBForEachItemViewBuilder();
     _fieldViewBuilder = new MBFieldViewBuilder();
     _styleHandler = new MBStyleHandler();
-    _dialogViewBuilder = new MBDialogContentBuilder();
+    _dialogContentBuilder = new MBDialogContentBuilder();
     _alertViewBuilder = new MBAlertDialogBuilder();
     _dialogDecoratorBuilder = new MBDialogDecoratorBuilder();
   }
@@ -111,14 +111,14 @@ public class MBViewBuilderFactory
     _styleHandler = styleHandler;
   }
 
-  public void setDialogViewBuilder(MBDialogContentBuilder dialogViewBuilder)
+  public void setDialogContentBuilder(MBDialogContentBuilder dialogContentBuilder)
   {
-    _dialogViewBuilder = dialogViewBuilder;
+    _dialogContentBuilder = dialogContentBuilder;
   }
 
-  public MBDialogContentBuilder getDialogViewBuilder()
+  public MBDialogContentBuilder getDialogContentBuilder()
   {
-    return _dialogViewBuilder;
+    return _dialogContentBuilder;
   }
 
   public MBAlertDialogBuilder getAlertViewBuilder()

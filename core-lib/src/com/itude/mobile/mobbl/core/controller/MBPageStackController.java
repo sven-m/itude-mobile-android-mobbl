@@ -11,6 +11,7 @@ public class MBPageStackController
   private final String             _name;
   private final String             _mode;
   private final MBDialogController _parent;
+  private int                      _fragmentInc = 0;
 
   public MBPageStackController(MBDialogController parent, int id, String name, String mode)
   {
@@ -64,7 +65,7 @@ public class MBPageStackController
     args.putString("id", entry.getId());
     fragment.setArguments(args);
 
-    getParent().getDecorator().presentFragment(fragment, getId(), entry.getId(), entry.isAddToBackStack());
+    getParent().getDecorator().presentFragment(fragment, getId(), entry.getId() + (_fragmentInc++), entry.isAddToBackStack());
   }
 
 }

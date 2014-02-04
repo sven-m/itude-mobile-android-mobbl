@@ -49,6 +49,7 @@ import com.itude.mobile.mobbl.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.threads.MBThread;
+import com.itude.mobile.mobbl.core.util.threads.exception.MBInterruptedException;
 import com.itude.mobile.mobbl.core.view.MBPage;
 import com.itude.mobile.mobbl.core.view.builders.MBDialogDecorator;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
@@ -67,7 +68,6 @@ public class MBDialogController extends ContextWrapper
   private boolean                                  _shown                = false;
   private FragmentStack                            _fragmentStack;
   private String                                   _title;
-  private boolean                                  _clearDialog;
   private Configuration                            _configurationChanged = null;
   private final Queue<ShowPageEntry>               _queuedPages          = new LinkedList<MBDialogController.ShowPageEntry>();
   private String                                   _defaultPageStack     = null;
@@ -160,7 +160,7 @@ public class MBDialogController extends ContextWrapper
 
   private void viewInit()
   {
-    _mainContainer = MBViewBuilderFactory.getInstance().getDialogViewBuilder().buildDialog(_contentType, _sortedDialogIds);
+    _mainContainer = MBViewBuilderFactory.getInstance().getDialogContentBuilder().buildDialog(_contentType, _sortedDialogIds);
 
   }
 
@@ -170,10 +170,16 @@ public class MBDialogController extends ContextWrapper
   {
     try
     {
-      _decorator.show();
+      MBViewManager.getInstance().runOnUiThread(new MBThread()
+      {
+        @Override
+        public void runMethod() throws MBInterruptedException
+        {
+          _decorator.show();
 
-      activateWithoutSwitching();
-      getSupportFragmentManager().executePendingTransactions();
+          activateWithoutSwitching();
+        }
+      });
 
     }
     catch (Throwable t)
@@ -194,14 +200,8 @@ public class MBDialogController extends ContextWrapper
         showPage(entry);
 
       _queuedPages.clear();
-    }
 
-    if (_clearDialog)
-    {
-      getFragmentStack().emptyBackStack(false);
-      _fragmentStack = new FragmentStack(getSupportFragmentManager());
-      _clearDialog = false;
-      _queuedPages.clear();
+      getSupportFragmentManager().executePendingTransactions();
     }
 
     if (_configurationChanged != null)
@@ -211,10 +211,10 @@ public class MBDialogController extends ContextWrapper
 
   }
 
-  public void deactivate()
+  public void deactivate(boolean maintainStack)
   {
-    getFragmentStack().emptyBackStack(true);
-    _decorator.hide();
+    removeOnBackStackChangedListenerOfCurrentDialog();
+    if (!maintainStack) getFragmentStack().emptyBackStack(true);
     _shown = false;
   }
 
@@ -224,10 +224,6 @@ public class MBDialogController extends ContextWrapper
         && !MBActivityHelper.isApplicationBroughtToBackground(getActivity()))
     {
       getFragmentStack().emptyBackStack(false);
-    }
-    else
-    {
-      // _clearDialog = true;
     }
   }
 
@@ -487,7 +483,7 @@ public class MBDialogController extends ContextWrapper
     if (getName().equals(MBViewManager.getInstance().getActiveDialogName()))
     {
 
-      MBViewBuilderFactory.getInstance().getDialogViewBuilder().handleConfigurationChanged(newConfig, this);
+      MBViewBuilderFactory.getInstance().getDialogContentBuilder().handleConfigurationChanged(newConfig, this);
 
       for (MBBasicViewController controller : getAllFragments())
       {
@@ -591,7 +587,9 @@ public class MBDialogController extends ContextWrapper
       public Fragment fragment;
     }
 
-    private final Stack<SavedStackEntry> _stack = new Stack<SavedStackEntry>();
+    private int                          _stackRoot = 0;
+    private boolean                      _archived  = true;
+    private final Stack<SavedStackEntry> _stack     = new Stack<SavedStackEntry>();
 
     public FragmentStack(FragmentManager manager)
     {
@@ -608,11 +606,12 @@ public class MBDialogController extends ContextWrapper
     {
       int count = getFragmentManager().getBackStackEntryCount();
 
+      boolean emptyBefore = _stack.isEmpty();
       _stack.clear();
-      for (; _stack.size() < count;)
+      for (int i = _stackRoot; i < count; ++i)
       {
         SavedStackEntry entry = new SavedStackEntry();
-        BackStackEntry bse = getFragmentManager().getBackStackEntryAt(_stack.size());
+        BackStackEntry bse = getFragmentManager().getBackStackEntryAt(i);
         entry.id = bse.getName();
 
         entry.fragment = getFragmentManager().findFragmentByTag(entry.id);
@@ -620,7 +619,7 @@ public class MBDialogController extends ContextWrapper
         _stack.push(entry);
       }
 
-      if (count == 0)
+      if (_stack.isEmpty() && !emptyBefore)
       {
         onEmptiedBackStack();
       }
@@ -628,21 +627,27 @@ public class MBDialogController extends ContextWrapper
 
     void playBackStack()
     {
-      if (!_stack.isEmpty())
+      if (_archived)
       {
-        for (SavedStackEntry sse : _stack)
+        _stackRoot = getFragmentManager().getBackStackEntryCount();
+        if (!_stack.isEmpty())
         {
-          if (sse.dialogId != 0)
+          for (SavedStackEntry sse : _stack)
           {
-            FragmentTransaction fr = getFragmentManager().beginTransaction();
+            if (sse.dialogId != 0)
+            {
+              FragmentTransaction fr = getFragmentManager().beginTransaction();
 
-            fr.addToBackStack(sse.id);
-            fr.replace(sse.dialogId, sse.fragment, sse.id);
-            fr.commitAllowingStateLoss();
+              fr.addToBackStack(sse.id);
+              fr.replace(sse.dialogId, sse.fragment, sse.id);
+              fr.commitAllowingStateLoss();
+            }
+
           }
 
         }
-
+        _archived = false;
+        getSupportFragmentManager().executePendingTransactions();
       }
 
       getFragmentManager().addOnBackStackChangedListener(this);
@@ -652,6 +657,7 @@ public class MBDialogController extends ContextWrapper
     {
       if (deactivate)
       {
+        _archived = true;
         getFragmentManager().removeOnBackStackChangedListener(this);
       }
 
@@ -662,7 +668,7 @@ public class MBDialogController extends ContextWrapper
         {
           if (!isBackStackEmpty())
           {
-            BackStackEntry backStackEntry = getFragmentManager().getBackStackEntryAt(0);
+            BackStackEntry backStackEntry = getFragmentManager().getBackStackEntryAt(_stackRoot);
             getFragmentManager().popBackStackImmediate(backStackEntry.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
           }
         }
@@ -672,7 +678,7 @@ public class MBDialogController extends ContextWrapper
     public boolean isBackStackEmpty()
     {
       int count = getFragmentManager().getBackStackEntryCount();
-      return count == 0;
+      return count == _stackRoot;
     }
 
   }
@@ -705,7 +711,7 @@ public class MBDialogController extends ContextWrapper
   public void dismiss()
   {
     popAll();
-    deactivate();
+    MBViewManager.getInstance().getDialogManager().deactivateDialog(getName());
   }
 
   public void onEmptiedBackStack()

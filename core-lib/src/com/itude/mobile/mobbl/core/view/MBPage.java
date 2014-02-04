@@ -48,7 +48,7 @@ public class MBPage extends MBPanel
   private String                                                 _pageStackName;
   private MBDocument                                             _document;
   private MBApplicationController                                _controller;
-  private MBBasicViewController                                 _viewController;
+  private MBBasicViewController                                  _viewController;
   private MBDocumentDiff                                         _documentDiff;
   private final Map<String, List<MBValueChangeListenerProtocol>> _valueChangedListeners;
   private MBPageDefinition.MBPageType                            _pageType;
@@ -169,6 +169,7 @@ public class MBPage extends MBPanel
     MBOutcome.Origin origin = new MBOutcome.Origin();
     origin.withPage(getPageName()).withPageStack(getPageStackName());
     origin.withDialog(MBViewManager.getInstance().getActiveDialogName());
+    outcome.setOrigin(origin);
     outcome.setOutcomeName(outcomeName);
     outcome.setDocument(getDocument());
     outcome.setPageStackName(getPageStackName());

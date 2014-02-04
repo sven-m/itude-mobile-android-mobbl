@@ -6,7 +6,7 @@ import com.itude.mobile.mobbl.core.controller.MBDialogController;
 
 public abstract class MBDialogDecorator
 {
-  private MBDialogController _dialog;
+  private final MBDialogController _dialog;
 
   public MBDialogDecorator(MBDialogController dialog)
   {
@@ -30,5 +30,15 @@ public abstract class MBDialogDecorator
 
   public void emptiedBackStack()
   {
+  }
+
+  public boolean handlesOwnDismiss()
+  {
+    return false;
+  }
+
+  public boolean maintainPreviousStack()
+  {
+    return false;
   }
 }

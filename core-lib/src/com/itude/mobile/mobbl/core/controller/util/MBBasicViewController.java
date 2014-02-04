@@ -313,14 +313,15 @@ public class MBBasicViewController extends DialogFragment
       if (layout != null) layout.setPadding(0, 0, 0, 0);
 
       styleCloseButton();
-
-      if (_isDialogFullscreen)
-      {
-        Window window = getDialog().getWindow();
-        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-      }
     }
+
+    if (getShowsDialog() && _isDialogFullscreen)
+    {
+      Window window = getDialog().getWindow();
+      window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+      window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
   }
 
   private void styleCloseButton()

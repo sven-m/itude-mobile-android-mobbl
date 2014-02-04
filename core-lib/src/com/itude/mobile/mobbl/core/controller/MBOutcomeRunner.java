@@ -35,6 +35,7 @@ public class MBOutcomeRunner
   private final MBOutcome _outcome;
   private final boolean   _throwException;
   private List<MBOutcome> _toProcess;
+  private static Object   _lock = new Object();
 
   public MBOutcomeRunner(MBOutcome outcome, boolean throwException)
   {
@@ -68,8 +69,11 @@ public class MBOutcomeRunner
 
     for (MBOutcome outcome : _toProcess)
     {
-      MBOutcomeTaskManager manager = setupTaskManager(outcome);
-      manager.run();
+      synchronized (_lock)
+      {
+        MBOutcomeTaskManager manager = setupTaskManager(outcome);
+        manager.run();
+      }
     }
   }
 
@@ -156,12 +160,13 @@ public class MBOutcomeRunner
 
       if (outcome.isPreConditionValid())
       {
+        MBPageDefinition pageDef = metadataService.getDefinitionForPageName(outcome.getAction(), false);
+        if (pageDef == null) manager.addTask(new MBDialogSwitchTask(manager));
 
         MBActionDefinition actionDef = metadataService.getDefinitionForActionName(outcome.getAction(), false);
         MBActionTask actionTask = null;
         if (actionDef != null) manager.addTask(actionTask = new MBActionTask(manager, actionDef));
 
-        MBPageDefinition pageDef = metadataService.getDefinitionForPageName(outcome.getAction(), false);
         if (pageDef != null)
         {
 
@@ -170,7 +175,6 @@ public class MBOutcomeRunner
           manager.addTask(new MBDialogSwitchTask(manager));
           manager.addTask(new MBShowPageTask(manager, pageTask.getResultContainer()));
         }
-        else manager.addTask(new MBDialogSwitchTask(manager));
 
         MBAlertDefinition alertDef = metadataService.getDefinitionForAlertName(outcome.getAction(), false);
         if (alertDef != null) manager.addTask(new MBAlertTask(manager, alertDef));
