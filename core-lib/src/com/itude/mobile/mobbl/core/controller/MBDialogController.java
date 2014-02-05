@@ -178,6 +178,8 @@ public class MBDialogController extends ContextWrapper
           _decorator.show();
 
           activateWithoutSwitching();
+
+          getSupportFragmentManager().executePendingTransactions();
         }
       });
 
@@ -200,8 +202,6 @@ public class MBDialogController extends ContextWrapper
         showPage(entry);
 
       _queuedPages.clear();
-
-      getSupportFragmentManager().executePendingTransactions();
     }
 
     if (_configurationChanged != null)
