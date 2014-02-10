@@ -89,56 +89,6 @@ public class MBPathUtilTest extends ApplicationTestCase<MBApplicationCore>
     }
   }
 
-  public void testSplitPathPerformance()
-  {
-    // the current splitPath implementation shows a major improvement
-    // over the old implementation.
-    // we don't want any changes to splitPath that make the implementation
-    // a lot slower.
-    // this test checks if the current impl is still ~3 times as fast as
-    // originally created.
-    Pattern splitPathPattern = Pattern.compile("/");
-    String[] pathsToTest = {"a/b/c", "/a/b/c", "a/b/c/", "/a/b/c/", "a/../c", "/a/../c", "a/../c/", "/a/../c/", "a/b/..", "/a/b/..",
-        "a/b/../", "/a/b/../", "a///////b/..", "/a/b////////////..", "a/////////b////////../", "////////////a/b/../", "./a/b/c",
-        "/./a/b/c", "a/b/./c/", "/a/b/c/.", "/a/b/c/./", "aaaaaaaaaaaaaaa/b/c", "/a/bbbbbbbbbbbbbbbbbbbbbbbbbb/c",
-        "a/b/ccccccccccccccccccccccccccc/"};
-    int numTimesToIterate = 500;
-    long timeOld = 0;
-    long timeNew = 0;
-    // old implementation
-    {
-      System.gc();
-      System.gc();
-      long start = System.currentTimeMillis();
-      for (int i = 0; i < numTimesToIterate; i++)
-      {
-        for (String path : pathsToTest)
-        {
-          splitPathOldImplementation(path, splitPathPattern);
-        }
-      }
-      long end = System.currentTimeMillis();
-      timeOld = end - start;
-    }
-    // new implementation
-    {
-      System.gc();
-      System.gc();
-      long start = System.currentTimeMillis();
-      for (int i = 0; i < numTimesToIterate; i++)
-      {
-        for (String path : pathsToTest)
-        {
-          MBPathUtil.splitPath(path);
-        }
-      }
-      long end = System.currentTimeMillis();
-      timeNew = end - start;
-    }
-    long difference = timeOld - timeNew;
-    assertTrue("splitPath implementation performs badly: slower than old impl", difference > 0);
-  }
-
   private static List<String> splitPathOldImplementation(String path, Pattern splitPathPattern)
   {
     List<String> components = new ArrayList<String>();
