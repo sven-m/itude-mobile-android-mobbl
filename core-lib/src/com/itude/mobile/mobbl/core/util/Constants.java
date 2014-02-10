@@ -143,6 +143,7 @@ public interface Constants
   public static final int    C_PARCELABLE_TYPE_DOMAIN_VALIDATOR_DEFINITION             = 7;
   public static final int    C_PARCELABLE_TYPE_DOCUMENT                                = 8;
   public static final int    C_PARCELABLE_TYPE_DOCUMENT_DEFINITION                     = 9;
+  public static final int    C_PARCELABLE_TYPE_ORIGIN                                  = 10;
 
   // Intent related
   public static final String C_INTENT_POST_INITIALOUTCOMES_OUTCOMENAME                 = "POST_INITIALOUTCOMES_OUTCOMENAME";

@@ -18,8 +18,6 @@ package com.itude.mobile.mobbl.core.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.util.Log;
-
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndPointDefinition;
@@ -34,7 +32,9 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBMvcConfigurationParser;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBToolDefinition;
+import com.itude.mobile.mobbl.core.controller.MBOutcome;
 import com.itude.mobile.mobbl.core.services.exceptions.MBActionNotDefinedException;
 import com.itude.mobile.mobbl.core.services.exceptions.MBAlertNotDefinedException;
 import com.itude.mobile.mobbl.core.services.exceptions.MBDialogNotDefinedException;
@@ -42,7 +42,6 @@ import com.itude.mobile.mobbl.core.services.exceptions.MBDocumentNotDefinedExcep
 import com.itude.mobile.mobbl.core.services.exceptions.MBDomainNotDefinedException;
 import com.itude.mobile.mobbl.core.services.exceptions.MBPageNotDefinedException;
 import com.itude.mobile.mobbl.core.services.exceptions.MBToolNotDefinedException;
-import com.itude.mobile.mobbl.core.util.Constants;
 
 public final class MBMetadataService
 {
@@ -55,7 +54,7 @@ public final class MBMetadataService
   private static String                   _tabletConfigName = null;
   private static String                   _endpointsName    = "endpoints.xml";
 
-  private MBDialogDefinition              _homeDialog       = null;
+  private MBDialogDefinition         _homeDialog       = null;
 
   private MBMetadataService()
   {
@@ -207,19 +206,21 @@ public final class MBMetadataService
     return dialogDef;
   }
 
-  /**
-   * A dialog can either be part of a DialogGroup or exist on its own. In some cases it is
-   * desirable to get the name of the top dialog. This could either be just the dialog name,
-   * or it can be the name of its parent; which is a DialogGroup.
-   * 
-   * @param dialogName
-   * @return the dialog name of the Dialog or its parent, the DialogGroup (if there is one)
-   */
-  public MBDialogDefinition getTopDialogDefinitionForDialogName(String dialogName)
+  public MBPageStackDefinition getDefinitionForPageStackName(String pageStack)
   {
-    MBDialogDefinition def = getDefinitionForDialogName(dialogName);
-    if (def.getParent() != null) return getDefinitionForDialogName(def.getParent());
-    return def;
+    return getDefinitionForPageStackName(pageStack, true);
+  }
+
+  public MBPageStackDefinition getDefinitionForPageStackName(String pageStack, boolean doThrow)
+  {
+    MBPageStackDefinition dialogDef = _cfg.getDefinitionForPageStackName(pageStack);
+    if (dialogDef == null && doThrow)
+    {
+      String message = "Pagestack with name " + pageStack + " not defined";
+      throw new MBDialogNotDefinedException(message);
+    }
+
+    return dialogDef;
   }
 
   public MBDialogDefinition getHomeDialogDefinition()
@@ -242,29 +243,17 @@ public final class MBMetadataService
     return new ArrayList<MBDialogDefinition>(_cfg.getDialogs().values());
   }
 
-  //For now do not raise an exception if an outcome is not defined
-  public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(String originName)
+  public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(MBOutcome.Origin origin, String outcomeName)
   {
-    List<MBOutcomeDefinition> list = _cfg.getOutcomeDefinitionsForOrigin(originName);
-    if (list == null || list.size() <= 0)
-    {
-      Log.w(Constants.APPLICATION_NAME, "WARNING No outcomes defined for origin " + originName + " ");
-    }
-
-    return list;
+    return getOutcomeDefinitionsForOrigin(origin, outcomeName, true);
   }
 
-  public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(String originName, String outcomeName)
+  public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(MBOutcome.Origin origin, String outcomeName, boolean doThrow)
   {
-    return getOutcomeDefinitionsForOrigin(originName, outcomeName, true);
-  }
-
-  public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(String originName, String outcomeName, boolean doThrow)
-  {
-    List<MBOutcomeDefinition> outcomeDefs = _cfg.getOutcomeDefinitionsForOrigin(originName, outcomeName);
+    List<MBOutcomeDefinition> outcomeDefs = _cfg.getOutcomeDefinitionsForOrigin(origin, outcomeName);
     if (outcomeDefs.size() == 0 && doThrow)
     {
-      String message = "Outcome with originName=" + originName + " outcomeName=" + outcomeName + " not defined";
+      String message = "Outcome with originName=" + origin + " outcomeName=" + outcomeName + " not defined";
       throw new MBActionNotDefinedException(message);
     }
     return outcomeDefs;

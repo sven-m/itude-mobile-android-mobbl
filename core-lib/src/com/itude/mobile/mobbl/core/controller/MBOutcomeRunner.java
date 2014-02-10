@@ -20,6 +20,7 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBOutcomeDefinition;
@@ -34,6 +35,7 @@ public class MBOutcomeRunner
   private final MBOutcome _outcome;
   private final boolean   _throwException;
   private List<MBOutcome> _toProcess;
+  private static Object   _lock = new Object();
 
   public MBOutcomeRunner(MBOutcome outcome, boolean throwException)
   {
@@ -59,6 +61,7 @@ public class MBOutcomeRunner
 
   private void actuallyHandle()
   {
+    supplementOrigin();
     clearCaches();
     prepareOutcomeCopies();
     persistIfNeeded();
@@ -66,9 +69,19 @@ public class MBOutcomeRunner
 
     for (MBOutcome outcome : _toProcess)
     {
-      MBOutcomeTaskManager manager = setupTaskManager(outcome);
-      manager.run();
+      synchronized (_lock)
+      {
+        MBOutcomeTaskManager manager = setupTaskManager(outcome);
+        manager.run();
+      }
     }
+  }
+
+  private void supplementOrigin()
+  {
+    if (_outcome.getOrigin() == null) _outcome.setOrigin(new MBOutcome.Origin());
+    if (StringUtil.isEmpty(_outcome.getOrigin().getDialog())) _outcome.getOrigin().withDialog(MBViewManager.getInstance()
+                                                                                                  .getActiveDialogName());
   }
 
   private void clearCaches()
@@ -85,11 +98,11 @@ public class MBOutcomeRunner
 
     MBMetadataService metadataService = MBMetadataService.getInstance();
 
-    List<MBOutcomeDefinition> outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(_outcome.getOriginName(),
+    List<MBOutcomeDefinition> outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(_outcome.getOrigin(),
                                                                                                   _outcome.getOutcomeName(), false);
     if (outcomeDefinitions.isEmpty())
     {
-      String msg = "No outcome defined for origin=" + _outcome.getOriginName() + " outcome=" + _outcome.getOutcomeName();
+      String msg = "No outcome defined for origin=" + _outcome.getOrigin() + " outcome=" + _outcome.getOutcomeName();
       throw new MBNoOutcomesDefinedException(msg);
     }
 
@@ -113,7 +126,7 @@ public class MBOutcomeRunner
         if (_outcome.getDocument() == null) Log
             .w(Constants.APPLICATION_NAME,
                "MBApplicationController.doHandleOutcome: origin="
-                   + _outcome.getOriginName()
+                   + _outcome.getOrigin()
                    + "and name="
                    + _outcome.getOutcomeName()
                    + " has persistDocument=TRUE but there is no document (probably the outcome originates from an action; which cannot have a document)");
@@ -125,7 +138,7 @@ public class MBOutcomeRunner
   private void resolveDialogNames()
   {
     for (MBOutcome outcome : _toProcess)
-      outcome.setDialogName(MBOutcomeHandler.resolveDialogName(outcome.getDialogName()));
+      outcome.setPageStackName(MBOutcomeHandler.resolvePageStackName(outcome.getPageStackName()));
   }
 
   private MBOutcomeTaskManager setupTaskManager(MBOutcome outcome)
@@ -147,12 +160,13 @@ public class MBOutcomeRunner
 
       if (outcome.isPreConditionValid())
       {
+        MBPageDefinition pageDef = metadataService.getDefinitionForPageName(outcome.getAction(), false);
+        if (pageDef == null) manager.addTask(new MBDialogSwitchTask(manager));
 
         MBActionDefinition actionDef = metadataService.getDefinitionForActionName(outcome.getAction(), false);
         MBActionTask actionTask = null;
         if (actionDef != null) manager.addTask(actionTask = new MBActionTask(manager, actionDef));
 
-        MBPageDefinition pageDef = metadataService.getDefinitionForPageName(outcome.getAction(), false);
         if (pageDef != null)
         {
 
@@ -161,7 +175,6 @@ public class MBOutcomeRunner
           manager.addTask(new MBDialogSwitchTask(manager));
           manager.addTask(new MBShowPageTask(manager, pageTask.getResultContainer()));
         }
-        else manager.addTask(new MBDialogSwitchTask(manager));
 
         MBAlertDefinition alertDef = metadataService.getDefinitionForAlertName(outcome.getAction(), false);
         if (alertDef != null) manager.addTask(new MBAlertTask(manager, alertDef));

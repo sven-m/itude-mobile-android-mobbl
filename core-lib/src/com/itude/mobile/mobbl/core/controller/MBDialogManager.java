@@ -23,11 +23,15 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.content.res.Configuration;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 
+import com.itude.mobile.android.util.AssertUtil;
 import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.controller.util.MBBaseLifecycleListener;
@@ -43,12 +47,13 @@ public class MBDialogManager extends MBBaseLifecycleListener
     public void onDialogSelected(String name);
   }
 
-  private final List<String>                    _sortedDialogNames;
-  private final Map<String, MBDialogController> _controllerMap;
-  private MBDialogController                    _menuController;
-  private String                                _activeDialog;
-  private final Activity                        _activity;
-  private final List<MBDialogChangeListener>    _listeners;
+  private final List<String>                       _sortedDialogNames;
+  private final Map<String, MBDialogController>    _controllerMap;
+  private final Map<String, MBPageStackController> _pageStackControllers;
+  private String                                   _activeDialog;
+  private final Activity                           _activity;
+  private final List<MBDialogChangeListener>       _listeners;
+  private String                                   _toActivate;
 
   public MBDialogManager(Activity activity)
   {
@@ -56,6 +61,7 @@ public class MBDialogManager extends MBBaseLifecycleListener
     _sortedDialogNames = new ArrayList<String>();
     _listeners = new ArrayList<MBDialogChangeListener>();
     _controllerMap = new HashMap<String, MBDialogController>();
+    _pageStackControllers = new HashMap<String, MBPageStackController>();
   }
 
   ///////////////// Lifecycle events ////////////
@@ -115,6 +121,7 @@ public class MBDialogManager extends MBBaseLifecycleListener
 
   public MBDialogController getActiveDialog()
   {
+    checkEnqueued();
     return getDialog(_activeDialog);
   }
 
@@ -122,11 +129,6 @@ public class MBDialogManager extends MBBaseLifecycleListener
   public Collection<MBDialogController> getDialogs()
   {
     return _controllerMap.values();
-  }
-
-  public MBDialogController getMenuDialog()
-  {
-    return _menuController;
   }
 
   public List<String> getSortedDialogNames()
@@ -182,8 +184,8 @@ public class MBDialogManager extends MBBaseLifecycleListener
 
     _sortedDialogNames.clear();
     _controllerMap.clear();
-    _menuController = null;
     _activeDialog = null;
+    _toActivate = null;
   }
 
   private void build()
@@ -193,21 +195,14 @@ public class MBDialogManager extends MBBaseLifecycleListener
     for (MBDialogDefinition dialog : dialogs)
       if (dialog.isPreConditionValid())
       {
-        if (dialog.getParent() == null) createDialog(dialog);
-        else
-        {
-          MBDialogController parent = _controllerMap.get(dialog.getParent());
-          _controllerMap.put(dialog.getName(), parent);
-        }
+        createDialog(dialog);
       }
   }
 
   public void activateHome()
   {
     MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
-    MBOutcome outcome = new MBOutcome(homeDialogDefinition.getName(), null);
-    outcome.setOriginName(homeDialogDefinition.getName());
-    MBApplicationController.getInstance().handleOutcome(outcome);
+    MBViewManager.getInstance().activateDialogWithName(homeDialogDefinition.getName());
   }
 
   boolean activateDialog(String dialogName)
@@ -225,17 +220,45 @@ public class MBDialogManager extends MBBaseLifecycleListener
 
     if (current != null)
     {
-      current.deactivate();
+      Log.d("MBDialogManager", "Switching from " + current.getName() + "...");
+      current.deactivate(dialog.getDecorator().maintainPreviousStack());
       current.handleAllOnLeavingWindow();
     }
 
     for (MBDialogChangeListener listener : _listeners)
       listener.onDialogSelected(dialogName);
 
-    _activeDialog = dialogName;
+    Log.d("MBDialogManager", "Switching to " + dialogName + "...");
     dialog.activate();
+    _activeDialog = dialogName;
+    _toActivate = null;
     dialog.handleAllOnWindowActivated();
     return true;
+  }
+
+  void activatePageStack(String pageStackName)
+  {
+    MBPageStackController controller = _pageStackControllers.get(pageStackName);
+    AssertUtil.notNull("controller", controller);
+
+    activateDialog(controller.getParent().getName());
+  }
+
+  void deactivateDialog(String dialogName)
+  {
+    if (!ComparisonUtil.safeEquals(_activeDialog, dialogName)) return;
+
+    // can't deactivate home dialog, since we have nothing to switch to
+    MBDialogDefinition homeDialogDefinition = MBMetadataService.getInstance().getHomeDialogDefinition();
+    if (homeDialogDefinition.getName().equals(dialogName)) return;
+
+    MBDialogController current = getActiveDialog();
+    if (current.getDecorator().handlesOwnDismiss())
+    {
+      current.deactivate(false);
+      current.getDecorator().hide();
+    }
+    else activateHome();
   }
 
   private void createDialog(MBDialogDefinition definition)
@@ -244,8 +267,8 @@ public class MBDialogManager extends MBBaseLifecycleListener
     String name = definition.getName();
     controller.init(name, null);
     _controllerMap.put(name, controller);
+    _pageStackControllers.putAll(controller.getPageStacks());
     _sortedDialogNames.add(name);
-    if (definition.isShowAsMenu()) _menuController = controller;
   }
 
   public void removeDialog(String dialogName)
@@ -277,4 +300,33 @@ public class MBDialogManager extends MBBaseLifecycleListener
     }
   }
 
+  public MBPageStackController getPageStack(String dialogName)
+  {
+    return _pageStackControllers.get(dialogName);
+  }
+
+  public void enqueueDialog(String dialog)
+  {
+    _activeDialog = null;
+    _toActivate = dialog;
+
+    new Handler(Looper.getMainLooper()).post(new MBThread()
+    {
+      @Override
+      public void runMethod() throws MBInterruptedException
+      {
+        checkEnqueued();
+      }
+    });
+  }
+
+  private void checkEnqueued()
+  {
+    if (_activeDialog == null && _toActivate != null)
+    {
+      String toActivate = _toActivate;
+      _toActivate = null;
+      activateDialog(toActivate);
+    }
+  }
 }

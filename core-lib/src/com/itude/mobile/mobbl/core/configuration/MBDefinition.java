@@ -34,6 +34,7 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainValidatorDefinition
 import com.itude.mobile.mobbl.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl.core.configuration.resources.MBItemDefinition;
 import com.itude.mobile.mobbl.core.configuration.resources.MBResourceDefinition;
@@ -119,6 +120,10 @@ public class MBDefinition implements Parcelable
   }
 
   public void addChildElement(MBPageDefinition child)
+  {
+  }
+
+  public void addChildElement(MBPageStackDefinition child)
   {
   }
 

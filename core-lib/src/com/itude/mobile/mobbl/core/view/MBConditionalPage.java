@@ -16,15 +16,13 @@
 package com.itude.mobile.mobbl.core.view;
 
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
-import com.itude.mobile.mobbl.core.controller.MBViewManager;
-import com.itude.mobile.mobbl.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 
 public class MBConditionalPage extends MBPage
 {
-  public MBConditionalPage(MBPageDefinition definition, MBDocument document, String rootPath, MBViewState viewState)
+  public MBConditionalPage(MBPageDefinition definition, MBDocument document, String rootPath)
   {
-    super(definition, document, rootPath, viewState);
+    super(definition, document, rootPath);
   }
 
   private MBPageDefinition _definitionWhenFalse;
@@ -51,13 +49,13 @@ public class MBConditionalPage extends MBPage
   }
 
   public Object initWithDefinitionWhenTrue(MBPageDefinition definitionWhenTrue, MBPageDefinition definitionWhenFalse,
-                                           Object viewController, MBDocument document, String rootPath, MBViewState viewState)
+                                           Object viewController, MBDocument document, String rootPath)
   {
     return null;
   }
 
   public Object initWithDefinitionWhenTrue(MBPageDefinition definitionWhenTrue, MBPageDefinition definitionWhenFalse, MBDocument document,
-                                           String rootPath, MBViewManager.MBViewState viewState, Object bounds)
+                                           String rootPath, Object bounds)
   {
     return null;
   }

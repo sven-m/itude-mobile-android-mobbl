@@ -21,14 +21,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.itude.mobile.android.util.ComparisonUtil;
+import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.configuration.MBConfigurationParser;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition.MBPageType;
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPageTypeException;
+import com.itude.mobile.mobbl.core.controller.MBOutcome;
 import com.itude.mobile.mobbl.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl.core.services.datamanager.handlers.MBMetadataDataHandler;
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
+import com.itude.mobile.mobbl.core.view.builders.MBDialogContentBuilder;
 
 public class MBMvcConfigurationParser extends MBConfigurationParser
 {
@@ -38,8 +42,8 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
   private List<String> _attributeAttributes;
   private List<String> _actionAttributes;
   private List<String> _outcomeAttributes;
+  private List<String> _pageStackAttributes;
   private List<String> _dialogAttributes;
-  private List<String> _dialogGroupAttributes;
   private List<String> _pageAttributes;
   private List<String> _panelAttributes;
   private List<String> _forEachAttributes;
@@ -99,12 +103,22 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _outcomeAttributes.add("name");
       _outcomeAttributes.add("action");
       _outcomeAttributes.add("dialog");
+      _outcomeAttributes.add("stack");
       _outcomeAttributes.add("displayMode");
       _outcomeAttributes.add("persist");
       _outcomeAttributes.add("transferDocument");
       _outcomeAttributes.add("preCondition");
       _outcomeAttributes.add("noBackgroundProcessing");
       _outcomeAttributes.add("indicator");
+    }
+    if (_pageStackAttributes == null)
+    {
+      _pageStackAttributes = new ArrayList<String>();
+      _pageStackAttributes.add("xmlns");
+      _pageStackAttributes.add("name");
+      _pageStackAttributes.add("mode");
+      _pageStackAttributes.add("preCondition");
+      _pageStackAttributes.add("localName");
     }
     if (_dialogAttributes == null)
     {
@@ -116,21 +130,9 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _dialogAttributes.add("icon");
       _dialogAttributes.add("showAs");
       _dialogAttributes.add("domain");
-      _dialogAttributes.add("action");
       _dialogAttributes.add("preCondition");
-    }
-    if (_dialogGroupAttributes == null)
-    {
-      _dialogGroupAttributes = new ArrayList<String>();
-      _dialogGroupAttributes.add("xmlns");
-      _dialogGroupAttributes.add("name");
-      _dialogGroupAttributes.add("title");
-      _dialogGroupAttributes.add("mode");
-      _dialogGroupAttributes.add("icon");
-      _dialogGroupAttributes.add("showAs");
-      _dialogGroupAttributes.add("domain");
-      _dialogGroupAttributes.add("action");
-      _dialogGroupAttributes.add("preCondition");
+      _dialogAttributes.add("contentType");
+      _dialogAttributes.add("decorator");
     }
     if (_pageAttributes == null)
     {
@@ -246,7 +248,8 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _alertAttributes.add("titlePath");
     }
 
-    MBConfigurationDefinition conf = (MBConfigurationDefinition) super.parseData(data, documentName);
+    MBDefinition definition = super.parseData(data, documentName);
+    MBConfigurationDefinition conf = (MBConfigurationDefinition) definition;
 
     if (conf == null) throw new MBException("Could not open configuration file " + documentName);
 
@@ -341,7 +344,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       outcomeDef.setOrigin(attributeDict.get("origin"));
       outcomeDef.setName(attributeDict.get("name"));
       outcomeDef.setAction(attributeDict.get("action"));
-      outcomeDef.setDialog(attributeDict.get("dialog"));
+      outcomeDef.setPageStack(ComparisonUtil.coalesce(attributeDict.get("stack"), attributeDict.get("dialog")));
       outcomeDef.setDisplayMode(attributeDict.get("displayMode"));
       outcomeDef.setPreCondition(attributeDict.get("preCondition"));
       outcomeDef.setPersist(Boolean.parseBoolean(attributeDict.get("persist")));
@@ -353,31 +356,23 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
 
       notifyProcessed(outcomeDef);
     }
+    else if (elementName.equals("PageStack"))
+    {
+      checkAttributesForElement(elementName, attributeDict, _pageStackAttributes);
+
+      MBPageStackDefinition pagestackDef = new MBPageStackDefinition();
+      pagestackDef.setName(attributeDict.get("name"));
+      pagestackDef.setMode(attributeDict.get("mode"));
+      pagestackDef.setPreCondition(attributeDict.get("preCondition"));
+      pagestackDef.setLocalName(attributeDict.get("localName"));
+
+      notifyProcessed(pagestackDef);
+    }
     else if (elementName.equals("Dialog"))
     {
       checkAttributesForElement(elementName, attributeDict, _dialogAttributes);
 
       MBDialogDefinition dialogDef = new MBDialogDefinition();
-      dialogDef.setName(attributeDict.get("name"));
-      dialogDef.setTitle(attributeDict.get("title"));
-      dialogDef.setMode(attributeDict.get("mode"));
-      dialogDef.setIcon(attributeDict.get("icon"));
-      dialogDef.setShowAs(attributeDict.get("showAs"));
-      dialogDef.setDomain(attributeDict.get("domain"));
-      dialogDef.setAction(attributeDict.get("action"));
-      dialogDef.setPreCondition(attributeDict.get("preCondition"));
-
-      // On tablets, we can have a split view, which is defined as a DialogGroup in xml
-      MBDefinition lastDef = getStack().peek();
-      if (lastDef instanceof MBDialogGroupDefinition) dialogDef.setParent(lastDef.getName());
-
-      notifyProcessed(dialogDef);
-    }
-    else if (elementName.equals("DialogGroup"))
-    {
-      checkAttributesForElement(elementName, attributeDict, _dialogGroupAttributes);
-
-      MBDialogGroupDefinition dialogDef = new MBDialogGroupDefinition();
       dialogDef.setName(attributeDict.get("name"));
       dialogDef.setTitle(attributeDict.get("title"));
       dialogDef.setTitlePortrait(attributeDict.get("titlePortrait"));
@@ -386,6 +381,10 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       dialogDef.setShowAs(attributeDict.get("showAs"));
       dialogDef.setDomain(attributeDict.get("domain"));
       dialogDef.setPreCondition(attributeDict.get("preCondition"));
+      dialogDef.setContentType(attributeDict.get("contentType"));
+      dialogDef.setDecorator(ComparisonUtil.coalesce(attributeDict.get("decorator"), "DEFAULT"));
+
+      dialogDef.setCustom(extractCustomAttributes(attributeDict, _dialogAttributes));
 
       notifyProcessed(dialogDef);
     }
@@ -592,16 +591,28 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       MBFieldDefinition fieldDef = (MBFieldDefinition) getStack().get(getStack().size() - 1);
       fieldDef.setText(getCharacters());
     }
-    else if ("DialogGroup".equals(elementName))
+    else if ("Dialog".equals(elementName))
     {
-      // On tablets, we can have a split view in a tab. In XML they are defined as two dialogs in a dialogGroup.
-      // This means that the dialogs are automatically added to a dialogGroup. 
-      // That is why we need to make sure that the dialogs are also kept locally, like on the phone, because the local references are used to address the Dialogs
-      // Thats why we copy them here after the group has been added.
       MBDefinition configDef = getStack().elementAt(getStack().size() - 2);
-      MBDialogGroupDefinition groupDef = (MBDialogGroupDefinition) getStack().peek();
-      for (MBDialogDefinition dialogDef : groupDef.getChildren())
+      MBDialogDefinition groupDef = (MBDialogDefinition) getStack().peek();
+      if (groupDef.getChildren().isEmpty())
+      {
+        MBPageStackDefinition dialogDef = new MBPageStackDefinition();
+        dialogDef.setName(groupDef.getName());
+        groupDef.addPageStack(dialogDef);
+      }
+
+      if (StringUtil.isEmpty(groupDef.getContentType()))
+      {
+        groupDef.setContentType(groupDef.getChildren().size() == 1
+            ? MBDialogContentBuilder.DEFAULT_SINGLE
+            : MBDialogContentBuilder.DEFAULT_SPLIT);
+      }
+
+      for (MBPageStackDefinition dialogDef : groupDef.getChildren())
         configDef.addChildElement(dialogDef);
+
+      createImplicitOutcomeForDialog(groupDef);
     }
 
     if (!elementName.equals("Configuration") && !elementName.equals("Include"))
@@ -611,12 +622,28 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
 
   }
 
+  private void createImplicitOutcomeForDialog(MBDialogDefinition dialog)
+  {
+    List<MBOutcomeDefinition> def = ((MBConfigurationDefinition) getRootConfig()).getOutcomeDefinitionsForOrigin(MBOutcome.Origin.WILDCARD,
+                                                                                                                 dialog.getName());
+    if (def.isEmpty())
+    {
+      MBOutcomeDefinition definition = new MBOutcomeDefinition();
+      definition.setAction("none");
+      definition.setPageStack(dialog.getChildren().get(0).getName());
+      definition.setName(dialog.getName());
+      definition.setNoBackgroundProcessing(true);
+      definition.setOrigin(MBConfigurationDefinition.ORIGIN_WILDCARD);
+      ((MBDefinition) getRootConfig()).addChildElement(definition);
+    }
+  }
+
   @Override
   public boolean isConcreteElement(String element)
   {
     return super.isConcreteElement(element) || element.equals("Configuration") || element.equals("Document") || element.equals("Element")
            || element.equals("Attribute") || element.equals("Action") || element.equals("Outcome") || element.equals("Page")
-           || element.equals("Dialog") || element.equals("DialogGroup") || element.equals("ForEach") || element.equals("Variable")
+           || element.equals("PageStack") || element.equals("Dialog") || element.equals("ForEach") || element.equals("Variable")
            || element.equals("Panel") || element.equals("Field") || element.equals("Domain") || element.equals("DomainValidator")
            || element.equals("Tool") || element.equals("Alert");
   }
@@ -768,155 +795,5 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
     addLanguageDocument(conf);
     addDeviceDocument(conf);
     addDialogsDocument(conf);
-  }
-
-  public List<String> getConfigAttributes()
-  {
-    return _configAttributes;
-  }
-
-  public void setConfigAttributes(List<String> configAttributes)
-  {
-    _configAttributes = configAttributes;
-  }
-
-  public List<String> getDocumentAttributes()
-  {
-    return _documentAttributes;
-  }
-
-  public void setDocumentAttributes(List<String> documentAttributes)
-  {
-    _documentAttributes = documentAttributes;
-  }
-
-  public List<String> getElementAttributes()
-  {
-    return _elementAttributes;
-  }
-
-  public void setElementAttributes(List<String> elementAttributes)
-  {
-    _elementAttributes = elementAttributes;
-  }
-
-  public List<String> getAttributeAttributes()
-  {
-    return _attributeAttributes;
-  }
-
-  public void setAttributeAttributes(List<String> attributeAttributes)
-  {
-    _attributeAttributes = attributeAttributes;
-  }
-
-  public List<String> getActionAttributes()
-  {
-    return _actionAttributes;
-  }
-
-  public void setActionAttributes(List<String> actionAttributes)
-  {
-    _actionAttributes = actionAttributes;
-  }
-
-  public List<String> getOutcomeAttributes()
-  {
-    return _outcomeAttributes;
-  }
-
-  public void setOutcomeAttributes(List<String> outcomeAttributes)
-  {
-    _outcomeAttributes = outcomeAttributes;
-  }
-
-  public List<String> getDialogAttributes()
-  {
-    return _dialogAttributes;
-  }
-
-  public void setDialogAttributes(List<String> dialogAttributes)
-  {
-    _dialogAttributes = dialogAttributes;
-  }
-
-  public List<String> getPageAttributes()
-  {
-    return _pageAttributes;
-  }
-
-  public void setPageAttributes(List<String> pageAttributes)
-  {
-    _pageAttributes = pageAttributes;
-  }
-
-  public List<String> getPanelAttributes()
-  {
-    return _panelAttributes;
-  }
-
-  public void setPanelAttributes(List<String> panelAttributes)
-  {
-    _panelAttributes = panelAttributes;
-  }
-
-  public List<String> getForEachAttributes()
-  {
-    return _forEachAttributes;
-  }
-
-  public void setForEachAttributes(List<String> forEachAttributes)
-  {
-    _forEachAttributes = forEachAttributes;
-  }
-
-  public List<String> getVariableAttributes()
-  {
-    return _variableAttributes;
-  }
-
-  public void setVariableAttributes(List<String> variableAttributes)
-  {
-    _variableAttributes = variableAttributes;
-  }
-
-  public List<String> getFieldAttributes()
-  {
-    return _fieldAttributes;
-  }
-
-  public void setFieldAttributes(List<String> fieldAttributes)
-  {
-    _fieldAttributes = fieldAttributes;
-  }
-
-  public List<String> getDomainAttributes()
-  {
-    return _domainAttributes;
-  }
-
-  public void setDomainAttributes(List<String> domainAttributes)
-  {
-    _domainAttributes = domainAttributes;
-  }
-
-  public List<String> getDomainValidatorAttributes()
-  {
-    return _domainValidatorAttributes;
-  }
-
-  public void setDomainValidatorAttributes(List<String> domainValidatorAttributes)
-  {
-    _domainValidatorAttributes = domainValidatorAttributes;
-  }
-
-  public List<String> getToolAttributes()
-  {
-    return _toolAttributes;
-  }
-
-  public void setToolAttributes(List<String> toolAttributes)
-  {
-    _toolAttributes = toolAttributes;
   }
 }

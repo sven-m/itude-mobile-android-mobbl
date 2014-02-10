@@ -15,13 +15,9 @@
  */
 package com.itude.mobile.mobbl.core.controller;
 
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Stack;
 
 import android.app.Application;
 import android.app.SearchManager;
@@ -37,7 +33,6 @@ import android.os.MessageQueue.IdleHandler;
 import android.util.Log;
 
 import com.itude.mobile.android.util.AssertUtil;
-import com.itude.mobile.android.util.CollectionUtilities;
 import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.DeviceUtil;
@@ -48,7 +43,6 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl.core.controller.MBViewManager.MBActionBarInvalidationOption;
-import com.itude.mobile.mobbl.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl.core.controller.exceptions.MBInvalidOutcomeException;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.model.MBDocument;
@@ -66,20 +60,16 @@ import com.itude.mobile.mobbl.core.view.MBPage;
 
 public class MBApplicationController extends Application
 {
-  private MBApplicationFactory                 _applicationFactory;
-  private MBViewManager                        _viewManager;
-  private boolean                              _suppressPageSelection;
-  private boolean                              _backStackEnabled;
-  private MBOutcome                            _outcomeWhichCausedModal;
-  private Map<String, MBPage>                  _pages;
-  private Map<String, HashMap<String, MBPage>> _pagesForName;
-  private Stack<String>                        _modalPageStack;
-  private MBOutcomeHandler                     _outcomeHandler;
-  private boolean                              _shuttingDown            = false;
+  private MBApplicationFactory           _applicationFactory;
+  private MBViewManager                  _viewManager;
+  private boolean                        _suppressPageSelection;
+  private boolean                        _backStackEnabled;
+  private MBOutcomeHandler               _outcomeHandler;
+  private boolean                        _shuttingDown            = false;
 
-  private static MBApplicationController       _instance                = null;
+  private static MBApplicationController _instance                = null;
 
-  private ApplicationState                     _currentApplicationState = ApplicationState.NOTSTARTED;
+  private ApplicationState               _currentApplicationState = ApplicationState.NOTSTARTED;
 
   public static enum ApplicationState {
     NOTSTARTED, STARTING, STARTED
@@ -96,9 +86,6 @@ public class MBApplicationController extends Application
     DeviceUtil.getInstance().setContext(context);
     super.onCreate();
     _instance = this;
-    _pages = new HashMap<String, MBPage>();
-    _pagesForName = new HashMap<String, HashMap<String, MBPage>>();
-    _modalPageStack = new Stack<String>();
 
     //    Looper.getMainLooper().setMessageLogging(new LogPrinter(Log.VERBOSE, "uithread"));
   }
@@ -151,9 +138,8 @@ public class MBApplicationController extends Application
   public void fireInitialOutcomes()
   {
     MBOutcome initialOutcome = new MBOutcome();
-    initialOutcome.setOriginName("Controller");
+    initialOutcome.setOrigin(new MBOutcome.Origin().withDialog("Controller"));
     initialOutcome.setOutcomeName("init");
-    initialOutcome.setDialogName(getActiveDialogName());
     initialOutcome.setNoBackgroundProcessing(true);
 
     _suppressPageSelection = true;
@@ -223,12 +209,12 @@ public class MBApplicationController extends Application
     }
   }
 
-  public String getActiveDialogName()
+  private String getActivePageStack()
   {
     String result = null;
-    if (_viewManager != null)
+    if (_viewManager != null && _viewManager.getActiveDialog() != null)
     {
-      result = _viewManager.getActiveDialogName();
+      result = _viewManager.getActiveDialog().getDefaultPageStack();
     }
     return result;
   }
@@ -295,30 +281,13 @@ public class MBApplicationController extends Application
 
       final String displayMode = causingOutcome.getDisplayMode();
 
-      MBViewState viewState = MBViewState.MBViewStatePlain;
-      if ("MODAL".equals(displayMode) //
-          || "MODALWITHCLOSEBUTTON".equals(displayMode) //
-          || "MODALFORMSHEET".equals(displayMode) //
-          || "MODALFORMSHEETWITHCLOSEBUTTON".equals(displayMode) //
-          || "MODALPAGESHEET".equals(displayMode) //
-          || "MODALPAGESHEETWITHCLOSEBUTTON".equals(displayMode) //
-          || "MODALFULLSCREEN".equals(displayMode) //
-          || "MODALFULLSCREENWITHCLOSEBUTTON".equals(displayMode) //
-          || "MODALCURRENTCONTEXT".equals(displayMode) //
-          || "MODALCURRENTCONTEXTWITHCLOSEBUTTON".equals(displayMode) //
-          || "ENDMODAL_CONTINUE".equals(displayMode))
-      {
-        viewState = MBViewState.MBViewStateModal;
-      }
-
-      final MBPage page = _applicationFactory.getPageConstructor()
-          .createPage(pageDefinition, document, causingOutcome.getPath(), viewState);
+      final MBPage page = _applicationFactory.getPageConstructor().createPage(pageDefinition, document, causingOutcome.getPath());
       page.setController(this);
-      page.setDialogName(causingOutcome.getDialogName());
+      page.setPageStackName(causingOutcome.getPageStackName());
       // Fallback on the lastly selected dialog if there is no dialog set in the outcome:
-      if (page.getDialogName() == null)
+      if (page.getPageStackName() == null)
       {
-        page.setDialogName(getActiveDialogName());
+        page.setPageStackName(getActivePageStack());
       }
 
       PageBuildResult result = new PageBuildResult(causingOutcome, page, backStackEnabled);
@@ -356,14 +325,14 @@ public class MBApplicationController extends Application
     {
       if (causingOutcome.getDocument() == null)
       {
-        String msg = "No document provided (null) in outcome by action/page/alert=" + causingOutcome.getOriginName()
+        String msg = "No document provided (null) in outcome by action/page/alert=" + causingOutcome.getOrigin()
                      + " but transferDocument='TRUE' in outcome definition";
         throw new MBInvalidOutcomeException(msg);
       }
       String actualType = causingOutcome.getDocument().getDefinition().getName();
       if (!actualType.equals(documentName))
       {
-        String msg = "Document provided via outcome by action/page/alert=" + causingOutcome.getOriginName()
+        String msg = "Document provided via outcome by action/page/alert=" + causingOutcome.getOrigin()
                      + " (transferDocument='TRUE') is of type " + actualType + " but must be of type " + documentName;
         throw new MBInvalidOutcomeException(msg);
       }
@@ -469,8 +438,13 @@ public class MBApplicationController extends Application
         {
           actionOutcome.setDisplayMode(Constants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE);
         }
-        actionOutcome.setDialogName(ComparisonUtil.coalesce(actionOutcome.getDialogName(), causingOutcome.getDialogName()));
-        actionOutcome.setOriginName(actionDef.getName());
+        actionOutcome.setPageStackName(ComparisonUtil.coalesce(actionOutcome.getPageStackName(), causingOutcome.getPageStackName()));
+        MBOutcome.Origin origin = new MBOutcome.Origin();
+        origin.withAction(actionDef.getName());
+        origin.withPageStack(actionOutcome.getPageStackName());
+        origin.withOutcome(causingOutcome.getOutcomeName());
+        origin.withDialog(causingOutcome.getOrigin().getDialog());
+        actionOutcome.setOrigin(origin);
         return actionOutcome;
       }
     }
@@ -495,45 +469,20 @@ public class MBApplicationController extends Application
 
   public void addEventToPage(MBEvent event, String pageName)
   {
-    Collection<MBPage> pages = getPagesWithName(pageName);
-
-    if (pages != null)
+    for (MBBasicViewController vc : getViewManager().getAllFragments())
     {
-      Iterator<MBPage> pagesIterator = pages.iterator();
-
-      if (pages != null)
-      {
-        while (pagesIterator.hasNext())
-        {
-          pagesIterator.next().getViewController().addEventToQueue(event);
-        }
-      }
+      if (vc.getPage().getName().equals(pageName)) vc.addEventToQueue(event);
     }
   }
 
   public void addEventToPages(MBEvent event, String[] pageNames)
   {
-    for (String pageName : pageNames)
+    List<String> pages = Arrays.asList(pageNames);
+    for (MBBasicViewController vc : getViewManager().getAllFragments())
     {
-      Collection<MBPage> pages = getPagesWithName(pageName);
-
-      if (pages != null)
-      {
-        Iterator<MBPage> pagesIterator = pages.iterator();
-
-        if (pages != null)
-        {
-          while (pagesIterator.hasNext())
-          {
-            MBBasicViewController controller = pagesIterator.next().getViewController();
-            if (controller != null)
-            {
-              controller.addEventToQueue(event);
-            }
-          }
-        }
-      }
+      if (pages.contains(vc.getPage().getName())) vc.addEventToQueue(event);
     }
+
   }
 
   ////////END OF EVENT HANDLING
@@ -552,16 +501,6 @@ public class MBApplicationController extends Application
   }
 
   ////////END OF WINDOW CHANGED HANDLING
-
-  public synchronized MBOutcome getOutcomeWhichCausedModal()
-  {
-    return _outcomeWhichCausedModal;
-  }
-
-  public synchronized void setOutcomeWhichCausedModal(MBOutcome outcomeWhichCausedModal)
-  {
-    _outcomeWhichCausedModal = outcomeWhichCausedModal;
-  }
 
   public void handleException(Exception exception, MBOutcome outcome)
   {
@@ -600,7 +539,7 @@ public class MBApplicationController extends Application
 
     exceptionDocument.setValue(name, MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_NAME);
     exceptionDocument.setValue(description, MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_DESCRIPTION);
-    exceptionDocument.setValue(outcome.getOriginName(), MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_ORIGIN);
+    exceptionDocument.setValue(outcome.getOrigin().toString(), MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_ORIGIN);
     exceptionDocument.setValue(outcome.getOutcomeName(), MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_OUTCOME);
     for (StackTraceElement traceElement : exception.getStackTrace())
     {
@@ -615,8 +554,8 @@ public class MBApplicationController extends Application
     MBMetadataService metadataService = MBMetadataService.getInstance();
 
     // See if there is an outcome defined for this particular exception
-    List<MBOutcomeDefinition> outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(outcome.getOriginName(), exception
-        .getClass().getSimpleName(), false);
+    List<MBOutcomeDefinition> outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(outcome.getOrigin(), exception.getClass()
+        .getSimpleName(), false);
     if (outcomeDefinitions.size() != 0)
     {
       MBOutcome specificExceptionHandler = new MBOutcome(outcome);
@@ -627,10 +566,10 @@ public class MBApplicationController extends Application
     else
     {
       // There is no specific exception handler defined. So fall back on the generic one
-      outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(outcome.getOriginName(), "exception", false);
+      outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(outcome.getOrigin(), "exception", false);
       if (outcomeDefinitions.isEmpty())
       {
-        Log.w(Constants.APPLICATION_NAME, "No outcome with origin=" + outcome.getOriginName()
+        Log.w(Constants.APPLICATION_NAME, "No outcome with origin=" + outcome
                                           + " name=exception defined to handle errors; so re-throwing exception");
         throw new RuntimeException(exception);
       }
@@ -642,28 +581,17 @@ public class MBApplicationController extends Application
       }
 
       MBOutcome genericExceptionHandler = new MBOutcome("exception", exceptionDocument);
-      genericExceptionHandler.setDialogName(outcome.getDialogName());
+      genericExceptionHandler.setPageStackName(outcome.getPageStackName());
       genericExceptionHandler.setPath(outcome.getPath());
 
       _outcomeHandler.handleOutcomeSynchronously(genericExceptionHandler, false);
     }
   }
 
-  public String activeDialogName()
-  {
-    String result = null;
-    if (_viewManager != null)
-    {
-      result = _viewManager.getActiveDialogName();
-    }
-    return result;
-  }
-
   public void resetController()
   {
     _viewManager.resetView();
     fireInitialOutcomes();
-
   }
 
   public void resetControllerPreservingCurrentDialog()
@@ -723,23 +651,12 @@ public class MBApplicationController extends Application
     //    }
 
     MBDocument searchConfigDoc = MBDataManagerService.getInstance().loadDocument(Constants.C_DOC_SEARCH_CONFIGURATION);
-    String searchPage = searchConfigDoc.getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/"
-                                                        + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_SEARCH_PAGE);
-    String searchAction = searchConfigDoc.getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/"
-                                                          + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_SEARCH_ACTION);
     String normalSearchOutcome = searchConfigDoc.getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/"
                                                                  + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_NORMAL_SEARCH_OUTCOME);
     String progressiveSearchOutcome = searchConfigDoc
         .getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/" + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_PROGRESSIVE_SEARCH_OUTCOME);
     searchPath = searchConfigDoc.getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/"
                                                  + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_SEARCH_PATH);
-
-    MBPageDefinition pageDefinition = MBMetadataService.getInstance().getDefinitionForPageName(searchPage);
-    MBDocument document = new MBDocument(MBMetadataService.getInstance().getDefinitionForDocumentName(pageDefinition.getDocumentName()));
-
-    MBPage page = MBApplicationFactory.getInstance().createPage(pageDefinition, document, null, MBViewState.MBViewStatePlain);
-    page.setController(MBApplicationController.getInstance());
-    MBApplicationController.getInstance().setPage(searchAction + searchPage, page);
 
     String path = Uri.decode(searchIntent.getDataString());
 
@@ -752,58 +669,13 @@ public class MBApplicationController extends Application
                                                      + Constants.C_EL_SEARCH_REQUEST_ATTR_PROGRESSIVE_SEARCH_OUTCOME);
 
     MBOutcome searchOutcome = new MBOutcome();
-    searchOutcome.setOriginName(Constants.C_MOBBL_ORIGIN_NAME_CONTROLLER);
+    searchOutcome.setOrigin(new MBOutcome.Origin().withDialog(Constants.C_MOBBL_ORIGIN_NAME_CONTROLLER));
     searchOutcome.setOutcomeName(Constants.C_MOBBL_ORIGIN_CONTROLLER_NAME_SEARCH);
     searchOutcome.setDocument(searchRequest);
     searchOutcome.setPath((path != null) ? path + searchPath : null);
 
     handleOutcome(searchOutcome);
 
-  }
-
-  /////////////////////////////////////////////////////////////////////////
-  // Android cannot pass object between activities without serializing them.
-  // This is a workaround for passing Pages between the controller and the DialogControllers
-
-  public MBPage getPage(String id)
-  {
-    return _pages.get(id);
-  }
-
-  public Collection<MBPage> getPagesWithName(String pageName)
-  {
-    if (_pagesForName.containsKey(pageName))
-    {
-      return _pagesForName.get(pageName).values();
-    }
-
-    return null;
-  }
-
-  public void setPage(String id, MBPage page)
-  {
-    if (page.getCurrentViewState().equals(MBViewState.MBViewStateModal))
-    {
-      _modalPageStack.add(id);
-    }
-    _pages.put(id, page);
-
-    if (!_pagesForName.containsKey(page.getName()))
-    {
-      _pagesForName.put(page.getName(), new HashMap<String, MBPage>());
-    }
-
-    _pagesForName.get(page.getName()).put(id, page);
-  }
-
-  public String getModalPageID()
-  {
-    return CollectionUtilities.isNotEmpty(_modalPageStack) ? _modalPageStack.peek() : null;
-  }
-
-  public void removeLastModalPageID()
-  {
-    _modalPageStack.pop();
   }
 
   public boolean getBackStackEnabled()

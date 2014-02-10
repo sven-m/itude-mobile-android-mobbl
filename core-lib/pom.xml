@@ -20,6 +20,30 @@
 	</organization>
 	<developers>
 		<developer>
+			<name>Coen Houtman</name>
+			<id>c.houtman</id>
+			<roles>
+				<role>Developer</role>
+				<role>Contributor</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Ali Derbane</name>
+			<id>a.derbane</id>
+			<roles>
+				<role>Developer</role>
+				<role>Contributor</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Pjotter Tommassen</name>
+			<id>p.tommassen</id>
+			<roles>
+				<role>Developer</role>
+				<role>Contributor</role>
+			</roles>
+		</developer>
+		<developer>
 			<name>Wiebe Elsinga</name>
 			<id>w.elsinga</id>
 			<roles>
@@ -61,10 +85,6 @@
 			<groupId>com.itude.mobile.android.util</groupId>
 			<artifactId>android-util-lib</artifactId>
 			<type>apklib</type>
-		</dependency>
-		<dependency>
-			<groupId>com.android.support</groupId>
-			<artifactId>support-v4</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.android.support</groupId>

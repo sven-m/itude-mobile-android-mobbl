@@ -25,8 +25,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogGroupDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.view.MBOutcomeListenerProtocol;
@@ -76,42 +77,35 @@ public class MBOutcomeHandler extends Handler
    * @param dialogName
    * @return the dialog name to place the page in
    */
-  static String resolveDialogName(String dialogName)
+  static String resolvePageStackName(String pageStackName)
   {
-    if (!"RIGHT".equals(dialogName) && !"LEFT".equals(dialogName))
+    // find out if the page stack to resolve is actually a dialog..
+    MBDialogDefinition dialogDef = MBMetadataService.getInstance().getDefinitionForDialogName(pageStackName, false);
+    if (dialogDef != null)
     {
-      return dialogName;
+      return dialogDef.getChildren().get(0).getName();
     }
 
-    String newDialogName = null;
-
-    String activeDialogName = MBApplicationController.getInstance().activeDialogName();
+    String activeDialogName = MBViewManager.getInstance().getActiveDialogName();
+    if (activeDialogName == null) return pageStackName;
     MBDialogDefinition activeDialogDef = MBMetadataService.getInstance().getDefinitionForDialogName(activeDialogName);
 
-    if (activeDialogDef.isGroup())
+    MBPageStackDefinition pageStackDef = null;
+    for (MBPageStackDefinition pageStack : activeDialogDef.getChildren())
+      if (ComparisonUtil.safeEquals(pageStackName, pageStack.getLocalName()))
+      {
+        pageStackDef = pageStack;
+        break;
+      }
+
+    if (pageStackDef != null)
     {
-      MBDialogGroupDefinition activeDialogGroupDef = (MBDialogGroupDefinition) activeDialogDef;
-      List<MBDialogDefinition> children = activeDialogGroupDef.getChildren();
 
-      MBDialogDefinition dialogDef = null;
-      if ("RIGHT".equals(dialogName))
-      {
-        dialogDef = children.get(children.size() - 1);
-      }
-      else if ("LEFT".equals(dialogName))
-      {
-        dialogDef = children.get(0);
-      }
-
-      if (dialogDef != null)
-      {
-        newDialogName = dialogDef.getName();
-
-        Log.d(Constants.APPLICATION_NAME, "Dialog name '" + dialogName + "' resolved to '" + newDialogName + "'");
-      }
+      Log.d(Constants.APPLICATION_NAME, "Dialog name '" + pageStackName + "' resolved to '" + pageStackDef.getName() + "'");
+      return pageStackDef.getName();
     }
 
-    return newDialogName;
+    return pageStackName;
   }
 
   public void registerOutcomeListener(MBOutcomeListenerProtocol listener)

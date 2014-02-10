@@ -15,21 +15,46 @@
  */
 package com.itude.mobile.mobbl.core.util.threads;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.util.Log;
 
 import com.itude.mobile.mobbl.core.util.Constants;
 
 public final class MBThreadHandler
 {
-  private HashSet<MBThread>      _runningThreads = null;
+  private final Set<MBThread>    _runningThreads;
 
-  private static MBThreadHandler _instance       = null;
+  private static MBThreadHandler _instance = null;
 
+  @TargetApi(Build.VERSION_CODES.GINGERBREAD)
   private MBThreadHandler()
   {
-    _runningThreads = new HashSet<MBThread>();
+    Set<MBThread> set;
+    try
+    {
+      set = new ConcurrentSkipListSet<MBThread>(new Comparator<MBThread>()
+      {
+
+        @Override
+        public int compare(MBThread lhs, MBThread rhs)
+        {
+          return (int) (lhs.getId() - rhs.getId());
+        }
+
+      });
+    }
+    catch (Exception e)
+    {
+      set = Collections.synchronizedSet(new HashSet<MBThread>());
+    }
+    _runningThreads = set;
   }
 
   public static final MBThreadHandler getInstance()

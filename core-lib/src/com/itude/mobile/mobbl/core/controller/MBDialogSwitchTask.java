@@ -44,36 +44,25 @@ public class MBDialogSwitchTask extends MBOutcomeTask
     final MBApplicationController applicationController = MBApplicationController.getInstance();
     final MBViewManager viewManager = applicationController.getViewManager();
 
-    if ("MODAL".equals(getOutcome().getDisplayMode()) || "MODALWITHCLOSEBUTTON".equals(getOutcome().getDisplayMode())
-        || "MODALFORMSHEET".equals(getOutcome().getDisplayMode()) || "MODALFORMSHEETWITHCLOSEBUTTON".equals(getOutcome().getDisplayMode())
-        || "MODALPAGESHEET".equals(getOutcome().getDisplayMode()) || "MODALPAGESHEETWITHCLOSEBUTTON".equals(getOutcome().getDisplayMode())
-        || "MODALFULLSCREEN".equals(getOutcome().getDisplayMode())
-        || "MODALFULLSCREENWITHCLOSEBUTTON".equals(getOutcome().getDisplayMode())
-        || "MODALCURRENTCONTEXT".equals(getOutcome().getDisplayMode())
-        || "MODALCURRENTCONTEXTWITHCLOSEBUTTON".equals(getOutcome().getDisplayMode()))
+    if ("ENDMODAL".equals(getOutcome().getDisplayMode()))
     {
-      applicationController.setOutcomeWhichCausedModal(getOutcome());
-    }
-    else if ("ENDMODAL".equals(getOutcome().getDisplayMode()))
-    {
-      if (applicationController.getModalPageID() != null)
-      {
-        viewManager.endModalDialog(applicationController.getModalPageID());
-      }
+      viewManager.endDialog(getOutcome().getPageStackName(), false);
+      getOutcome().setPageStackName(null);
     }
     else if ("ENDMODAL_CONTINUE".equals(getOutcome().getDisplayMode()))
     {
-      viewManager.endModalDialog();
-      applicationController.setOutcomeWhichCausedModal(getOutcome());
+      viewManager.endDialog(getOutcome().getPageStackName(), true);
+      getOutcome().setPageStackName(null);
     }
     else if ("POP".equals(getOutcome().getDisplayMode()))
     {
-      viewManager.popPage(getOutcome().getDialogName());
-      getOutcome().setDialogName(null);
+      viewManager.popPage(getOutcome().getPageStackName());
+      getOutcome().setPageStackName(null);
     }
     else if ("POPALL".equals(getOutcome().getDisplayMode()))
     {
-      viewManager.endDialog(getOutcome().getDialogName(), true);
+      viewManager.endDialog(getOutcome().getPageStackName(), true);
+      getOutcome().setPageStackName(null);
     }
     else if ("CLEAR".equals(getOutcome().getDisplayMode()))
     {
@@ -81,16 +70,16 @@ public class MBDialogSwitchTask extends MBOutcomeTask
     }
     else if ("END".equals(getOutcome().getDisplayMode()))
     {
-      viewManager.endDialog(getOutcome().getDialogName(), false);
+      viewManager.endDialog(getOutcome().getPageStackName(), false);
     }
-    else if (getOutcome().getDialogName() != null
+    else if (getOutcome().getPageStackName() != null
              && !Constants.C_DISPLAY_MODE_BACKGROUND.equals(getOutcome().getDisplayMode()) //
-             && getOutcome().getDialogName() != null
+             && getOutcome().getPageStackName() != null
              && !Constants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE.equals(getOutcome().getDisplayMode()) //
-             && !getOutcome().getDialogName().equals(_dialogWhenCreated) //
+             && !getOutcome().getPageStackName().equals(_dialogWhenCreated) //
              && !applicationController.isSuppressPageSelection())
     {
-      viewManager.getDialogManager().activateDialog(getOutcome().getDialogName());
+      viewManager.getDialogManager().activatePageStack(getOutcome().getPageStackName());
 
     }
 

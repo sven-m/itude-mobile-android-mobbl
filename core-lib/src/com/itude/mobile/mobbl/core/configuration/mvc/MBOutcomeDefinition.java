@@ -22,7 +22,7 @@ public class MBOutcomeDefinition extends MBDefinition
 {
   private String  _origin;
   private String  _action;
-  private String  _dialog;
+  private String  _pageStack;
   private String  _displayMode;
   private String  _preCondition;
   private boolean _persist;
@@ -37,7 +37,7 @@ public class MBOutcomeDefinition extends MBDefinition
     return StringUtil.appendIndentString(appendToMe, level).append("<Outcome origin='").append(_origin).append("' name='")
         .append(getName()).append("' action='").append(_action).append("' transferDocument='").append(_transferDocument)
         .append("' persist='").append(_persist).append("' noBackgroundProcessing='").append(_noBackgroundProcessing).append("'")
-        .append(getAttributeAsXml("dialog", _dialog)).append(getAttributeAsXml("preCondition", _preCondition))
+        .append(getAttributeAsXml("pageStack", _pageStack)).append(getAttributeAsXml("preCondition", _preCondition))
         .append(getAttributeAsXml("displayMode", _displayMode)).append(getAttributeAsXml("indicator", _indicator)).append("/>\n");
   }
 
@@ -61,14 +61,32 @@ public class MBOutcomeDefinition extends MBDefinition
     _action = action;
   }
 
+  /**
+   * @deprecated Use setPageStack instead
+   */
+  @Deprecated
   public String getDialog()
   {
-    return _dialog;
+    return _pageStack;
   }
 
-  public void setDialog(String dialog)
+  /**
+   * @deprecated Use setPageStack instead
+   */
+  @Deprecated
+  public void setDialog(String pageStack)
   {
-    _dialog = dialog;
+    _pageStack = pageStack;
+  }
+
+  public String getPageStack()
+  {
+    return _pageStack;
+  }
+
+  public void setPageStack(String pageStack)
+  {
+    _pageStack = pageStack;
   }
 
   public String getDisplayMode()

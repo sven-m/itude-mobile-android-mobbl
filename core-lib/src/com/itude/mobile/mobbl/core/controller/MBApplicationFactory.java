@@ -90,9 +90,9 @@ public class MBApplicationFactory
     return _controllers.createController(pageName);
   }
 
-  public final MBPage createPage(MBPageDefinition definition, MBDocument document, String rootPath, MBViewManager.MBViewState viewState)
+  public final MBPage createPage(MBPageDefinition definition, MBDocument document, String rootPath)
   {
-    return getPageConstructor().createPage(definition, document, rootPath, viewState);
+    return getPageConstructor().createPage(definition, document, rootPath);
   }
 
   public MBDialogController createDialogController()
@@ -267,9 +267,9 @@ public class MBApplicationFactory
         listener.onConstructedPanel(panel);
     }
 
-    public MBPage createPage(MBPageDefinition definition, MBDocument document, String rootPath, MBViewManager.MBViewState viewState)
+    public MBPage createPage(MBPageDefinition definition, MBDocument document, String rootPath)
     {
-      MBPage page = new MBPage(definition, document, rootPath, viewState);
+      MBPage page = new MBPage(definition, document, rootPath);
       return page;
     }
 

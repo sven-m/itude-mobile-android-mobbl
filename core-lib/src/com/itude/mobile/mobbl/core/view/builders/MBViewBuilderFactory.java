@@ -17,16 +17,17 @@ package com.itude.mobile.mobbl.core.view.builders;
 
 public class MBViewBuilderFactory
 {
-  private static MBViewBuilderFactory _instance;
+  private static MBViewBuilderFactory    _instance;
 
-  private final MBPanelViewBuilder    _panelViewBuilder;
-  private MBPageViewBuilder           _pageViewBuilder;
-  private MBForEachViewBuilder        _forEachViewBuilder;
-  private MBForEachItemViewBuilder    _forEachItemViewBuilder;
-  private final MBFieldViewBuilder    _fieldViewBuilder;
-  private MBStyleHandler              _styleHandler;
-  private MBDialogViewBuilder         _dialogViewBuilder;
-  private final MBAlertDialogBuilder  _alertViewBuilder;
+  private final MBPanelViewBuilder       _panelViewBuilder;
+  private MBPageViewBuilder              _pageViewBuilder;
+  private MBForEachViewBuilder           _forEachViewBuilder;
+  private MBForEachItemViewBuilder       _forEachItemViewBuilder;
+  private final MBFieldViewBuilder       _fieldViewBuilder;
+  private MBStyleHandler                 _styleHandler;
+  private MBDialogContentBuilder         _dialogContentBuilder;
+  private final MBAlertDialogBuilder     _alertViewBuilder;
+  private final MBDialogDecoratorBuilder _dialogDecoratorBuilder;
 
   private MBViewBuilderFactory()
   {
@@ -36,8 +37,9 @@ public class MBViewBuilderFactory
     _forEachItemViewBuilder = new MBForEachItemViewBuilder();
     _fieldViewBuilder = new MBFieldViewBuilder();
     _styleHandler = new MBStyleHandler();
-    _dialogViewBuilder = new MBDialogViewBuilder();
+    _dialogContentBuilder = new MBDialogContentBuilder();
     _alertViewBuilder = new MBAlertDialogBuilder();
+    _dialogDecoratorBuilder = new MBDialogDecoratorBuilder();
   }
 
   public static MBViewBuilderFactory getInstance()
@@ -109,19 +111,24 @@ public class MBViewBuilderFactory
     _styleHandler = styleHandler;
   }
 
-  public void setDialogViewBuilder(MBDialogViewBuilder dialogViewBuilder)
+  public void setDialogContentBuilder(MBDialogContentBuilder dialogContentBuilder)
   {
-    _dialogViewBuilder = dialogViewBuilder;
+    _dialogContentBuilder = dialogContentBuilder;
   }
 
-  public MBDialogViewBuilder getDialogViewBuilder()
+  public MBDialogContentBuilder getDialogContentBuilder()
   {
-    return _dialogViewBuilder;
+    return _dialogContentBuilder;
   }
 
   public MBAlertDialogBuilder getAlertViewBuilder()
   {
     return _alertViewBuilder;
+  }
+
+  public MBDialogDecoratorBuilder getDialogDecoratorBuilder()
+  {
+    return _dialogDecoratorBuilder;
   }
 
 }
