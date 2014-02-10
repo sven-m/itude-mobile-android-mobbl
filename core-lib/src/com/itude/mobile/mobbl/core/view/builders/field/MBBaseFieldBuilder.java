@@ -20,8 +20,8 @@ import android.text.TextUtils.TruncateAt;
 import android.widget.TextView;
 
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
-import com.itude.mobile.mobbl.core.view.builders.MBViewBuilder;
 import com.itude.mobile.mobbl.core.view.builders.MBFieldViewBuilder.Builder;
+import com.itude.mobile.mobbl.core.view.builders.MBViewBuilder;
 
 public abstract class MBBaseFieldBuilder extends MBViewBuilder implements Builder
 {

@@ -73,10 +73,6 @@ import com.itude.mobile.mobbl.core.view.components.tabbar.MBActionBarBuilder;
 
 public abstract class MBViewManager extends ActionBarActivity implements MBDialogChangeListener
 {
-  public enum MBViewState {
-    MBViewStateFullScreen, MBViewStatePlain, MBViewStateTabbed, MBViewStateModal
-  };
-
   public enum MBActionBarInvalidationOption {
     SHOW_FIRST, RESET_HOME_DIALOG, NOTIFY_LISTENER
   }
@@ -395,8 +391,8 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   {
 
     Log.d(Constants.APPLICATION_NAME,
-          "MBViewManager: showPage name=" + page.getPageName() + " dialog=" + page.getDialogName() + " mode=" + displayMode + " type="
-              + page.getPageType() + " orientation=" + ((MBPageDefinition) page.getDefinition()).getOrientationPermissions()
+          "MBViewManager: showPage name=" + page.getPageName() + " pagestackName=" + page.getPageStackName() + " mode=" + displayMode
+              + " type=" + page.getPageType() + " orientation=" + ((MBPageDefinition) page.getDefinition()).getOrientationPermissions()
               + " backStack=" + addToBackStack);
 
     if (page.getPageType() == MBPageDefinition.MBPageType.MBPageTypesErrorPage || "POPUP".equals(displayMode))
@@ -405,7 +401,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
     }
     else
     {
-      addPageToDialog(page, displayMode, addToBackStack);
+      addPageToPageStack(page, displayMode, addToBackStack);
     }
   }
 
@@ -553,18 +549,12 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   }
 
-  private void addPageToDialog(MBPage page, String displayMode, boolean addToBackStack)
+  private void addPageToPageStack(MBPage page, String displayMode, boolean addToBackStack)
   {
-    MBDialogDefinition topDefinition = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(page.getDialogName());
-    MBDialogController dialogController = _dialogManager.getDialog(topDefinition.getName());
-    if (dialogController == null || dialogController.getTemporary())
-    {
-      //  activateDialogWithPage(page);
-    }
-    else
-    {
-      dialogController.showPage(page, displayMode, page.getDialogName() + page.getPageName(), page.getDialogName(), addToBackStack);
-    }
+    //MBDialogDefinition topDefinition = MBMetadataService.getInstance().getTopDialogDefinitionForDialogName(page.getDialogName());
+    MBPageStackController pageStack = _dialogManager.getPageStack(page.getPageStackName());
+    MBDialogController dialogController = pageStack.getParent();
+    dialogController.showPage(page, displayMode, page.getPageStackName() + page.getPageName(), page.getPageStackName(), addToBackStack);
   }
 
   @Override
@@ -583,13 +573,15 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   public boolean activateDialogWithName(String dialogName)
   {
     MBOutcome outcome = new MBOutcome(dialogName, null);
-    outcome.setOriginName(dialogName);
+    outcome.setOrigin(new MBOutcome.Origin().withDialog(dialogName));
     MBApplicationController.getInstance().handleOutcome(outcome);
     return false;
   }
 
   public void endDialog(String dialogName, boolean keepPosition)
   {
+    if (keepPosition) _dialogManager.getDialog(dialogName).popAll();
+    else _dialogManager.getDialog(dialogName).dismiss();
   }
 
   public void popPage(String dialogName)
@@ -618,16 +610,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
       dc.clearAllViews();
     }
 
-  }
-
-  public void endModalDialog(String modalPageID)
-  {
-    if (getActiveDialog() != null) getActiveDialog().endModalPage(modalPageID);
-  }
-
-  public void endModalDialog()
-  {
-    endModalDialog(MBApplicationController.getInstance().getModalPageID());
   }
 
   public static MBViewManager getInstance()
@@ -745,11 +727,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   ////// Dialog management ////////
 
-  public MBDialogController getMenuDialog()
-  {
-    return _dialogManager.getMenuDialog();
-  }
-
   public MBDialogController getActiveDialog()
   {
     return _dialogManager.getActiveDialog();
@@ -848,11 +825,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
     throw new UnsupportedOperationException("This method is not supported on smartphone");
   }
 
-  public boolean needsSlidingMenu()
-  {
-    return getMenuDialog() != null;
-  }
-
   public void reset()
   {
     _dialogManager.reset();
@@ -949,7 +921,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   protected void handleOutcome(MBToolDefinition def)
   {
     MBOutcome outcome = new MBOutcome();
-    outcome.setOriginName(def.getName());
+    outcome.setOrigin(new MBOutcome.Origin().withAction(def.getName()));
     outcome.setOutcomeName(def.getOutcomeName());
 
     MBApplicationController.getInstance().handleOutcome(outcome);
@@ -960,13 +932,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   {
     if (dialogName != null)
     {
-      MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      if (dialogDefinition.getParent() != null)
-      {
-        dialogName = dialogDefinition.getParent();
-        dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(dialogName);
-      }
-
       _actionBarBuilder.selectTabWithoutReselection(dialogName);
 
     }

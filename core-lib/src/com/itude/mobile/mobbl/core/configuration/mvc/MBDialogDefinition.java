@@ -15,37 +15,65 @@
  */
 package com.itude.mobile.mobbl.core.configuration.mvc;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.util.Log;
+
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBConditionalDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidDialogDefinitionException;
+import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPageStackDefinitionException;
 import com.itude.mobile.mobbl.core.util.Constants;
 
 public class MBDialogDefinition extends MBConditionalDefinition
 {
-  private String _title;
-  private String _titlePortrait;
-  private String _mode;
-  private String _icon;
-  private String _parent;
-  private String _showAs;
-  private String _domain;
-  private String _action;
+  private final List<MBPageStackDefinition>        _children;
+  private final Map<MBPageStackDefinition, String> _childrenPreCondition;
+
+  private String                                   _title;
+  private String                                   _titlePortrait;
+  private String                                   _mode;
+  private String                                   _icon;
+  private String                                   _showAs;
+  private String                                   _domain;
+  private String                                   _contentType;
+  private String                                   _decorator;
+
+  public MBDialogDefinition()
+  {
+    _children = new ArrayList<MBPageStackDefinition>();
+    _childrenPreCondition = new HashMap<MBPageStackDefinition, String>();
+  }
+
+  public void addPageStack(MBPageStackDefinition pageStackDef)
+  {
+    if (_children.contains(pageStackDef))
+    {
+      Log.w(Constants.APPLICATION_NAME, "Group contains duplicate definitions for pagestack " + pageStackDef.getName() + " in dialog "
+                                        + getName());
+    }
+
+    _children.add(pageStackDef);
+    _childrenPreCondition.put(pageStackDef, pageStackDef.getPreCondition());
+    pageStackDef.setParent(getName());
+  }
 
   @Override
-  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
+  public void addChildElement(MBPageStackDefinition child)
   {
-    return StringUtil.appendIndentString(appendToMe, level)//
-        .append("<Dialog name='")//
-        .append(getName())//
-        .append('\'')//
-        .append(getAttributeAsXml("mode", _mode))//
-        .append(getAttributeAsXml("title", _title))//
-        .append(getAttributeAsXml("titlePortrait", _titlePortrait))//
-        .append(getAttributeAsXml("icon", _icon))//
-        .append(getAttributeAsXml("showAs", _showAs))//
-        .append(getAttributeAsXml("domain", _domain))//
-        .append(getAttributeAsXml("action", _action))//
-        .append("/>\n");
+    addPageStack(child);
+  }
+
+  public MBPageStackDefinition getPageStackDefinition(String name)
+  {
+    for (MBPageStackDefinition pageStackDef : _children)
+    {
+      if (pageStackDef.getName().equals(name)) return pageStackDef;
+    }
+
+    return null;
   }
 
   @Override
@@ -53,9 +81,63 @@ public class MBDialogDefinition extends MBConditionalDefinition
   {
     if (getName() == null)
     {
-      String message = "no name set for dialog";
-      throw new MBInvalidDialogDefinitionException(message);
+      throw new MBInvalidPageStackDefinitionException("no name set for dialogGroup");
     }
+  }
+
+  @Override
+  public boolean isPreConditionValid()
+  {
+    boolean valid = super.isPreConditionValid();
+
+    if (valid)
+    {
+      // then reset pre conditions
+      for (MBPageStackDefinition child : getChildren())
+      {
+        child.setPreCondition(_childrenPreCondition.get(child));
+      }
+    }
+    else
+    {
+      // then override children to also be invalid
+      for (MBPageStackDefinition child : getChildren())
+      {
+        child.setPreCondition(Constants.C_FALSE);
+      }
+    }
+
+    return valid;
+  }
+
+  @Override
+  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
+  {
+    StringUtil.appendIndentString(appendToMe, level)//
+        .append("<Dialog name='")//
+        .append(getName())//
+        .append('\'')//
+        .append(getAttributeAsXml("mode", getMode()))//
+        .append(getAttributeAsXml("title", getTitle()))//
+        .append(getAttributeAsXml("titlePortrait", getTitlePortrait()))//
+        .append(getAttributeAsXml("icon", getIcon()))//
+        .append(getAttributeAsXml("showAs", _showAs))//
+        .append(getAttributeAsXml("domain", _domain))//
+        .append(">\n");
+
+    for (MBPageStackDefinition dialog : _children)
+    {
+      dialog.asXmlWithLevel(appendToMe, level + 2);
+    }
+
+    StringUtil.appendIndentString(appendToMe, level).append("<Dialog/>");
+
+    return appendToMe;
+  }
+
+  public List<MBPageStackDefinition> getChildren()
+  {
+    return _children;
   }
 
   public String getTitle()
@@ -98,16 +180,6 @@ public class MBDialogDefinition extends MBConditionalDefinition
     _icon = icon;
   }
 
-  public String getParent()
-  {
-    return _parent;
-  }
-
-  public void setParent(String parent)
-  {
-    _parent = parent;
-  }
-
   public String getShowAs()
   {
     return _showAs;
@@ -121,11 +193,6 @@ public class MBDialogDefinition extends MBConditionalDefinition
   public boolean isShowAsTab()
   {
     return Constants.C_SHOW_AS_TAB.equals(_showAs);
-  }
-
-  public boolean isShowAsMenu()
-  {
-    return Constants.C_SHOW_AS_MENU.equals(_showAs);
   }
 
   public boolean isShowAsDocument()
@@ -143,19 +210,23 @@ public class MBDialogDefinition extends MBConditionalDefinition
     return _domain;
   }
 
-  public void setAction(String action)
+  public String getContentType()
   {
-    _action = action;
+    return _contentType;
   }
 
-  public String getAction()
+  public void setContentType(String contentType)
   {
-    return _action;
+    _contentType = contentType;
   }
 
-  public boolean isGroup()
+  public void setDecorator(String decorator)
   {
-    return false;
+    _decorator = decorator;
   }
 
+  public String getDecorator()
+  {
+    return _decorator;
+  }
 }

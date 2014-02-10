@@ -44,6 +44,7 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainValidatorDefinition
 import com.itude.mobile.mobbl.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBFileNotFoundException;
 import com.itude.mobile.mobbl.core.configuration.resources.MBItemDefinition;
@@ -231,6 +232,12 @@ public abstract class MBConfigurationParser extends DefaultHandler
   }
 
   public void notifyProcessed(MBPageDefinition definition)
+  {
+    getStack().peek().addChildElement(definition);
+    getStack().push(definition);
+  }
+
+  public void notifyProcessed(MBPageStackDefinition definition)
   {
     getStack().peek().addChildElement(definition);
     getStack().push(definition);

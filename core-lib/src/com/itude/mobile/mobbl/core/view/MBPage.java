@@ -32,7 +32,6 @@ import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPathExc
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.controller.MBOutcome;
 import com.itude.mobile.mobbl.core.controller.MBViewManager;
-import com.itude.mobile.mobbl.core.controller.MBViewManager.MBViewState;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.model.MBDocumentDiff;
@@ -46,25 +45,20 @@ public class MBPage extends MBPanel
 
   private String                                                 _pageName;
   private String                                                 _rootPath;
-  private String                                                 _dialogName;
+  private String                                                 _pageStackName;
   private MBDocument                                             _document;
   private MBApplicationController                                _controller;
   private MBBasicViewController                                  _viewController;
-  private List                                                   _childViewControllers;
   private MBDocumentDiff                                         _documentDiff;
   private final Map<String, List<MBValueChangeListenerProtocol>> _valueChangedListeners;
   private MBPageDefinition.MBPageType                            _pageType;
-  private Object                                                 _maxBounds;
-  private final MBViewManager.MBViewState                        _viewState;
   private boolean                                                _scrollable;
-  //  private boolean                                                _allowedPortraitOrientation;
-  //  private boolean                                                _allowedLandscapeOrientation;
   private boolean                                                _reloadOnDocChange;
   private View                                                   _selectedView;
 
   private OrientationPermission                                  _orientationPermission;
 
-  public MBPage(MBPageDefinition definition, MBDocument document, String rootPath, MBViewState viewState)
+  public MBPage(MBPageDefinition definition, MBDocument document, String rootPath)
   {
     // Make sure that the Panel does not start building the view based on the children OF THIS PAGE because that is too early
     // The children need the additional information that is set after the constructor of super. So pass buildViewStructure: FALSE
@@ -81,7 +75,6 @@ public class MBPage extends MBPanel
     setScrollable(definition.isScrollable());
     setReloadOnDocChange(definition.isReloadOnDocChange());
 
-    _viewState = viewState;
     _valueChangedListeners = new Hashtable<String, List<MBValueChangeListenerProtocol>>();
 
     // Ok, now we can build the children
@@ -102,14 +95,14 @@ public class MBPage extends MBPanel
     _pageName = pageName;
   }
 
-  public String getDialogName()
+  public String getPageStackName()
   {
-    return _dialogName;
+    return _pageStackName;
   }
 
-  public void setDialogName(String dialogName)
+  public void setPageStackName(String pageStackName)
   {
-    _dialogName = dialogName;
+    _pageStackName = pageStackName;
   }
 
   public MBApplicationController getController()
@@ -144,16 +137,6 @@ public class MBPage extends MBPanel
     _documentDiff = documentDiff;
   }
 
-  public List getChildViewControllers()
-  {
-    return _childViewControllers;
-  }
-
-  public void setChildViewControllers(List childViewControllers)
-  {
-    _childViewControllers = childViewControllers;
-  }
-
   public MBPageDefinition.MBPageType getPageType()
   {
     return _pageType;
@@ -183,10 +166,13 @@ public class MBPage extends MBPanel
   public void handleTheOutcome(String outcomeName, String path, boolean synchro)
   {
     MBOutcome outcome = new MBOutcome();
-    outcome.setOriginName(getPageName());
+    MBOutcome.Origin origin = new MBOutcome.Origin();
+    origin.withPage(getPageName()).withPageStack(getPageStackName());
+    origin.withDialog(MBViewManager.getInstance().getActiveDialogName());
+    outcome.setOrigin(origin);
     outcome.setOutcomeName(outcomeName);
     outcome.setDocument(getDocument());
-    outcome.setDialogName(getDialogName());
+    outcome.setPageStackName(getPageStackName());
     outcome.setPath(path);
 
     if (synchro)
@@ -430,23 +416,13 @@ public class MBPage extends MBPanel
   @Override
   public ViewGroup buildView()
   {
-    return MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(this, null);
+    return MBViewBuilderFactory.getInstance().getPageViewBuilder().buildPageView(this);
   }
 
   public void handleException(Exception exception)
   {
     MBOutcome outcome = new MBOutcome(getPageName(), _document);
     _controller.handleException(exception, outcome);
-  }
-
-  public MBViewState getCurrentViewState()
-  {
-    return _viewState;
-  }
-
-  public void unregisterAllViewControllers()
-  {
-    setChildViewControllers(null);
   }
 
   @Override
@@ -470,7 +446,7 @@ public class MBPage extends MBPanel
   public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
   {
     StringUtil.appendIndentString(appendToMe, level).append("<MBPage ").append(attributeAsXml("pageName", _pageName)).append(" ")
-        .append(attributeAsXml("rootPath", _rootPath)).append(" ").append(attributeAsXml("dialogName", _dialogName)).append(" ")
+        .append(attributeAsXml("rootPath", _rootPath)).append(" ").append(attributeAsXml("dialogName", _pageStackName)).append(" ")
         .append(attributeAsXml("document", _document.getDocumentName())).append(">\n");
 
     childrenAsXmlWithLevel(appendToMe, level + 2);

@@ -22,7 +22,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
 
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
-import com.itude.mobile.mobbl.core.controller.MBViewManager;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.view.MBPage;
 import com.itude.mobile.mobbl.core.view.components.MBHeader;
@@ -30,7 +29,7 @@ import com.itude.mobile.mobbl.core.view.components.MBHeader;
 public class MBPageViewBuilder extends MBViewBuilder
 {
 
-  public ViewGroup buildPageView(MBPage page, MBViewManager.MBViewState viewState, boolean buildWithContent)
+  public ViewGroup buildPageView(MBPage page, boolean buildWithContent)
   {
     boolean buildWithScrollView = page.isScrollable();
 
@@ -111,14 +110,14 @@ public class MBPageViewBuilder extends MBViewBuilder
     return main;
   }
 
-  public ViewGroup buildPageView(MBPage page, MBViewManager.MBViewState viewState)
+  public ViewGroup buildPageView(MBPage page)
   {
-    return buildPageView(page, viewState, true);
+    return buildPageView(page, true);
   }
 
-  public ViewGroup buildPageViewWithoutContent(MBPage page, MBViewManager.MBViewState viewState)
+  public ViewGroup buildPageViewWithoutContent(MBPage page)
   {
-    return buildPageView(page, viewState, false);
+    return buildPageView(page, false);
   }
 
 }

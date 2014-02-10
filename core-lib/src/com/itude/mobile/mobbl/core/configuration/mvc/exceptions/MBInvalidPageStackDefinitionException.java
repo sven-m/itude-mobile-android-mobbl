@@ -17,7 +17,7 @@ package com.itude.mobile.mobbl.core.configuration.mvc.exceptions;
 
 import com.itude.mobile.mobbl.core.MBException;
 
-public class MBInvalidDialogDefinitionException extends MBException
+public class MBInvalidPageStackDefinitionException extends MBException
 {
 
   /**
@@ -25,12 +25,12 @@ public class MBInvalidDialogDefinitionException extends MBException
    */
   private static final long serialVersionUID = -4024284646115464732L;
 
-  public MBInvalidDialogDefinitionException(String msg, Throwable throwable)
+  public MBInvalidPageStackDefinitionException(String msg, Throwable throwable)
   {
     super(msg, throwable);
   }
 
-  public MBInvalidDialogDefinitionException(String msg)
+  public MBInvalidPageStackDefinitionException(String msg)
   {
     super(msg);
   }

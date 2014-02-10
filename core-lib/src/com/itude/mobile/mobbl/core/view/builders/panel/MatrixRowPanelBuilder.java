@@ -33,8 +33,8 @@ import com.itude.mobile.mobbl.core.util.ScreenConstants;
 import com.itude.mobile.mobbl.core.view.MBComponent;
 import com.itude.mobile.mobbl.core.view.MBField;
 import com.itude.mobile.mobbl.core.view.MBPanel;
-import com.itude.mobile.mobbl.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl.core.view.builders.MBPanelViewBuilder.BuildState;
+import com.itude.mobile.mobbl.core.view.builders.MBStyleHandler;
 
 // TODO: this class is idiotic; refactor
 public class MatrixRowPanelBuilder extends MBBasePanelBuilder

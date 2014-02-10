@@ -27,33 +27,35 @@ import android.util.Log;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl.core.configuration.MBIncludableDefinition;
+import com.itude.mobile.mobbl.core.controller.MBOutcome.Origin;
 import com.itude.mobile.mobbl.core.util.Constants;
 
 public class MBConfigurationDefinition extends MBDefinition implements MBIncludableDefinition
 {
 
-  private static final String                     ORIGIN_WILDCARD                   = "*";
-  public static final String                      DOC_SYSTEM_EMPTY                  = "MBEmpty";
-  public static final String                      DOC_SYSTEM_LANGUAGE               = "MBBundle";
-  public static final String                      DOC_SYSTEM_EXCEPTION              = "MBException";
-  public static final String                      PATH_SYSTEM_EXCEPTION_NAME        = "/Exception[0]/@name";
-  public static final String                      PATH_SYSTEM_EXCEPTION_DESCRIPTION = "/Exception[0]/@description";
-  public static final String                      PATH_SYSTEM_EXCEPTION_ORIGIN      = "/Exception[0]/@origin";
-  public static final String                      PATH_SYSTEM_EXCEPTION_OUTCOME     = "/Exception[0]/@outcome";
-  public static final String                      PATH_SYSTEM_EXCEPTION_PATH        = "/Exception[0]/@path";
+  public static final String                         ORIGIN_WILDCARD                   = "*";
+  public static final String                         DOC_SYSTEM_EMPTY                  = "MBEmpty";
+  public static final String                         DOC_SYSTEM_LANGUAGE               = "MBBundle";
+  public static final String                         DOC_SYSTEM_EXCEPTION              = "MBException";
+  public static final String                         PATH_SYSTEM_EXCEPTION_NAME        = "/Exception[0]/@name";
+  public static final String                         PATH_SYSTEM_EXCEPTION_DESCRIPTION = "/Exception[0]/@description";
+  public static final String                         PATH_SYSTEM_EXCEPTION_ORIGIN      = "/Exception[0]/@origin";
+  public static final String                         PATH_SYSTEM_EXCEPTION_OUTCOME     = "/Exception[0]/@outcome";
+  public static final String                         PATH_SYSTEM_EXCEPTION_PATH        = "/Exception[0]/@path";
 
-  public static final String                      DOC_SYSTEM_PROPERTIES             = "MBApplicationProperties";
-  public static final String                      DOC_SYSTEM_DEVICE                 = "MBDevice";
+  public static final String                         DOC_SYSTEM_PROPERTIES             = "MBApplicationProperties";
+  public static final String                         DOC_SYSTEM_DEVICE                 = "MBDevice";
 
-  private final Map<String, MBDomainDefinition>   _domainTypes;
-  private final Map<String, MBDocumentDefinition> _documentTypes;
-  private final Map<String, MBActionDefinition>   _actionTypes;
-  private final List<MBOutcomeDefinition>         _outcomeTypes;
-  private final Map<String, MBPageDefinition>     _pageTypes;
-  private final Map<String, MBDialogDefinition>   _dialogs;
-  private MBDialogDefinition                      _homeDialog;
-  private final Map<String, MBToolDefinition>     _tools;
-  private final Map<String, MBAlertDefinition>    _alerts;
+  private final Map<String, MBDomainDefinition>      _domainTypes;
+  private final Map<String, MBDocumentDefinition>    _documentTypes;
+  private final Map<String, MBActionDefinition>      _actionTypes;
+  private final List<MBOutcomeDefinition>            _outcomeTypes;
+  private final Map<String, MBPageDefinition>        _pageTypes;
+  private final Map<String, MBDialogDefinition> _dialogs;
+  private final Map<String, MBPageStackDefinition>   _pageStacks;
+  private MBDialogDefinition                    _homeDialog;
+  private final Map<String, MBToolDefinition>        _tools;
+  private final Map<String, MBAlertDefinition>       _alerts;
 
   public MBConfigurationDefinition()
   {
@@ -65,6 +67,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     _pageTypes = new HashMap<String, MBPageDefinition>();
     _tools = new LinkedHashMap<String, MBToolDefinition>();
     _alerts = new HashMap<String, MBAlertDefinition>();
+    _pageStacks = new HashMap<String, MBPageStackDefinition>();
   }
 
   @Override
@@ -101,6 +104,10 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     for (MBDialogDefinition dialogDef : otherConfig.getDialogs().values())
     {
       addDialog(dialogDef);
+    }
+    for (MBPageStackDefinition pageStackDef : otherConfig.getPageStacks().values())
+    {
+      addPageStack(pageStackDef);
     }
     for (MBPageDefinition pageDef : otherConfig.getPages().values())
     {
@@ -194,6 +201,12 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   }
 
   @Override
+  public void addChildElement(MBPageStackDefinition child)
+  {
+    addPageStack(child);
+  }
+
+  @Override
   public void addChildElement(MBAlertDefinition child)
   {
     addAlert(child);
@@ -274,7 +287,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   {
     if (_dialogs.containsKey(dialog.getName()))
     {
-      Log.w(Constants.APPLICATION_NAME, "Dialog definition overridden: multiple definitions for action with name " + dialog.getName());
+      Log.w(Constants.APPLICATION_NAME, "Dialog definition overridden: multiple definitions for dialog with name " + dialog.getName());
     }
 
     if (_homeDialog == null)
@@ -282,23 +295,11 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
       _homeDialog = dialog;
     }
     _dialogs.put(dialog.getName(), dialog);
-
-    createImplicitOutcomeForDialog(dialog);
   }
 
-  private void createImplicitOutcomeForDialog(MBDialogDefinition dialog)
+  public void addPageStack(MBPageStackDefinition dialog)
   {
-    List<MBOutcomeDefinition> def = getOutcomeDefinitionsForOrigin(ORIGIN_WILDCARD, dialog.getName());
-    if (def.isEmpty())
-    {
-      MBOutcomeDefinition definition = new MBOutcomeDefinition();
-      definition.setAction("none");
-      definition.setDialog(dialog.getName());
-      definition.setName(dialog.getName());
-      definition.setNoBackgroundProcessing(true);
-      definition.setOrigin(ORIGIN_WILDCARD);
-      addOutcome(definition);
-    }
+    _pageStacks.put(dialog.getName(), dialog);
   }
 
   public void addTool(MBToolDefinition tool)
@@ -361,16 +362,19 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return result;
   }
 
-  public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(String originName, String outcomeName)
+  public List<MBOutcomeDefinition> getOutcomeDefinitionsForOrigin(Origin origin, String outcomeName)
   {
     List<MBOutcomeDefinition> result = new ArrayList<MBOutcomeDefinition>();
 
     // First look for specific matches
-    for (MBOutcomeDefinition outcomeDef : _outcomeTypes)
+    if (origin != null)
     {
-      if (outcomeDef.getOrigin().equals(originName) && outcomeDef.getName().equals(outcomeName))
+      for (MBOutcomeDefinition outcomeDef : _outcomeTypes)
       {
-        result.add(outcomeDef);
+        if (origin.matches(outcomeDef.getOrigin()) && outcomeDef.getName().equals(outcomeName))
+        {
+          result.add(outcomeDef);
+        }
       }
     }
 
@@ -429,6 +433,11 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return _tools;
   }
 
+  public Map<String, MBPageStackDefinition> getPageStacks()
+  {
+    return _pageStacks;
+  }
+
   public List<MBToolDefinition> getToolDefinitionsForType(String type)
   {
     ArrayList<MBToolDefinition> result = new ArrayList<MBToolDefinition>();
@@ -453,4 +462,8 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
     return _alerts.get(name);
   }
 
+  public MBPageStackDefinition getDefinitionForPageStackName(String pageStack)
+  {
+    return _pageStacks.get(pageStack);
+  }
 }

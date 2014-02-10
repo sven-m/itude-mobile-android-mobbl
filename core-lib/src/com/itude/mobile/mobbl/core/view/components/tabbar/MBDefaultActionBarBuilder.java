@@ -149,7 +149,7 @@ public abstract class MBDefaultActionBarBuilder implements MBActionBarBuilder
   protected void handleOutcome(MBToolDefinition def)
   {
     MBOutcome outcome = new MBOutcome();
-    outcome.setOriginName(def.getName());
+    outcome.setOrigin(new MBOutcome.Origin().withAction(def.getName()));
     outcome.setOutcomeName(def.getOutcomeName());
 
     MBApplicationController.getInstance().handleOutcome(outcome);
