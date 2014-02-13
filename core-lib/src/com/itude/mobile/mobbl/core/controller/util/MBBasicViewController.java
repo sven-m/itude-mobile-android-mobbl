@@ -67,13 +67,13 @@ import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl.core.view.components.MBHeader;
 
 /**
- * @author Coen Houtman
- * 
  * View controller for displaying one MBPage. An MBBasicViewController can be displayed in the following ways:
- *  - fullscreen
- *  - as part of a screen (Fragment)
- *  - modal
- *  - fullscreen modal
+ * <ul>
+ * <li>fullscreen</li>
+ * <li>as part of a screen (Fragment)</li>
+ * <li>modal</li>
+ * <li>fullscreen modal</li>
+ * </ul>
  */
 public class MBBasicViewController extends DialogFragment
     implements
@@ -377,6 +377,11 @@ public class MBBasicViewController extends DialogFragment
     _page.setViewController(this);
   }
 
+  /**
+   * Looks up the {@link MBPage} associated with this instance and sets the view property with a fresh view hierarchy constructed from the page definition.
+   * 
+   * @param contentViewNeedsToBeSet boolean indicating if the content view needs to be set during rebuild
+   */
   public void rebuildView(final boolean contentViewNeedsToBeSet)
   {
     // it is possible for the fragment to get detached in the meantime,

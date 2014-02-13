@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.model.exceptions;
 
 import com.itude.mobile.mobbl.core.MBException;
 
+/**
+ * {@link MBException} class used when a document can't be found
+ *
+ */
 public class MBDocumentNotFoundException extends MBException
 {
 
@@ -25,11 +29,22 @@ public class MBDocumentNotFoundException extends MBException
    */
   private static final long serialVersionUID = -1729729464319255262L;
 
+  /**
+   * Constructor for MBDocumentNotFoundException.
+   * 
+   * @param msg exception message
+   */
   public MBDocumentNotFoundException(String msg)
   {
     super(msg);
   }
 
+  /**
+   * Constructor for MBDocumentNotFoundException.
+   * 
+   * @param msg exception message
+   * @param throwable throwable {@link Throwable}
+   */
   public MBDocumentNotFoundException(String msg, Throwable throwable)
   {
     super(msg, throwable);

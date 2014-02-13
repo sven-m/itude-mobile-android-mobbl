@@ -30,32 +30,36 @@ import com.itude.mobile.mobbl.core.configuration.MBIncludableDefinition;
 import com.itude.mobile.mobbl.core.controller.MBOutcome.Origin;
 import com.itude.mobile.mobbl.core.util.Constants;
 
+/**
+ * {@link MBDefinition} Class for a configuration
+ *
+ */
 public class MBConfigurationDefinition extends MBDefinition implements MBIncludableDefinition
 {
 
-  public static final String                         ORIGIN_WILDCARD                   = "*";
-  public static final String                         DOC_SYSTEM_EMPTY                  = "MBEmpty";
-  public static final String                         DOC_SYSTEM_LANGUAGE               = "MBBundle";
-  public static final String                         DOC_SYSTEM_EXCEPTION              = "MBException";
-  public static final String                         PATH_SYSTEM_EXCEPTION_NAME        = "/Exception[0]/@name";
-  public static final String                         PATH_SYSTEM_EXCEPTION_DESCRIPTION = "/Exception[0]/@description";
-  public static final String                         PATH_SYSTEM_EXCEPTION_ORIGIN      = "/Exception[0]/@origin";
-  public static final String                         PATH_SYSTEM_EXCEPTION_OUTCOME     = "/Exception[0]/@outcome";
-  public static final String                         PATH_SYSTEM_EXCEPTION_PATH        = "/Exception[0]/@path";
+  public static final String                       ORIGIN_WILDCARD                   = "*";
+  public static final String                       DOC_SYSTEM_EMPTY                  = "MBEmpty";
+  public static final String                       DOC_SYSTEM_LANGUAGE               = "MBBundle";
+  public static final String                       DOC_SYSTEM_EXCEPTION              = "MBException";
+  public static final String                       PATH_SYSTEM_EXCEPTION_NAME        = "/Exception[0]/@name";
+  public static final String                       PATH_SYSTEM_EXCEPTION_DESCRIPTION = "/Exception[0]/@description";
+  public static final String                       PATH_SYSTEM_EXCEPTION_ORIGIN      = "/Exception[0]/@origin";
+  public static final String                       PATH_SYSTEM_EXCEPTION_OUTCOME     = "/Exception[0]/@outcome";
+  public static final String                       PATH_SYSTEM_EXCEPTION_PATH        = "/Exception[0]/@path";
 
-  public static final String                         DOC_SYSTEM_PROPERTIES             = "MBApplicationProperties";
-  public static final String                         DOC_SYSTEM_DEVICE                 = "MBDevice";
+  public static final String                       DOC_SYSTEM_PROPERTIES             = "MBApplicationProperties";
+  public static final String                       DOC_SYSTEM_DEVICE                 = "MBDevice";
 
-  private final Map<String, MBDomainDefinition>      _domainTypes;
-  private final Map<String, MBDocumentDefinition>    _documentTypes;
-  private final Map<String, MBActionDefinition>      _actionTypes;
-  private final List<MBOutcomeDefinition>            _outcomeTypes;
-  private final Map<String, MBPageDefinition>        _pageTypes;
-  private final Map<String, MBDialogDefinition> _dialogs;
-  private final Map<String, MBPageStackDefinition>   _pageStacks;
-  private MBDialogDefinition                    _homeDialog;
-  private final Map<String, MBToolDefinition>        _tools;
-  private final Map<String, MBAlertDefinition>       _alerts;
+  private final Map<String, MBDomainDefinition>    _domainTypes;
+  private final Map<String, MBDocumentDefinition>  _documentTypes;
+  private final Map<String, MBActionDefinition>    _actionTypes;
+  private final List<MBOutcomeDefinition>          _outcomeTypes;
+  private final Map<String, MBPageDefinition>      _pageTypes;
+  private final Map<String, MBDialogDefinition>    _dialogs;
+  private final Map<String, MBPageStackDefinition> _pageStacks;
+  private MBDialogDefinition                       _homeDialog;
+  private final Map<String, MBToolDefinition>      _tools;
+  private final Map<String, MBAlertDefinition>     _alerts;
 
   public MBConfigurationDefinition()
   {

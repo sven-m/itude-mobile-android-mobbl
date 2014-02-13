@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.configuration.mvc.exceptions;
 
 import com.itude.mobile.mobbl.core.MBException;
 
+/**
+ * {@link MBException} class used when path is empty
+ *
+ */
 public class MBEmptyPathException extends MBException
 {
 
@@ -25,14 +29,25 @@ public class MBEmptyPathException extends MBException
    */
   private static final long serialVersionUID = -3612987590681693945L;
 
-  public MBEmptyPathException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
-
+  /**
+   * Constructor for MBEmptyPathException.
+   * 
+   * @param msg exception message
+   */
   public MBEmptyPathException(String msg)
   {
     super(msg);
+  }
+
+  /**
+   * Constructor for MBEmptyPathException.
+   * 
+   * @param msg exception message
+   * @param throwable throwable {@link Throwable}
+   */
+  public MBEmptyPathException(String msg, Throwable throwable)
+  {
+    super(msg, throwable);
   }
 
 }

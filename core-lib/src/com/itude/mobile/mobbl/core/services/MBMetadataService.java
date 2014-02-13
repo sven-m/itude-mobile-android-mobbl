@@ -43,6 +43,10 @@ import com.itude.mobile.mobbl.core.services.exceptions.MBDomainNotDefinedExcepti
 import com.itude.mobile.mobbl.core.services.exceptions.MBPageNotDefinedException;
 import com.itude.mobile.mobbl.core.services.exceptions.MBToolNotDefinedException;
 
+/**
+ * Service to handle meta data
+ *
+ */
 public final class MBMetadataService
 {
   private final MBConfigurationDefinition _cfg;
@@ -54,7 +58,7 @@ public final class MBMetadataService
   private static String                   _tabletConfigName = null;
   private static String                   _endpointsName    = "endpoints.xml";
 
-  private MBDialogDefinition         _homeDialog       = null;
+  private MBDialogDefinition              _homeDialog       = null;
 
   private MBMetadataService()
   {

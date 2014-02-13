@@ -17,8 +17,21 @@ package com.itude.mobile.mobbl.core.controller;
 
 import com.itude.mobile.mobbl.core.model.MBDocument;
 
+/**
+ * Interface for an action. Typical use is to influence the flow of navigation between screens during authentication sequences or purchase flows. 
+ *
+ */
 public interface MBAction
 {
+  /**
+   * Execute an action.
+   * 
+   * @param document {@link MBDocument}
+   * @param path path
+   * @param outcomeName name of the outcome
+   * 
+   * @return {@link MBOutcome} to be executed
+   */
   public MBOutcome execute(MBDocument document, String path);
 
 }

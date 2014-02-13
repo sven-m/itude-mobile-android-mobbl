@@ -35,6 +35,10 @@ import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.MBPathUtil;
 
+/**
+ * {@link MBDefinition} Class for a document
+ *
+ */
 public class MBDocumentDefinition extends MBDefinition
 {
   private final Map<String, MBElementDefinition> _elements = new TreeMap<String, MBElementDefinition>();

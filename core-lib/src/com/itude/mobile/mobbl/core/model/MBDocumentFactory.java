@@ -24,6 +24,10 @@ import com.itude.mobile.mobbl.core.model.parser.MBDocumentParser;
 import com.itude.mobile.mobbl.core.model.parser.MBJsonDocumentParser;
 import com.itude.mobile.mobbl.core.model.parser.MBXmlDocumentParser;
 
+/**
+ * Factory for a {@link MBDocument}
+ *
+ */
 public class MBDocumentFactory
 {
 

@@ -21,6 +21,10 @@ import java.util.List;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 
+/**
+ * {@link MBDefinition} Class for an alert
+ *
+ */
 public class MBAlertDefinition extends MBDefinition
 {
 

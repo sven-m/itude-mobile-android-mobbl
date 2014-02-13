@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.util.exceptions;
 
 import com.itude.mobile.mobbl.core.MBException;
 
+/**
+ * {@link MBException} class used when a relative path is not valid
+ *
+ */
 public class MBInvalidRelativePathException extends MBException
 {
 
@@ -25,11 +29,22 @@ public class MBInvalidRelativePathException extends MBException
    */
   private static final long serialVersionUID = 7936676805593582175L;
 
+  /**
+   * Constructor for MBInvalidRelativePathException.
+   * 
+   * @param msg exception message
+   */
   public MBInvalidRelativePathException(String msg)
   {
     super(msg);
   }
 
+  /**
+   * Constructor for MBInvalidRelativePathException.
+   * 
+   * @param msg exception message
+   * @param throwable throwable {@link Throwable}
+   */
   public MBInvalidRelativePathException(String msg, Throwable throwable)
   {
     super(msg, throwable);

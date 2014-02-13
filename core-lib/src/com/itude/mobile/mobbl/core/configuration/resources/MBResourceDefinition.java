@@ -26,6 +26,10 @@ import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl.core.util.Constants;
 
+/**
+ * {@link MBDefinition} Class for a resource file
+ *
+ */
 public class MBResourceDefinition extends MBDefinition
 {
   private String                        _resourceId;

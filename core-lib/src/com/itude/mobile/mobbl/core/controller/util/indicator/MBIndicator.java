@@ -21,6 +21,10 @@ import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.controller.MBViewManager;
 import com.itude.mobile.mobbl.core.util.MBCustomAttributeContainer;
 
+/**
+ * Indicator class
+ *
+ */
 public class MBIndicator
 {
   // type 'none' obviously doesn't show anything; it's there to have a handle for some fringe cases in which we show indicators pretty much all of the time, with some small exceptions
@@ -32,6 +36,9 @@ public class MBIndicator
   private boolean        _active;
   private final Activity _activity;
 
+  /**
+   * @param type {@link Type}
+   */
   protected MBIndicator(Type type)
   {
     _type = type;
@@ -39,6 +46,10 @@ public class MBIndicator
     _activity = MBViewManager.getInstance();
   }
 
+  /**
+   * @param activity {@link Activity}
+   * @param type {@link Type}
+   */
   protected MBIndicator(Activity activity, Type type)
   {
     _type = type;
@@ -46,6 +57,11 @@ public class MBIndicator
     _activity = activity;
   }
 
+  /**
+   * Show the indicator with custom attributes
+   * 
+   * @param customAttributes {@link MBCustomAttributeContainer}
+   */
   private void showIndicator(MBCustomAttributeContainer customAttributes)
   {
     switch (_type)
@@ -61,6 +77,9 @@ public class MBIndicator
     }
   }
 
+  /**
+   * Hide/Remove the indicator
+   */
   private void hideIndicator()
   {
     switch (_type)
@@ -77,6 +96,9 @@ public class MBIndicator
 
   }
 
+  /**
+   * Release the indicator
+   */
   public void release()
   {
     if (!_active) throw new MBException("Trying to release already released MBIndicator");
@@ -85,7 +107,7 @@ public class MBIndicator
   }
 
   /**
-   * @deprecated Only exists to support applications that don't cleanly use the framework, like Actum. Don't use this in any new application! 
+   * @deprecated Only exists to support applications that don't cleanly use the framework. Don't use this in any new application! 
    */
   @Deprecated
   public static MBIndicator show(Activity activity, Type type)
@@ -96,11 +118,24 @@ public class MBIndicator
 
   }
 
+  /**
+   * Show the indicator
+   * 
+   * @param type MBCustomAttributeContainer
+   * @return {@link MBIndicator}
+   */
   public static MBIndicator show(Type type)
   {
     return show(type, MBCustomAttributeContainer.EMPTY);
   }
 
+  /**
+   * Show the indicator
+   * 
+   * @param type {@link Type}
+   * @param customAttributes {@link MBCustomAttributeContainer}
+   * @return {@link MBIndicator}
+   */
   public static MBIndicator show(Type type, MBCustomAttributeContainer customAttributes)
   {
     MBIndicator indicator = new MBIndicator(type);

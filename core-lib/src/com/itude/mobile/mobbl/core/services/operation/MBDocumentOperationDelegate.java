@@ -17,10 +17,21 @@ package com.itude.mobile.mobbl.core.services.operation;
 
 import com.itude.mobile.mobbl.core.model.MBDocument;
 
+/**
+ * Delegate Class containing document operations.
+ */
 public interface MBDocumentOperationDelegate
 {
+  /**
+   * Process a {@link MBDocument} when a call has been done
+   * @param document {@link MBDocument}
+   */
   public void processResult(MBDocument document);
 
-  public void processException(Exception e);
+  /**
+   * Process an Exception when a call has gone wrong.
+   * @param ext {@link Exception}
+   */
+  public void processException(Exception ext);
 
 }

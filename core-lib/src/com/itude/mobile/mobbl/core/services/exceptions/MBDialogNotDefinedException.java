@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.services.exceptions;
 
 import com.itude.mobile.mobbl.core.MBException;
 
+/**
+ * {@link MBException} class used when a dialog is not defined 
+ *
+ */
 public class MBDialogNotDefinedException extends MBException
 {
 
@@ -25,11 +29,22 @@ public class MBDialogNotDefinedException extends MBException
    */
   private static final long serialVersionUID = -8763172107603449945L;
 
+  /**
+   * Constructor for MBDialogNotDefinedException.
+   * 
+   * @param msg exception message
+   */
   public MBDialogNotDefinedException(String msg)
   {
     super(msg);
   }
 
+  /**
+   * Constructor for MBDialogNotDefinedException.
+   * 
+   * @param msg exception message
+   * @param throwable throwable {@link Throwable}
+   */
   public MBDialogNotDefinedException(String msg, Throwable throwable)
   {
     super(msg, throwable);

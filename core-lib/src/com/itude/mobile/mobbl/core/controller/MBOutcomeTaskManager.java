@@ -18,6 +18,9 @@ package com.itude.mobile.mobbl.core.controller;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * Manager to handle all outcome related functionality
+ */
 public class MBOutcomeTaskManager
 {
 

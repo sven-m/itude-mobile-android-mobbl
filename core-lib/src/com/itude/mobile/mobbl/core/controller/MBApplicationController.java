@@ -58,6 +58,12 @@ import com.itude.mobile.mobbl.core.util.imagecache.ImageUtil;
 import com.itude.mobile.mobbl.core.view.MBAlert;
 import com.itude.mobile.mobbl.core.view.MBPage;
 
+/** 
+ * Facade for all navigation control and logic sequencing.
+ * 
+ * The MBApplicationController is responsible for determining which MBPage or MBAction should be constructed when an MBOutcome is triggered.
+ * The handleOutcome method is the main usage. The MBOutcomes are defined in the application configuration which is typically the config.xml file. Alternatively config.xml may reference a file using the <Include ...> directive in which case outcomes.xmlx is an often used convention. 
+ */
 public class MBApplicationController extends Application
 {
   private MBApplicationFactory           _applicationFactory;
@@ -149,7 +155,7 @@ public class MBApplicationController extends Application
     _outcomeHandler.sendEmptyMessage(Constants.C_MESSAGE_INITIAL_OUTCOMES_FINISHED);
   }
 
-  /*
+  /**
    * Visibility should be as strict as possible (as always). Because this method is called
    * from the MBOutcomeHandler the visibility is set to package (controller).
    */
@@ -641,14 +647,6 @@ public class MBApplicationController extends Application
     isProgressive = !Intent.ACTION_SEARCH.equals(searchIntent.getAction());
 
     String searchPath = "";
-
-    //    Bundle bundle = searchIntent.getBundleExtra(SearchManager.APP_DATA);
-    //    if (bundle != null)
-    //    {
-    //      _searchResultNormal = bundle.getString(Constants.C_BUNDLE_NORMAL_SEARCH_OUTCOME);
-    //      _searchResultProgressive = bundle.getString(Constants.C_BUNDLE_PROGRESSIVE_SEARCH_OUTCOME);
-    //      searchPath = bundle.getString(Constants.C_BUNDLE_SEARCH_PATH);
-    //    }
 
     MBDocument searchConfigDoc = MBDataManagerService.getInstance().loadDocument(Constants.C_DOC_SEARCH_CONFIGURATION);
     String normalSearchOutcome = searchConfigDoc.getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/"

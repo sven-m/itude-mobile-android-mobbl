@@ -15,6 +15,10 @@
  */
 package com.itude.mobile.mobbl.core.services;
 
+/**
+ * Event listener class
+ *
+ */
 public interface MBEventListener
 {
 

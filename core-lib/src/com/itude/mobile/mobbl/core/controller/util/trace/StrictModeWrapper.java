@@ -19,6 +19,10 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.StrictMode;
 
+/**
+ * StricMode wrapper class
+ *
+ */
 public final class StrictModeWrapper
 {
 
@@ -38,6 +42,9 @@ public final class StrictModeWrapper
   {
   }
 
+  /**
+   * Check if StricMode is available
+   */
   public static void checkAvailable()
   {
   }

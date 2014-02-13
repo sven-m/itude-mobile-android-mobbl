@@ -4,3 +4,5 @@ core-lib/.settings/org.eclipse.core.resources.prefs
 core-lib/.settings/org.eclipse.m2e.core.prefs
 core-test/.settings/org.eclipse.core.resources.prefs
 core-test/.settings/org.eclipse.m2e.core.prefs
+
+/target

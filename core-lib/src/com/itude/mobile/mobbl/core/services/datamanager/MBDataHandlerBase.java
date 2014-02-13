@@ -21,6 +21,9 @@ import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.util.Constants;
 
+/**
+ * Base data handler
+ */
 public class MBDataHandlerBase implements MBDataHandler
 {
 

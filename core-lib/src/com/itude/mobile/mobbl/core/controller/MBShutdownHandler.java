@@ -19,6 +19,9 @@ import android.app.Activity;
 
 import com.itude.mobile.mobbl.core.util.helper.MBSecurityHelper;
 
+/**
+ * Class to handle the shutdown process 
+ */
 public abstract class MBShutdownHandler
 {
 

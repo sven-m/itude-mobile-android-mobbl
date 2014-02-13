@@ -19,6 +19,10 @@ import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBConditionalDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPageStackDefinitionException;
 
+/**
+ * {@link MBConditionalDefinition} Class for a pagestack
+ *
+ */
 public class MBPageStackDefinition extends MBConditionalDefinition
 {
 

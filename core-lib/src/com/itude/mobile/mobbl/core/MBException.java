@@ -15,6 +15,10 @@
  */
 package com.itude.mobile.mobbl.core;
 
+/**
+ * Default Exception Class
+ *
+ */
 public class MBException extends RuntimeException
 {
   private String            _name            = null;
@@ -29,27 +33,50 @@ public class MBException extends RuntimeException
 
   }
 
+  /**
+   * Constructor for MBException.
+   * 
+   * @param msg exception message
+   */
   public MBException(String msg)
   {
     super(msg);
   }
 
+  /**
+   * Constructor for MBException.
+   * 
+   * @param name name of exception
+   * @param msg exception message
+   */
   public MBException(String name, String msg)
   {
     this(msg);
     setName(name);
   }
 
+  /**
+   * Constructor for MBException.
+   * 
+   * @param msg exception message
+   * @param throwable throwable {@link Throwable}
+   */
   public MBException(String msg, Throwable throwable)
   {
     super(msg, throwable);
   }
 
+  /**
+   * @param name name
+   */
   public void setName(String name)
   {
     _name = name;
   }
 
+  /**
+   * @return name
+   */
   public String getName()
   {
     return _name;

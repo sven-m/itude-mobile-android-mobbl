@@ -26,6 +26,10 @@ import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.MBProperties;
 import com.itude.mobile.mobbl.core.view.MBBundle;
 
+/**
+ * Service Class containing localization methods
+ *
+ */
 public class MBLocalizationService
 {
   private final Map<String, MBBundle>  _languages;         //DictionaryofDictionaries(languagecode->(key->value))

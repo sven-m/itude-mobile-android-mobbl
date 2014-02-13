@@ -80,6 +80,10 @@ import com.itude.mobile.mobbl.core.util.MBProperties;
 import com.itude.mobile.mobbl.core.util.log.Logger;
 import com.itude.mobile.mobbl.core.util.log.LoggerFactory;
 
+/**
+ * Retrieves and sends MBDocument instances to and from a webservice using HTTP operations
+ *
+ */
 public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 {
 

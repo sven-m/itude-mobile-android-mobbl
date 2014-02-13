@@ -11,7 +11,7 @@
 	<artifactId>mobbl-core-test</artifactId>
 	<packaging>apk</packaging>
 	<name>Android Mobbl Core Test</name>
-	<description>Android Mobbl Core Whitelabel test application</description>
+	<description>Android Mobbl Core Library - Unit test application</description>
 	<url>http://mobbl.org/</url>
 	<inceptionYear>2014</inceptionYear>
 	<organization>

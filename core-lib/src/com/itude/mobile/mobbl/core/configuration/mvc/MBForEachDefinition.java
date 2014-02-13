@@ -24,6 +24,10 @@ import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBConditionalDefinition;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 
+/**
+ * {@link MBDefinition} Class for a for each
+ *
+ */
 public class MBForEachDefinition extends MBConditionalDefinition
 {
   private String                            _value;

@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.services.exceptions;
 
 import com.itude.mobile.mobbl.core.MBException;
 
+/**
+ * {@link MBException} class used when there is a problem with a script 
+ *
+ */
 public class MBScriptErrorException extends MBException
 {
 
@@ -25,11 +29,22 @@ public class MBScriptErrorException extends MBException
    */
   private static final long serialVersionUID = -661654491873974277L;
 
+  /**
+   * Constructor for MBScriptErrorException.
+   * 
+   * @param msg exception message
+   */
   public MBScriptErrorException(String msg)
   {
     super(msg);
   }
 
+  /**
+   * Constructor for MBScriptErrorException.
+   * 
+   * @param msg exception message
+   * @param throwable throwable {@link Throwable}
+   */
   public MBScriptErrorException(String msg, Throwable throwable)
   {
     super(msg, throwable);

@@ -17,6 +17,9 @@ package com.itude.mobile.mobbl.core.controller;
 
 import com.itude.mobile.mobbl.core.controller.MBApplicationController.PageBuildResult;
 
+/**
+ * {@link MBOutcomeTask} class describing a show page task
+ */
 public class MBShowPageTask extends MBOutcomeTask<Object>
 {
 

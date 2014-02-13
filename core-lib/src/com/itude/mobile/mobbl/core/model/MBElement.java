@@ -32,6 +32,9 @@ import com.itude.mobile.mobbl.core.model.exceptions.MBInvalidAttributeNameExcept
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
 
+/**
+* A node in an Element tree.
+*/
 public class MBElement extends MBElementContainer
 {
 
@@ -46,6 +49,11 @@ public class MBElement extends MBElementContainer
     _values = new HashMap<String, String>();
   }
 
+  /**
+   * Creating and Initializing an Element
+   *  
+   * @param definition {@link MBElementDefinition}
+   */
   public MBElement(MBElementDefinition definition)
   {
     super();
@@ -76,16 +84,35 @@ public class MBElement extends MBElementContainer
     }
   }
 
+  /**
+   * Working with attribute values
+   * 
+   * @param value value
+   * @param attributeName attribute name
+   */
   public void setAttributeValue(boolean value, String attributeName)
   {
     setAttributeValue(value ? Constants.C_TRUE : Constants.C_FALSE, attributeName, true);
   }
 
+  /**
+   * Working with attribute values
+   * 
+   * @param value value
+   * @param attributeName attribute name
+   */
   public void setAttributeValue(String value, String attributeName)
   {
     setAttributeValue(value, attributeName, true);
   }
 
+  /**
+   * Working with attribute values
+   * 
+   * @param value value
+   * @param attributeName attribute name
+   * @param throwIfInvalid true if an exeption needs to be thrown if attribute is invalid
+   */
   public void setAttributeValue(String value, String attributeName, boolean throwIfInvalid)
   {
     if (throwIfInvalid)
@@ -197,6 +224,12 @@ public class MBElement extends MBElementContainer
     _definition = definition;
   }
 
+  /**
+   * Checking existence of attributes
+   * 
+   * @param attributeName attribute name
+   * @return true if attribute is valid
+   */
   public boolean isValidAttribute(String attributeName)
   {
     return (getDefinition()).isValidAttribute(attributeName);
@@ -213,6 +246,11 @@ public class MBElement extends MBElementContainer
     }
   }
 
+  /**
+   * Working with the 'text()' attribute
+   * 
+   * @return get 'text()' value
+   */
   public String getBodyText()
   {
     if (isValidAttribute(TEXT_ATTRIBUTE))
@@ -227,6 +265,10 @@ public class MBElement extends MBElementContainer
     setAttributeValue(text, TEXT_ATTRIBUTE);
   }
 
+  /**
+   * Copying element state
+   * @param target {@link MBElement}
+   */
   public void assignToElement(MBElement target)
   {
     if (!target.getDefinition().getName().equals(_definition.getName()))

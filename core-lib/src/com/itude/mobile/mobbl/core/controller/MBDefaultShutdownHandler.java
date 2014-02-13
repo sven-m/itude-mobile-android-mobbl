@@ -21,6 +21,10 @@ import android.content.DialogInterface.OnClickListener;
 
 import com.itude.mobile.mobbl.core.services.MBLocalizationService;
 
+/**
+ * {@link MBShutdownHandler} class handling the default shutdown
+ *
+ */
 public class MBDefaultShutdownHandler extends MBShutdownHandler
 {
 

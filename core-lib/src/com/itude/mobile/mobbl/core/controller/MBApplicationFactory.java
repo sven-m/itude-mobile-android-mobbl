@@ -36,11 +36,19 @@ import com.itude.mobile.mobbl.core.view.builders.contentview.MBDefaultContentVie
 import com.itude.mobile.mobbl.core.view.components.tabbar.MBActionBarBuilder;
 import com.itude.mobile.mobbl.core.view.listeners.MBPageConstructionListener;
 
-/*
- * Factory class for Pages and Actions.
- * Subclass and use setInstance() to provide custom Pages and custom Actions
+/**
+ * Factory class for creating custom MBViewControllers, MBResultListeners and MBActions
+ * <br/> 
+ * In short there are three steps to using custom code with MOBBL framework:
+ * <ol>
+ *  <li>Create Pages, Actions and ResultListeners in the application definition files  (config.xml and endpoints.xml).</li>
+ *  <li>Create a subclass of the MBApplicationFactory which can create custom ViewControllers, MBActions and MBResultListeners,,/li>
+ *  <li>set the instance to your MBApplicationFactory subclass:
+ *  <code>
+ *      MBApplicationFactory.setInstance(new CustomApplicationFactory());
+ *  </code>
+ *  </ol>
  */
-
 public class MBApplicationFactory
 {
   private static MBApplicationFactory         _instance = null;

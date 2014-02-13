@@ -24,18 +24,24 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
+/**
+ * Helper Class to be used for activities
+ *
+ */
 public class MBActivityHelper
 {
 
+  /**
+   * Default private constructor
+   */
   private MBActivityHelper()
   {
-
   }
 
   /**
   * Checks if the application is in the background (i.e behind another application's Activity).
   *
-  * @param context
+  * @param context {@link Context}
   * @return true if another application is above this one.
   */
   public static boolean isApplicationBroughtToBackground(final Context context)

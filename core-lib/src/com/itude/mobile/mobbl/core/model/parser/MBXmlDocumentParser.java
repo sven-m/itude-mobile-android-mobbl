@@ -42,6 +42,10 @@ import com.itude.mobile.mobbl.core.model.exceptions.MBParseErrorException;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.MBPathUtil;
 
+/**
+ * Parser for XML type documents
+ *
+ */
 public class MBXmlDocumentParser extends DefaultHandler implements MBDocumentParser
 {
   private static final Pattern      NUMBERPATTERN = Pattern.compile("\\[[0-9]+\\]");

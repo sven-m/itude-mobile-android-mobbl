@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.model.exceptions;
 
 import com.itude.mobile.mobbl.core.MBException;
 
+/**
+ * {@link MBException} class used when an index out of bounds occurs 
+ *
+ */
 public class MBIndexOutOfBoundsException extends MBException
 {
 
@@ -25,11 +29,22 @@ public class MBIndexOutOfBoundsException extends MBException
    */
   private static final long serialVersionUID = 4498476068805513875L;
 
+  /**
+   * Constructor for MBIndexOutOfBoundsException.
+   * 
+   * @param msg exception message
+   */
   public MBIndexOutOfBoundsException(String msg)
   {
     super(msg);
   }
 
+  /**
+   * Constructor for MBIndexOutOfBoundsException.
+   * 
+   * @param msg exception message
+   * @param throwable throwable {@link Throwable}
+   */
   public MBIndexOutOfBoundsException(String msg, Throwable throwable)
   {
     super(msg, throwable);

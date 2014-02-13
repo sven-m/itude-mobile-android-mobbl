@@ -27,6 +27,10 @@ import com.itude.mobile.mobbl.core.configuration.MBConditionalDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPageStackDefinitionException;
 import com.itude.mobile.mobbl.core.util.Constants;
 
+/**
+ * {@link MBConditionalDefinition} Class for a dialog
+ *
+ */
 public class MBDialogDefinition extends MBConditionalDefinition
 {
   private final List<MBPageStackDefinition>        _children;

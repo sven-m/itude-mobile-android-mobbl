@@ -30,6 +30,9 @@ import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.services.datamanager.MBDataHandlerBase;
 import com.itude.mobile.mobbl.core.util.Constants;
 
+/**
+ * Retrieves and stores MBDocument instances in memory only
+ */
 public class MBMemoryDataHandler extends MBDataHandlerBase
 {
   private final Map<String, MBDocument> _dictionary;

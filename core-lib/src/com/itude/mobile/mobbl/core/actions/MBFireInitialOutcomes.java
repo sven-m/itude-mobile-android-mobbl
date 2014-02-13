@@ -31,18 +31,31 @@ import com.itude.mobile.mobbl.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.util.Constants;
 
+/**
+ * This class is responsible for handling outcomes in the initial outcomes document.
+ *
+ */
 public class MBFireInitialOutcomes implements MBAction
 {
+  /**
+   * @return the documentname that contains the initial outcomes. The default name is "InitialOutcomes"
+   */
   protected String getDocumentName()
   {
     return "InitialOutcomes";
   }
 
+  /**
+   * @return true is first dialog should be handled synchronized
+   */
   protected boolean isFirstDialogSynchronized()
   {
     return true;
   }
 
+  /**
+   * @see com.itude.mobile.mobbl.core.controller.MBAction#execute(com.itude.mobile.mobbl.core.model.MBDocument, java.lang.String)
+   */
   @Override
   public MBOutcome execute(MBDocument document, String path)
   {

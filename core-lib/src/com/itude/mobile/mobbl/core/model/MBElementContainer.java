@@ -45,6 +45,14 @@ import com.itude.mobile.mobbl.core.util.MBDynamicAttributeComparator;
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
 import com.itude.mobile.mobbl.core.util.MBPathUtil;
 
+/**
+ * A node in a tree of MBElement instances.
+ * <br/>
+ * In MOBBL, data is represented in MBDocuments and MBElements. An MBDocument is a lightweight xml-like structure, optimised for mobile use.
+ * 
+ * MBDocuments and MBElements are both MBElementContainers. Each ElementContainer has an associated MBElementDefinition which defines its structure. 
+ * The most frequently used methods are valueForPath:, setValue: forPath: and elementsWithName:
+ */
 public class MBElementContainer implements Parcelable
 {
   private static final List<MBElement> EMPTY_LIST = Collections.emptyList();

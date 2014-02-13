@@ -28,6 +28,9 @@ import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.threads.MBThread;
 import com.itude.mobile.mobbl.core.util.threads.exception.MBInterruptedException;
 
+/**
+ * Class containing document operations.
+ */
 public class MBDocumentOperation extends MBThread
 {
   private MBDataHandler               _dataHandler;

@@ -21,6 +21,10 @@ import android.content.pm.PackageManager;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 
+/**
+ * Class responsible for the session
+ *
+ */
 public final class MBSession implements MBSessionInterface
 {
 
@@ -31,6 +35,11 @@ public final class MBSession implements MBSessionInterface
 
   }
 
+  /**
+   * Returns the current session instance
+   * 
+   * @return {@link MBSessionInterface}
+   */
   public static MBSessionInterface getInstance()
   {
     if (_instance == null)
@@ -41,6 +50,11 @@ public final class MBSession implements MBSessionInterface
     return _instance;
   }
 
+  /**
+   * Sets the given sessions as the instance
+   * 
+   * @param session {@link MBSessionInterface}
+   */
   public static void setInstance(MBSessionInterface session)
   {
     // To maintain a decent security, the user should be logged out as soon as the application is brought to the background; this is checked in MBViewManager.onPause.
@@ -53,15 +67,24 @@ public final class MBSession implements MBSessionInterface
     _instance = session;
   }
 
-  //
-  //Override the following methods in an instance specific for your app; and register it app startup with setSharedInstance
-  //
+  /**
+   * Should return the session document that stores the current session state
+   * 
+   * IMPORTANT: THIS METHOD IS NOT IMPLEMENTED! It needs to be overridden in a superclass
+   * 
+   * @return a {@link MBDocument} that keeps track of the current session state (e.g. A MBDocument that stores the current session state)
+   */
   @Override
   public MBDocument getDocument()
   {
     return null;
   }
 
+  /**
+   * Should logOff the current session (e.g. clear the current session state from the session document)
+   * 
+   * IMPORTANT: THIS METHOD IS NOT IMPLEMENTED! It needs to be overridden in a superclass
+   */
   @Override
   public void logOff()
   {

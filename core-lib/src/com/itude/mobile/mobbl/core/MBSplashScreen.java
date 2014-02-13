@@ -25,6 +25,10 @@ import com.itude.mobile.mobbl.core.controller.MBViewManagerFactory;
 import com.itude.mobile.mobbl.core.services.MBResourceService;
 import com.itude.mobile.mobbl.core.util.Constants;
 
+/**
+ * Defaulty splashscreen implementation
+ *
+ */
 public class MBSplashScreen extends Activity
 {
   private Handler _handler = null;

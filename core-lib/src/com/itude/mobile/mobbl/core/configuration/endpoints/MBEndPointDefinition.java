@@ -21,6 +21,10 @@ import java.util.List;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl.core.services.MBResultListenerDefinition;
 
+/**
+ * {@link MBDefinition} Class for an enpoint
+ *
+ */
 public class MBEndPointDefinition extends MBDefinition
 {
   private String                                 _documentIn;

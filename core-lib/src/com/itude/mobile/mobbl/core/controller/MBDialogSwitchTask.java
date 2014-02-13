@@ -17,7 +17,10 @@ package com.itude.mobile.mobbl.core.controller;
 
 import com.itude.mobile.mobbl.core.util.Constants;
 
-public class MBDialogSwitchTask extends MBOutcomeTask
+/**
+ * {@link MBOutcomeTask} class describing a dialog swith task
+ */
+public class MBDialogSwitchTask extends MBOutcomeTask<Object>
 {
   private final String _dialogWhenCreated;
 

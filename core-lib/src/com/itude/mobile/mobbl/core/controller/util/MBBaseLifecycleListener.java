@@ -15,6 +15,10 @@
  */
 package com.itude.mobile.mobbl.core.controller.util;
 
+/**
+ * {@link MBLifecycleListener} class responsible for the base lifecycle
+ *
+ */
 public class MBBaseLifecycleListener implements MBLifecycleListener
 {
 

@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.configuration.mvc.exceptions;
 
 import com.itude.mobile.mobbl.core.MBException;
 
+/**
+ * {@link MBException} class used when the pagestack definition is invalid
+ *
+ */
 public class MBInvalidPageStackDefinitionException extends MBException
 {
 
@@ -25,14 +29,25 @@ public class MBInvalidPageStackDefinitionException extends MBException
    */
   private static final long serialVersionUID = -4024284646115464732L;
 
-  public MBInvalidPageStackDefinitionException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
-
+  /**
+   * Constructor for MBInvalidPageStackDefinitionException.
+   * 
+   * @param msg exception message
+   */
   public MBInvalidPageStackDefinitionException(String msg)
   {
     super(msg);
+  }
+
+  /**
+   * Constructor for MBInvalidPageStackDefinitionException.
+   * 
+   * @param msg exception message
+   * @param throwable throwable {@link Throwable}
+   */
+  public MBInvalidPageStackDefinitionException(String msg, Throwable throwable)
+  {
+    super(msg, throwable);
   }
 
 }

@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.controller.exceptions;
 
 import com.itude.mobile.mobbl.core.MBException;
 
+/**
+ * {@link MBException} class used when no outcome is defined
+ *
+ */
 public class MBNoOutcomesDefinedException extends MBException
 {
 
@@ -25,6 +29,11 @@ public class MBNoOutcomesDefinedException extends MBException
    */
   private static final long serialVersionUID = 3707214202241026227L;
 
+  /**
+   * Constructor for MBNoOutcomesDefinedException.
+   * 
+   * @param msg exception message
+   */
   public MBNoOutcomesDefinedException(String msg)
   {
     super(msg);

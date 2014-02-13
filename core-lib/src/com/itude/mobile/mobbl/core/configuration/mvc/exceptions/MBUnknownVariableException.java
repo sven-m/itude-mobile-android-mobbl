@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.configuration.mvc.exceptions;
 
 import com.itude.mobile.mobbl.core.MBException;
 
+/**
+ * {@link MBException} class used when a variable is unknown
+ *
+ */
 public class MBUnknownVariableException extends MBException
 {
 
@@ -25,11 +29,22 @@ public class MBUnknownVariableException extends MBException
    */
   private static final long serialVersionUID = 4160255176791154859L;
 
+  /**
+   * Constructor for MBUnknownVariableException.
+   * 
+   * @param msg exception message
+   */
   public MBUnknownVariableException(String msg)
   {
     super(msg);
   }
 
+  /**
+   * Constructor for MBUnknownVariableException.
+   * 
+   * @param msg exception message
+   * @param throwable throwable {@link Throwable}
+   */
   public MBUnknownVariableException(String msg, Throwable throwable)
   {
     super(msg, throwable);

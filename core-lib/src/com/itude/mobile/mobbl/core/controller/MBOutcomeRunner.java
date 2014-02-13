@@ -30,6 +30,10 @@ import com.itude.mobile.mobbl.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.util.Constants;
 
+/**
+ * Runner class for an outcome
+ *
+ */
 public class MBOutcomeRunner
 {
   private final MBOutcome _outcome;
