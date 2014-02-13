@@ -32,10 +32,6 @@ import com.itude.mobile.mobbl.core.util.Constants;
  * The attributes of the search request document can be accessed via their getters. It is also possible to access the 
  * MBSearchRequestDoc in case you implemented a data handler that can handle the MBSearchRequestDoc.
  * 
- * More info: https://mobiledev.itude.com/confluence/display/MOBBL/Search
- *
- * @author Coen Houtman
- * @since 3.0.0.16
  */
 public abstract class MBSearchAction implements MBAction
 {

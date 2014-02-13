@@ -29,6 +29,9 @@ import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.MBCustomAttributeContainer;
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
 
+/**
+ * Defines an outcome
+ */
 public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
 {
   private String     _outcomeName;

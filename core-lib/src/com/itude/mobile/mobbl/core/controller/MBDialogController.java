@@ -54,6 +54,9 @@ import com.itude.mobile.mobbl.core.view.MBPage;
 import com.itude.mobile.mobbl.core.view.builders.MBDialogDecorator;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
 
+/**
+ * Dialog controller class
+ */
 public class MBDialogController extends ContextWrapper
 {
 

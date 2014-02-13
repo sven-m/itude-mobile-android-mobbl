@@ -24,6 +24,10 @@ import com.itude.mobile.mobbl.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
 
+/**
+ * {@link MBDefinition} Class for a condition
+ *
+ */
 public class MBConditionalDefinition extends MBDefinition
 {
   private String _preCondition;

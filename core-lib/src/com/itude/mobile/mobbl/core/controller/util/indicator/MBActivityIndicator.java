@@ -21,16 +21,24 @@ import android.app.ProgressDialog;
 import com.itude.mobile.mobbl.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl.core.util.MBCustomAttributeContainer;
 
+/**
+ * {@link MBCountingIndicator} class defines an Activity indicator
+ */
 public final class MBActivityIndicator extends MBCountingIndicator
 {
 
   private ProgressDialog _dialog = null;
 
+  /**
+   * Default private constructor
+   */
   MBActivityIndicator()
   {
-
   }
 
+  /**
+   * @see com.itude.mobile.mobbl.core.controller.util.indicator.MBCountingIndicator#show(android.app.Activity, com.itude.mobile.mobbl.core.util.MBCustomAttributeContainer)
+   */
   @Override
   protected void show(final Activity activity, MBCustomAttributeContainer customAttributes)
   {
@@ -39,6 +47,9 @@ public final class MBActivityIndicator extends MBCountingIndicator
         .getInstance().getTextForKey("msg_loading"), true, false);
   }
 
+  /**
+   * @see com.itude.mobile.mobbl.core.controller.util.indicator.MBCountingIndicator#dismiss(android.app.Activity)
+   */
   @Override
   protected void dismiss(final Activity activity)
   {

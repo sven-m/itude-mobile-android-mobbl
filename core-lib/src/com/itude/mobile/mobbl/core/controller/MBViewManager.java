@@ -71,6 +71,10 @@ import com.itude.mobile.mobbl.core.view.MBPage.OrientationPermission;
 import com.itude.mobile.mobbl.core.view.builders.MBContentViewWrapper;
 import com.itude.mobile.mobbl.core.view.components.tabbar.MBActionBarBuilder;
 
+/**
+ * Default view manager
+ *
+ */
 public abstract class MBViewManager extends ActionBarActivity implements MBDialogChangeListener
 {
   public enum MBActionBarInvalidationOption {

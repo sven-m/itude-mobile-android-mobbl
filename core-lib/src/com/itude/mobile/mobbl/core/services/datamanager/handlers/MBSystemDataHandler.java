@@ -29,6 +29,9 @@ import com.itude.mobile.mobbl.core.model.parser.MBXmlDocumentParser;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.services.datamanager.MBDataHandlerBase;
 
+/**
+ * Retrieves and stores MBDocument instances on the current system
+ */
 public class MBSystemDataHandler extends MBDataHandlerBase
 {
   private final Map<String, MBDocument> _dictionary;

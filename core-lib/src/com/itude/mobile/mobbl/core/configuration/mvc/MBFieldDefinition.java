@@ -21,6 +21,10 @@ import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBConditionalDefinition;
 import com.itude.mobile.mobbl.core.view.MBStylableDefinition;
 
+/**
+ * {@link MBConditionalDefinition} Class for a field
+ *
+ */
 public class MBFieldDefinition extends MBConditionalDefinition implements MBStylableDefinition
 {
   private String _label;

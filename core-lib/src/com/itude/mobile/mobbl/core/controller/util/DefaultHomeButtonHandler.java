@@ -18,9 +18,16 @@ package com.itude.mobile.mobbl.core.controller.util;
 import com.itude.mobile.mobbl.core.controller.MBViewManager;
 import com.itude.mobile.mobbl.core.controller.MBViewManager.HomeButtonHandler;
 
+/**
+ * {@link HomeButtonHandler} class to handle the default home button
+ *
+ */
 public class DefaultHomeButtonHandler implements HomeButtonHandler
 {
 
+  /**
+   * @see com.itude.mobile.mobbl.core.controller.MBViewManager.HomeButtonHandler#handleButton()
+   */
   @Override
   public void handleButton()
   {

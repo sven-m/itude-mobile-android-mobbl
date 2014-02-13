@@ -25,6 +25,10 @@ import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl.core.configuration.MBIncludableDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBBundleDefinition;
 
+/**
+ * {@link MBDefinition} Class for a resource configuration file
+ *
+ */
 public class MBResourceConfiguration extends MBDefinition implements MBIncludableDefinition
 {
   private final Map<String, MBResourceDefinition> _resources;

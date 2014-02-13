@@ -51,6 +51,9 @@ import com.itude.mobile.mobbl.core.configuration.resources.MBItemDefinition;
 import com.itude.mobile.mobbl.core.configuration.resources.MBResourceDefinition;
 import com.itude.mobile.mobbl.core.util.Constants;
 
+/**
+* Parsers the configuration file
+*/
 public abstract class MBConfigurationParser extends DefaultHandler
 {
   private Stack<MBDefinition>    _stack;

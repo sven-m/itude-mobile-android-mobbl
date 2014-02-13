@@ -18,6 +18,10 @@ package com.itude.mobile.mobbl.core.controller;
 import com.itude.mobile.mobbl.core.view.components.tabbar.MBActionBarBuilder;
 import com.itude.mobile.mobbl.core.view.components.tabbar.MBTabletActionBarBuilder;
 
+/**
+ * {@link MBViewManager} for a phone view
+ *
+ */
 public class MBPhoneViewManager extends MBViewManager
 {
   @Override

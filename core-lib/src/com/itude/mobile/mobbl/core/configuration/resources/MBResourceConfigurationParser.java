@@ -25,6 +25,10 @@ import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBBundleDefinition;
 import com.itude.mobile.mobbl.core.util.Constants;
 
+/**
+ * {@link MBConfigurationParser} Class to parse a resource configuration file
+ *
+ */
 public class MBResourceConfigurationParser extends MBConfigurationParser
 {
   private List<String> _resourceAttributes;

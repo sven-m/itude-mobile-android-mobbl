@@ -18,6 +18,10 @@ package com.itude.mobile.mobbl.core.configuration.mvc;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 
+/**
+ * {@link MBDefinition} Class for an action
+ *
+ */
 public class MBActionDefinition extends MBDefinition
 {
   private String _className;

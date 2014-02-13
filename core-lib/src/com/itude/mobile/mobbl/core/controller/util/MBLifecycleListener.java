@@ -15,6 +15,10 @@
  */
 package com.itude.mobile.mobbl.core.controller.util;
 
+/**
+ * Interface class containing lifecycle methods 
+ *
+ */
 public interface MBLifecycleListener
 {
   public void onCreate();

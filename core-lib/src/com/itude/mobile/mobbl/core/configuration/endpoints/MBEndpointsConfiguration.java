@@ -23,6 +23,9 @@ import java.util.Map;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl.core.services.MBResultListenerDefinition;
 
+/**
+ * {@link MBDefinition} Class for a default service configuration
+ */
 public class MBEndpointsConfiguration extends MBDefinition
 {
   private final Map<String, MBEndPointDefinition> _endPoints;

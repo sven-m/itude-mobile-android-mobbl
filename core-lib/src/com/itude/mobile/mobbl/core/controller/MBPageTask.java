@@ -21,6 +21,9 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController.PageBuildResult;
 import com.itude.mobile.mobbl.core.util.Constants;
 
+/**
+ * {@link MBOutcomeTask} class describing a page task
+ */
 public class MBPageTask extends MBOutcomeTask<PageBuildResult>
 {
 

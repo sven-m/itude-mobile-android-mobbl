@@ -7,7 +7,7 @@
 	<version>3.2.0.13-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Android Mobbl Core</name>
-	<description>Android Mobbl Core</description>
+	<description>Android Mobbl Core library - A development framework for data centric Android apps.</description>
 	<url>http://mobbl.org/</url>
 	<inceptionYear>2014</inceptionYear>
 	<organization>
@@ -195,6 +195,13 @@
 			<url>http://mobbl.org/maven-repository/releases</url>
 		</repository>
 	</repositories>
+	
+	<distributionManagement>
+		<site>
+			<id>${project.artifactId}-site</id>
+			<url>${project.baseUri}</url>
+		</site>
+	</distributionManagement>
     
 </project>
 

@@ -40,6 +40,9 @@ import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.util.threads.MBThread;
 import com.itude.mobile.mobbl.core.util.threads.exception.MBInterruptedException;
 
+/**
+ * Manager to handle all dialog related functionality
+ */
 public class MBDialogManager extends MBBaseLifecycleListener
 {
   public static interface MBDialogChangeListener

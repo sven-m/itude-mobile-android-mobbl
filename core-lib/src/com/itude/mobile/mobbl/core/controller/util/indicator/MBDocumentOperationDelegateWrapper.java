@@ -19,11 +19,20 @@ import com.itude.mobile.android.util.AssertUtil;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.services.operation.MBDocumentOperationDelegate;
 
+/**
+ * {@link MBDocumentOperationDelegate} wrapper class to handle document operations including the use of a indicator
+ */
 public class MBDocumentOperationDelegateWrapper implements MBDocumentOperationDelegate
 {
   final MBDocumentOperationDelegate _actualDelegate;
   final MBIndicator                 _indicator;
 
+  /**
+   * Constructor so you handle a document operator including a indicator.
+   * 
+   * @param actualDelegate {@link MBDocumentOperationDelegate}
+   * @param indicator {@link MBIndicator}
+   */
   public MBDocumentOperationDelegateWrapper(MBDocumentOperationDelegate actualDelegate, MBIndicator indicator)
   {
     AssertUtil.notNull("actualDelegate", actualDelegate);
@@ -32,6 +41,9 @@ public class MBDocumentOperationDelegateWrapper implements MBDocumentOperationDe
     _indicator = indicator;
   }
 
+  /**
+   * @see com.itude.mobile.mobbl.core.services.operation.MBDocumentOperationDelegate#processResult(com.itude.mobile.mobbl.core.model.MBDocument)
+   */
   @Override
   public void processResult(MBDocument document)
   {
@@ -47,6 +59,9 @@ public class MBDocumentOperationDelegateWrapper implements MBDocumentOperationDe
 
   }
 
+  /**
+   * @see com.itude.mobile.mobbl.core.services.operation.MBDocumentOperationDelegate#processException(java.lang.Exception)
+   */
   @Override
   public void processException(Exception e)
   {

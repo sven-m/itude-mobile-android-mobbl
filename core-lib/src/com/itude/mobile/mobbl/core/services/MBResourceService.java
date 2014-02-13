@@ -43,6 +43,9 @@ import com.itude.mobile.mobbl.core.view.MBBundle;
 import com.itude.mobile.mobbl.core.view.MBComponentFactory;
 import com.itude.mobile.mobbl.core.view.MBResource;
 
+/**
+ * Service to handle resources
+ */
 public final class MBResourceService
 {
 

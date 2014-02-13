@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.services.exceptions;
 
 import com.itude.mobile.mobbl.core.MBException;
 
+/**
+ * {@link MBException} class used when an action is not defined
+ *
+ */
 public class MBActionNotDefinedException extends MBException
 {
 
@@ -25,11 +29,22 @@ public class MBActionNotDefinedException extends MBException
    */
   private static final long serialVersionUID = -19044856396571552L;
 
+  /**
+   * Constructor for MBActionNotDefinedException.
+   * 
+   * @param msg exception message
+   */
   public MBActionNotDefinedException(String msg)
   {
     super(msg);
   }
 
+  /**
+   * Constructor for MBActionNotDefinedException.
+   * 
+   * @param msg exception message
+   * @param throwable throwable {@link Throwable}
+   */
   public MBActionNotDefinedException(String msg, Throwable throwable)
   {
     super(msg, throwable);

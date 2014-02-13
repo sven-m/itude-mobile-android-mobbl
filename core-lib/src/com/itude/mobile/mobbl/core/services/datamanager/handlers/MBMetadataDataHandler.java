@@ -25,6 +25,9 @@ import com.itude.mobile.mobbl.core.model.MBElement;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.services.datamanager.MBDataHandlerBase;
 
+/**
+ * Retrieves and stores MBDocument instances as Meta data
+ */
 public class MBMetadataDataHandler extends MBDataHandlerBase
 {
 

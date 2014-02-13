@@ -15,6 +15,9 @@
  */
 package com.itude.mobile.mobbl.core.services;
 
+/**
+ * Event class
+ */
 public class MBEvent
 {
 

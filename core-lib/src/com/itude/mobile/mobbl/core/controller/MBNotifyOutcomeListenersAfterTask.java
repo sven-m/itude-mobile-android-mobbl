@@ -2,6 +2,9 @@ package com.itude.mobile.mobbl.core.controller;
 
 import com.itude.mobile.mobbl.core.view.MBOutcomeListenerProtocol;
 
+/**
+ * {@link MBOutcomeTask} class describing a notify outcome listener after task
+ */
 public class MBNotifyOutcomeListenersAfterTask extends MBOutcomeTask<Object>
 {
 

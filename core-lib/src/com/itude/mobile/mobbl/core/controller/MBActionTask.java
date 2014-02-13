@@ -17,6 +17,9 @@ package com.itude.mobile.mobbl.core.controller;
 
 import com.itude.mobile.mobbl.core.configuration.mvc.MBActionDefinition;
 
+/**
+ * {@link MBOutcomeTask} class describing a action task
+ */
 public class MBActionTask extends MBOutcomeTask<MBOutcome>
 {
   private final MBActionDefinition _action;

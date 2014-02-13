@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.controller.exceptions;
 
 import com.itude.mobile.mobbl.core.MBException;
 
+/**
+ * {@link MBException} class used when an outcome is invalid
+ *
+ */
 public class MBInvalidOutcomeException extends MBException
 {
 
@@ -25,6 +29,11 @@ public class MBInvalidOutcomeException extends MBException
    */
   private static final long serialVersionUID = -1681698488777290755L;
 
+  /**
+   * Constructor for MBInvalidOutcomeException.
+   * 
+   * @param msg exception message
+   */
   public MBInvalidOutcomeException(String msg)
   {
     super(msg);

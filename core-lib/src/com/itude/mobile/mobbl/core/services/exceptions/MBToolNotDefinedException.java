@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.services.exceptions;
 
 import com.itude.mobile.mobbl.core.MBException;
 
+/**
+ * {@link MBException} class used when a tool is not defined 
+ *
+ */
 public class MBToolNotDefinedException extends MBException
 {
 
@@ -25,11 +29,22 @@ public class MBToolNotDefinedException extends MBException
    */
   private static final long serialVersionUID = -4131950326282479541L;
 
+  /**
+   * Constructor for MBToolNotDefinedException.
+   * 
+   * @param msg exception message
+   */
   public MBToolNotDefinedException(String msg)
   {
     super(msg);
   }
 
+  /**
+   * Constructor for MBToolNotDefinedException.
+   * 
+   * @param msg exception message
+   * @param throwable throwable {@link Throwable}
+   */
   public MBToolNotDefinedException(String msg, Throwable throwable)
   {
     super(msg, throwable);

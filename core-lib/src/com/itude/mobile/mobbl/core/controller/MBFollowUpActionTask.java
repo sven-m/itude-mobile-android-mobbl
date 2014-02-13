@@ -15,6 +15,9 @@
  */
 package com.itude.mobile.mobbl.core.controller;
 
+/**
+ * {@link MBOutcomeTask} class describing a follow up task
+ */
 public class MBFollowUpActionTask extends MBOutcomeTask<Object>
 {
   private final ResultContainer<MBOutcome> _outcome;

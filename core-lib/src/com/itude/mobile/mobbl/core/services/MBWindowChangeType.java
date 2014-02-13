@@ -15,6 +15,9 @@
  */
 package com.itude.mobile.mobbl.core.services;
 
+/**
+ * Window change types
+ */
 public class MBWindowChangeType
 {
 

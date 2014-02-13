@@ -20,6 +20,21 @@ import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.services.datamanager.MBDataHandlerBase;
 
+/** 
+ * Retrieves and sends MBDocument instances to and from a webservice.
+ * <br/>
+ * The MBWebserviceDataHandler is the top level in the DataHandlers for HTTP network communication.
+ * Default behavior is to process an MBDocument, add the result to the request body and perform an HTTP operation (POST/GET).
+ * 
+ * The endpoints.xml file maps Document names to Webservice URL's together with caching and timeout information. 
+ * The response body is parsed and validated against the Document Definition.
+ * 
+ * The response can be handled by a ResultListener, also defined in the endpoints.xml file. Matching is by regex, so errors can be flexibly handled.
+ * 
+ * Override this class to influence behavior. There are a bunch of template methods for easily changing HTTP headers, HTTP method etc.
+ * 
+ * Caching is configurable and automatic. The cache key is based on the document name and arguments. For REST webservices the operation name is one of the arguments.
+ */
 public abstract class MBWebserviceDataHandler extends MBDataHandlerBase
 {
   @Override

@@ -15,7 +15,16 @@
  */
 package com.itude.mobile.mobbl.core.configuration;
 
+/**
+ * Interface for an includable definition. 
+ *
+ */
 public interface MBIncludableDefinition
 {
+
+  /**
+   * Add all definitions
+   * @param otherDefinition {@link MBIncludableDefinition}
+   */
   public void addAll(MBIncludableDefinition otherDefinition);
 }

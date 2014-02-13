@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.controller;
 
 import android.os.HandlerThread;
 
+/**
+ * {@link HandlerThread} class for a outcome
+ *
+ */
 public class MBOutcomeHandlerThread extends HandlerThread
 {
   private MBOutcomeHandler _outcomeHandler;

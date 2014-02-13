@@ -29,6 +29,10 @@ import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidElement
 import com.itude.mobile.mobbl.core.model.MBElement;
 import com.itude.mobile.mobbl.core.util.Constants;
 
+/**
+ * {@link MBDefinition} Class for an element
+ *
+ */
 public class MBElementDefinition extends MBDefinition
 {
   private final Map<String, MBAttributeDefinition> _attributes;

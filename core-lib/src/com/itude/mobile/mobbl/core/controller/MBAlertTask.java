@@ -17,6 +17,9 @@ package com.itude.mobile.mobbl.core.controller;
 
 import com.itude.mobile.mobbl.core.configuration.mvc.MBAlertDefinition;
 
+/**
+ * {@link MBOutcomeTask} class describing a alert task
+ */
 public class MBAlertTask extends MBOutcomeTask
 {
   private final MBAlertDefinition _alertDefinition;

@@ -18,6 +18,10 @@ package com.itude.mobile.mobbl.core.configuration.mvc;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBConditionalDefinition;
 
+/**
+ * {@link MBConditionalDefinition} Class for a tool
+ *
+ */
 public class MBToolDefinition extends MBConditionalDefinition
 {
   private String _type;

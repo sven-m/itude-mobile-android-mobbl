@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.services.exceptions;
 
 import com.itude.mobile.mobbl.core.MBException;
 
+/**
+ * {@link MBException} class used when a page is not defined 
+ *
+ */
 public class MBPageNotDefinedException extends MBException
 {
 
@@ -25,11 +29,22 @@ public class MBPageNotDefinedException extends MBException
    */
   private static final long serialVersionUID = 4183802163615960775L;
 
+  /**
+   * Constructor for MBPageNotDefinedException.
+   * 
+   * @param msg exception message
+   */
   public MBPageNotDefinedException(String msg)
   {
     super(msg);
   }
 
+  /**
+   * Constructor for MBPageNotDefinedException.
+   * 
+   * @param msg exception message
+   * @param throwable throwable {@link Throwable}
+   */
   public MBPageNotDefinedException(String msg, Throwable throwable)
   {
     super(msg, throwable);

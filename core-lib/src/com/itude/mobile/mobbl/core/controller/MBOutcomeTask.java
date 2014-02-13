@@ -23,6 +23,9 @@ import com.itude.mobile.mobbl.core.controller.util.indicator.MBIndicator;
 import com.itude.mobile.mobbl.core.controller.util.indicator.MBIndicator.Type;
 import com.itude.mobile.mobbl.core.util.threads.MBThread;
 
+/**
+ * {@link Runnable} class to handle a outcome task
+ */
 public abstract class MBOutcomeTask<Result> implements Runnable
 {
   private final MBOutcomeTaskManager _manager;

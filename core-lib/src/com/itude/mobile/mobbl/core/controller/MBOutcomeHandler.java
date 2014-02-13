@@ -33,8 +33,7 @@ import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.view.MBOutcomeListenerProtocol;
 
 /**
- * @author Coen Houtman
- *
+ * {@link Handler} class responsable to handle an outcome
  */
 public class MBOutcomeHandler extends Handler
 {
@@ -64,9 +63,11 @@ public class MBOutcomeHandler extends Handler
 
   /***
    * In case of:
-   *  1. a split dialog; 
-   *  2. a page must always put either left or right; and
-   *  3. that page can be used in multiple dialogs
+   * <ol>
+   *  <li>a split dialog;</li> 
+   *  <li>2. a page must always put either left or right; and</li>
+   *  <li>3. that page can be used in multiple dialogs</li>
+   *  </ol>
    *  
    *  Instead of defining the specific dialog name, either LEFT or RIGHT can be defined as the target dialog.
    *  The page will be displayed in either the left or right part of the active dialog.

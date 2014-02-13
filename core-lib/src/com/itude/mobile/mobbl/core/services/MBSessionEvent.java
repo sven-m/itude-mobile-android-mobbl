@@ -15,6 +15,10 @@
  */
 package com.itude.mobile.mobbl.core.services;
 
+/**
+ * {@link MBEvent} class to hanlde session events
+ *
+ */
 public class MBSessionEvent extends MBEvent
 {
 

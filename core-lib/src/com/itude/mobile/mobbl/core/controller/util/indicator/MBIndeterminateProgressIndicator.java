@@ -20,13 +20,22 @@ import android.support.v7.app.ActionBarActivity;
 
 import com.itude.mobile.mobbl.core.util.MBCustomAttributeContainer;
 
+/**
+ * {@link MBCountingIndicator} class defines an indeterminate progress indicator
+ */
 public final class MBIndeterminateProgressIndicator extends MBCountingIndicator
 {
+  /**
+   * Default private constructor
+   */
   MBIndeterminateProgressIndicator()
   {
 
   }
 
+  /**
+   * @see com.itude.mobile.mobbl.core.controller.util.indicator.MBCountingIndicator#show(android.app.Activity, com.itude.mobile.mobbl.core.util.MBCustomAttributeContainer)
+   */
   @Override
   protected void show(final Activity activity, MBCustomAttributeContainer customAttributes)
   {
@@ -43,6 +52,9 @@ public final class MBIndeterminateProgressIndicator extends MBCountingIndicator
     }
   }
 
+  /**
+   * @see com.itude.mobile.mobbl.core.controller.util.indicator.MBCountingIndicator#dismiss(android.app.Activity)
+   */
   @Override
   protected void dismiss(final Activity activity)
   {

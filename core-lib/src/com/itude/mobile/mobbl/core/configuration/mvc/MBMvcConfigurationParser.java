@@ -34,6 +34,10 @@ import com.itude.mobile.mobbl.core.services.datamanager.handlers.MBMetadataDataH
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
 import com.itude.mobile.mobbl.core.view.builders.MBDialogContentBuilder;
 
+/**
+ * {@link MBDefinition} Class for a configuration file
+ *
+ */
 public class MBMvcConfigurationParser extends MBConfigurationParser
 {
   private List<String> _configAttributes;

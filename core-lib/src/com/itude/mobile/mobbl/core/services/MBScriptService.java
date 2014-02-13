@@ -27,6 +27,10 @@ import android.util.Log;
 import com.itude.mobile.mobbl.core.services.exceptions.MBScriptErrorException;
 import com.itude.mobile.mobbl.core.util.Constants;
 
+/**
+ * Service class for evaluating Javascript expressions
+ * 
+ */
 public final class MBScriptService
 {
   private static final String        ERROR_MARKER         = "SCRIPT_ERROR: ";

@@ -23,6 +23,10 @@ import com.itude.mobile.mobbl.core.configuration.MBConditionalDefinition;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl.core.view.MBStylableDefinition;
 
+/**
+ * {@link MBDefinition} Class for a panel
+ *
+ */
 public class MBPanelDefinition extends MBConditionalDefinition implements MBStylableDefinition
 {
   private String             _type;

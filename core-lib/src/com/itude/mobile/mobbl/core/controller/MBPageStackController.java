@@ -5,6 +5,10 @@ import android.os.Bundle;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.util.Constants;
 
+/**
+ * Controller class responsible for the page stack
+ *
+ */
 public class MBPageStackController
 {
   private final int                _id;

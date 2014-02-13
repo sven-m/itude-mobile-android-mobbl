@@ -18,6 +18,10 @@ package com.itude.mobile.mobbl.core.configuration.resources;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 
+/**
+ * {@link MBDefinition} Class for an item
+ *
+ */
 public class MBItemDefinition extends MBDefinition
 {
   private String _resource;

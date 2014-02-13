@@ -18,16 +18,20 @@ package com.itude.mobile.mobbl.core.controller;
 import com.itude.mobile.android.util.DeviceUtil;
 
 /**
- * @author Coen Houtman
- *
- *  Factory to get an MBViewManager based on the device type.
+ * Factory to get an {@link MBViewManager} based on the device type.
  */
 public class MBViewManagerFactory
 {
   public static Class<? extends MBViewManager> getViewManagerClass()
   {
-    if (DeviceUtil.getInstance().isTablet()) return MBTabletViewManager.class;
-    else return MBPhoneViewManager.class;
+    if (DeviceUtil.isTablet())
+    {
+      return MBTabletViewManager.class;
+    }
+    else
+    {
+      return MBPhoneViewManager.class;
+    }
 
   }
 }

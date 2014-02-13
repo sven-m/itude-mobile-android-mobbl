@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.services;
 
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 
+/**
+ * Result listener defenition class 
+ *
+ */
 public class MBResultListenerDefinition extends MBDefinition
 {
   private String   _matchExpression;

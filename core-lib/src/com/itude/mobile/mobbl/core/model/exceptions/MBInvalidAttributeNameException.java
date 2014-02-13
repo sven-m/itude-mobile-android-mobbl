@@ -17,6 +17,10 @@ package com.itude.mobile.mobbl.core.model.exceptions;
 
 import com.itude.mobile.mobbl.core.MBException;
 
+/**
+ * {@link MBException} class used when an attribute name is invalid
+ *
+ */
 public class MBInvalidAttributeNameException extends MBException
 {
 
@@ -25,11 +29,22 @@ public class MBInvalidAttributeNameException extends MBException
    */
   private static final long serialVersionUID = 1L;
 
+  /**
+   * Constructor for MBInvalidAttributeNameException.
+   * 
+   * @param msg exception message
+   */
   public MBInvalidAttributeNameException(String msg)
   {
     super(msg);
   }
 
+  /**
+   * Constructor for MBInvalidAttributeNameException.
+   * 
+   * @param msg exception message
+   * @param throwable throwable {@link Throwable}
+   */
   public MBInvalidAttributeNameException(String msg, Throwable throwable)
   {
     super(msg, throwable);

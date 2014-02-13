@@ -24,9 +24,7 @@ import com.itude.mobile.mobbl.core.view.components.tabbar.MBActionBarBuilder;
 import com.itude.mobile.mobbl.core.view.components.tabbar.MBTabletActionBarBuilder;
 
 /**
- * @author Coen Houtman
- *
- *  This ViewManager can be used to perform actions that cannot be done on pre-Honeycomb devices.
+ *  This {@link MBShutdownHandler} can be used to perform actions that cannot be done on pre-Honeycomb devices.
  *  For example the use of the ActionBar.
  */
 public class MBTabletViewManager extends MBViewManager
