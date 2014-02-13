@@ -56,6 +56,7 @@ import com.itude.mobile.mobbl.core.services.exceptions.MBNoDocumentException;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.imagecache.ImageUtil;
 import com.itude.mobile.mobbl.core.view.MBAlert;
+import com.itude.mobile.mobbl.core.view.MBOutcomeListenerProtocol;
 import com.itude.mobile.mobbl.core.view.MBPage;
 
 /** 
@@ -64,7 +65,7 @@ import com.itude.mobile.mobbl.core.view.MBPage;
  * The MBApplicationController is responsible for determining which MBPage or MBAction should be constructed when an MBOutcome is triggered.
  * The handleOutcome method is the main usage. The MBOutcomes are defined in the application configuration which is typically the config.xml file. Alternatively config.xml may reference a file using the <Include ...> directive in which case outcomes.xmlx is an often used convention. 
  */
-public class MBApplicationController extends Application
+public class MBApplicationController extends Application implements MBOutcomeListenerProtocol
 {
   private MBApplicationFactory           _applicationFactory;
   private MBViewManager                  _viewManager;
@@ -143,16 +144,28 @@ public class MBApplicationController extends Application
 
   public void fireInitialOutcomes()
   {
+    _outcomeHandler.registerOutcomeListener(this);
     MBOutcome initialOutcome = new MBOutcome();
-    initialOutcome.setOrigin(new MBOutcome.Origin().withDialog("Controller"));
+    initialOutcome.setOrigin(new MBOutcome.Origin().withAction("Controller"));
     initialOutcome.setOutcomeName("init");
-    initialOutcome.setNoBackgroundProcessing(true);
 
     _suppressPageSelection = true;
     _backStackEnabled = false;
-    handleOutcomeSynchronously(initialOutcome);
+    handleOutcome(initialOutcome);
+  }
+
+  @Override
+  public void outcomeProduced(MBOutcome outcome)
+  {
+  }
+
+  @Override
+  public void afterOutcomeHandled(MBOutcome outcome)
+  {
+    if (outcome.getOrigin().matches("Controller") && outcome.getOutcomeName().equals("init"))
 
     _outcomeHandler.sendEmptyMessage(Constants.C_MESSAGE_INITIAL_OUTCOMES_FINISHED);
+
   }
 
   /**
