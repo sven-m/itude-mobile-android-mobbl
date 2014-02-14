@@ -1,4 +1,5 @@
 # Android MOBBL
+![MOBBL](http://itudemobiledev.files.wordpress.com/2014/02/mobbl-logo.png?w=362&h=203 "MOBBL logo")
 
 A development framework for data centric Android apps.
 
