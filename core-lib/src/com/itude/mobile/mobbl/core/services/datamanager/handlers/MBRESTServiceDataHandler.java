@@ -132,7 +132,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     String key = null;
 
     // Look for any cached result for GET requests. If there; return it
-    String operationMethod = doc.getValueForPath("/Operation[0]/@httpMethod");
+    String operationMethod = getOperation(doc);
 
     if (Constants.C_HTTP_REQUEST_METHOD_GET.equalsIgnoreCase(operationMethod))
     {
@@ -197,7 +197,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
         _log.debug("RestServiceDataHandler is about to send this message: \n" + body + "\n to " + endPoint.getEndPointUri());
       }
 
-      String operationMethod = doc.getValueForPath("/Operation[0]/@httpMethod");
+      String operationMethod = getOperation(doc);
 
       // Let's get our possibly altered url
       String urlString = getRequestUrlFromDocument(endPoint.getEndPointUri(), doc);
@@ -273,6 +273,11 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
       }
       throw new RuntimeException(e);
     }
+  }
+
+  protected String getOperation(MBDocument doc)
+  {
+    return doc.getValueForPath("/Operation[0]/@httpMethod");
   }
 
   protected String getRequestUrlFromDocument(String urlString, //

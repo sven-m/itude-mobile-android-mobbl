@@ -75,6 +75,7 @@ public abstract class MBOutcomeTask<Result> implements Runnable
 
   protected MBIndicator showIndicator()
   {
+    if (getOutcome().getNoBackgroundProcessing()) return MBIndicator.show(Type.none, getOutcome());
     if ("exception".equals(getOutcome().getOutcomeName())) return MBIndicator.show(Type.none, getOutcome());
     if (getThreading() != Threading.BACKGROUND) return MBIndicator.show(Type.none, getOutcome());
 
