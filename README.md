@@ -1,4 +1,5 @@
 # Android MOBBL
+![MOBBL](http://itudemobiledev.files.wordpress.com/2014/02/mobbl-logo.png?w=362&h=203 "MOBBL logo")
 
 A development framework for data centric Android apps.
 
@@ -14,7 +15,7 @@ For Api documentation, see the [Android API Reference](http://mobbl.org/apis/and
 
 
 ## [Changelog](https://github.com/ItudeMobile/itude-mobile-android-mobbl/wiki/Changelog)
-Current version: 3.2.0.12
+Current version: 3.2.0.13
 
 ## Build
 #### Maven
