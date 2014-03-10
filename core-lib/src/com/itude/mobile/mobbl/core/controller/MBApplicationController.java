@@ -558,7 +558,8 @@ public class MBApplicationController extends Application implements MBOutcomeLis
 
     exceptionDocument.setValue(name, MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_NAME);
     exceptionDocument.setValue(description, MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_DESCRIPTION);
-    exceptionDocument.setValue(outcome.getOrigin().toString(), MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_ORIGIN);
+    String origin = outcome.getOrigin() != null ? outcome.getOrigin().toString() : null;
+    exceptionDocument.setValue(origin, MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_ORIGIN);
     exceptionDocument.setValue(outcome.getOutcomeName(), MBConfigurationDefinition.PATH_SYSTEM_EXCEPTION_OUTCOME);
     for (StackTraceElement traceElement : exception.getStackTrace())
     {
