@@ -618,7 +618,7 @@ public class MBBasicViewController extends DialogFragment
 
   public MBDialogController getDialogController()
   {
-    return _dialogController.get();
+    return _dialogController != null ? _dialogController.get() : null;
   }
 
   @Override
