@@ -616,6 +616,10 @@ public class MBElementContainer implements Parcelable
   public String evaluateExpression(String expression, String currentPath)
   {
     String translated = substituteExpressions(expression, "null", currentPath);
+    if (StringUtil.isNotBlank(translated))
+    {
+      translated = translated.replace("\n", "").replace("\r", "");
+    }
     return MBScriptService.getInstance().evaluate(translated);
   }
 
