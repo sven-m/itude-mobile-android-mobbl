@@ -95,7 +95,7 @@ public class MBDataManagerService
 
   private MBDocumentOperation getLoaderForDocumentName(String documentName, MBDocument arguments)
   {
-    return new MBDocumentOperation(getHandlerForDocument(documentName), documentName, arguments);
+    return getHandlerForDocument(documentName).createLoadDocumentOperation(documentName, arguments);
   }
 
   private MBDataHandler getHandlerForDocument(String documentName)
@@ -223,7 +223,7 @@ public class MBDataManagerService
 
   public void storeDocument(MBDocument document, MBDocumentOperationDelegate delegate, Object resultSelector, Object errorSelector)
   {
-    MBDocumentOperation storer = new MBDocumentOperation(getHandlerForDocument(document.getName()), document);
+    MBDocumentOperation storer = getHandlerForDocument(document.getName()).createStoreDocumentOperation(document);
     storer.setDelegate(delegate);
     storer.start();
   }
