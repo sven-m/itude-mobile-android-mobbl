@@ -19,6 +19,7 @@ import android.util.Log;
 
 import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
+import com.itude.mobile.mobbl.core.services.operation.MBDocumentOperation;
 import com.itude.mobile.mobbl.core.util.Constants;
 
 /**
@@ -120,6 +121,18 @@ public class MBDataHandlerBase implements MBDataHandler
       result = loadFreshDocument(documentName, documentParser);
     }
     return result;
+  }
+
+  @Override
+  public MBDocumentOperation createLoadDocumentOperation(String documentName, MBDocument arguments)
+  {
+    return new MBDocumentOperation(this, documentName, arguments);
+  }
+
+  @Override
+  public MBDocumentOperation createStoreDocumentOperation(MBDocument document)
+  {
+    return new MBDocumentOperation(this, document);
   }
 
 }
