@@ -310,8 +310,15 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
     else
     {
       // Pass this onKeyDown event trough to the underlying fragments
-      if (!getActiveDialog().onKeyDown(keyCode, event)) return super.onKeyDown(keyCode, event);
-      else return true;
+      MBDialogController activeDialog = getActiveDialog();
+      if (activeDialog != null && !getActiveDialog().onKeyDown(keyCode, event))
+      {
+        return super.onKeyDown(keyCode, event);
+      }
+      else
+      {
+        return true;
+      }
     }
 
   }
@@ -657,6 +664,11 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   public void setOrientation(MBPage page)
   {
+    if (page == null)
+    {
+      Log.w(Constants.APPLICATION_NAME, "Can't set orientation without an MBPage");
+      return;
+    }
 
     MBPage.OrientationPermission orientationPermissions = page.getOrientationPermissions();
 

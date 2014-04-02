@@ -31,8 +31,6 @@ public class MBPageViewBuilder extends MBViewBuilder
 
   public ViewGroup buildPageView(MBPage page, boolean buildWithContent)
   {
-    boolean buildWithScrollView = page.isScrollable();
-
     Context context = MBApplicationController.getInstance().getBaseContext();
     MBStyleHandler styleHandler = getStyleHandler();
 
@@ -42,6 +40,11 @@ public class MBPageViewBuilder extends MBViewBuilder
     LinearLayout main = new LinearLayout(context);
     main.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     main.setOrientation(LinearLayout.VERTICAL);
+
+    if (page == null)
+    {
+      return main;
+    }
 
     /*
      * Add a styled header if we have got a title
@@ -83,6 +86,8 @@ public class MBPageViewBuilder extends MBViewBuilder
      * If we want to have a scrollview we will create one and add our content to it
      * If we don't want a scrollview but do want content we will add our content directly to our main view
      */
+    boolean buildWithScrollView = page.isScrollable();
+
     if (buildWithScrollView)
     {
       ScrollView scrollView = new ScrollView(context);
