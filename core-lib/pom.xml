@@ -130,7 +130,6 @@
 											[3.7.0,)
 										</versionRange>
 										<goals>
-											<goal>proguard</goal>
 											<goal>generate-sources</goal>
 										</goals>
 									</pluginExecutionFilter>

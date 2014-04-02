@@ -311,7 +311,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
     {
       // Pass this onKeyDown event trough to the underlying fragments
       MBDialogController activeDialog = getActiveDialog();
-      if (activeDialog != null && !getActiveDialog().onKeyDown(keyCode, event))
+      if (activeDialog != null && !activeDialog.onKeyDown(keyCode, event))
       {
         return super.onKeyDown(keyCode, event);
       }
