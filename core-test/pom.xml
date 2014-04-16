@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.itude.mobile.android.mobbl</groupId>
 		<artifactId>mobbl-core</artifactId>
-		<version>3.2.0.18-SNAPSHOT</version>
+		<version>3.2.0.19-SNAPSHOT</version>
 	</parent>
 	<artifactId>mobbl-core-test</artifactId>
 	<packaging>apk</packaging>
@@ -65,10 +65,6 @@
 			<artifactId>android</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!--dependency>
-			<groupId>com.android.support</groupId>
-  			<artifactId>support-v4</artifactId>
-  		</dependency-->
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android-test</artifactId>

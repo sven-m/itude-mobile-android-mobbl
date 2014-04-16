@@ -38,12 +38,7 @@
 				<artifactId>android</artifactId>
 				<version>${android.version}</version>
 			</dependency>
-            <!--dependency>
-				<groupId>com.android.support</groupId>
-				<artifactId>support-v4</artifactId>
-				<version>${android.support.version}</version>
-			</dependency-->
-			<dependency>
+            <dependency>
 				<groupId>com.android.support</groupId>
 				<artifactId>appcompat-v7</artifactId>
 				<type>jar</type>
