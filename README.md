@@ -15,7 +15,7 @@ For Api documentation, see the [Android API Reference](http://mobbl.org/apis/and
 
 
 ## [Changelog](https://github.com/ItudeMobile/itude-mobile-android-mobbl/wiki/Changelog)
-Current version: 3.2.0.17
+Current version: 3.2.0.18
 
 ## Build
 #### Maven
@@ -37,16 +37,6 @@ Now add Android Mobbl
 	<groupId>com.itude.mobile.android.mobbl</groupId>
 	<artifactId>mobbl-core-lib</artifactId>
 	<version>${core.lib.version}</version>
-	<type>apklib</type>
-</dependency>
-```
-and the [Android Util](https://github.com/ItudeMobile/itude-mobile-android-util)
-
-```xml
-<dependency>
-	<groupId>com.itude.mobile.android.util</groupId>
-	<artifactId>android-util-lib</artifactId>
-	<version>${util.lib.version}</version>
 	<type>apklib</type>
 </dependency>
 ```
