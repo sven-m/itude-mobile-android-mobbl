@@ -64,14 +64,24 @@
 			<artifactId>android</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
+		<!--dependency>
 			<groupId>com.android.support</groupId>
 			<artifactId>support-v4</artifactId>
+		</dependency-->
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>appcompat-v7</artifactId>
+			<type>jar</type>
 		</dependency>
 		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>appcompat-v7</artifactId>
+			<type>apklib</type>
+		</dependency>
+		<!--dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-		</dependency>
+		</dependency-->
 		<dependency>
 			<groupId>rhino</groupId>
 			<artifactId>js</artifactId>
@@ -85,16 +95,7 @@
 			<artifactId>android-util-lib</artifactId>
 			<type>apklib</type>
 		</dependency>
-		<dependency>
-			<groupId>com.android.support</groupId>
-			<artifactId>appcompat-v7</artifactId>
-			<type>jar</type>
-		</dependency>
-		<dependency>
-			<groupId>com.android.support</groupId>
-			<artifactId>appcompat-v7</artifactId>
-			<type>apklib</type>
-		</dependency>
+
 	</dependencies>
 
 	<scm>

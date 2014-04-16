@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry exported="true" kind="var" path="M2_REPO/com/android/support/support-v4/19.0.0/support-v4-19.0.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/google/android/android-test/2.2.1/android-test-2.2.1.jar"/>
-	<classpathentry exported="true" kind="var" path="M2_REPO/rhino/js/1.7R2/js-1.7R2.jar"/>
 	<classpathentry kind="src" path="gen">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
