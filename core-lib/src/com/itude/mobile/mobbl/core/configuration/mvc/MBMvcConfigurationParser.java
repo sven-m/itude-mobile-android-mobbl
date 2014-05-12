@@ -435,6 +435,8 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
         }
       }
       pageDef.setOrientationPermissions(attributeDict.get("orientationPermissions"));
+      
+      pageDef.setCustom(extractCustomAttributes(attributeDict, _pageAttributes));
 
       notifyProcessed(pageDef);
     }
