@@ -67,12 +67,7 @@
 		<dependency>
 			<groupId>com.android.support</groupId>
 			<artifactId>appcompat-v7</artifactId>
-			<type>jar</type>
-		</dependency>
-		<dependency>
-			<groupId>com.android.support</groupId>
-			<artifactId>appcompat-v7</artifactId>
-			<type>apklib</type>
+			<type>aar</type>
 		</dependency>
 		<dependency>
 			<groupId>rhino</groupId>
@@ -120,7 +115,7 @@
 											android-maven-plugin
 										</artifactId>
 										<versionRange>
-											[3.7.0,)
+											[3.9.0-rc.1)
 										</versionRange>
 										<goals>
 											<goal>generate-sources</goal>
