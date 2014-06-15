@@ -71,6 +71,10 @@
 			<artifactId>appcompat-v7</artifactId>
 			<type>apklib</type>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
 	</dependencies>
 
 	<scm>
