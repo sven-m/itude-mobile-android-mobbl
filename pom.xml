@@ -75,6 +75,11 @@
 				<version>${util.lib.version}</version>
 				<type>apklib</type>
 			</dependency>			
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${apache.commons.lang.version}</version>
+      </dependency>
 		</dependencies>
 	</dependencyManagement>
     
@@ -176,6 +181,7 @@
         <android.version>4.4</android.version>
         <android.support.version>19.0.1</android.support.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <apache.commons.lang.version>3.3.2</apache.commons.lang.version>
     </properties>
 
 	<repositories>
