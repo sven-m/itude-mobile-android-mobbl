@@ -120,6 +120,7 @@
 								<Attribute name="coverImage" type="string"/>
 								<Attribute name="review" type="string" />
 								<Attribute name="language" type="string" />
+								<Attribute name="text()" type="string" />
 							</Element>
 						</Element>
 					</Document>

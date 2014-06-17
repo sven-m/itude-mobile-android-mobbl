@@ -15,63 +15,34 @@
  */
 package com.itude.mobile.mobbl.core.model;
 
-import android.test.ApplicationTestCase;
-
-import com.itude.mobile.android.util.AssetUtil;
-import com.itude.mobile.android.util.DataUtil;
-import com.itude.mobile.mobbl.core.MBApplicationCore;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBMvcConfigurationParser;
 
-public class MBDocumentFactoryTest extends ApplicationTestCase<MBApplicationCore>
+public class MBDocumentFactoryTest extends MBDocumentAbstractTest
 {
-
-  private byte[]                    configData;
-  private byte[]                    jsonDocumentData;
-  private byte[]                    xmlDocumentData;
-  private MBConfigurationDefinition config;
-
-  public MBDocumentFactoryTest()
-  {
-    super(MBApplicationCore.class);
-  }
-
-  @Override
-  protected void setUp() throws Exception
-  {
-    DataUtil.getInstance().setContext(getContext());
-    jsonDocumentData = AssetUtil.getInstance().getByteArray("unittests/testdocument.txt");
-    xmlDocumentData = AssetUtil.getInstance().getByteArray("unittests/testdocument.xml");
-    configData = AssetUtil.getInstance().getByteArray("unittests/config_unittests.xml");
-
-    MBMvcConfigurationParser configParser = new MBMvcConfigurationParser();
-    config = (MBConfigurationDefinition) configParser.parseData(configData, "config");
-  }
 
   public void testJsonParsing()
   {
-    assertNotNull(jsonDocumentData);
-    assertNotNull(configData);
-    assertNotNull(config);
+    assertNotNull(getJsonDocumentData());
+    assertNotNull(getConfigData());
+    assertNotNull(getConfig());
 
-    MBDocumentDefinition docDef = config.getDefinitionForDocumentName("Books");
+    MBDocumentDefinition docDef = getConfig().getDefinitionForDocumentName("Books");
     assertNotNull(docDef);
 
-    MBDocument document = MBDocumentFactory.getInstance().getDocumentWithData(jsonDocumentData, MBDocumentFactory.PARSER_JSON, docDef);
+    MBDocument document = MBDocumentFactory.getInstance().getDocumentWithData(getJsonDocumentData(), MBDocumentFactory.PARSER_JSON, docDef);
     assertNotNull(document);
   }
 
   public void testXMLParsing()
   {
-    assertNotNull(xmlDocumentData);
-    assertNotNull(configData);
-    assertNotNull(config);
+    assertNotNull(getXmlDocumentData());
+    assertNotNull(getConfigData());
+    assertNotNull(getConfig());
 
-    MBDocumentDefinition docDef = config.getDefinitionForDocumentName("Books");
+    MBDocumentDefinition docDef = getConfig().getDefinitionForDocumentName("Books");
     assertNotNull(docDef);
 
-    MBDocument document = MBDocumentFactory.getInstance().getDocumentWithData(xmlDocumentData, MBDocumentFactory.PARSER_XML, docDef);
+    MBDocument document = MBDocumentFactory.getInstance().getDocumentWithData(getXmlDocumentData(), MBDocumentFactory.PARSER_XML, docDef);
     assertNotNull(document);
   }
 

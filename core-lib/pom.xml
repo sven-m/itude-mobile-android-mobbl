@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=" http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.itude.mobile.android.mobbl</groupId>
@@ -32,8 +33,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.android.support</groupId>
-  			<artifactId>support-v4</artifactId>
-  		</dependency>
+			<artifactId>support-v4</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
@@ -70,18 +71,25 @@
 			<artifactId>appcompat-v7</artifactId>
 			<type>apklib</type>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
 	</dependencies>
 
 	<scm>
-		<url>https://github.com/ItudeMobile/itude-mobile-android-mobbl/core-lib</url>
-		<connection>scm:git:git://github.com/ItudeMobile/itude-mobile-android-mobbl.git/core-lib</connection>
-		<developerConnection>scm:git:git@github.com:ItudeMobile/itude-mobile-android-mobbl.git/core-lib</developerConnection>
+		<url>https://github.com/ItudeMobile/itude-mobile-android-mobbl/core-lib
+		</url>
+		<connection>scm:git:git://github.com/ItudeMobile/itude-mobile-android-mobbl.git/core-lib
+		</connection>
+		<developerConnection>scm:git:git@github.com:ItudeMobile/itude-mobile-android-mobbl.git/core-lib
+		</developerConnection>
 	</scm>
 
 	<build>
 		<defaultGoal>install</defaultGoal>
 		<finalName>${project.artifactId}-${project.version}</finalName>
-		<sourceDirectory>src</sourceDirectory> 
+		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -91,17 +99,17 @@
 				<artifactId>android-maven-plugin</artifactId>
 				<executions>
 					<execution>
-                    	<id>lint</id>
-                        <goals>
-                        	<goal>lint</goal>
-                        </goals>
-                        <phase>install</phase>
-                    </execution>
+						<id>lint</id>
+						<goals>
+							<goal>lint</goal>
+						</goals>
+						<phase>install</phase>
+					</execution>
 				</executions>
 				<configuration>
 					<lint>
-                        <skip>false</skip>
-                    </lint>
+						<skip>false</skip>
+					</lint>
 				</configuration>
 			</plugin>
 		</plugins>
