@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.itude.mobile.android.mobbl</groupId>
 	<artifactId>mobbl-core</artifactId>
-	<version>3.2.0.10</version>
+	<version>3.2.0.10.fix-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Android Mobbl Core</name>
 	<description>Android Mobbl Core</description>
@@ -141,7 +141,7 @@
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
-                    <version>3.7.0</version>
+                    <version>3.9.0-rc.1</version>
                     <configuration>
 						<sdk>
 							<platform>19</platform>

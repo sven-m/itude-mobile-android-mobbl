@@ -112,7 +112,7 @@ public class MBMvcConfigurationParserTest extends ApplicationTestCase<MBApplicat
 
     assertEquals("Book", childDef.getName());
 
-    assertEquals(7, childDef.getAttributes().size());
+    assertEquals(8, childDef.getAttributes().size());
 
     String[] attributes = childDef.getAttributeNames().split(",");
 
