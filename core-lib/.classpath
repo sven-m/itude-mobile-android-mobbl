@@ -11,6 +11,7 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry exported="true" kind="var" path="M2_REPO/rhino/js/1.7R2/js-1.7R2.jar"/>
 	<classpathentry exported="true" kind="var" path="M2_REPO/org/apache/httpcomponents/httpclient/4.1/httpclient-4.1.jar"/>
+	<classpathentry exported="true" kind="var" path="M2_REPO/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/android-support-v7-appcompat"/>
 	<classpathentry kind="output" path="bin/classes"/>

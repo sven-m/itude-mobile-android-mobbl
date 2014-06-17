@@ -32,6 +32,8 @@ import com.itude.mobile.mobbl.core.model.exceptions.MBInvalidAttributeNameExcept
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 /**
 * A node in an Element tree.
 */
@@ -183,7 +185,7 @@ public class MBElement extends MBElementContainer
       appendToMe.append(">");
       if (hasBodyText)
       {
-        appendToMe.append(StringUtil.escapeHtml(getBodyText()));
+        appendToMe.append(StringEscapeUtils.escapeXml10(getBodyText()));
       }
       else
       {
@@ -364,7 +366,7 @@ public class MBElement extends MBElementContainer
 
   public String attributeAsXml(String name, Object attrValue)
   {
-    attrValue = cookValue((String) attrValue);
+    attrValue = StringEscapeUtils.escapeXml10((String) attrValue);
 
     if (attrValue == null)
     {
