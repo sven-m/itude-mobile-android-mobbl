@@ -119,7 +119,7 @@
 											android-maven-plugin
 										</artifactId>
 										<versionRange>
-											[3.9.0-rc.1)
+											[3.9.0-rc.1,)
 										</versionRange>
 										<goals>
 											<goal>generate-sources</goal>
