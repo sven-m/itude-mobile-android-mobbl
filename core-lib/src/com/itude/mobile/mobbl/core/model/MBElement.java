@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -31,8 +33,6 @@ import com.itude.mobile.mobbl.core.model.exceptions.MBCannotAssignException;
 import com.itude.mobile.mobbl.core.model.exceptions.MBInvalidAttributeNameException;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
-
-import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
 * A node in an Element tree.
@@ -289,24 +289,24 @@ public class MBElement extends MBElementContainer
   @Override
   public String getUniqueId()
   {
-    String uid = "";
-    uid += getDefinition().getName();
+    StringBuilder uid = new StringBuilder();
+    uid.append(getDefinition().getName());
     for (MBAttributeDefinition def : _definition.getAttributes())
     {
       String attrName = def.getName();
       if (!attrName.equals("xmlns"))
       {
         String attrValue = _values.get(attrName);
-        uid += "_";
+        uid.append('_');
         if (attrValue != null)
         {
-          uid += cookValue(attrValue);
+          uid.append(cookValue(attrValue));
         }
       }
     }
-    uid += super.getUniqueId();
+    uid.append(super.getUniqueId());
 
-    return uid;
+    return uid.toString();
   }
 
   @Override
@@ -347,21 +347,21 @@ public class MBElement extends MBElementContainer
       return null;
     }
 
-    String cooked = "";
+    StringBuilder cooked = new StringBuilder();
     for (int i = 0; i < uncooked.length(); i++)
     {
       char c = uncooked.charAt(i);
       if (c < 32 || c == '&' || c == '\'' || c > 126)
       {
-        cooked += "&#" + (int) c + ";";
+        cooked.append("&#").append((int) c).append(';');
       }
       else
       {
-        cooked += c;
+        cooked.append(c);
       }
     }
 
-    return cooked;
+    return cooked.toString();
   }
 
   public String attributeAsXml(String name, Object attrValue)
