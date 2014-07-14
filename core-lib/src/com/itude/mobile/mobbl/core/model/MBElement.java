@@ -185,7 +185,7 @@ public class MBElement extends MBElementContainer
       appendToMe.append(">");
       if (hasBodyText)
       {
-        appendToMe.append(StringEscapeUtils.escapeXml10(getBodyText()));
+        appendToMe.append(StringEscapeUtils.escapeXml10(getBodyText().trim ()));
       }
       else
       {
