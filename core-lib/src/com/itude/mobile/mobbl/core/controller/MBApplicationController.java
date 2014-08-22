@@ -155,6 +155,12 @@ public class MBApplicationController extends Application implements MBOutcomeLis
   }
 
   @Override
+  public boolean shouldHandleOutcome(MBOutcome outcome)
+  {
+    return true;
+  }
+
+  @Override
   public void outcomeProduced(MBOutcome outcome)
   {
   }
