@@ -17,6 +17,7 @@ package com.itude.mobile.mobbl.core.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
@@ -642,8 +643,7 @@ public class MBElementContainer implements Parcelable
   //Descending sort on an attribute can be done by prefixing the attribute with a -
   public void sortElements(String elementName, String attributeNames)
   {
-    List<MBElement> elements = getElementsWithName(elementName);
-    if (elements.isEmpty())
+    if (StringUtil.isBlank(elementName) || StringUtil.isBlank(attributeNames))
     {
       return;
     }
@@ -662,7 +662,19 @@ public class MBElementContainer implements Parcelable
       trace.add(new Object[]{attrSpec, ascending});
     }
 
-    Collections.sort(elements, new MBDynamicAttributeComparator(trace));
+    sortElements(elementName, new MBDynamicAttributeComparator(trace));
+  }
+
+  public void sortElements(String elementName, Comparator<Object> comparator)
+  {
+    if (StringUtil.isBlank(elementName) || comparator == null)
+    {
+      return;
+    }
+
+    List<MBElement> elements = getElementsWithName(elementName);
+
+    Collections.sort(elements, comparator);
 
     getDocument().clearPathCache();
   }
