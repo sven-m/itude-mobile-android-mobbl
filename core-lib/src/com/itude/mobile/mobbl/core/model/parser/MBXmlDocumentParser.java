@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -191,7 +192,8 @@ public class MBXmlDocumentParser extends DefaultHandler implements MBDocumentPar
 
         for (int i = 0; i < attributes.getLength(); i++)
         {
-          ((MBElement) element).setAttributeValue(attributes.getValue(i), attributes.getLocalName(i), false);
+          String unescapedXml = StringEscapeUtils.unescapeXml(attributes.getValue(i));
+		((MBElement) element).setAttributeValue(unescapedXml, attributes.getLocalName(i), false);
         }
       }
       _stack.add(element);
@@ -218,7 +220,7 @@ public class MBXmlDocumentParser extends DefaultHandler implements MBDocumentPar
 
   private void endValidElement(String uri, String localName, String qName) throws SAXException
   {
-    String string = _characters.toString().trim();
+    String string = StringEscapeUtils.unescapeXml(_characters.toString().trim());
     if (string.length() > 0)
     {
       if (_stack.peek() instanceof MBElement && ((MBElement) _stack.peek()).isValidAttribute("text()"))
