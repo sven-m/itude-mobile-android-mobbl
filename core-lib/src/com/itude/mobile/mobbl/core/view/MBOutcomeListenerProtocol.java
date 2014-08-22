@@ -20,6 +20,8 @@ import com.itude.mobile.mobbl.core.controller.MBOutcome;
 public interface MBOutcomeListenerProtocol
 {
 
+  public boolean shouldHandleOutcome(MBOutcome outcome);
+
   public void outcomeProduced(MBOutcome outcome);
 
   public void afterOutcomeHandled(MBOutcome outcome);
