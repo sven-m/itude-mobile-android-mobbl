@@ -29,6 +29,7 @@ import com.itude.mobile.mobbl.core.controller.exceptions.MBNoOutcomesDefinedExce
 import com.itude.mobile.mobbl.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.view.MBOutcomeListenerProtocol;
 
 /**
  * Runner class for an outcome
@@ -66,6 +67,9 @@ public class MBOutcomeRunner
   private void actuallyHandle()
   {
     supplementOrigin();
+
+    if (!shouldHandleOutcome()) return;
+
     clearCaches();
     prepareOutcomeCopies();
     persistIfNeeded();
@@ -79,6 +83,14 @@ public class MBOutcomeRunner
         manager.run();
       }
     }
+  }
+
+  private boolean shouldHandleOutcome()
+  {
+    for (MBOutcomeListenerProtocol listener : MBApplicationController.getInstance().getOutcomeHandler().getOutcomeListeners())
+      if (!listener.shouldHandleOutcome(_outcome)) return false;
+
+    return true;
   }
 
   private void supplementOrigin()
