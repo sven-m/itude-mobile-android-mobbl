@@ -587,6 +587,7 @@ public class MBApplicationController extends Application implements MBOutcomeLis
       MBOutcome specificExceptionHandler = new MBOutcome(outcome);
       specificExceptionHandler.setOutcomeName(exception.getClass().getSimpleName());
       specificExceptionHandler.setDocument(exceptionDocument);
+      specificExceptionHandler.setAction(null);
       handleOutcome(specificExceptionHandler);
     }
     else
