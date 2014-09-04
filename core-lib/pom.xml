@@ -8,7 +8,7 @@
 		<version>3.2.0.24-SNAPSHOT</version>
 	</parent>
 	<artifactId>mobbl-core-lib</artifactId>
-	<packaging>apklib</packaging>
+	<packaging>aar</packaging>
 	<name>Android Mobbl Core Lib</name>
 	<description>Android Mobbl Core Library - Core library</description>
 	<url>http://mobbl.org/</url>
