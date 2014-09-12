@@ -344,8 +344,7 @@ public class MBField extends MBComponent
     String path = getAbsoluteDataPath();
     String originalValue = (String) getDocument().getValueForPath(path);
 
-    boolean valueChanged = (value == null && originalValue != null) || (value != null && originalValue == null)
-                           || !value.equals(originalValue);
+    boolean valueChanged = (value == null && originalValue != null) || (value != null && !value.equals(originalValue));
 
     if (valueChanged && notifyValueWillChange(value, originalValue, path))
     {
