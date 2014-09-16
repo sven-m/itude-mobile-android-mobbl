@@ -87,11 +87,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
     if (builder == null) throw new MBException("No field builder found for field " + field);
 
     View view = builder.buildField(field);
-    if (view != null)
-    {
-      field.attachView(view);
-      view.setContentDescription(builder.getClass().getSimpleName());
-    }
+    if (view != null) field.attachView(view);
 
     return view;
   }

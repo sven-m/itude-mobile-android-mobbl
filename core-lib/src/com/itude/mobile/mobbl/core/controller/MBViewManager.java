@@ -148,7 +148,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
       FrameLayout container = new FrameLayout(this);
       LayoutParams layout = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
       container.setLayoutParams(layout);
-      container.setContentDescription("Main container");
 
       MBContentViewWrapper wrapper = MBApplicationFactory.getInstance().createContentViewWrapper();
       super.setContentView(wrapper.buildContentView(this, container));
@@ -158,7 +157,6 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
     ViewUtilities.replaceView(_container, view);
     _container = view;
-    view.setContentDescription("Content view");
   }
 
   @Override

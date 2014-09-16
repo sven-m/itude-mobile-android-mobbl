@@ -16,7 +16,6 @@ public class SingleDialogBuilder extends MBDialogContentBuilder.Builder
   @Override
   public ViewGroup buildDialog(List<Integer> sortedDialogIds)
   {
-    //    ViewGroup container = buildContainer();
     if (sortedDialogIds != null && !sortedDialogIds.isEmpty())
     {
       FrameLayout fragmentContainer = new FrameLayout(MBApplicationController.getInstance().getBaseContext());
@@ -27,11 +26,7 @@ public class SingleDialogBuilder extends MBDialogContentBuilder.Builder
       styleHandler.styleFragmentPadding(fragmentContainer, 0);
       styleHandler.styleBackground(fragmentContainer);
 
-      fragmentContainer.setContentDescription("Dialog Fragment container");
-
       return fragmentContainer;
-
-      //container.addView(fragmentContainer);
     }
 
     return buildContainer();
