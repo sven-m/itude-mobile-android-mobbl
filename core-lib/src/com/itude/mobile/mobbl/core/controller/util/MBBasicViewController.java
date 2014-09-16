@@ -83,7 +83,7 @@ public class MBBasicViewController extends DialogFragment
       OperationListener
 {
 
-  private ViewGroup                             _contentView;
+  protected ViewGroup                           _contentView;
   private MBPage                                _page;
   private ScrollView                            _mainScrollView        = null;
   private View                                  _rootView              = null;

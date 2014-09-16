@@ -64,6 +64,8 @@ public class MBPanelViewBuilder extends MBViewBuilder
 
     getStyleHandler().applyStyle(panel, view);
 
+    view.setContentDescription(builder.getClass().getSimpleName());
+
     return view;
   }
 
