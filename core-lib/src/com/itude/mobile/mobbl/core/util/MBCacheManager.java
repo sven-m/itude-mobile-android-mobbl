@@ -33,7 +33,7 @@ import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.model.parser.MBXmlDocumentParser;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 
-public final class MBCacheManager
+public class MBCacheManager
 {
   public static final String        CACHE_DIR           = "cache";
   public static final String        CACHE_REGISTRY_FILE = "cache_registry.plist";
@@ -71,7 +71,7 @@ public final class MBCacheManager
     _temporaryMemoryCache = new HashMap<String, byte[]>();
   }
 
-  private MBCacheManager()
+  protected MBCacheManager()
   {
     init();
 
@@ -105,7 +105,12 @@ public final class MBCacheManager
     return _instance;
   }
 
-  private byte[] doGetValueForKey(String key)
+  public static void setCacheManager(MBCacheManager manager)
+  {
+    _instance = manager;
+  }
+
+  protected byte[] doGetValueForKey(String key)
   {
 
     String fileName = null;
@@ -148,7 +153,7 @@ public final class MBCacheManager
     return data;
   }
 
-  private void doSetValue(byte[] data, String key, int ttl)
+  protected void doSetValue(byte[] data, String key, int ttl)
   {
     // Put the data in the temporary memory cache; to avoid reading a file a writer is not yet done with:
     synchronized (_temporaryMemoryCache)
