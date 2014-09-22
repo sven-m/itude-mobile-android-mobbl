@@ -49,20 +49,20 @@ public class MBEndpointsConfigurationParser extends MBConfigurationParser
     else if (elementName.equals("EndPoint"))
     {
       MBEndPointDefinition endpointDef = new MBEndPointDefinition();
-      endpointDef.setDocumentIn(attributeDict.get("documentIn"));
-      endpointDef.setDocumentOut(attributeDict.get("documentOut"));
-      endpointDef.setEndPointUri(attributeDict.get("endPoint"));
-      endpointDef.setCacheable(Boolean.parseBoolean(attributeDict.get("cacheable")));
 
-      if (attributeDict.containsKey("ttl"))
+      for (Map.Entry<String, String> attribute : attributeDict.entrySet())
       {
-        endpointDef.setTtl(Integer.parseInt(attributeDict.get("ttl")));
+        if ("documentIn".equals(attribute.getKey())) endpointDef.setDocumentIn(attribute.getValue());
+        else if ("documentOut".equals(attribute.getKey())) endpointDef.setDocumentOut(attribute.getValue());
+        else if ("endPoint".equals(attribute.getKey())) endpointDef.setEndPointUri(attribute.getValue());
+        else if ("cacheable".equals(attribute.getKey())) endpointDef.setCacheable(Boolean.parseBoolean(attribute.getValue()));
+        else if ("ttl".equals(attribute.getKey())) endpointDef.setTtl(Integer.parseInt(attribute.getValue()));
+        else if ("timeout".equals(attribute.getKey())) endpointDef.setTimeout(Integer.parseInt(attribute.getValue()));
+        else endpointDef.setCustom(attribute.getKey(), attribute.getValue());
+
       }
-      if (attributeDict.containsKey("timeout"))
-      {
-        endpointDef.setTimeout(Integer.parseInt(attributeDict.get("timeout")));
-      }
-      else
+
+      if (!attributeDict.containsKey("ttl"))
       {
         endpointDef.setTimeout(300);
       }

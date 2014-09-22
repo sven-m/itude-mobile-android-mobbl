@@ -49,6 +49,7 @@ public class MBEndPointDefinition extends MBDefinition
     _cacheable = mbEndPointDefinition.getCacheable();
     _timeout = mbEndPointDefinition.getTimeout();
     _ttl = mbEndPointDefinition.getTtl();
+    setCustom(mbEndPointDefinition.getCustom());
   }
 
   public String getDocumentIn()
