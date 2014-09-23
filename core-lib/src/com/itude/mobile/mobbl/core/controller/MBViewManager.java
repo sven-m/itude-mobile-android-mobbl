@@ -37,13 +37,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 
 import com.itude.mobile.android.util.StringUtil;
-import com.itude.mobile.android.util.ViewUtilities;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
@@ -95,7 +95,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   private MBShutdownHandler      _shutdownHandler = new MBDefaultShutdownHandler();
 
   private HomeButtonHandler      _homeButtonHandler;
-  private View                   _container;
+  private ViewGroup              _container;
 
   ///////////////////// Android lifecycle methods
 
@@ -155,8 +155,8 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
       _container = container;
     }
 
-    ViewUtilities.replaceView(_container, view);
-    _container = view;
+    _container.removeAllViews();
+    _container.addView(view);
   }
 
   @Override
