@@ -88,6 +88,7 @@ public class MBFieldViewBuilder extends MBViewBuilder
 
     View view = builder.buildField(field);
     if (view != null) field.attachView(view);
+
     return view;
   }
 
