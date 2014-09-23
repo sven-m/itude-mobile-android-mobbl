@@ -17,6 +17,7 @@ package com.itude.mobile.mobbl.core.configuration;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import android.os.Parcel;
@@ -328,6 +329,17 @@ public class MBDefinition implements Parcelable
   public void setCustom(Map<String, String> custom)
   {
     _custom = custom;
+  }
+
+  public void setCustom(String key, String value)
+  {
+    if (_custom.isEmpty()) _custom = new HashMap<String, String>();
+    _custom.put(key, value);
+  }
+
+  public String getCustom(String key)
+  {
+    return _custom.get(key);
   }
 
   //Parcelable stuff
