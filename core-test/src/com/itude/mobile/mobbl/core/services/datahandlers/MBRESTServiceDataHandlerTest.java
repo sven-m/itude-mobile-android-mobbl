@@ -85,12 +85,12 @@ public class MBRESTServiceDataHandlerTest extends ApplicationTestCase<MBApplicat
     MBDocument request = getRequestDocument();
     dataHandler.loadFreshDocument(TEST_DOCUMENT_NAME, request, null);
 
-    String httpMethod = client.getLastRequest().getMethod();
-    assertEquals("application/xml", client.getLastRequest().getFirstHeader("Accept").getValue());
-    assertEquals("application/x-www-form-encoded", client.getLastRequest().getFirstHeader("Content-Type").getValue());
+    String httpMethod = client.getLastUriRequest().getMethod();
+    assertEquals("application/xml", client.getLastUriRequest().getFirstHeader("Accept").getValue());
+    assertEquals("application/x-www-form-encoded", client.getLastUriRequest().getFirstHeader("Content-Type").getValue());
 
     assertEquals("GET", httpMethod);
-    assertEquals("http://example.com/resource/blarp", client.getLastRequest().getURI().toString());
+    assertEquals("http://example.com/resource/blarp", client.getLastUriRequest().getURI().toString());
   }
 
   public void testCorrectResultLoadFresh()
