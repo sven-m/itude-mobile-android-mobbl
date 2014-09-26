@@ -312,7 +312,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     return sb.toString();
   }
 
-  protected DefaultHttpClient createHttpClient(HttpParams httpParameters)
+  protected HttpClient createHttpClient(HttpParams httpParameters)
   {
     return new DefaultHttpClient(httpParameters);
   }
@@ -339,7 +339,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     // in milliseconds which is the timeout for waiting for data.
     int timeoutSocket = 5000;
 
-    DefaultHttpClient httpClient = createHttpClient(httpParameters);
+    HttpClient httpClient = createHttpClient(httpParameters);
 
     HttpUriRequest httpUriRequest = setupHttpUriRequestType(operationMethod, endPointUri, body);
 

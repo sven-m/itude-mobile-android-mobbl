@@ -1,3 +1,5 @@
-<EndPoints xmlns="https://itude.com/schemas/MB/1.0">
+<EndPoints xmlns="https://itude.com/schemas/MB/1.0" >
+
+    <EndPoint documentOut="WebCallResult" timeout="0" endPoint="http://example.com/resource" cacheable="true" ttl="0" />
 
 </EndPoints>

@@ -143,6 +143,12 @@
 			</Element>
 
 		</Document>
+		
+		<Document name="WebCallResult" dataManager="MBMockWebServiceDataHandler">
+                <Element name="Result" minOccurs="1">
+                    <Attribute name="text()" type="string" />
+                </Element>
+            </Document>
 	</Documents>
   
   </Model>
