@@ -1,11 +1,7 @@
 package com.itude.mobile.mobbl.core.services.datahandlers;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -26,14 +22,22 @@ public class MockHttpClient implements HttpClient
 {
 
   private HttpUriRequest lastRequest;
+  private String         response;
+  private int            responseCode;
+
+  public MockHttpClient(String response, int responseCode)
+  {
+    this.response = response;
+    this.responseCode = this.responseCode;
+  }
 
   @Override
   public HttpResponse execute(HttpUriRequest request) throws IOException, ClientProtocolException
   {
     ProtocolVersion version = new ProtocolVersion("HTTP", 1, 1);
-    StatusLine line = new BasicStatusLine(version, 200, "Great success!");
+    StatusLine line = new BasicStatusLine(version, responseCode, "Great success!");
     HttpResponse response = new BasicHttpResponse(line);
-    response.setEntity(new StringEntity("<Result>blarp</Result>"));
+    response.setEntity(new StringEntity(this.response));
     lastRequest = request;
     return response;
   }

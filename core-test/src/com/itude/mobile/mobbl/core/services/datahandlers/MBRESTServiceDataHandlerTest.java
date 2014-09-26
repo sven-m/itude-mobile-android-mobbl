@@ -7,15 +7,20 @@ import android.test.ApplicationTestCase;
 
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.mobbl.core.MBApplicationCore;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
+import com.itude.mobile.mobbl.core.model.parser.MBXmlDocumentParser;
 import com.itude.mobile.mobbl.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.services.datamanager.handlers.MBMockRESTServiceDataHandler;
 import com.itude.mobile.mobbl.core.services.datamanager.handlers.MBMockRESTServiceDataHandler.HttpClientFactory;
+import com.itude.mobile.mobbl.core.util.MBCacheManager;
 
 public class MBRESTServiceDataHandlerTest extends ApplicationTestCase<MBApplicationCore>
 {
-  private final String TEST_DOCUMENT_NAME = "WebCallResult";
+  private static final String TEST_DOCUMENT_NAME  = "WebCallResult";
+  private static final String TEST_DOCUMENT_HTTP  = "<" + TEST_DOCUMENT_NAME + "><Result>Success!</Result></" + TEST_DOCUMENT_NAME + ">";
+  private static final String TEST_DOCUMENT_CACHE = "<" + TEST_DOCUMENT_NAME + "><Result>Cache!</Result></" + TEST_DOCUMENT_NAME + ">";
 
   public MBRESTServiceDataHandlerTest()
   {
@@ -35,46 +40,19 @@ public class MBRESTServiceDataHandlerTest extends ApplicationTestCase<MBApplicat
   private MBDocument getRequestDocument()
   {
     MBDocument request = MBDataManagerService.getInstance().loadDocument("MBGenericRestRequest");
-    request.setValue("POST", "Operation[0]/@httpMethod");
+    request.setValue("GET", "Operation[0]/@httpMethod");
     request.setValue("blarp", "Operation[0]/@name");
     return request;
-
   }
 
-  /*
-  
-  (void)testCorrectHTTPRequestLoadFreshNoArguments {
-    NSData * const httpData = [self testData];
-    NSArray * const mockConnectionBehavior = [self connectionBehaviorWithData:httpData andFinishWithResponseHeaders:@{}];
-    
-    __block NSURLRequest * urlRequest = nil;
-    const MBHTTPConnectionBuilder mockConnectionBuilder = ^id<MBHTTPConnection>(NSURLRequest *request, id<MBHTTPConnectionDelegate>delegate) {
-        urlRequest = [request retain];
-        return [[MBMockHTTPConnection alloc] initWithRequest:request delegate:delegate connectionBehavior:mockConnectionBehavior];
-    };
-    
-    MBMockWebServiceDataHandler * const mockWebServiceDataHandler = [[MBMockWebServiceDataHandler alloc] initWithConnectionBuilder:mockConnectionBuilder documentCacheStorage:nil];
-    XCTAssertNotNil(mockWebServiceDataHandler);
-    
-    [mockConnectionBuilder release];
-    
-    __unused MBDocument *resultIsIrrelevant = [mockWebServiceDataHandler loadDocument:TestDocumentName];
-    
-    XCTAssertNotNil(urlRequest);
-    
-    NSDictionary * const effectiveHTTPHeaders = [urlRequest allHTTPHeaderFields];
-    NSString * const httpMethod = [urlRequest HTTPMethod];
-    
-    NSDictionary * const expectedHTTPHeaders = [self defaultHTTPHeaders];
-    
-    XCTAssertEqualObjects(@"POST", httpMethod);
-    XCTAssertEqualObjects(effectiveHTTPHeaders, expectedHTTPHeaders);
-  }*/
-
-  public void testCorrectHTTPRequestLoadFreshNoArguments()
+  private MockHttpClient createClient()
   {
-    final MockHttpClient client = new MockHttpClient();
-    HttpClientFactory factory = new HttpClientFactory()
+    return new MockHttpClient(TEST_DOCUMENT_HTTP, 200);
+  }
+
+  private HttpClientFactory createFactory(final MockHttpClient client)
+  {
+    return new HttpClientFactory()
     {
       @Override
       public HttpClient createHttpClient(HttpParams httpParameters)
@@ -82,16 +60,85 @@ public class MBRESTServiceDataHandlerTest extends ApplicationTestCase<MBApplicat
         return client;
       }
     };
+  }
 
-    MBMockRESTServiceDataHandler dataHandler = new MBMockRESTServiceDataHandler(factory);
+  private MBDocument parse(String string)
+  {
+    MBDocumentDefinition definition = MBMetadataService.getInstance().getDefinitionForDocumentName(TEST_DOCUMENT_NAME);
+    MBXmlDocumentParser parser = new MBXmlDocumentParser();
+    return parser.parse(string.getBytes(), definition);
+  }
+
+  private MBMockRESTServiceDataHandler createDataHandler(MockHttpClient client)
+  {
+
+    MBMockRESTServiceDataHandler dataHandler = new MBMockRESTServiceDataHandler(createFactory(client));
     dataHandler.setDocumentFactoryType("XML");
+    return dataHandler;
+  }
+
+  public void testCorrectHTTPRequestLoadFresh()
+  {
+    MockHttpClient client = createClient();
+    MBMockRESTServiceDataHandler dataHandler = createDataHandler(client);
 
     MBDocument request = getRequestDocument();
-    MBDocument testResult = dataHandler.loadDocument(TEST_DOCUMENT_NAME, request, null);
+    dataHandler.loadFreshDocument(TEST_DOCUMENT_NAME, request, null);
 
     String httpMethod = client.getLastRequest().getMethod();
+    assertEquals("application/xml", client.getLastRequest().getFirstHeader("Accept").getValue());
+    assertEquals("application/x-www-form-encoded", client.getLastRequest().getFirstHeader("Content-Type").getValue());
 
-    assertEquals("POST", httpMethod);
+    assertEquals("GET", httpMethod);
+    assertEquals("http://example.com/resource/blarp", client.getLastRequest().getURI().toString());
+  }
+
+  public void testCorrectResultLoadFresh()
+  {
+    MockHttpClient client = createClient();
+    MBMockRESTServiceDataHandler dataHandler = createDataHandler(client);
+
+    MBDocument request = getRequestDocument();
+    MBDocument response = dataHandler.loadFreshDocument(TEST_DOCUMENT_NAME, request, null);
+
+    assertEquals("Success!", response.getValueForPath("Result[0]/@text()"));
+  }
+
+  public void testCacheHit()
+  {
+    MockHttpClient client = createClient();
+    MBMockRESTServiceDataHandler dataHandler = createDataHandler(client);
+
+    MBDocument request = getRequestDocument();
+
+    MBCacheManager.setDocument(parse(TEST_DOCUMENT_CACHE), TEST_DOCUMENT_NAME + request.getUniqueId(), 0);
+
+    // hit the cache; results in cache document
+    MBDocument response = dataHandler.loadDocument(TEST_DOCUMENT_NAME, request, null);
+    assertEquals("Cache!", response.getValueForPath("Result[0]/@text()"));
+
+    // bypass cache
+    MBDocument response2 = dataHandler.loadFreshDocument(TEST_DOCUMENT_NAME, request, null);
+    assertEquals("Success!", response2.getValueForPath("Result[0]/@text()"));
+
+    // previous call  should have stored http document in cache, so test if this happened
+    MBDocument response3 = dataHandler.loadDocument(TEST_DOCUMENT_NAME, request, null);
+    assertEquals("Success!", response3.getValueForPath("Result[0]/@text()"));
+
+  }
+
+  public void testCacheMiss()
+  {
+    MockHttpClient client = createClient();
+    MBMockRESTServiceDataHandler dataHandler = createDataHandler(client);
+
+    MBDocument request = getRequestDocument();
+
+    // make sure document isn't in cache
+    MBCacheManager.getInstance().expireDataForKey(TEST_DOCUMENT_NAME + request.getUniqueId());
+
+    MBDocument response = dataHandler.loadDocument(TEST_DOCUMENT_NAME, request, null);
+    assertEquals("Success!", response.getValueForPath("Result[0]/@text()"));
   }
 
 }
