@@ -375,6 +375,7 @@ public class MBField extends MBComponent
     return MBLocalizationService.getInstance().getTextForKey(((MBFieldDefinition) getDefinition()).getText());
   }
 
+  @Override
   public String getOutcomeName()
   {
     return ((MBFieldDefinition) getDefinition()).getOutcomeName();

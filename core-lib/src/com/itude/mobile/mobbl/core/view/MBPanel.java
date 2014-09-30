@@ -217,6 +217,7 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
     _outcomeName = outcomeName;
   }
 
+  @Override
   public String getOutcomeName()
   {
     return _outcomeName;
