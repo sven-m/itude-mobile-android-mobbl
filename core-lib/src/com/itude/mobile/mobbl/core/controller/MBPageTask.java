@@ -15,8 +15,7 @@
  */
 package com.itude.mobile.mobbl.core.controller;
 
-import android.util.Log;
-
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController.PageBuildResult;
 import com.itude.mobile.mobbl.core.util.Constants;
@@ -50,7 +49,7 @@ public class MBPageTask extends MBOutcomeTask<PageBuildResult>
   @Override
   protected void execute()
   {
-    Log.d(Constants.APPLICATION_NAME, "Going to page " + getPageDefinition().getName());
+    MBLog.d(Constants.APPLICATION_NAME, "Going to page " + getPageDefinition().getName());
 
     final MBApplicationController applicationController = MBApplicationController.getInstance();
     PageBuildResult result = applicationController.preparePage(new MBOutcome(getOutcome()), getPageDefinition().getName(),

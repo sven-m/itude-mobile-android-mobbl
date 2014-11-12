@@ -29,9 +29,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import android.util.Log;
-
 import com.itude.mobile.android.util.DataUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.exceptions.MBUnknownElementException;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBAlertDefinition;
@@ -88,7 +87,7 @@ public abstract class MBConfigurationParser extends DefaultHandler
     }
     catch (Exception e)
     {
-      Log.e(Constants.APPLICATION_NAME, "Unable to parse document " + documentName, e);
+      MBLog.e(Constants.APPLICATION_NAME, "Unable to parse document " + documentName, e);
 
       /*
        * CH: In some magical way, the exception itself can be null. Well it can't, but it sometimes is.
@@ -97,7 +96,7 @@ public abstract class MBConfigurationParser extends DefaultHandler
        */
       if (e == null)
       {
-        Log.e(Constants.APPLICATION_NAME, "Maybe the config is not loaded yet. (Hint: MBMetadataService)");
+        MBLog.e(Constants.APPLICATION_NAME, "Maybe the config is not loaded yet. (Hint: MBMetadataService)");
       }
     }
 
@@ -122,11 +121,11 @@ public abstract class MBConfigurationParser extends DefaultHandler
       }
       catch (InstantiationException e)
       {
-        Log.e(Constants.APPLICATION_NAME, "Unable to create new parser for element Include", e);
+        MBLog.e(Constants.APPLICATION_NAME, "Unable to create new parser for element Include", e);
       }
       catch (IllegalAccessException e)
       {
-        Log.e(Constants.APPLICATION_NAME, "Unable to create new parser for element Include", e);
+        MBLog.e(Constants.APPLICATION_NAME, "Unable to create new parser for element Include", e);
       }
 
       byte[] data = DataUtil.getInstance().readFromAssetOrFile(name);
@@ -177,8 +176,8 @@ public abstract class MBConfigurationParser extends DefaultHandler
       nextKey = keys.next();
       if (!valids.contains(nextKey))
       {
-        Log.w(Constants.APPLICATION_NAME, "****WARNING Invalid attribute " + nextKey + " for element " + elementName + " in document "
-                                          + _documentName);
+        MBLog.w(Constants.APPLICATION_NAME, "****WARNING Invalid attribute " + nextKey + " for element " + elementName + " in document "
+                                            + _documentName);
         result = false;
       }
     }

@@ -19,8 +19,10 @@ import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.MBProperties;
 
 /**
- *
+ *  @deprecated
+ *  Use MBLog instead to perform reliable logging behavior
  */
+@Deprecated
 public final class LoggerFactory
 {
 

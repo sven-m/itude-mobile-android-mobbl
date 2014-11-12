@@ -24,9 +24,9 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.itude.mobile.android.util.DataUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBBundleDefinition;
 import com.itude.mobile.mobbl.core.configuration.resources.MBResourceConfiguration;
 import com.itude.mobile.mobbl.core.configuration.resources.MBResourceConfigurationParser;
@@ -198,11 +198,11 @@ public final class MBResourceService
 
         if (data == null)
         {
-          Log.w(Constants.APPLICATION_NAME, "Warning: could not load file=" + fileName + " based on URL=" + urlString);
+          MBLog.w(Constants.APPLICATION_NAME, "Warning: could not load file=" + fileName + " based on URL=" + urlString);
         }
         if (isPng)
         {
-          Log.i(Constants.APPLICATION_NAME, "png placed in cache: " + urlString);
+          MBLog.i(Constants.APPLICATION_NAME, "png placed in cache: " + urlString);
           _pngCache.put(urlString, data);
         }
 
@@ -210,7 +210,7 @@ public final class MBResourceService
       }
       catch (Exception e)
       {
-        Log.w(Constants.APPLICATION_NAME, "Warning: could not load file=" + fileName + " based on URL=" + urlString);
+        MBLog.w(Constants.APPLICATION_NAME, "Warning: could not load file=" + fileName + " based on URL=" + urlString);
       }
     }
 
@@ -257,7 +257,7 @@ public final class MBResourceService
       return resDef.getUrl();
     }
 
-    Log.w(Constants.APPLICATION_NAME, "No resource found for id " + resourceId);
+    MBLog.w(Constants.APPLICATION_NAME, "No resource found for id " + resourceId);
 
     return null;
   }

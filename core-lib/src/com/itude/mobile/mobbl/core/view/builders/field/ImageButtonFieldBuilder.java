@@ -16,11 +16,11 @@
 package com.itude.mobile.mobbl.core.view.builders.field;
 
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.services.MBResourceService;
 import com.itude.mobile.mobbl.core.util.Constants;
@@ -35,7 +35,7 @@ public class ImageButtonFieldBuilder extends MBBaseFieldBuilder
     String source = field.getSource();
     if (StringUtil.isBlank(source))
     {
-      Log.w(Constants.APPLICATION_NAME, "Source is null or empty for field");
+      MBLog.w(Constants.APPLICATION_NAME, "Source is null or empty for field");
       return null;
     }
 

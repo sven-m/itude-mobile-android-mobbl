@@ -18,10 +18,9 @@ package com.itude.mobile.mobbl.core.services.datamanager.handlers;
 import java.util.Hashtable;
 import java.util.Map;
 
-import android.util.Log;
-
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.exceptions.DataParsingException;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
@@ -58,7 +57,7 @@ public class MBMemoryDataHandler extends MBDataHandlerBase
       }
       catch (DataParsingException e)
       {
-        Log.d(Constants.APPLICATION_NAME, "Unable to find file " + fileName + " in assets");
+        MBLog.d(Constants.APPLICATION_NAME, "Unable to find file " + fileName + " in assets");
       }
       MBDocumentDefinition docDef = MBMetadataService.getInstance().getDefinitionForDocumentName(documentName);
       return MBDocumentFactory.getInstance().getDocumentWithData(data, MBDocumentFactory.PARSER_XML, docDef);

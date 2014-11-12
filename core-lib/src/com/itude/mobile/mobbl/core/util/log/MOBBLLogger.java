@@ -19,8 +19,10 @@ import android.util.Log;
 
 /**
  * The logger implementation for MOBBL.
- *
+ * @deprecated 
+ * Use MBLog instead to perform reliable logging behavior
  */
+@Deprecated
 public class MOBBLLogger implements Logger
 {
 

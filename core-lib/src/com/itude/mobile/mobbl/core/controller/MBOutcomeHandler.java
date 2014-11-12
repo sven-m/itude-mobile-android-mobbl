@@ -23,9 +23,9 @@ import java.util.List;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.itude.mobile.android.util.ComparisonUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
@@ -42,7 +42,7 @@ public class MBOutcomeHandler extends Handler
   @Override
   public void handleMessage(Message msg)
   {
-    Log.d(Constants.APPLICATION_NAME, "MBOutcomeHandler.handleMessage(): " + msg.what);
+    MBLog.d(Constants.APPLICATION_NAME, "MBOutcomeHandler.handleMessage(): " + msg.what);
     if (msg.what == Constants.C_MESSAGE_INITIAL_OUTCOMES_FINISHED)
     {
       MBApplicationController.getInstance().finishedInitialOutcomes();
@@ -102,7 +102,7 @@ public class MBOutcomeHandler extends Handler
     if (pageStackDef != null)
     {
 
-      Log.d(Constants.APPLICATION_NAME, "Dialog name '" + pageStackName + "' resolved to '" + pageStackDef.getName() + "'");
+      MBLog.d(Constants.APPLICATION_NAME, "Dialog name '" + pageStackName + "' resolved to '" + pageStackDef.getName() + "'");
       return pageStackDef.getName();
     }
 

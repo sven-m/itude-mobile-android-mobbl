@@ -15,8 +15,7 @@
  */
 package com.itude.mobile.mobbl.core.configuration;
 
-import android.util.Log;
-
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl.core.controller.exceptions.MBExpressionNotBooleanException;
 import com.itude.mobile.mobbl.core.model.MBDocument;
@@ -79,8 +78,8 @@ public class MBConditionalDefinition extends MBDefinition
     }
     catch (NullPointerException npe)
     {
-      Log.e(Constants.APPLICATION_NAME, "Error validating precondition: " + _preCondition + " for type " + getClass().getSimpleName()
-                                        + " with name " + getName(), npe);
+      MBLog.e(Constants.APPLICATION_NAME, "Error validating precondition: " + _preCondition + " for type " + getClass().getSimpleName()
+                                          + " with name " + getName(), npe);
       return false;
     }
 
