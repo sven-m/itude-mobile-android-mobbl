@@ -30,12 +30,12 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue;
 import android.os.MessageQueue.IdleHandler;
-import android.util.Log;
 
 import com.itude.mobile.android.util.AssertUtil;
 import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.DeviceUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBAlertDefinition;
@@ -125,9 +125,9 @@ public class MBApplicationController extends Application implements MBOutcomeLis
 
   public void startApplication(MBApplicationFactory applicationFactory)
   {
-    Log.d(Constants.APPLICATION_NAME, "MBApplicationController.startApplication");
-    Log.d(Constants.APPLICATION_NAME, "Device info:\n");
-    Log.d(Constants.APPLICATION_NAME, DeviceUtil.getInstance().toString());
+    MBLog.d(Constants.APPLICATION_NAME, "MBApplicationController.startApplication");
+    MBLog.d(Constants.APPLICATION_NAME, "Device info:\n");
+    MBLog.d(Constants.APPLICATION_NAME, DeviceUtil.getInstance().toString());
 
     startOutcomeHandler();
 
@@ -450,8 +450,8 @@ public class MBApplicationController extends Application implements MBOutcomeLis
 
       if (actionOutcome == null)
       {
-        Log.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action "
-                                          + actionDef.getName() + " (outcome == null); no further procesing.");
+        MBLog.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action "
+                                            + actionDef.getName() + " (outcome == null); no further procesing.");
       }
       else
       {
@@ -531,13 +531,13 @@ public class MBApplicationController extends Application implements MBOutcomeLis
   {
     if (_outcomeHandler == null)
     {
-      Log.w(Constants.APPLICATION_NAME, "Skipping handleException because outcomeHandler is null");
+      MBLog.w(Constants.APPLICATION_NAME, "Skipping handleException because outcomeHandler is null");
       return;
     }
 
-    Log.w(Constants.APPLICATION_NAME, "________EXCEPTION RAISED______________________________________________________________");
-    Log.w(Constants.APPLICATION_NAME, exception);
-    Log.w(Constants.APPLICATION_NAME, "______________________________________________________________________________________");
+    MBLog.w(Constants.APPLICATION_NAME, "________EXCEPTION RAISED______________________________________________________________");
+    MBLog.w(Constants.APPLICATION_NAME, exception);
+    MBLog.w(Constants.APPLICATION_NAME, "______________________________________________________________________________________");
 
     MBDocument exceptionDocument = MBDataManagerService.getInstance().loadDocument(MBConfigurationDefinition.DOC_SYSTEM_EXCEPTION);
     String name = MBLocalizationService.getInstance().getTextForKey("General error");
@@ -596,14 +596,15 @@ public class MBApplicationController extends Application implements MBOutcomeLis
       outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(outcome.getOrigin(), "exception", false);
       if (outcomeDefinitions.isEmpty())
       {
-        Log.w(Constants.APPLICATION_NAME, "No outcome with origin=" + outcome
-                                          + " name=exception defined to handle errors; so re-throwing exception");
+        MBLog.w(Constants.APPLICATION_NAME, "No outcome with origin=" + outcome
+                                            + " name=exception defined to handle errors; so re-throwing exception");
         throw new RuntimeException(exception);
       }
       if ("exception".equals(outcome.getOutcomeName()))
       {
-        Log.w(Constants.APPLICATION_NAME,
-              "Error in handling an outcome with name=exception (i.e. the error handling in the controller is probably misconfigured) Re-throwing exception");
+        MBLog
+            .w(Constants.APPLICATION_NAME,
+               "Error in handling an outcome with name=exception (i.e. the error handling in the controller is probably misconfigured) Re-throwing exception");
         throw new RuntimeException(exception);
       }
 
@@ -630,7 +631,7 @@ public class MBApplicationController extends Application implements MBOutcomeLis
   {
     if (_outcomeHandler != null)
     {
-      Log.w(Constants.APPLICATION_NAME, "Outcome handler already started, so skipping");
+      MBLog.w(Constants.APPLICATION_NAME, "Outcome handler already started, so skipping");
       return;
     }
 
@@ -639,9 +640,9 @@ public class MBApplicationController extends Application implements MBOutcomeLis
 
     while ((_outcomeHandler = outcomeHandlerThread.getOutcomeHandler()) == null)
     {
-      Log.d(Constants.APPLICATION_NAME, "Waiting for OutcomeHandler to settle down...");
+      MBLog.d(Constants.APPLICATION_NAME, "Waiting for OutcomeHandler to settle down...");
     }
-    Log.d(Constants.APPLICATION_NAME, "OutcomeHandler settled, continue startup");
+    MBLog.d(Constants.APPLICATION_NAME, "OutcomeHandler settled, continue startup");
   }
 
   public void stopOutcomeHandler()

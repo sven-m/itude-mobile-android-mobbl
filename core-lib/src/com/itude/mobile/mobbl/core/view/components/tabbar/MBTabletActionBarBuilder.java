@@ -20,10 +20,10 @@ import java.lang.reflect.Field;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
 
@@ -67,7 +67,7 @@ public class MBTabletActionBarBuilder extends MBDefaultActionBarBuilder
     }
     catch (Exception e)
     {
-      Log.e(Constants.APPLICATION_NAME, "error changing searchbutton icon", e);
+      MBLog.e(Constants.APPLICATION_NAME, "error changing searchbutton icon", e);
     }
 
   }

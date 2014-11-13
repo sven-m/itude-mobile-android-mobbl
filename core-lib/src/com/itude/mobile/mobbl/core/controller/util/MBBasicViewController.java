@@ -29,7 +29,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +43,7 @@ import android.widget.ScrollView;
 
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.ViewUtilities;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.controller.MBDialogController;
 import com.itude.mobile.mobbl.core.controller.MBViewManager;
@@ -133,7 +133,7 @@ public class MBBasicViewController extends DialogFragment
       String outcomeID = getArguments().getString("id");
       if (StringUtil.isNotBlank(outcomeID))
       {
-        Log.d(Constants.APPLICATION_NAME, "MBBasicViewController.onCreate: found id=" + outcomeID);
+        MBLog.d(Constants.APPLICATION_NAME, "MBBasicViewController.onCreate: found id=" + outcomeID);
 
         MBDocument pageDoc = getPage().getDocument();
         if (getPage().isReloadOnDocChange() && pageDoc != null)
@@ -409,8 +409,8 @@ public class MBBasicViewController extends DialogFragment
             fragmentContainer.addView(view);
             _contentView = view;
           }
-          else Log.w(Constants.APPLICATION_NAME, "Failed to refresh view for page " + getPage().getPageName()
-                                                 + ", has the activity been created?");
+          else MBLog.w(Constants.APPLICATION_NAME, "Failed to refresh view for page " + getPage().getPageName()
+                                                   + ", has the activity been created?");
         }
       }
     };

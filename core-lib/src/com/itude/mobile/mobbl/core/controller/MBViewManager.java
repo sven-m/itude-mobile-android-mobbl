@@ -31,7 +31,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,6 +43,7 @@ import android.widget.FrameLayout.LayoutParams;
 
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.ViewUtilities;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
@@ -401,10 +401,10 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   public void showPage(MBPage page, String displayMode, boolean addToBackStack)
   {
 
-    Log.d(Constants.APPLICATION_NAME,
-          "MBViewManager: showPage name=" + page.getPageName() + " pagestackName=" + page.getPageStackName() + " mode=" + displayMode
-              + " type=" + page.getPageType() + " orientation=" + ((MBPageDefinition) page.getDefinition()).getOrientationPermissions()
-              + " backStack=" + addToBackStack);
+    MBLog.d(Constants.APPLICATION_NAME, "MBViewManager: showPage name=" + page.getPageName() + " pagestackName=" + page.getPageStackName()
+                                        + " mode=" + displayMode + " type=" + page.getPageType() + " orientation="
+                                        + ((MBPageDefinition) page.getDefinition()).getOrientationPermissions() + " backStack="
+                                        + addToBackStack);
 
     if (page.getPageType() == MBPageDefinition.MBPageType.MBPageTypesErrorPage || "POPUP".equals(displayMode))
     {
@@ -461,7 +461,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
       }
       catch (MBInvalidPathException e)
       {
-        Log.w(Constants.APPLICATION_NAME, "Popup document " + pageDoc.getName() + " has no buttons defined. Adding neutral button Ok");
+        MBLog.w(Constants.APPLICATION_NAME, "Popup document " + pageDoc.getName() + " has no buttons defined. Adding neutral button Ok");
       }
     }
 
@@ -658,7 +658,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
    */
   public void setOrientation(int orientation)
   {
-    Log.d(Constants.APPLICATION_NAME, "MBViewManager.setOrientation: Changing to " + orientation);
+    MBLog.d(Constants.APPLICATION_NAME, "MBViewManager.setOrientation: Changing to " + orientation);
     setRequestedOrientation(orientation);
   }
 
@@ -666,7 +666,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   {
     if (page == null)
     {
-      Log.w(Constants.APPLICATION_NAME, "Can't set orientation without an MBPage");
+      MBLog.w(Constants.APPLICATION_NAME, "Can't set orientation without an MBPage");
       return;
     }
 
@@ -687,18 +687,18 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
     {
       if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_SENSOR)
       {
-        Log.d(Constants.APPLICATION_NAME, "MBViewManager.setOrientation: Changing to SENSOR");
+        MBLog.d(Constants.APPLICATION_NAME, "MBViewManager.setOrientation: Changing to SENSOR");
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
       }
     }
     else if (orientationPermissions == OrientationPermission.PORTRAIT)
     {
-      Log.d(Constants.APPLICATION_NAME, "MBViewManager.setOrientation: Changing to PORTRAIT");
+      MBLog.d(Constants.APPLICATION_NAME, "MBViewManager.setOrientation: Changing to PORTRAIT");
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
     else if (orientationPermissions == OrientationPermission.LANDSCAPE)
     {
-      Log.d(Constants.APPLICATION_NAME, "MBViewManager.setOrientation: Changing to LANDSCAPE");
+      MBLog.d(Constants.APPLICATION_NAME, "MBViewManager.setOrientation: Changing to LANDSCAPE");
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
@@ -707,7 +707,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   @Override
   public void onConfigurationChanged(Configuration newConfig)
   {
-    Log.d(Constants.APPLICATION_NAME, "MBViewManager.onConfigurationChanged");
+    MBLog.d(Constants.APPLICATION_NAME, "MBViewManager.onConfigurationChanged");
 
     invalidateActionBar();
 

@@ -15,9 +15,8 @@
  */
 package com.itude.mobile.mobbl.core.controller;
 
-import android.util.Log;
-
 import com.itude.mobile.android.util.AssertUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.controller.util.indicator.MBIndicator;
 import com.itude.mobile.mobbl.core.controller.util.indicator.MBIndicator.Type;
@@ -127,7 +126,7 @@ public abstract class MBOutcomeTask<Result> implements Runnable
     MBIndicator indicator = showIndicator();
     try
     {
-      Log.d(this.getClass().getSimpleName(), "Running outcome task for " + getOutcome());
+      MBLog.d(this.getClass().getSimpleName(), "Running outcome task for " + getOutcome());
       execute();
       _manager.finished(this);
     }

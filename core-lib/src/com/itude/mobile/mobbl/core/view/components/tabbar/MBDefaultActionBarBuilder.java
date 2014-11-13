@@ -26,7 +26,6 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,6 +43,7 @@ import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainValidatorDefinition;
@@ -176,7 +176,7 @@ public abstract class MBDefaultActionBarBuilder implements MBActionBarBuilder
     String visibility = def.getVisibility();
     if (StringUtil.isBlank(visibility))
     {
-      Log.w(Constants.APPLICATION_NAME, "No visibility specified for tool " + def.getName() + ": using default show as action if room");
+      MBLog.w(Constants.APPLICATION_NAME, "No visibility specified for tool " + def.getName() + ": using default show as action if room");
       return MenuItemCompat.SHOW_AS_ACTION_IF_ROOM;
     }
 

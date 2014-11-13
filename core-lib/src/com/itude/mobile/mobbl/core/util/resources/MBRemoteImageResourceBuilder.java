@@ -21,8 +21,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.services.MBResourceService;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.view.MBResource;
@@ -40,12 +40,12 @@ public class MBRemoteImageResourceBuilder implements MBResourceBuilder.Builder<D
     }
     catch (MalformedURLException e)
     {
-      Log.e(Constants.APPLICATION_NAME, "Not a correct img source: " + e.getMessage());
+      MBLog.e(Constants.APPLICATION_NAME, "Not a correct img source: " + e.getMessage());
       image = MBResourceService.getInstance().getImageByID(Constants.C_ICON_TRANSPARENT);
     }
     catch (IOException e)
     {
-      Log.e(Constants.APPLICATION_NAME, "Could not read img: " + e.getMessage());
+      MBLog.e(Constants.APPLICATION_NAME, "Could not read img: " + e.getMessage());
       image = MBResourceService.getInstance().getImageByID(Constants.C_ICON_TRANSPARENT);
     }
 

@@ -37,6 +37,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.MBProperties;
 
@@ -157,11 +158,11 @@ public class ImageCache
     catch (IllegalStateException e)
     {
       // this is possible if the redirection goes wrong while trying to retrieve an image
-      android.util.Log.e(LOG_TAG, "Error loading from: " + uri, e);
+      MBLog.e(LOG_TAG, "Error loading from: " + uri, e);
     }
     catch (IOException e)
     {
-      android.util.Log.e(LOG_TAG, "Error loading from: " + uri, e);
+      MBLog.e(LOG_TAG, "Error loading from: " + uri, e);
     }
 
     addToCache(uri, result);
@@ -214,11 +215,11 @@ public class ImageCache
       }
       catch (FileNotFoundException e)
       {
-        android.util.Log.e(LOG_TAG, "Could not cache photo " + uri + " to file " + uri.hashCode(), e);
+        MBLog.e(LOG_TAG, "Could not cache photo " + uri + " to file " + uri.hashCode(), e);
       }
       catch (IOException e)
       {
-        android.util.Log.e(LOG_TAG, "Could not cache photo " + uri + " to file " + uri.hashCode(), e);
+        MBLog.e(LOG_TAG, "Could not cache photo " + uri + " to file " + uri.hashCode(), e);
       }
       finally
       {
@@ -251,7 +252,7 @@ public class ImageCache
     }
     catch (IOException e)
     {
-      android.util.Log.e(LOG_TAG, "Could not load photo: " + uri, e);
+      MBLog.e(LOG_TAG, "Could not load photo: " + uri, e);
     }
     finally
     {
@@ -296,7 +297,7 @@ public class ImageCache
       }
       catch (IOException e)
       {
-        android.util.Log.e(LOG_TAG, "Could not close stream", e);
+        MBLog.e(LOG_TAG, "Could not close stream", e);
       }
     }
   }
