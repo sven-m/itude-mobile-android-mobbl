@@ -23,9 +23,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.Gravity;
 
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.services.MBResourceService;
 import com.itude.mobile.mobbl.core.util.Constants;
@@ -74,11 +74,11 @@ public class MBImageResourceBuilder implements MBResourceBuilder.Builder<Drawabl
     {
       if (error != null)
       {
-        Log.w(Constants.APPLICATION_NAME, "Warning: could not load file for resource=" + resource.getId(), error);
+        MBLog.w(Constants.APPLICATION_NAME, "Warning: could not load file for resource=" + resource.getId(), error);
       }
       else
       {
-        Log.w(Constants.APPLICATION_NAME, "Warning: could not load file for resource=" + resource.getId());
+        MBLog.w(Constants.APPLICATION_NAME, "Warning: could not load file for resource=" + resource.getId());
       }
       return null;
     }
@@ -86,7 +86,7 @@ public class MBImageResourceBuilder implements MBResourceBuilder.Builder<Drawabl
     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     if (bitmap == null)
     {
-      Log.w(Constants.APPLICATION_NAME, "Could not create image for resource=" + resource.getId());
+      MBLog.w(Constants.APPLICATION_NAME, "Could not create image for resource=" + resource.getId());
     }
 
     Resources res = MBApplicationController.getInstance().getBaseContext().getResources();

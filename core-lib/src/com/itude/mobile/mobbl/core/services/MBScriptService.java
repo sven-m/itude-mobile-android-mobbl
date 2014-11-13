@@ -22,8 +22,7 @@ import java.util.Map;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 
-import android.util.Log;
-
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.services.exceptions.MBScriptErrorException;
 import com.itude.mobile.mobbl.core.util.Constants;
 
@@ -87,7 +86,7 @@ public final class MBScriptService
   {
     String result = COMPUTED_EXPRESSIONS.get(expression);
     if (result != null) return result;
-    Log.d(Constants.APPLICATION_NAME, "expression for ScriptService=" + expression);
+    MBLog.d(Constants.APPLICATION_NAME, "expression for ScriptService=" + expression);
 
     String stub = "function x(){ var TRUE=true; var FALSE=false; try { return " + //
                   expression + //

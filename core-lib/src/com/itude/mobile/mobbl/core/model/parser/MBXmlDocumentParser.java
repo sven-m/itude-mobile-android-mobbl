@@ -30,8 +30,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import android.util.Log;
-
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidElementNameException;
@@ -125,8 +124,8 @@ public class MBXmlDocumentParser extends DefaultHandler implements MBDocumentPar
       }
       catch (Exception e)
       {
-        Log.d(Constants.APPLICATION_NAME, new String(data));
-        Log.e(Constants.APPLICATION_NAME, "MBXmlDocumentParser.doParseFragment (for the data, see debug log above)", e);
+        MBLog.d(Constants.APPLICATION_NAME, new String(data));
+        MBLog.e(Constants.APPLICATION_NAME, "MBXmlDocumentParser.doParseFragment (for the data, see debug log above)", e);
       }
     }
   }
@@ -172,8 +171,8 @@ public class MBXmlDocumentParser extends DefaultHandler implements MBDocumentPar
       }
       catch (MBInvalidElementNameException e)
       {
-        Log.w(Constants.APPLICATION_NAME,
-              "Skipping element with name " + localName + ". Element is not in definition " + _definition.getName());
+        MBLog.w(Constants.APPLICATION_NAME,
+                "Skipping element with name " + localName + ". Element is not in definition " + _definition.getName());
         _ignoredPaths.add(getCurrentPath());
       }
     }
@@ -193,7 +192,7 @@ public class MBXmlDocumentParser extends DefaultHandler implements MBDocumentPar
         for (int i = 0; i < attributes.getLength(); i++)
         {
           String unescapedXml = StringEscapeUtils.unescapeXml(attributes.getValue(i));
-		((MBElement) element).setAttributeValue(unescapedXml, attributes.getLocalName(i), false);
+          ((MBElement) element).setAttributeValue(unescapedXml, attributes.getLocalName(i), false);
         }
       }
       _stack.add(element);
@@ -229,8 +228,8 @@ public class MBXmlDocumentParser extends DefaultHandler implements MBDocumentPar
       }
       else
       {
-        Log.w(Constants.APPLICATION_NAME, "MBXmlDocumentParser.endElement: Text (" + string + ") specified in body of element " + localName
-                                          + " is ignored because the element has no text() attribute defined");
+        MBLog.w(Constants.APPLICATION_NAME, "MBXmlDocumentParser.endElement: Text (" + string + ") specified in body of element "
+                                            + localName + " is ignored because the element has no text() attribute defined");
       }
     }
     if (_stack.size() > 1)

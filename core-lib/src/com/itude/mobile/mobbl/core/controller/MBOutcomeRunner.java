@@ -21,6 +21,7 @@ import java.util.List;
 import android.util.Log;
 
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBActionDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBOutcomeDefinition;
@@ -159,7 +160,7 @@ public class MBOutcomeRunner
 
   private MBOutcomeTaskManager setupTaskManager(MBOutcome outcome)
   {
-    Log.d(Constants.APPLICATION_NAME, "MBOutcomeRunner.setupTaskManager: " + outcome);
+    MBLog.d(Constants.APPLICATION_NAME, "MBOutcomeRunner.setupTaskManager: " + outcome);
 
     MBOutcomeTaskManager manager = new MBOutcomeTaskManager(outcome);
     MBMetadataService metadataService = MBMetadataService.getInstance();

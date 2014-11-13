@@ -17,9 +17,8 @@ package com.itude.mobile.mobbl.core.actions;
 
 import java.util.List;
 
-import android.util.Log;
-
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.controller.MBAction;
@@ -96,7 +95,7 @@ public class MBFireInitialOutcomes implements MBAction
 
           if (isMenu || (first && isFirstDialogSynchronized()))
           {
-            Log.d(this.getClass().getSimpleName(), "Firing in foreground: " + oc);
+            MBLog.d(this.getClass().getSimpleName(), "Firing in foreground: " + oc);
             MBApplicationController.getInstance().getOutcomeHandler().handleOutcomeSynchronously(oc, false);
 
             if (!isMenu)
@@ -110,7 +109,7 @@ public class MBFireInitialOutcomes implements MBAction
           else
           {
             oc.setDisplayMode(Constants.C_DISPLAY_MODE_BACKGROUND);
-            Log.d(this.getClass().getSimpleName(), "Firing in background: " + oc);
+            MBLog.d(this.getClass().getSimpleName(), "Firing in background: " + oc);
             MBApplicationController.getInstance().handleOutcome(oc);
 
           }
@@ -118,7 +117,7 @@ public class MBFireInitialOutcomes implements MBAction
       }
       else
       {
-        Log.e(this.getClass().getSimpleName(), "Could not find dialog " + dialog);
+        MBLog.e(this.getClass().getSimpleName(), "Could not find dialog " + dialog);
       }
     }
     return null;

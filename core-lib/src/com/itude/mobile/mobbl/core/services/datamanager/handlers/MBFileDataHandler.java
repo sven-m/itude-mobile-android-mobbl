@@ -15,11 +15,10 @@
  */
 package com.itude.mobile.mobbl.core.services.datamanager.handlers;
 
-import android.util.Log;
-
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.FileUtil;
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
@@ -43,7 +42,7 @@ public class MBFileDataHandler extends MBDataHandlerBase
   @Override
   public MBDocument loadDocument(String documentName, String parser)
   {
-    Log.d(Constants.APPLICATION_NAME, "MBFileDataHandler.loadDocument: " + documentName);
+    MBLog.d(Constants.APPLICATION_NAME, "MBFileDataHandler.loadDocument: " + documentName);
     String fileName = determineFileName(documentName, parser);
     MBDocumentDefinition docDef = MBMetadataService.getInstance().getDefinitionForDocumentName(documentName);
     byte[] data = DataUtil.getInstance().readFromAssetOrFile(fileName);
@@ -74,7 +73,7 @@ public class MBFileDataHandler extends MBDataHandlerBase
       StringBuffer sb = new StringBuffer(4096);
       String xml = document.asXmlWithLevel(sb, 0, false).toString();// TODO, set the last parameter to true if we want to properly escape the document to be stored
 
-      Log.d(Constants.APPLICATION_NAME, "Writing document " + document.getName() + " to " + fileName);
+      MBLog.d(Constants.APPLICATION_NAME, "Writing document " + document.getName() + " to " + fileName);
 
       try
       {
@@ -83,8 +82,8 @@ public class MBFileDataHandler extends MBDataHandlerBase
       }
       catch (Exception e)
       {
-        Log.w(Constants.APPLICATION_NAME, "MBFileDataHandler.storeDocument: Error writing document " + document.getName() + " to "
-                                          + fileName, e);
+        MBLog.w(Constants.APPLICATION_NAME, "MBFileDataHandler.storeDocument: Error writing document " + document.getName() + " to "
+                                            + fileName, e);
       }
     }
   }

@@ -20,9 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.util.Log;
-
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.MBConditionalDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPageStackDefinitionException;
 import com.itude.mobile.mobbl.core.util.Constants;
@@ -55,8 +54,8 @@ public class MBDialogDefinition extends MBConditionalDefinition
   {
     if (_children.contains(pageStackDef))
     {
-      Log.w(Constants.APPLICATION_NAME, "Group contains duplicate definitions for pagestack " + pageStackDef.getName() + " in dialog "
-                                        + getName());
+      MBLog.w(Constants.APPLICATION_NAME, "Group contains duplicate definitions for pagestack " + pageStackDef.getName() + " in dialog "
+                                          + getName());
     }
 
     _children.add(pageStackDef);
