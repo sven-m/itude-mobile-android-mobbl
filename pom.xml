@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.itude.mobile.android.mobbl</groupId>
 	<artifactId>mobbl-core</artifactId>
-	<version>3.2.0.28-SNAPSHOT</version>
+	<version>3.2.0.28</version>
 	<packaging>pom</packaging>
 	<name>Android Mobbl Core</name>
 	<description>Android Mobbl Core library - A development framework for data centric Android apps.</description>
@@ -124,7 +124,7 @@
 		<url>https://github.com/ItudeMobile/itude-mobile-android-mobbl</url>
 		<connection>scm:git:git://github.com/ItudeMobile/itude-mobile-android-mobbl.git</connection>
 		<developerConnection>scm:git:git@github.com:ItudeMobile/itude-mobile-android-mobbl.git</developerConnection>
-	  <tag>HEAD</tag>
+	  <tag>mobbl-core-3.2.0.28</tag>
   </scm>
 	
 	<build>
