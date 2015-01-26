@@ -62,6 +62,7 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl.core.controller.MBApplicationFactory;
 import com.itude.mobile.mobbl.core.model.MBDocument;
@@ -77,8 +78,6 @@ import com.itude.mobile.mobbl.core.services.exceptions.MBDocumentNotDefinedExcep
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.util.MBCacheManager;
 import com.itude.mobile.mobbl.core.util.MBProperties;
-import com.itude.mobile.mobbl.core.util.log.Logger;
-import com.itude.mobile.mobbl.core.util.log.LoggerFactory;
 
 /**
  * Retrieves and sends MBDocument instances to and from a webservice using HTTP operations
@@ -87,9 +86,7 @@ import com.itude.mobile.mobbl.core.util.log.LoggerFactory;
 public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 {
 
-  protected final Logger _log = LoggerFactory.getInstance(Constants.APPLICATION_NAME);
-
-  private String         _documentFactoryType;
+  private String _documentFactoryType;
 
   public MBRESTServiceDataHandler()
   {
@@ -167,17 +164,11 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 
     if (endPoint == null)
     {
-      if (_log.isWarnEnabled())
-      {
-        _log.warn("No endpoint defined for document name " + documentName);
-      }
+      MBLog.w(Constants.APPLICATION_NAME, "No endpoint defined for document name " + documentName);
       return null;
     }
 
-    if (_log.isDebugEnabled())
-    {
-      _log.debug("MBRESTServiceDataHandler:doLoadDocument " + documentName + " from " + endPoint.getEndPointUri());
-    }
+    MBLog.d(Constants.APPLICATION_NAME, "MBRESTServiceDataHandler:doLoadDocument " + documentName + " from " + endPoint.getEndPointUri());
 
     String dataString = null;
     MBDocument responseDoc = null;
@@ -192,10 +183,8 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 
     try
     {
-      if (_log.isDebugEnabled())
-      {
-        _log.debug("RestServiceDataHandler is about to send this message: \n" + body + "\n to " + endPoint.getEndPointUri());
-      }
+      MBLog.d(Constants.APPLICATION_NAME,
+              "RestServiceDataHandler is about to send this message: \n" + body + "\n to " + endPoint.getEndPointUri());
 
       String operationMethod = getOperation(doc);
 
@@ -204,11 +193,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 
       dataString = postAndGetResult(endPoint, operationMethod, urlString, body);
 
-      if (_log.isDebugEnabled())
-      {
-        _log.debug("RestServiceDataHandler received this message: " + dataString);
-
-      }
+      MBLog.d(Constants.APPLICATION_NAME, "RestServiceDataHandler received this message: " + dataString);
 
       boolean serverErrorHandled = false;
 
@@ -242,11 +227,8 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     // TODO: clean up exception handling
     catch (Exception e)
     {
-      if (_log.isDebugEnabled())
-      {
-        _log.debug("Sent xml:\n" + body);
-        _log.debug("Received:\n" + dataString, e.getCause());
-      }
+      MBLog.d(Constants.APPLICATION_NAME, "Sent xml:\n" + body);
+      MBLog.d(Constants.APPLICATION_NAME, "Received:\n" + dataString, e.getCause());
 
       if (e instanceof RuntimeException)
       {
@@ -312,7 +294,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     return sb.toString();
   }
 
-  protected DefaultHttpClient createHttpClient(HttpParams httpParameters)
+  protected HttpClient createHttpClient(HttpParams httpParameters)
   {
     return new DefaultHttpClient(httpParameters);
   }
@@ -339,7 +321,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     // in milliseconds which is the timeout for waiting for data.
     int timeoutSocket = 5000;
 
-    DefaultHttpClient httpClient = createHttpClient(httpParameters);
+    HttpClient httpClient = createHttpClient(httpParameters);
 
     HttpUriRequest httpUriRequest = setupHttpUriRequestType(operationMethod, endPointUri, body);
 
@@ -366,10 +348,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
       }
       catch (MBDocumentNotDefinedException dnde)
       {
-        if (_log.isDebugEnabled())
-        {
-          _log.debug("No Environment properties set");
-        }
+        MBLog.d(Constants.APPLICATION_NAME, "No Environment properties set");
       }
     }
 
@@ -384,10 +363,8 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     String responseMessage = httpResponse.getStatusLine().getReasonPhrase();
     if (responseCode != HttpStatus.SC_OK)
     {
-      if (_log.isErrorEnabled())
-      {
-        _log.error("MBRESTServiceDataHandler.loadDocument: Received HTTP responseCode=" + responseCode + ": " + responseMessage);
-      }
+      MBLog.e(Constants.APPLICATION_NAME, "MBRESTServiceDataHandler.loadDocument: Received HTTP responseCode=" + responseCode + ": "
+                                          + responseMessage);
     }
 
     HttpEntity entity = httpResponse.getEntity();
@@ -489,31 +466,19 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     }
     catch (KeyStoreException kse)
     {
-      if (_log.isErrorEnabled())
-      {
-        _log.error("Could not make keystore " + kse.getMessage(), kse);
-      }
+      MBLog.e(Constants.APPLICATION_NAME, "Could not make keystore " + kse.getMessage(), kse);
     }
     catch (CertificateException ce)
     {
-      if (_log.isErrorEnabled())
-      {
-        _log.error("Could not make locate certificate " + ce.getMessage(), ce);
-      }
+      MBLog.e(Constants.APPLICATION_NAME, "Could not make locate certificate " + ce.getMessage(), ce);
     }
     catch (IOException ioe)
     {
-      if (_log.isErrorEnabled())
-      {
-        _log.error(ioe.getMessage(), ioe);
-      }
+      MBLog.e(Constants.APPLICATION_NAME, ioe.getMessage(), ioe);
     }
     catch (UnrecoverableKeyException urke)
     {
-      if (_log.isErrorEnabled())
-      {
-        _log.error(urke.getMessage(), urke);
-      }
+      MBLog.e(Constants.APPLICATION_NAME, urke.getMessage(), urke);
     }
   }
 

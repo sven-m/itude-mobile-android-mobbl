@@ -33,13 +33,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.itude.mobile.android.util.UniqueIntegerGenerator;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
@@ -138,7 +138,7 @@ public class MBDialogController extends ContextWrapper
     }
     else
     {
-      Log.w(Constants.APPLICATION_NAME, "MBDialogController.onCreate: unable to find dialogName");
+      MBLog.w(Constants.APPLICATION_NAME, "MBDialogController.onCreate: unable to find dialogName");
       return false;
     }
   }

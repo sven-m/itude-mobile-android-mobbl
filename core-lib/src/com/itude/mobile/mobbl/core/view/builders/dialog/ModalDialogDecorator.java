@@ -5,8 +5,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.controller.MBDialogController;
 import com.itude.mobile.mobbl.core.controller.MBViewManager;
@@ -33,7 +33,7 @@ public class ModalDialogDecorator extends MBDialogDecorator
     if (!_shown)
     {
       _previousDialog = MBViewManager.getInstance().getActiveDialogName();
-      Log.d("ModalDialogDecorator", "Grabbed previous " + _previousDialog);
+      MBLog.d("ModalDialogDecorator", "Grabbed previous " + _previousDialog);
       MBDialogDefinition dialogDefinition = MBMetadataService.getInstance().getDefinitionForDialogName(getDialog().getName());
       _fullscreen = Boolean.parseBoolean(dialogDefinition.getCustom().get("fullscreen"));
       _cancelable = dialogDefinition.getCustom().containsKey("cancelable") ? Boolean.parseBoolean(dialogDefinition.getCustom()
@@ -41,7 +41,7 @@ public class ModalDialogDecorator extends MBDialogDecorator
       _closable = Boolean.parseBoolean(dialogDefinition.getCustom().get("closable"));
       _shown = true;
     }
-    else Log.d("ModalDialogDecorator", "Already grabbed previous " + _previousDialog);
+    else MBLog.d("ModalDialogDecorator", "Already grabbed previous " + _previousDialog);
 
   }
 
@@ -51,7 +51,7 @@ public class ModalDialogDecorator extends MBDialogDecorator
     _shown = false;
     if (_previousDialog != null)
     {
-      Log.d("ModalDialogDecorator", "Enqueueing " + _previousDialog);
+      MBLog.d("ModalDialogDecorator", "Enqueueing " + _previousDialog);
       MBViewManager.getInstance().getDialogManager().enqueueDialog(_previousDialog);
     }
   }

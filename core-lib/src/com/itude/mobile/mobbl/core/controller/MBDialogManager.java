@@ -26,13 +26,13 @@ import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 import com.itude.mobile.android.util.AssertUtil;
 import com.itude.mobile.android.util.ComparisonUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.controller.util.MBBaseLifecycleListener;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
@@ -223,7 +223,7 @@ public class MBDialogManager extends MBBaseLifecycleListener
 
     if (current != null)
     {
-      Log.d("MBDialogManager", "Switching from " + current.getName() + "...");
+      MBLog.d("MBDialogManager", "Switching from " + current.getName() + "...");
       current.deactivate(dialog.getDecorator().maintainPreviousStack());
       current.handleAllOnLeavingWindow();
     }
@@ -231,7 +231,7 @@ public class MBDialogManager extends MBBaseLifecycleListener
     for (MBDialogChangeListener listener : _listeners)
       listener.onDialogSelected(dialogName);
 
-    Log.d("MBDialogManager", "Switching to " + dialogName + "...");
+    MBLog.d("MBDialogManager", "Switching to " + dialogName + "...");
     dialog.activate();
     _activeDialog = dialogName;
     _toActivate = null;

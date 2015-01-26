@@ -22,9 +22,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.util.Log;
-
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl.core.configuration.MBIncludableDefinition;
 import com.itude.mobile.mobbl.core.controller.MBOutcome.Origin;
@@ -250,7 +249,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   {
     if (_domainTypes.containsKey(domain.getName()))
     {
-      Log.w(Constants.APPLICATION_NAME, "Domain definition overridden: multiple definitions for domain with name " + domain.getName());
+      MBLog.w(Constants.APPLICATION_NAME, "Domain definition overridden: multiple definitions for domain with name " + domain.getName());
     }
     _domainTypes.put(domain.getName(), domain);
   }
@@ -259,7 +258,8 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   {
     if (_documentTypes.containsKey(document.getName()))
     {
-      Log.w(Constants.APPLICATION_NAME, "Document definition overridden: multiple definitions for document with name " + document.getName());
+      MBLog.w(Constants.APPLICATION_NAME,
+              "Document definition overridden: multiple definitions for document with name " + document.getName());
     }
     _documentTypes.put(document.getName(), document);
   }
@@ -268,7 +268,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   {
     if (_actionTypes.containsKey(action.getName()))
     {
-      Log.w(Constants.APPLICATION_NAME, "Action definition overridden: multiple definitions for action with name " + action.getName());
+      MBLog.w(Constants.APPLICATION_NAME, "Action definition overridden: multiple definitions for action with name " + action.getName());
     }
     _actionTypes.put(action.getName(), action);
   }
@@ -282,7 +282,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   {
     if (_pageTypes.containsKey(page.getName()))
     {
-      Log.w(Constants.APPLICATION_NAME, "Page definition overridden: multiple definitions for page with name " + page.getName());
+      MBLog.w(Constants.APPLICATION_NAME, "Page definition overridden: multiple definitions for page with name " + page.getName());
     }
     _pageTypes.put(page.getName(), page);
   }
@@ -291,7 +291,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   {
     if (_dialogs.containsKey(dialog.getName()))
     {
-      Log.w(Constants.APPLICATION_NAME, "Dialog definition overridden: multiple definitions for dialog with name " + dialog.getName());
+      MBLog.w(Constants.APPLICATION_NAME, "Dialog definition overridden: multiple definitions for dialog with name " + dialog.getName());
     }
 
     if (_homeDialog == null)
@@ -310,7 +310,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   {
     if (_tools.containsKey(tool.getName()))
     {
-      Log.w(Constants.APPLICATION_NAME, "Tool definition overridden: multiple definitions for tool with name " + tool.getName());
+      MBLog.w(Constants.APPLICATION_NAME, "Tool definition overridden: multiple definitions for tool with name " + tool.getName());
     }
 
     _tools.put(tool.getName(), tool);
@@ -320,7 +320,7 @@ public class MBConfigurationDefinition extends MBDefinition implements MBIncluda
   {
     if (_alerts.containsKey(alert.getName()))
     {
-      Log.w(Constants.APPLICATION_NAME, "Alert definition overridden: multiple definitions for alert with name " + alert.getName());
+      MBLog.w(Constants.APPLICATION_NAME, "Alert definition overridden: multiple definitions for alert with name " + alert.getName());
     }
 
     _alerts.put(alert.getName(), alert);

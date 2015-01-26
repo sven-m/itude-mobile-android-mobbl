@@ -23,11 +23,10 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
-import android.util.Log;
-
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.FileUtil;
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.model.parser.MBXmlDocumentParser;
@@ -50,7 +49,7 @@ public class MBCacheManager
   @SuppressWarnings("unchecked")
   protected void init()
   {
-    Log.d(Constants.APPLICATION_NAME, "init CacheManager");
+    MBLog.d(Constants.APPLICATION_NAME, "init CacheManager");
 
     /* 
      * AD: When writing our ttls to a file we should also read them. 
@@ -216,7 +215,7 @@ public class MBCacheManager
 
   private void doExpireDataForKey(String key)
   {
-    Log.d(Constants.APPLICATION_NAME, "removing " + key + "from cache");
+    MBLog.d(Constants.APPLICATION_NAME, "removing " + key + "from cache");
     deleteCachedFile(key);
     flushRegistry();
   }
@@ -253,7 +252,7 @@ public class MBCacheManager
     byte[] data = DataUtil.getInstance().decompress(zipped);
     if (data == null)
     {
-      Log.e(Constants.APPLICATION_NAME, "Error decompressing cached document");
+      MBLog.e(Constants.APPLICATION_NAME, "Error decompressing cached document");
       return null;
     }
 
@@ -277,7 +276,7 @@ public class MBCacheManager
     }
     catch (UnsupportedEncodingException e)
     {
-      Log.w(Constants.APPLICATION_NAME, e);
+      MBLog.w(Constants.APPLICATION_NAME, e);
     }
   }
 

@@ -18,9 +18,8 @@ package com.itude.mobile.mobbl.core.util;
 import java.util.Hashtable;
 import java.util.Map;
 
-import android.util.Log;
-
 import com.itude.mobile.android.util.FileUtil;
+import com.itude.mobile.android.util.log.MBLog;
 
 public class MBCacheWriter extends Thread
 {
@@ -74,10 +73,10 @@ public class MBCacheWriter extends Thread
         if (success && getData() != null)
         {
           success = FileUtil.getInstance().writeToFile(getData(), getFileName(), null);
-          if (!success) Log.e(Constants.APPLICATION_NAME, "Error caching data in " + getFileName());
+          if (!success) MBLog.e(Constants.APPLICATION_NAME, "Error caching data in " + getFileName());
         }
-        else if (!success) Log.w(Constants.APPLICATION_NAME, "Could not store the cache registry info in " + getRegistryFileName()
-                                                             + " and/or " + getTtlsFileName() + " skipping writing to the cache!");
+        else if (!success) MBLog.w(Constants.APPLICATION_NAME, "Could not store the cache registry info in " + getRegistryFileName()
+                                                               + " and/or " + getTtlsFileName() + " skipping writing to the cache!");
       }
 
     }

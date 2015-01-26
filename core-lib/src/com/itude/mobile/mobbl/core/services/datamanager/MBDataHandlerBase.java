@@ -15,8 +15,7 @@
  */
 package com.itude.mobile.mobbl.core.services.datamanager;
 
-import android.util.Log;
-
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.services.operation.MBDocumentOperation;
@@ -31,14 +30,14 @@ public class MBDataHandlerBase implements MBDataHandler
   @Override
   public MBDocument loadDocument(String documentName)
   {
-    Log.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No loadDocument implementation for " + documentName);
+    MBLog.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No loadDocument implementation for " + documentName);
     return null;
   }
 
   @Override
   public MBDocument loadFreshDocument(String documentName)
   {
-    Log.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No loadFreshDocument implementation for " + documentName);
+    MBLog.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No loadFreshDocument implementation for " + documentName);
     return null;
   }
 
@@ -64,14 +63,14 @@ public class MBDataHandlerBase implements MBDataHandler
   @Override
   public MBDocument loadDocument(String documentName, MBDocument args, MBEndPointDefinition endPoint)
   {
-    Log.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No loadDocument implementation for " + documentName);
+    MBLog.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No loadDocument implementation for " + documentName);
     return null;
   }
 
   @Override
   public MBDocument loadFreshDocument(String documentName, MBDocument args, MBEndPointDefinition endPoint)
   {
-    Log.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No loadFreshDocument implementation for " + documentName);
+    MBLog.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No loadFreshDocument implementation for " + documentName);
     return null;
   }
 
@@ -90,7 +89,7 @@ public class MBDataHandlerBase implements MBDataHandler
   @Override
   public void storeDocument(MBDocument document)
   {
-    Log.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No storeDocument implementation for " + document.getDefinition().getName());
+    MBLog.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No storeDocument implementation for " + document.getDefinition().getName());
   }
 
   @Override

@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,6 +33,7 @@ import android.widget.ToggleButton;
 
 import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBAttributeDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDomainDefinition;
@@ -99,13 +99,13 @@ public class MBField extends MBComponent
         }
         else
         {
-          Log.w(Constants.APPLICATION_NAME, fieldDef.getWidth() + " could not be parsed als int");
+          MBLog.w(Constants.APPLICATION_NAME, fieldDef.getWidth() + " could not be parsed als int");
         }
 
       }
       catch (NumberFormatException e)
       {
-        Log.d(Constants.APPLICATION_NAME, fieldDef.toString(), e);
+        MBLog.d(Constants.APPLICATION_NAME, fieldDef.toString(), e);
       }
     }
     if (fieldDef.getHeight() != null)
@@ -116,7 +116,7 @@ public class MBField extends MBComponent
       }
       catch (NumberFormatException e)
       {
-        Log.d(Constants.APPLICATION_NAME, fieldDef.toString(), e);
+        MBLog.d(Constants.APPLICATION_NAME, fieldDef.toString(), e);
       }
     }
 
@@ -418,8 +418,8 @@ public class MBField extends MBComponent
       catch (MBInvalidPathException e)
       {
         // Button outcomes do not map to an attribute
-        Log.d(Constants.APPLICATION_NAME, "MBField.getAttributeDefinition() with path=" + path
-                                          + " does not map to an attribute. Probably an outcomePath for a Button.");
+        MBLog.d(Constants.APPLICATION_NAME, "MBField.getAttributeDefinition() with path=" + path
+                                            + " does not map to an attribute. Probably an outcomePath for a Button.");
       }
     }
 
@@ -521,7 +521,7 @@ public class MBField extends MBComponent
     {
       // dead code?
       appendToMe.append("<MBField errorInDefinition='" + e.getClass().getSimpleName() + ", " + e.getCause() + "'/>\n");
-      Log.d(Constants.APPLICATION_NAME, e.getMessage(), e);
+      MBLog.d(Constants.APPLICATION_NAME, e.getMessage(), e);
     }
 
     return appendToMe;

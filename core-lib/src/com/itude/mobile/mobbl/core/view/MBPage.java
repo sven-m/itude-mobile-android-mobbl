@@ -21,11 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition.MBPageType;
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPathException;
@@ -233,9 +233,9 @@ public class MBPage extends MBPanel
       {
         if (mustBe.equals("/"))
         {
-          Log.w(Constants.APPLICATION_NAME, "Ignoring path " + stripped + " because the document definition used root path " + mustBe
-                                            + ". Check your document attribute in your page definition. Maybe you meant: "
-                                            + ((MBPageDefinition) getDefinition()).getDocumentName() + "/" + stripped);
+          MBLog.w(Constants.APPLICATION_NAME, "Ignoring path " + stripped + " because the document definition used root path " + mustBe
+                                              + ". Check your document attribute in your page definition. Maybe you meant: "
+                                              + ((MBPageDefinition) getDefinition()).getDocumentName() + "/" + stripped);
           ignorePath = true;
         }
         else

@@ -18,7 +18,6 @@ package com.itude.mobile.mobbl.core.view.builders.field;
 import android.content.Context;
 import android.text.InputType;
 import android.text.TextUtils.TruncateAt;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -26,6 +25,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl.core.util.Constants;
@@ -85,8 +85,8 @@ public class InputFieldBuilder extends MBBaseFieldBuilder
       }
       catch (Exception e)
       {
-        Log.w(Constants.APPLICATION_NAME, "Inputfield with type \"" + field.getDataType() + "\" cannot have the value \"" + defaultValue
-                                          + "\"", e);
+        MBLog.w(Constants.APPLICATION_NAME, "Inputfield with type \"" + field.getDataType() + "\" cannot have the value \"" + defaultValue
+                                            + "\"", e);
       }
     }
     else if (field.getDataType() != null
@@ -102,8 +102,8 @@ public class InputFieldBuilder extends MBBaseFieldBuilder
       }
       catch (Exception e)
       {
-        Log.w(Constants.APPLICATION_NAME, "Inputfield with type \"" + field.getDataType() + "\" cannot have the value \"" + defaultValue
-                                          + "\"", e);
+        MBLog.w(Constants.APPLICATION_NAME, "Inputfield with type \"" + field.getDataType() + "\" cannot have the value \"" + defaultValue
+                                            + "\"", e);
       }
 
       // Depending on the localeCode-settings in the applicationProperties, we want to display a comma or a dot as decimal seperator for floats and doubles

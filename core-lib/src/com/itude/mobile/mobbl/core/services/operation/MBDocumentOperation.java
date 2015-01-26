@@ -17,8 +17,7 @@ package com.itude.mobile.mobbl.core.services.operation;
 
 import java.util.Date;
 
-import android.util.Log;
-
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
@@ -151,8 +150,8 @@ public class MBDocumentOperation extends MBThread
     {
       doc.setArgumentsUsed(getArguments());
     }
-    Log.d(Constants.APPLICATION_NAME, "Loading of document " + getDocumentName() + " took " + (new Date().getTime() - now) / 1000
-                                      + " seconds");
+    MBLog.d(Constants.APPLICATION_NAME, "Loading of document " + getDocumentName() + " took " + (new Date().getTime() - now) / 1000
+                                        + " seconds");
     return doc;
   }
 
@@ -187,7 +186,7 @@ public class MBDocumentOperation extends MBThread
         throw (MBInterruptedException) e;
       }
 
-      Log.w(Constants.APPLICATION_NAME, "Exception during Document Operation: " + e.getMessage(), e);
+      MBLog.w(Constants.APPLICATION_NAME, "Exception during Document Operation: " + e.getMessage(), e);
       getDelegate().processException(e);
     }
   }

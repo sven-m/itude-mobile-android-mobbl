@@ -15,9 +15,8 @@
  */
 package com.itude.mobile.mobbl.core.util;
 
-import android.util.Log;
-
 import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.log.MBLog;
 
 public final class MBParseUtil
 {
@@ -37,7 +36,7 @@ public final class MBParseUtil
     }
     catch (NumberFormatException e)
     {
-      Log.d(Constants.APPLICATION_NAME, "Could not convert " + stringToConvert + " to float");
+      MBLog.d(Constants.APPLICATION_NAME, "Could not convert " + stringToConvert + " to float");
     }
 
     return returnValue;
@@ -63,7 +62,7 @@ public final class MBParseUtil
     }
     catch (NumberFormatException e)
     {
-      Log.w(Constants.APPLICATION_NAME, "Could not convert " + stringToConvert + " to double");
+      MBLog.w(Constants.APPLICATION_NAME, "Could not convert " + stringToConvert + " to double");
     }
 
     return returnValue;

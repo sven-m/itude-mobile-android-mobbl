@@ -23,8 +23,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.util.Log;
 
+import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.util.Constants;
 
 public final class MBThreadHandler
@@ -79,7 +79,7 @@ public final class MBThreadHandler
 
   public synchronized void stopAllRunningThreads()
   {
-    Log.d(Constants.APPLICATION_NAME, "Stopping all running threads from MBThreadHandler");
+    MBLog.d(Constants.APPLICATION_NAME, "Stopping all running threads from MBThreadHandler");
 
     for (MBThread thread : _runningThreads)
     {
