@@ -176,6 +176,11 @@ public class MBComponent extends MBCustomAttributeContainer
     return "";
   }
 
+  public String getOutcomeName()
+  {
+    return null;
+  }
+
   public String getAbsoluteDataPath()
   {
     String componentPath = getComponentDataPath();
