@@ -1,18 +1,15 @@
 package com.itude.mobile.mobbl.core.view.bindings;
 
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.itude.mobile.mobbl.core.view.MBField;
 
-public class TextBinder extends BaseViewBinder
+public class TextBinder extends SingleViewBinder<TextView, MBField>
 {
-  private final int id;
-
   protected TextBinder(int id)
   {
-    this.id = id;
+    super(id);
   }
 
   public static TextBinder getInstance(int id)
@@ -21,19 +18,10 @@ public class TextBinder extends BaseViewBinder
   }
 
   @Override
-  protected View bindSpecificView(BuildState state)
+  protected void bindSingleView(TextView view, MBField component)
   {
-    TextView text = (TextView) state.parent.findViewById(id);
-
-    if (text != null)
-    {
-      MBField field = (MBField) state.component;
-      text.setText(field.getValuesForDisplay());
-      if (text instanceof EditText) text.addTextChangedListener((MBField) state.component);
-    }
-
-    return text;
-
+    view.setText(component.getValuesForDisplay());
+    if (view instanceof EditText) view.addTextChangedListener(component);
   }
 
 }

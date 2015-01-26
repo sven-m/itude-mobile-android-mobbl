@@ -1,19 +1,16 @@
 package com.itude.mobile.mobbl.core.view.bindings;
 
-import android.view.View;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 
 import com.itude.mobile.mobbl.core.view.MBField;
 
-public class RatingBarBinder extends BaseViewBinder
+public class RatingBarBinder extends SingleViewBinder<RatingBar, MBField>
 {
-
-  private final int id;
 
   protected RatingBarBinder(int id)
   {
-    this.id = id;
+    super(id);
   }
 
   public static RatingBarBinder getInstance(int id)
@@ -22,18 +19,10 @@ public class RatingBarBinder extends BaseViewBinder
   }
 
   @Override
-  protected View bindSpecificView(BuildState state)
+  protected void bindSingleView(RatingBar view, MBField component)
   {
-    RatingBar bar = (RatingBar) state.parent.findViewById(id);
-
-    if (bar != null)
-    {
-      MBField field = (MBField) state.component;
-      bar.setRating(Float.parseFloat(field.getValue()));
-      bar.setOnRatingBarChangeListener(new RatingBarChangeListener(field));
-    }
-
-    return bar;
+    view.setRating(Float.parseFloat(component.getValue()));
+    view.setOnRatingBarChangeListener(new RatingBarChangeListener(component));
   }
 
   private static class RatingBarChangeListener implements OnRatingBarChangeListener

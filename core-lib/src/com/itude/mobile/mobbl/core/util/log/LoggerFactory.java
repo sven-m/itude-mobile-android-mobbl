@@ -24,7 +24,13 @@ import com.itude.mobile.mobbl.core.util.MBProperties;
 public final class LoggerFactory
 {
 
-  public static final int LOGLEVEL = Integer.parseInt(MBProperties.getInstance().getValueForProperty(Constants.C_PROPERTY_LOGLEVEL));
+  public static final int LOGLEVEL;
+
+  static
+  {
+    String property = MBProperties.getInstance().getValueForProperty(Constants.C_PROPERTY_LOGLEVEL);
+    LOGLEVEL = property != null ? Integer.parseInt(property) : 6;
+  }
 
   private LoggerFactory()
   {

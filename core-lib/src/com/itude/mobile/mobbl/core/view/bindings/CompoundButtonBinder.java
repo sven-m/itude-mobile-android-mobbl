@@ -1,18 +1,16 @@
 package com.itude.mobile.mobbl.core.view.bindings;
 
-import android.view.View;
 import android.widget.CompoundButton;
 
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
 import com.itude.mobile.mobbl.core.view.MBField;
 
-public class CompoundButtonBinder extends BaseViewBinder
+public class CompoundButtonBinder extends SingleViewBinder<CompoundButton, MBField>
 {
-  private final int id;
 
   protected CompoundButtonBinder(int id)
   {
-    this.id = id;
+    super(id);
   }
 
   public static CompoundButtonBinder getInstance(int id)
@@ -21,34 +19,24 @@ public class CompoundButtonBinder extends BaseViewBinder
   }
 
   @Override
-  protected View bindSpecificView(BuildState state)
+  protected void bindSingleView(CompoundButton view, MBField component)
   {
-    CompoundButton button = (CompoundButton) state.parent.findViewById(id);
+    Boolean value = MBParseUtil.strictBooleanValue(component.getUntranslatedValue());
+    boolean valueIfNil = MBParseUtil.booleanValue(component.getUntranslatedValueIfNil());
+    boolean checked = false;
 
-    if (button != null)
+    if ((value != null && value) || (value == null && valueIfNil))
     {
-      MBField field = (MBField) state.component;
-
-      Boolean value = MBParseUtil.strictBooleanValue(field.getUntranslatedValue());
-      boolean valueIfNil = MBParseUtil.booleanValue(field.getUntranslatedValueIfNil());
-      boolean checked = false;
-
-      if ((value != null && value) || (value == null && valueIfNil))
-      {
-        checked = true;
-      }
-
-      // remove any earlier listeners, in case this shows up in a ListView, and the view
-      // gets recycled
-
-      button.setOnCheckedChangeListener(field);
-      button.setOnKeyListener(field);
-
-      button.setChecked(checked);
+      checked = true;
     }
 
-    return button;
+    // remove any earlier listeners, in case this shows up in a ListView, and the view
+    // gets recycled
 
+    view.setOnCheckedChangeListener(component);
+    view.setOnKeyListener(component);
+
+    view.setChecked(checked);
   }
 
 }
