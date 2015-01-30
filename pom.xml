@@ -55,21 +55,6 @@
 				<version>${apache.commons.lang.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>4.1</version>
-				<exclusions>
-					<exclusion>
-	            	    <groupId>commons-codec</groupId>
-    	           	 <artifactId>commons-codec</artifactId>
-	        	    </exclusion>
-		            <exclusion>
-    		            <groupId>commons-logging</groupId>
-        		        <artifactId>commons-logging</artifactId>
-            		</exclusion>
-            	</exclusions>
-			</dependency>
-			<dependency>
 				<groupId>rhino</groupId>
 				<artifactId>js</artifactId>
 				<version>1.7R2</version>
@@ -189,7 +174,7 @@
     </build>
     
     <properties>
-        <util.lib.version>0.2.0.5</util.lib.version>
+        <util.lib.version>1.0.0</util.lib.version>
         <android.version>4.4</android.version>
         <android.support.version>19.1.0</android.support.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
