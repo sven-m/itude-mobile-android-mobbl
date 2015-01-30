@@ -43,6 +43,7 @@ public final class MBDataTypeFormatterFactory
     registerFormatter("priceWithFourDecimals", new PriceWithFourDecimalsFormatter());
     registerFormatter("volume", new VolumeFormatter());
     registerFormatter("percentageWithTwoDecimals", new PercentageWithTwoDecimalsFormatter());
+    registerFormatter("domain", new DomainFormatter());
   }
 
   public void registerFormatter(String name, MBDataTypeFormatter formatter)

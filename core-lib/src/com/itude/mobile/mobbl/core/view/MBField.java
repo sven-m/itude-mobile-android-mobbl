@@ -31,6 +31,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
+import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
@@ -344,10 +345,11 @@ public class MBField extends MBComponent
     String path = getAbsoluteDataPath();
     String originalValue = (String) getDocument().getValueForPath(path);
 
-    boolean valueChanged = (value == null && originalValue != null) || (value != null && !value.equals(originalValue));
+    boolean valueChanged = !ComparisonUtil.safeEquals(value, originalValue);
 
     if (valueChanged && notifyValueWillChange(value, originalValue, path))
     {
+      _cachedValueSet = false;
       getDocument().setValue(value, path);
       notifyValueChanged(value, originalValue, path);
     }
@@ -375,6 +377,7 @@ public class MBField extends MBComponent
     return MBLocalizationService.getInstance().getTextForKey(((MBFieldDefinition) getDefinition()).getText());
   }
 
+  @Override
   public String getOutcomeName()
   {
     return ((MBFieldDefinition) getDefinition()).getOutcomeName();
