@@ -15,7 +15,7 @@ For Api documentation, see the [Android API Reference](http://mobbl.org/apis/and
 
 
 ## [Changelog](https://github.com/ItudeMobile/itude-mobile-android-mobbl/wiki/Changelog)
-Current version: 1.0.0
+Current version: 4.0.0
 
 ## Build
 #### Maven
