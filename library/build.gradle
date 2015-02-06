@@ -17,6 +17,11 @@ android {
         testInstrumentationRunner 'android.test.InstrumentationTestRunner'
     }
 
+    lintOptions {
+        lintConfig file("lint.xml")
+    }
+
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_6
         targetCompatibility JavaVersion.VERSION_1_6
@@ -30,7 +35,9 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.3.2'
 }
 
+
+
 // Used to push in maven
-//apply from: '../maven_push.gradle'
+apply from: '../maven_push.gradle'
 
 

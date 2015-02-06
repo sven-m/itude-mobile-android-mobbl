@@ -102,6 +102,8 @@ afterEvaluate { project ->
         exclude '**/BuildConfig.java'
         exclude '**/R.java'
 
+        failOnError false
+
         source = android.sourceSets.main.java.sourceFiles
         classpath += project.files(project.android.getBootClasspath().join(File.pathSeparator))
     }
