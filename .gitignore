@@ -1,9 +1,3 @@
-# Built application files
-build
-
-# Lint files
-lint.xml
-
 # Files for the dex VM
 *.dex
 
