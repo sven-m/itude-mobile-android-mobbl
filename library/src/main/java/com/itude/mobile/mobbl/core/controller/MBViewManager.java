@@ -870,7 +870,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
 
   protected void onPreCreate()
   {
-      supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+      requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
   }
 
   private MBActionBarBuilder constructActionBarBuilder()
