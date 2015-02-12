@@ -17,7 +17,6 @@ package com.itude.mobile.mobbl.core.util.resources;
 
 import java.util.Map;
 
-import android.R;
 import android.content.res.ColorStateList;
 
 import com.itude.mobile.mobbl.core.services.MBResourceService;
@@ -54,35 +53,35 @@ public class MBColorStatedResourceBuilder implements MBResourceBuilder.Builder<C
 
     if (pressed != null)
     {
-      int[] itemStates = new int[]{R.attr.state_pressed};
+      int[] itemStates = new int[]{android.R.attr.state_pressed};
 
       processItem(pressed, itemStates);
     }
 
     if (enabled != null)
     {
-      int[] itemStates = new int[]{R.attr.state_enabled, -R.attr.state_selected};
+      int[] itemStates = new int[]{android.R.attr.state_enabled, -android.R.attr.state_selected};
 
       processItem(enabled, itemStates);
     }
 
     if (disabled != null)
     {
-      int[] itemStates = new int[]{-R.attr.state_enabled};
+      int[] itemStates = new int[]{-android.R.attr.state_enabled};
 
       processItem(disabled, itemStates);
     }
 
     if (selected != null)
     {
-      int[] itemStates = new int[]{R.attr.state_selected};
+      int[] itemStates = new int[]{android.R.attr.state_selected};
 
       processItem(selected, itemStates);
     }
 
     if (checked != null)
     {
-      int[] itemStates = new int[]{R.attr.state_checked};
+      int[] itemStates = new int[]{android.R.attr.state_checked};
 
       processItem(checked, itemStates);
     }
