@@ -17,7 +17,6 @@ package com.itude.mobile.mobbl.core.util.resources;
 
 import java.util.Map;
 
-import android.R;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
@@ -40,13 +39,13 @@ public class MBRadioGroupStatedResourceBuilder extends MBAbstractStatedResourceB
 
     if (checked != null)
     {
-      int[] itemStates = new int[]{R.attr.state_checked};
+      int[] itemStates = new int[]{android.R.attr.state_checked};
 
       processItem(stateListDrawable, checked, itemStates);
     }
     if (unchecked != null)
     {
-      int[] itemStates = new int[]{-R.attr.state_checked};
+      int[] itemStates = new int[]{-android.R.attr.state_checked};
 
       processItem(stateListDrawable, unchecked, itemStates);
     }

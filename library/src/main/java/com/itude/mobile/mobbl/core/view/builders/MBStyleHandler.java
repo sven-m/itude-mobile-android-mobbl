@@ -17,7 +17,6 @@ package com.itude.mobile.mobbl.core.view.builders;
 
 import java.util.List;
 
-import android.R;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -145,14 +144,14 @@ public class MBStyleHandler
     if (statePressed != null)
     {
       Drawable imageFocused = MBResourceService.getInstance().getImageByID(statePressed);
-      buttonStates.addState(new int[]{R.attr.state_pressed}, imageFocused);
+      buttonStates.addState(new int[]{android.R.attr.state_pressed}, imageFocused);
     }
 
     if (stateNormal != null)
     {
       Drawable imageEnabled = MBResourceService.getInstance().getImageByID(stateNormal);
-      buttonStates.addState(new int[]{R.attr.state_enabled}, imageEnabled);
-      buttonStates.addState(new int[]{-R.attr.state_selected}, imageEnabled);
+      buttonStates.addState(new int[]{android.R.attr.state_enabled}, imageEnabled);
+      buttonStates.addState(new int[]{-android.R.attr.state_selected}, imageEnabled);
     }
 
     return buttonStates;
@@ -166,7 +165,7 @@ public class MBStyleHandler
     if (stateDisabled != null)
     {
       Drawable imageDisabled = MBResourceService.getInstance().getImageByID(stateDisabled);
-      buttonStates.addState(new int[]{-R.attr.state_enabled}, imageDisabled);
+      buttonStates.addState(new int[]{-android.R.attr.state_enabled}, imageDisabled);
     }
 
     return buttonStates;
@@ -184,10 +183,10 @@ public class MBStyleHandler
     Drawable imageNormal = MBResourceService.getInstance().getImageByID(stateNormal);
     Drawable imagePressed = MBResourceService.getInstance().getImageByID(statePressed);
 
-    if (stateSelected != null) buttonStates.addState(new int[]{R.attr.state_selected}, imageSelected);
-    if (statePressed != null) buttonStates.addState(new int[]{R.attr.state_pressed}, imagePressed);
-    if (stateDisabled != null) buttonStates.addState(new int[]{-R.attr.state_enabled}, imageDisabled);
-    if (stateNormal != null) buttonStates.addState(new int[]{R.attr.state_enabled}, imageNormal);
+    if (stateSelected != null) buttonStates.addState(new int[]{android.R.attr.state_selected}, imageSelected);
+    if (statePressed != null) buttonStates.addState(new int[]{android.R.attr.state_pressed}, imagePressed);
+    if (stateDisabled != null) buttonStates.addState(new int[]{-android.R.attr.state_enabled}, imageDisabled);
+    if (stateNormal != null) buttonStates.addState(new int[]{android.R.attr.state_enabled}, imageNormal);
 
     return buttonStates;
   }
@@ -199,9 +198,9 @@ public class MBStyleHandler
     Drawable imageActive = MBResourceService.getInstance().getImageByID(stateActive);
     Drawable imageDisabled = MBResourceService.getInstance().getImageByID(stateDisabled);
 
-    if (stateActive != null) buttonStates.addState(new int[]{R.attr.state_focused}, imageActive);
-    if (stateNormal != null) buttonStates.addState(new int[]{R.attr.state_enabled}, imageNormal);
-    if (stateDisabled != null) buttonStates.addState(new int[]{-R.attr.state_enabled}, imageDisabled);
+    if (stateActive != null) buttonStates.addState(new int[]{android.R.attr.state_focused}, imageActive);
+    if (stateNormal != null) buttonStates.addState(new int[]{android.R.attr.state_enabled}, imageNormal);
+    if (stateDisabled != null) buttonStates.addState(new int[]{-android.R.attr.state_enabled}, imageDisabled);
 
     return buttonStates;
   }

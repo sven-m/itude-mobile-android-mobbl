@@ -17,7 +17,6 @@ package com.itude.mobile.mobbl.core.util.resources;
 
 import java.util.Map;
 
-import android.R;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
@@ -43,34 +42,34 @@ public class MBStatedImageResourceBuilder extends MBAbstractStatedResourceBuilde
 
     if (pressed != null)
     {
-      int[] itemStates = new int[]{R.attr.state_pressed};
+      int[] itemStates = new int[]{android.R.attr.state_pressed};
 
       processItem(stateListDrawable, pressed, itemStates);
     }
 
     if (enabled != null)
     {
-      int[] itemStates = new int[]{R.attr.state_enabled, -R.attr.state_selected};
+      int[] itemStates = new int[]{android.R.attr.state_enabled, -android.R.attr.state_selected};
 
       processItem(stateListDrawable, enabled, itemStates);
     }
 
     if (disabled != null)
     {
-      int[] itemStates = new int[]{-R.attr.state_enabled};
+      int[] itemStates = new int[]{-android.R.attr.state_enabled};
 
       processItem(stateListDrawable, disabled, itemStates);
     }
 
     if (selected != null)
     {
-      int[] itemStates = new int[]{R.attr.state_selected};
+      int[] itemStates = new int[]{android.R.attr.state_selected};
 
       processItem(stateListDrawable, selected, itemStates);
     }
     if (checked != null)
     {
-      int[] itemStates = new int[]{R.attr.state_checked};
+      int[] itemStates = new int[]{android.R.attr.state_checked};
 
       processItem(stateListDrawable, checked, itemStates);
     }

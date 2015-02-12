@@ -18,7 +18,6 @@ package com.itude.mobile.mobbl.core.view.components.tabbar;
 import java.util.EnumSet;
 import java.util.List;
 
-import android.R;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -283,7 +282,7 @@ public abstract class MBDefaultActionBarBuilder implements MBActionBarBuilder
 
         MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
 
-        View homeIcon = MBViewManager.getInstance().findViewById(R.id.home);
+          View homeIcon = MBViewManager.getInstance().findViewById(android.R.id.home);
 
 
         if (homeIcon != null)
