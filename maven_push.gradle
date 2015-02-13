@@ -121,6 +121,11 @@ task androidSourcesJar(type: Jar) {
     from android.sourceSets.main.java.sourceFiles
 }
 
+artifacts {
+    archives androidSourcesJar
+    archives androidJavadocsJar
+}
+
 afterEvaluate {
     androidJavadocs.classpath += project.android.libraryVariants.toList().first().javaCompile.classpath
 }
