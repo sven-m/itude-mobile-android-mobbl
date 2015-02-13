@@ -271,7 +271,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   }
 
   /***
-   * Only sets a flag to invalidate the menu on first invocation. The menu is built in {@link #onPrepareOptionsMenu(Menu)}
+   * Only sets a flag to invalidate the menu on first invocation. The menu is built in onPrepareOptionsMenu(Menu)
    */
   @Override
   public boolean onCreateOptionsMenu(Menu menu)

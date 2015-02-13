@@ -29,6 +29,9 @@ android {
     }
 }
 
+// Used to push in maven
+apply from: '../maven_push.gradle'
+
 dependencies {
     compile 'com.android.support:appcompat-v7:19.1.0'
     compile 'com.itude.mobile.android.util:android-util-lib:2.0.0@aar'
@@ -38,7 +41,6 @@ dependencies {
 
 
 
-// Used to push in maven
-apply from: '../maven_push.gradle'
+
 
 

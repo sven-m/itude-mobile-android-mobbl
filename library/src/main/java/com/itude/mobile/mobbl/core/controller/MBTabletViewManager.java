@@ -19,7 +19,6 @@ import android.content.res.Configuration;
 import android.os.Handler;
 import android.view.View;
 
-import com.itude.mobile.mobbl.core.R;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl.core.view.components.tabbar.MBActionBarBuilder;
 import com.itude.mobile.mobbl.core.view.components.tabbar.MBTabletActionBarBuilder;
@@ -48,7 +47,7 @@ public class MBTabletViewManager extends MBViewManager
     // that onConfigurationChanged should be in the message queue. This places a new message at the end of
     // the queue that changes the home icon back, which is therefore handled after the onConfigurationChanged message
     // that ruins it.
-    final View homeIcon = findViewById(R.id.home);
+    final View homeIcon = findViewById(com.itude.mobile.mobbl.core.R.id.home);
     if (homeIcon != null) new Handler().post(new Runnable()
     {
 
