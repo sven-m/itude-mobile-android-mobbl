@@ -1,0 +1,46 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.1.0"
+
+    defaultConfig {
+
+        minSdkVersion 9
+        targetSdkVersion 16
+
+        versionName VERSION_NAME
+        versionCode Integer.parseInt(VERSION_CODE)
+
+        testApplicationId 'com.itude.mobile.android.mobbl.tests'
+        testInstrumentationRunner 'android.test.InstrumentationTestRunner'
+    }
+
+    lintOptions {
+        lintConfig file("lint.xml")
+    }
+
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+        encoding 'UTF-8'
+    }
+}
+
+// Used to push in maven
+apply from: '../maven_push.gradle'
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:19.1.0'
+    compile 'com.itude.mobile.android.util:android-util-lib:2.0.0@aar'
+    compile 'rhino:js:1.7R2'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+}
+
+
+
+
+
+
