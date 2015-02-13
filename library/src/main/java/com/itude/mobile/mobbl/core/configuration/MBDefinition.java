@@ -73,7 +73,7 @@ public class MBDefinition implements Parcelable
   /** 
    * Set the value of the `name` property of the XML element in the configuration.
    *  
-   * @name the definition's name
+   * @param name the definition's name
    */
   public void setName(String name)
   {
@@ -161,7 +161,7 @@ public class MBDefinition implements Parcelable
   /**
    * Add {@link MBDefinition} as child element
    * 
-   * @param child {@link MBDefinition}
+   * @param definition {@link MBDefinition}
    */
   public void addChildElement(MBDefinition definition)
   {
@@ -281,7 +281,7 @@ public class MBDefinition implements Parcelable
   /**
    * Add {@link MBEndPointDefinition} as child element
    * 
-   * @param child {@link MBEndPointDefinition}
+   * @param definition {@link MBEndPointDefinition}
    */
   public void addEndPoint(MBEndPointDefinition definition)
   {
@@ -290,7 +290,7 @@ public class MBDefinition implements Parcelable
   /**
    * Add {@link MBResultListenerDefinition} as child element
    * 
-   * @param child {@link MBResultListenerDefinition}
+   * @param lsnr {@link MBResultListenerDefinition}
    */
   public void addResultListener(MBResultListenerDefinition lsnr)
   {

@@ -113,8 +113,8 @@ public class MBThread extends Thread
   }
 
   /**
-   * Get a {@link #java.lang.String} value from the provided {@link android.os.Bundle}.
-   * @param key
+   * Get a {@link java.lang.String} value from the provided {@link android.os.Bundle}.
+   * @param key key
    * @return null if there is no Bundle available; otherwise @see {@link android.os.Bundle#get(String)}
    */
   protected final String getStringParameter(String key)

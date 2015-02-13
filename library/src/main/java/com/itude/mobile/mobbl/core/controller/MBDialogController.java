@@ -402,9 +402,8 @@ public class MBDialogController extends ContextWrapper
   }
 
   /**
-   * @param type
-   * @return
-   * @return
+   * @param clazz Class
+   * @return {@link java.util.List} of fragments
    * 
    *         Get a list of fragments of a specific type
    */
@@ -460,8 +459,7 @@ public class MBDialogController extends ContextWrapper
   }
 
   /**
-   * @param id
-   *            id of the dialog
+   * @param vc the {@link com.itude.mobile.mobbl.core.controller.util.MBBasicViewController}
    */
   public void handleOnWindowActivated(MBBasicViewController vc)
   {
@@ -469,8 +467,7 @@ public class MBDialogController extends ContextWrapper
   }
 
   /**
-   * @param id
-   *            id of the dialog
+   * @param vc the {@link com.itude.mobile.mobbl.core.controller.util.MBBasicViewController}
    */
   public void handleOnLeavingWindow(MBBasicViewController vc)
   {

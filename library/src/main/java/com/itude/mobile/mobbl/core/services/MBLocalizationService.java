@@ -136,10 +136,9 @@ public class MBLocalizationService
   }
 
   /***
-   * @see java.util.Formatter.format(String, Object ...)
-   * @param key
-   * @param args
-   * @return
+   * @param key Key
+   * @param args Objects
+   * @return text
    */
   public String getText(String key, Object... args)
   {

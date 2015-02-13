@@ -44,9 +44,9 @@ public class MBDataHandlerBase implements MBDataHandler
   /**
    * Load document with specified name using a specific parser eg. JSON or XML.
    * Use static variables from MBDocumentFactory to specify the parser.
-   * @param documentName
-   * @param parser
-   * @return
+   * @param documentName documentName
+   * @param parser parser
+   * @return {@link com.itude.mobile.mobbl.core.model.MBDocument}
    */
   @Override
   public MBDocument loadDocument(String documentName, String parser)

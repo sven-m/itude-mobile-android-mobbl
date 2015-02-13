@@ -965,10 +965,10 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
   }
 
   /***
-   * @deprecated please use {@link com.itude.mobile.mobbl.core.configuration.MBConditionalDefinition#isPreConditionValid()
+   * @deprecated please use {@link com.itude.mobile.mobbl.core.configuration.MBConditionalDefinition#isPreConditionValid()}
    * 
-   * @param def
-   * @return
+   * @param def {@link com.itude.mobile.mobbl.core.configuration.mvc.MBToolDefinition}
+   * @return true if precondition is valid
    */
   @Deprecated
   protected final boolean isPreConditionValid(MBToolDefinition def)

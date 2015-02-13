@@ -36,8 +36,8 @@ public final class MBPathUtil
    * a . is removed
    * a .. is interpreted as: pop the previous path part (d in the example above)  
    * 
-   * @param path
-   * @return
+   * @param toSplit {@link java.lang.String} to split
+   * @return {@link java.util.List} paths
    */
   public static List<String> splitPath(String toSplit)
   {

@@ -157,10 +157,10 @@ public class MBElementContainer implements Parcelable
   }
 
   /***
-   * @deprecated Please use {@link createElement(String)}
+   * @deprecated Please use {@link MBElement createElement(String)}
    *  createElement(String name)
-   * @param name
-   * @return
+   * @param name name
+   * @return {@link com.itude.mobile.mobbl.core.model.MBElement}
    */
   @Deprecated
   public MBElement createElementWithName(String name)
@@ -180,11 +180,11 @@ public class MBElementContainer implements Parcelable
 
   /***
    * Create an element on the position specified with the index. After invoking this method, please consider clearing the
-   * document's path cache by invoking {@link MBDocument.clearPathCache()}.
+   * document's path cache by invoking MBDocument.clearPathCache().
    * 
-   * @param name
-   * @param index
-   * @return
+   * @param name name
+   * @param index index
+   * @return {@link MBElement}
    */
   public MBElement createElement(String name, int index)
   {
@@ -270,7 +270,7 @@ public class MBElementContainer implements Parcelable
 
   /***
    * Add an element on the position specified with the index. After invoking this method, please consider clearing the
-   * document's path cache by invoking {@link MBDocument.clearPathCache()}.
+   * document's path cache by invoking MBDocument.clearPathCache().
    * 
    * @param element
    * @param index

@@ -75,7 +75,7 @@ public class MBOutcomeHandler extends Handler
    *  Example outcome definition:
    *  <Outcome origin="*" name="OUTCOME-page_winnerslosers_overview" action="PAGE-page_winnerslosers_overview" transferDocument="TRUE" dialog="LEFT"/>
    *  
-   * @param dialogName
+   * @param pageStackName
    * @return the dialog name to place the page in
    */
   static String resolvePageStackName(String pageStackName)

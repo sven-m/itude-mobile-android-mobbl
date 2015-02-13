@@ -48,8 +48,8 @@ public class MBDialogContentBuilder
 
     /**
      * Build the container in which to place the fragments. A RelativeLayout should provide
-     * enough flexibility to build any possible view. The view ids can be retrieved from the {@link #__sortedDialogIds}.
-     * @return
+     * enough flexibility to build any possible view. The view ids can be retrieved from the _sortedDialogIds.
+     * @return {@link android.widget.RelativeLayout}
      */
     protected RelativeLayout buildContainer()
     {

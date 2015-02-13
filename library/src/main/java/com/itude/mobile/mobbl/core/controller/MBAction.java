@@ -28,8 +28,7 @@ public interface MBAction
    * 
    * @param document {@link MBDocument}
    * @param path path
-   * @param outcomeName name of the outcome
-   * 
+   *
    * @return {@link MBOutcome} to be executed
    */
   public MBOutcome execute(MBDocument document, String path);
