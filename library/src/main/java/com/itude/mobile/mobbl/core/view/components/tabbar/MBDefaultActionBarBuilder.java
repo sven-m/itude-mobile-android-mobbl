@@ -320,7 +320,7 @@ public abstract class MBDefaultActionBarBuilder implements MBActionBarBuilder
         }
 
         actionBar.setCustomView(customView, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
-            ActionBar.LayoutParams.MATCH_PARENT, Gravity.LEFT));
+            ActionBar.LayoutParams.MATCH_PARENT, Gravity.START));
       }
 
       private void setTabText(MBDialogDefinition dialogDefinition, MBTab tab, MBTabBar tabBar)

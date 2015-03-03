@@ -100,11 +100,11 @@ public class MBImageResourceBuilder implements MBResourceBuilder.Builder<Drawabl
   {
     if ("LEFT".equals(align))
     {
-      drawable.setGravity(Gravity.LEFT);
+      drawable.setGravity(Gravity.START);
     }
     else if ("RIGHT".equals(align))
     {
-      drawable.setGravity(Gravity.RIGHT);
+      drawable.setGravity(Gravity.END);
     }
     else if ("TOP".equals(align))
     {

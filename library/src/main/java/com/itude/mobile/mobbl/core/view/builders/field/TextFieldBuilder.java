@@ -40,11 +40,11 @@ public class TextFieldBuilder extends MBBaseFieldBuilder
     {
       if (field.getAlignment().equals(Constants.C_ALIGNMENT_RIGHT))
       {
-        returnView.setGravity(Gravity.RIGHT);
+        returnView.setGravity(Gravity.END);
       }
       else if (field.getAlignment().equals(Constants.C_ALIGNMENT_LEFT))
       {
-        returnView.setGravity(Gravity.LEFT);
+        returnView.setGravity(Gravity.START);
       }
       else if (field.getAlignment().equals(Constants.C_ALIGNMENT_CENTER_VERTICAL))
       {

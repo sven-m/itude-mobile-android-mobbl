@@ -75,7 +75,7 @@ public class MBStyleHandler {
     }
 
     public void styleSubLabel(TextView view) {
-        view.setGravity(Gravity.BOTTOM | Gravity.LEFT);
+        view.setGravity(Gravity.BOTTOM | Gravity.START);
     }
 
     public void styleSubLabel(TextView view, String style) {
@@ -88,7 +88,7 @@ public class MBStyleHandler {
         if (view instanceof EditText) {
             EditText textField = (EditText) view;
             textField.setSelection(textField.getText().length());
-            textField.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+            textField.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         }
 
     }
@@ -271,13 +271,13 @@ public class MBStyleHandler {
         if (alignment != null) {
             // Align the label
             if (alignment.equals(Constants.C_ALIGNMENT_LEFT)) {
-                label.setGravity(Gravity.LEFT);
+                label.setGravity(Gravity.START);
             } else if (alignment.equals(Constants.C_ALIGNMENT_CENTER)) {
                 label.setGravity(Gravity.CENTER_HORIZONTAL);
             } else if (alignment.equals(Constants.C_ALIGNMENT_CENTER_VERTICAL)) {
                 label.setGravity(Gravity.CENTER_VERTICAL);
             } else if (alignment.equals(Constants.C_ALIGNMENT_RIGHT)) {
-                label.setGravity(Gravity.RIGHT);
+                label.setGravity(Gravity.END);
             }
         }
 
@@ -327,9 +327,9 @@ public class MBStyleHandler {
 
     public void styleMatrixCell(MBField field, TextView label) {
         if (field.getAlignment() != null && field.getAlignment().equals("LEFT")) {
-            label.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+            label.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         } else if (field.getAlignment() != null && field.getAlignment().equals("RIGHT")) {
-            label.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+            label.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
         } else {
             label.setGravity(Gravity.CENTER_VERTICAL);
         }
