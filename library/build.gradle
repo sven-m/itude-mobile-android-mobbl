@@ -2,13 +2,13 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
 
-        minSdkVersion 9
-        targetSdkVersion 16
+        minSdkVersion 15
+        targetSdkVersion 21
 
         versionName VERSION_NAME
         versionCode Integer.parseInt(VERSION_CODE)
@@ -33,8 +33,8 @@ android {
 apply from: '../maven_push.gradle'
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:19.1.0'
-    compile 'com.itude.mobile.android.util:android-util-lib:2.0.0@aar'
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.itude.mobile.android.util:android-util-lib:3.0.0@aar'
     compile 'rhino:js:1.7R2'
     compile 'org.apache.commons:commons-lang3:3.3.2'
 }

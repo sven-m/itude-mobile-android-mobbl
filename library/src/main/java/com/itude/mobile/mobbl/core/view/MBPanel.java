@@ -320,7 +320,7 @@ public class MBPanel extends MBComponentContainer implements OnClickListener
   @Override
   public void onClick(View v)
   {
-    if (DeviceUtil.getInstance().isTablet())
+    if (DeviceUtil.isBigDeviceType())
     {
       View selectedView = getPage().getSelectedView();
 
