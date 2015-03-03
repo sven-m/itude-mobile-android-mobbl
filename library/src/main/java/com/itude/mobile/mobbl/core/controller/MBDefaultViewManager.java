@@ -15,23 +15,18 @@
  */
 package com.itude.mobile.mobbl.core.controller;
 
-import com.itude.mobile.android.util.DeviceUtil;
+import com.itude.mobile.mobbl.core.view.components.tabbar.MBActionBarBuilder;
+import com.itude.mobile.mobbl.core.view.components.tabbar.MBSearchActionBarBuilder;
 
 /**
- * Factory to get an {@link MBViewManager} based on the device type.
+ * {@link MBViewManager} for a phone view
+ *
  */
-public class MBViewManagerFactory
+public class MBDefaultViewManager extends MBViewManager
 {
-  public static Class<? extends MBViewManager> getViewManagerClass()
+  @Override
+  protected MBActionBarBuilder getDefaultActionBar()
   {
-    if (DeviceUtil.isTablet())
-    {
-      return MBTabletViewManager.class;
-    }
-    else
-    {
-      return MBPhoneViewManager.class;
-    }
-
+    return new MBSearchActionBarBuilder(this);
   }
 }

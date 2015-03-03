@@ -69,11 +69,11 @@ public class MBLayeredImageResourceBuilder implements MBResourceBuilder.Builder<
   {
     if (Constants.C_GRAVITY_LEFT.equals(align))
     {
-      drawable.setGravity(Gravity.LEFT);
+      drawable.setGravity(Gravity.START);
     }
     else if (Constants.C_GRAVITY_RIGHT.equals(align))
     {
-      drawable.setGravity(Gravity.RIGHT);
+      drawable.setGravity(Gravity.END);
     }
     else if (Constants.C_GRAVITY_TOP.equals(align))
     {

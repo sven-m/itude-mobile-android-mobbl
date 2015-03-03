@@ -27,10 +27,10 @@ import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.util.Constants;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
 
-public class MBTabletActionBarBuilder extends MBDefaultActionBarBuilder
+public class MBSearchActionBarBuilder extends MBDefaultActionBarBuilder
 {
 
-  public MBTabletActionBarBuilder(Context context)
+  public MBSearchActionBarBuilder(Context context)
   {
     super(context);
   }

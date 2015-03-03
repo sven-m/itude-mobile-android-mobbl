@@ -54,8 +54,6 @@ public final class MBMetadataService
 
   private static MBMetadataService        _instance;
   private static String                   _configName       = "config.xml";
-  private static String                   _phoneConfigName  = null;
-  private static String                   _tabletConfigName = null;
   private static String                   _endpointsName    = "endpoints.xml";
 
   private MBDialogDefinition              _homeDialog       = null;
@@ -63,15 +61,7 @@ public final class MBMetadataService
   private MBMetadataService()
   {
     MBMvcConfigurationParser mvcParser = new MBMvcConfigurationParser();
-    if (_phoneConfigName != null && !DeviceUtil.isTablet())
-    {
-      _configName = _phoneConfigName;
-    }
-    else if (_tabletConfigName != null && DeviceUtil.isTablet())
-    {
-      _configName = _tabletConfigName;
-    }
-
+      
     // Configuration definition
     _cfg = (MBConfigurationDefinition) mvcParser.parseData(DataUtil.getInstance().readFromAssetOrFile(_configName), _configName);
 
@@ -94,18 +84,6 @@ public final class MBMetadataService
   public static void setConfigName(String name)
   {
     _configName = name;
-    _instance = null;
-  }
-
-  public static void setPhoneConfigName(String name)
-  {
-    _phoneConfigName = name;
-    _instance = null;
-  }
-
-  public static void setTabletConfigName(String name)
-  {
-    _tabletConfigName = name;
     _instance = null;
   }
 

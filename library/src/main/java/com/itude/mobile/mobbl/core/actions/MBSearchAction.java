@@ -69,10 +69,7 @@ public abstract class MBSearchAction implements MBAction
     }
     finally
     {
-      if (DeviceUtil.isTablet() || DeviceUtil.getInstance().isPhoneV14())
-      {
-        MBViewManager.getInstance().supportInvalidateOptionsMenu();
-      }
+      MBViewManager.getInstance().supportInvalidateOptionsMenu();
     }
   }
 
