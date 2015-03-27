@@ -45,7 +45,6 @@ import com.itude.mobile.mobbl.core.view.MBComponent;
 import com.itude.mobile.mobbl.core.view.MBField;
 import com.itude.mobile.mobbl.core.view.MBPage;
 import com.itude.mobile.mobbl.core.view.MBPanel;
-import com.itude.mobile.mobbl.core.view.components.MBHeader;
 import com.itude.mobile.mobbl.core.view.components.MBSegmentedControlBar;
 import com.itude.mobile.mobbl.core.view.components.MBSegmentedControlContainer;
 import com.itude.mobile.mobbl.core.view.components.MBSegmentedItem;
@@ -298,12 +297,6 @@ public class MBStyleHandler {
     public void styleCloseButtonDialog(Button button) {
     }
 
-    public void styleHomeIcon(View homeIcon) {
-    }
-
-    public void styleActionBar(ActionBar actionBar) {
-    }
-
     public void styleWebView(WebView webView, MBField field) {
     }
 
@@ -416,12 +409,5 @@ public class MBStyleHandler {
 
     public void styleDialogCloseButtonWrapper(View wrapper) {
     }
-
-    public void styleActionBarHeader(MBHeader header) {
-    }
-
-    public void styleActionBarHeaderTitle(TextView titleView) {
-    }
-
 
 }

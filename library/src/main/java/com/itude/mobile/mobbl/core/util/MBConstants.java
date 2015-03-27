@@ -111,8 +111,6 @@ public interface MBConstants
   public static final String C_FALSE                                                   = "false";
 
   public static final String C_PAGE_CONTENT_VIEW                                       = "PAGE-CONTENT-VIEW";
-  public static final String C_PAGE_CONTENT_HEADER_VIEW                                = "PAGE-CONTENT-HEADER-VIEW";
-  public static final String C_PAGE_CONTENT_HEADER_TITLE_VIEW                          = "PAGE-CONTENT-HEADER-TITLE-VIEW";
   public static final String C_PAGE_SOURCE_VIEW                                        = "PAGE-SOURCE-VIEW";
   public static final String C_PAGE_ORIENTATION_PERMISSION_LANDSCAPE                   = "LANDSCAPE";
   public static final String C_PAGE_ORIENTATION_PERMISSION_PORTRAIT                    = "PORTRAIT";

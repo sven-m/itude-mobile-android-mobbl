@@ -26,7 +26,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +61,6 @@ import com.itude.mobile.mobbl.core.view.MBPanel;
 import com.itude.mobile.mobbl.core.view.builders.MBPanelViewBuilder;
 import com.itude.mobile.mobbl.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
-import com.itude.mobile.mobbl.core.view.components.MBHeader;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -270,43 +268,27 @@ public class MBBasicViewController extends DialogFragment
     /**
      * Override this method to define the Toolbar once for both a Fragment.
      *
-     * @param view the ViewGroup to display in a Fragment
-     * @param actionBarActivity ActionBarActivity
+     * @param view              the ViewGroup to display in a Fragment
+     * @param actionBarActivity android.support.v7.app.ActionBarActivity()
      */
     protected void buildToolbar(ViewGroup view, ActionBarActivity actionBarActivity) {
+        setToolbarTitle(view, actionBarActivity);
+    }
+
+    /**
+     * Set the Toolbar or Actionbar title
+     * @param view the ViewGroup to display in a Fragment
+     * @param actionBarActivity @see android.support.v7.app.ActionBarActivity()
+     */
+    protected void setToolbarTitle(ViewGroup view, ActionBarActivity actionBarActivity)
+    {
         final ActionBar actionBar = actionBarActivity.getSupportActionBar();
-        if(actionBar!=null) {
-            MBViewManager.getInstance().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
-
-                    //fix the Home icon padding
-                    View homeIcon = MBViewManager.getInstance().findViewById(android.R.id.home);
-                    if (homeIcon != null) {
-                        styleHandler.styleHomeIcon(homeIcon);
-                        actionBar.setHomeButtonEnabled(true);
-                    }
-                    styleHandler.styleActionBar(actionBar);
-
-                    int actionBarDisplayOptions = ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO;
-                    actionBar.setDisplayOptions(actionBarDisplayOptions);
-
-                    final View customView;
-
-                    MBHeader header = new MBHeader(getActivity());
-                    header.setTitleText((String) MBViewManager.getInstance().getTitle());
-
-                    styleHandler.styleActionBarHeader(header);
-                    styleHandler.styleActionBarHeaderTitle(header.getTitleView());
-
-                    customView = header;
-
-
-                    actionBar.setCustomView(customView, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
-                            ActionBar.LayoutParams.MATCH_PARENT, Gravity.START));
-                }
-            });
+        if (actionBar != null) {
+            if (StringUtil.isNotBlank(getPage().getTitle())) {
+                actionBar.setTitle(getPage().getTitle());
+            } else {
+                actionBar.setTitle(getActivity().getTitle());
+            }
         }
     }
 
@@ -454,6 +436,8 @@ public class MBBasicViewController extends DialogFragment
 
         if (_rebuildView) {
             rebuildView(true);
+        } else {
+            setToolbarTitle((ViewGroup) getView(), (ActionBarActivity) getActivity());
         }
 
         // Make sure orientation for the page is as expected
@@ -475,19 +459,6 @@ public class MBBasicViewController extends DialogFragment
 
     public View getRootView() {
         return _rootView;
-    }
-
-    public MBHeader getHeaderView() {
-        if (_rootView == null) {
-            return ((MBHeader) getView().findViewById(android.R.id.content).findViewWithTag(MBConstants.C_PAGE_CONTENT_HEADER_VIEW));
-        } else {
-            return getHeaderViewFromRoot(_rootView);
-        }
-
-    }
-
-    public MBHeader getHeaderViewFromRoot(View root) {
-        return ((MBHeader) root.findViewWithTag(MBConstants.C_PAGE_CONTENT_HEADER_VIEW));
     }
 
     public View getMainScrollViewContentFromRoot(View root) {

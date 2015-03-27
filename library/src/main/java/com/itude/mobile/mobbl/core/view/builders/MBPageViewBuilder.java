@@ -24,7 +24,6 @@ import android.widget.ScrollView;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBPage;
-import com.itude.mobile.mobbl.core.view.components.MBHeader;
 
 public class MBPageViewBuilder extends MBViewBuilder
 {
@@ -44,25 +43,6 @@ public class MBPageViewBuilder extends MBViewBuilder
     if (page == null)
     {
       return main;
-    }
-
-    /*
-     * Add a styled header if we have got a title
-     */
-    if (page.getTitle() != null)
-    {
-      LinearLayout headerContainer = new LinearLayout(context);
-      headerContainer.setOrientation(LinearLayout.VERTICAL);
-      headerContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-
-      MBHeader header = new MBHeader(headerContainer.getContext());
-      header.setTag(MBConstants.C_PAGE_CONTENT_HEADER_VIEW);
-      header.getTitleView().setText(page.getTitle());
-      styleHandler.stylePageHeader(header);
-      styleHandler.stylePageHeaderTitle(header.getTitleView());
-      headerContainer.addView(header);
-
-      main.addView(headerContainer);
     }
 
     /*
