@@ -75,7 +75,7 @@ import com.itude.mobile.mobbl.core.services.MBResultListenerDefinition;
 import com.itude.mobile.mobbl.core.services.datamanager.handlers.exceptions.MBNetworkErrorException;
 import com.itude.mobile.mobbl.core.services.datamanager.handlers.exceptions.MBServerErrorException;
 import com.itude.mobile.mobbl.core.services.exceptions.MBDocumentNotDefinedException;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.MBCacheManager;
 import com.itude.mobile.mobbl.core.util.MBProperties;
 
@@ -131,7 +131,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     // Look for any cached result for GET requests. If there; return it
     String operationMethod = getOperation(doc);
 
-    if (Constants.C_HTTP_REQUEST_METHOD_GET.equalsIgnoreCase(operationMethod))
+    if (MBConstants.C_HTTP_REQUEST_METHOD_GET.equalsIgnoreCase(operationMethod))
     {
       cacheable = endPoint.getCacheable();
     }
@@ -164,11 +164,11 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 
     if (endPoint == null)
     {
-      MBLog.w(Constants.APPLICATION_NAME, "No endpoint defined for document name " + documentName);
+      MBLog.w(MBConstants.APPLICATION_NAME, "No endpoint defined for document name " + documentName);
       return null;
     }
 
-    MBLog.d(Constants.APPLICATION_NAME, "MBRESTServiceDataHandler:doLoadDocument " + documentName + " from " + endPoint.getEndPointUri());
+    MBLog.d(MBConstants.APPLICATION_NAME, "MBRESTServiceDataHandler:doLoadDocument " + documentName + " from " + endPoint.getEndPointUri());
 
     String dataString = null;
     MBDocument responseDoc = null;
@@ -183,7 +183,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 
     try
     {
-      MBLog.d(Constants.APPLICATION_NAME,
+      MBLog.d(MBConstants.APPLICATION_NAME,
               "RestServiceDataHandler is about to send this message: \n" + body + "\n to " + endPoint.getEndPointUri());
 
       String operationMethod = getOperation(doc);
@@ -193,7 +193,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 
       dataString = postAndGetResult(endPoint, operationMethod, urlString, body);
 
-      MBLog.d(Constants.APPLICATION_NAME, "RestServiceDataHandler received this message: " + dataString);
+      MBLog.d(MBConstants.APPLICATION_NAME, "RestServiceDataHandler received this message: " + dataString);
 
       boolean serverErrorHandled = false;
 
@@ -227,8 +227,8 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     // TODO: clean up exception handling
     catch (Exception e)
     {
-      MBLog.d(Constants.APPLICATION_NAME, "Sent xml:\n" + body);
-      MBLog.d(Constants.APPLICATION_NAME, "Received:\n" + dataString, e.getCause());
+      MBLog.d(MBConstants.APPLICATION_NAME, "Sent xml:\n" + body);
+      MBLog.d(MBConstants.APPLICATION_NAME, "Received:\n" + dataString, e.getCause());
 
       if (e instanceof RuntimeException)
       {
@@ -289,7 +289,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
       {
         sb.append("&");
       }
-      sb.append(key + "=" + URLEncoder.encode(value, Constants.C_ENCODING));
+      sb.append(key + "=" + URLEncoder.encode(value, MBConstants.C_ENCODING));
     }
     return sb.toString();
   }
@@ -338,17 +338,17 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 
     boolean allowAnyCertificate = false;
 
-    boolean inDevelopment = MBProperties.getInstance().getBooleanProperty(Constants.C_PROPERTY_INDEVELOPMENT);
+    boolean inDevelopment = MBProperties.getInstance().getBooleanProperty(MBConstants.C_PROPERTY_INDEVELOPMENT);
     if (inDevelopment)
     {
       try
       {
-        MBDocument environmentDocument = MBDataManagerService.getInstance().loadDocument(Constants.C_APPLICATION_ENVIRONMENT);
+        MBDocument environmentDocument = MBDataManagerService.getInstance().loadDocument(MBConstants.C_APPLICATION_ENVIRONMENT);
         allowAnyCertificate = Boolean.parseBoolean((String) environmentDocument.getValueForPath("Secure[0]/@allowAll"));
       }
       catch (MBDocumentNotDefinedException dnde)
       {
-        MBLog.d(Constants.APPLICATION_NAME, "No Environment properties set");
+        MBLog.d(MBConstants.APPLICATION_NAME, "No Environment properties set");
       }
     }
 
@@ -363,7 +363,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     String responseMessage = httpResponse.getStatusLine().getReasonPhrase();
     if (responseCode != HttpStatus.SC_OK)
     {
-      MBLog.e(Constants.APPLICATION_NAME, "MBRESTServiceDataHandler.loadDocument: Received HTTP responseCode=" + responseCode + ": "
+      MBLog.e(MBConstants.APPLICATION_NAME, "MBRESTServiceDataHandler.loadDocument: Received HTTP responseCode=" + responseCode + ": "
                                           + responseMessage);
     }
 
@@ -385,33 +385,33 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
   {
     HttpUriRequest httpUriRequest;
     // To be backward compatible we assume that if no request method was set POST will be used. 
-    if (Constants.C_HTTP_REQUEST_METHOD_GET.equalsIgnoreCase(operationName))
+    if (MBConstants.C_HTTP_REQUEST_METHOD_GET.equalsIgnoreCase(operationName))
     {
       httpUriRequest = new HttpGet(endPointUri);
     }
-    else if (Constants.C_HTTP_REQUEST_METHOD_PUT.equalsIgnoreCase(operationName))
+    else if (MBConstants.C_HTTP_REQUEST_METHOD_PUT.equalsIgnoreCase(operationName))
     {
       httpUriRequest = new HttpPut(endPointUri);
       if (body != null)
       {
-        ((HttpPut) httpUriRequest).setEntity(new StringEntity(body, Constants.C_ENCODING));
+        ((HttpPut) httpUriRequest).setEntity(new StringEntity(body, MBConstants.C_ENCODING));
       }
     }
-    else if (Constants.C_HTTP_REQUEST_METHOD_DELETE.equalsIgnoreCase(operationName))
+    else if (MBConstants.C_HTTP_REQUEST_METHOD_DELETE.equalsIgnoreCase(operationName))
     {
       httpUriRequest = new HttpDelete(endPointUri);
     }
-    else if (Constants.C_HTTP_REQUEST_METHOD_HEAD.equalsIgnoreCase(operationName))
+    else if (MBConstants.C_HTTP_REQUEST_METHOD_HEAD.equalsIgnoreCase(operationName))
     {
       httpUriRequest = new HttpHead(endPointUri);
     }
-    else if (Constants.C_HTTP_REQUEST_METHOD_POST.equalsIgnoreCase(operationName))
+    else if (MBConstants.C_HTTP_REQUEST_METHOD_POST.equalsIgnoreCase(operationName))
     {
       httpUriRequest = new HttpPost(endPointUri);
 
       if (body != null)
       {
-        ((HttpPost) httpUriRequest).setEntity(new StringEntity(body, Constants.C_ENCODING));
+        ((HttpPost) httpUriRequest).setEntity(new StringEntity(body, MBConstants.C_ENCODING));
       }
     }
     else
@@ -420,7 +420,7 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
 
       if (body != null)
       {
-        ((HttpPost) httpUriRequest).setEntity(new StringEntity(body, Constants.C_ENCODING));
+        ((HttpPost) httpUriRequest).setEntity(new StringEntity(body, MBConstants.C_ENCODING));
       }
     }
     return httpUriRequest;
@@ -466,19 +466,19 @@ public class MBRESTServiceDataHandler extends MBWebserviceDataHandler
     }
     catch (KeyStoreException kse)
     {
-      MBLog.e(Constants.APPLICATION_NAME, "Could not make keystore " + kse.getMessage(), kse);
+      MBLog.e(MBConstants.APPLICATION_NAME, "Could not make keystore " + kse.getMessage(), kse);
     }
     catch (CertificateException ce)
     {
-      MBLog.e(Constants.APPLICATION_NAME, "Could not make locate certificate " + ce.getMessage(), ce);
+      MBLog.e(MBConstants.APPLICATION_NAME, "Could not make locate certificate " + ce.getMessage(), ce);
     }
     catch (IOException ioe)
     {
-      MBLog.e(Constants.APPLICATION_NAME, ioe.getMessage(), ioe);
+      MBLog.e(MBConstants.APPLICATION_NAME, ioe.getMessage(), ioe);
     }
     catch (UnrecoverableKeyException urke)
     {
-      MBLog.e(Constants.APPLICATION_NAME, urke.getMessage(), urke);
+      MBLog.e(MBConstants.APPLICATION_NAME, urke.getMessage(), urke);
     }
   }
 

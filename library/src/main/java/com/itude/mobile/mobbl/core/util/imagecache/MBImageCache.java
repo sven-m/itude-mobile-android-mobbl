@@ -38,12 +38,12 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import com.itude.mobile.android.util.log.MBLog;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.MBProperties;
 
-public class ImageCache
+public class MBImageCache
 {
-  private final Map<Uri, ImageCacheObject> _images;
+  private final Map<Uri, MBImageCacheObject> _images;
   private long                             _cacheSize        = 0;
   private long                             _localCacheSize   = 0;
 
@@ -52,15 +52,15 @@ public class ImageCache
   private static final int                 IO_BUFFER_SIZE    = 4 * 1024;
 
   private static final long                MEMORY_CACHE_SIZE = MBProperties.getInstance()
-                                                                 .getIntegerProperty(Constants.C_PROPERTY_IMAGE_CACHE_MEMORY, 3) * 1024 * 1024;
+                                                                 .getIntegerProperty(MBConstants.C_PROPERTY_IMAGE_CACHE_MEMORY, 3) * 1024 * 1024;
   private static final long                LOCAL_CACHE_SIZE  = MBProperties.getInstance()
-                                                                 .getIntegerProperty(Constants.C_PROPERTY_IMAGE_CACHE_DISK, 10) * 1024 * 1024;
+                                                                 .getIntegerProperty(MBConstants.C_PROPERTY_IMAGE_CACHE_DISK, 10) * 1024 * 1024;
 
-  private static final String              LOG_TAG           = ImageCache.class.getSimpleName();
+  private static final String              LOG_TAG           = MBImageCache.class.getSimpleName();
 
-  public ImageCache(File localCache)
+  public MBImageCache(File localCache)
   {
-    _images = new LinkedHashMap<Uri, ImageCacheObject>(100, 0.75f, true);
+    _images = new LinkedHashMap<Uri, MBImageCacheObject>(100, 0.75f, true);
     _localCache = localCache;
     _localCacheSize = calculateLocalCacheSize();
     cleanLocalCache();
@@ -68,7 +68,7 @@ public class ImageCache
 
   public Bitmap getBitmapFromCache(Uri uri)
   {
-    ImageCacheObject ico = getFromMemoryCache(uri);
+    MBImageCacheObject ico = getFromMemoryCache(uri);
     if (ico != null)
     {
       if (ico.isValid()) return ico.getBitmap();
@@ -85,7 +85,7 @@ public class ImageCache
   {
     try
     {
-      ImageCacheObject ico = getFromMemoryCache(uri);
+      MBImageCacheObject ico = getFromMemoryCache(uri);
       if (ico != null)
       {
         if (ico.isValid()) return ico.getBitmap();
@@ -112,22 +112,22 @@ public class ImageCache
     }
   }
 
-  private ImageCacheObject getFromMemoryCache(Uri uri)
+  private MBImageCacheObject getFromMemoryCache(Uri uri)
   {
     synchronized (_images)
     {
-      ImageCacheObject ico = _images.get(uri);
+      MBImageCacheObject ico = _images.get(uri);
       return ico;
     }
   }
 
-  private ImageCacheObject getFromLocalCache(Uri uri)
+  private MBImageCacheObject getFromLocalCache(Uri uri)
   {
     File file = new File(_localCache, "" + uri.hashCode());
     if (file.exists())
     {
       Uri localUri = Uri.fromFile(file);
-      ImageCacheObject result = loadFromStream(localUri);
+      MBImageCacheObject result = loadFromStream(localUri);
       if (result != null && result.isValid())
       {
         file.setLastModified(System.currentTimeMillis());
@@ -138,9 +138,9 @@ public class ImageCache
     else return null;
   }
 
-  private ImageCacheObject getFromInternet(Uri uri)
+  private MBImageCacheObject getFromInternet(Uri uri)
   {
-    ImageCacheObject result = ImageCacheObject.NULL;
+    MBImageCacheObject result = MBImageCacheObject.NULL;
     try
     {
 
@@ -152,7 +152,7 @@ public class ImageCache
       Uri localUri = storeLocally(uri, boas.toByteArray());
 
       result = loadFromStream(localUri);
-      if (result == null) result = ImageCacheObject.NULL;
+      if (result == null) result = MBImageCacheObject.NULL;
 
     }
     catch (IllegalStateException e)
@@ -170,7 +170,7 @@ public class ImageCache
 
   }
 
-  private void addToCache(Uri uri, ImageCacheObject object)
+  private void addToCache(Uri uri, MBImageCacheObject object)
   {
     synchronized (_images)
     {
@@ -182,7 +182,7 @@ public class ImageCache
     }
   }
 
-  private void removeFromCache(Uri uri, ImageCacheObject object)
+  private void removeFromCache(Uri uri, MBImageCacheObject object)
   {
     synchronized (_images)
     {
@@ -263,16 +263,16 @@ public class ImageCache
     return bitmap;
   }
 
-  private ImageCacheObject loadFromStream(Uri uri)
+  private MBImageCacheObject loadFromStream(Uri uri)
   {
 
     Bitmap bitmap = null;
-    ImageCacheObject result = null;
+    MBImageCacheObject result = null;
 
     bitmap = loadBitmap(uri);
     // decoding went wrong, apparently
-    if (bitmap == null) return ImageCacheObject.NULL;
-    else result = new ImageCacheObject(bitmap);
+    if (bitmap == null) return MBImageCacheObject.NULL;
+    else result = new MBImageCacheObject(bitmap);
 
     return result;
   }
@@ -362,10 +362,10 @@ public class ImageCache
         if (_cacheSize > MEMORY_CACHE_SIZE)
         {
           long size = _cacheSize;
-          Iterator<Map.Entry<Uri, ImageCacheObject>> it = _images.entrySet().iterator();
+          Iterator<Map.Entry<Uri, MBImageCacheObject>> it = _images.entrySet().iterator();
           while (it.hasNext() && size > MEMORY_CACHE_SIZE)
           {
-            Map.Entry<Uri, ImageCacheObject> entry = it.next();
+            Map.Entry<Uri, MBImageCacheObject> entry = it.next();
             size -= entry.getValue().getSize();
             //android.util.Log.d(LOG_TAG, "Removed " + entry.getKey() + " from memory cache. Size is now " + size);
             it.remove();
@@ -380,10 +380,10 @@ public class ImageCache
   {
     synchronized (_images)
     {
-      Iterator<Map.Entry<Uri, ImageCacheObject>> it = _images.entrySet().iterator();
+      Iterator<Map.Entry<Uri, MBImageCacheObject>> it = _images.entrySet().iterator();
       while (it.hasNext())
       {
-        Map.Entry<Uri, ImageCacheObject> entry = it.next();
+        Map.Entry<Uri, MBImageCacheObject> entry = it.next();
         if (!entry.getValue().isValid())
         {
           it.remove();

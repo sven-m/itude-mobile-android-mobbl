@@ -30,7 +30,7 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl.core.model.exceptions.MBCannotAssignException;
 import com.itude.mobile.mobbl.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl.core.services.operation.MBDocumentOperationDelegate;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 /**
  * XML-like structure containing application data.
@@ -300,7 +300,7 @@ public class MBDocument extends MBElementContainer
   @Override
   public int describeContents()
   {
-    return Constants.C_PARCELABLE_TYPE_DOCUMENT;
+    return MBConstants.C_PARCELABLE_TYPE_DOCUMENT;
   }
 
   @Override

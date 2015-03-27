@@ -15,7 +15,7 @@
  */
 package com.itude.mobile.mobbl.core.controller;
 
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 /**
  * {@link MBOutcomeTask} class describing a dialog swith task
@@ -76,9 +76,9 @@ public class MBDialogSwitchTask extends MBOutcomeTask<Object>
       viewManager.endDialog(getOutcome().getPageStackName(), false);
     }
     else if (getOutcome().getPageStackName() != null
-             && !Constants.C_DISPLAY_MODE_BACKGROUND.equals(getOutcome().getDisplayMode()) //
+             && !MBConstants.C_DISPLAY_MODE_BACKGROUND.equals(getOutcome().getDisplayMode()) //
              && getOutcome().getPageStackName() != null
-             && !Constants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE.equals(getOutcome().getDisplayMode()) //
+             && !MBConstants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE.equals(getOutcome().getDisplayMode()) //
              && !getOutcome().getPageStackName().equals(_dialogWhenCreated) //
              && !applicationController.isSuppressPageSelection())
     {

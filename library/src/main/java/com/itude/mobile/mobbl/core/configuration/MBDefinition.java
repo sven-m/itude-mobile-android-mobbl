@@ -15,11 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.configuration;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -36,12 +31,16 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl.core.configuration.resources.MBItemDefinition;
 import com.itude.mobile.mobbl.core.configuration.resources.MBResourceDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.services.MBResultListenerDefinition;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
 * Common superclass of configuration definitions.
@@ -232,15 +231,6 @@ public class MBDefinition implements Parcelable
   }
 
   /**
-   * Add {@link MBToolDefinition} as child element
-   * 
-   * @param child {@link MBToolDefinition}
-   */
-  public void addChildElement(MBToolDefinition child)
-  {
-  }
-
-  /**
    * Add {@link MBAlertDefinition} as child element
    * 
    * @param child {@link MBAlertDefinition}
@@ -352,7 +342,7 @@ public class MBDefinition implements Parcelable
   @Override
   public int describeContents()
   {
-    return Constants.C_PARCELABLE_TYPE_DEFINITION;
+    return MBConstants.C_PARCELABLE_TYPE_DEFINITION;
   }
 
   @Override

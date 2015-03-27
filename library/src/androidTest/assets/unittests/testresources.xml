@@ -2,11 +2,8 @@
 	<Resource id="config" url="file://config.xml" />
 	<Resource id="endpoints" url="file://endpoints.xml" />
 
-	<Resource id="splashscreen" url="file://splashscreen.png" />
-	<Resource id="whitelabel-splashscreen" url="file://whitelabel_splashscreen.png" />
 	<Resource id="arrow" url="file://images/arrow.png" />
-	<Resource id="leaf" url="file://images/leaf.png" />
-	
+
 	<Resource id="ICON-tab_1" url="file://ic_1.png" />
 	<Resource id="ICON-tab_2" url="file://ic_2.png" />
 	

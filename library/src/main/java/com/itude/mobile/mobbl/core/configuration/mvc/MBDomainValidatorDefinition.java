@@ -22,7 +22,7 @@ import android.os.Parcelable;
 
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 /**
  * {@link MBDefinition} Class for a domain validator
@@ -103,7 +103,7 @@ public class MBDomainValidatorDefinition extends MBDefinition
   @Override
   public int describeContents()
   {
-    return Constants.C_PARCELABLE_TYPE_DOMAIN_VALIDATOR_DEFINITION;
+    return MBConstants.C_PARCELABLE_TYPE_DOMAIN_VALIDATOR_DEFINITION;
   }
 
   @Override

@@ -24,7 +24,7 @@ import org.mozilla.javascript.ContextFactory;
 
 import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.services.exceptions.MBScriptErrorException;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 /**
  * Service class for evaluating Javascript expressions
@@ -40,21 +40,21 @@ public final class MBScriptService
   private static Map<String, String> COMPUTED_EXPRESSIONS = Collections.synchronizedMap(new HashMap<String, String>());
   static
   {
-    COMPUTED_EXPRESSIONS.put("false", Constants.C_FALSE);
-    COMPUTED_EXPRESSIONS.put("!false", Constants.C_TRUE);
-    COMPUTED_EXPRESSIONS.put("true", Constants.C_TRUE);
-    COMPUTED_EXPRESSIONS.put("!true", Constants.C_FALSE);
-    COMPUTED_EXPRESSIONS.put("('EUR'=='EUR')", Constants.C_TRUE);
-    COMPUTED_EXPRESSIONS.put("!('EUR'=='EUR')", Constants.C_FALSE);
-    COMPUTED_EXPRESSIONS.put("('USD'=='EUR')", Constants.C_FALSE);
-    COMPUTED_EXPRESSIONS.put("!('USD'=='EUR')", Constants.C_TRUE);
-    COMPUTED_EXPRESSIONS.put("'EUR'=='EUR'", Constants.C_TRUE);
-    COMPUTED_EXPRESSIONS.put("1!=10", Constants.C_TRUE);
-    COMPUTED_EXPRESSIONS.put("10!=10", Constants.C_FALSE);
-    COMPUTED_EXPRESSIONS.put("1==2", Constants.C_FALSE);
-    COMPUTED_EXPRESSIONS.put("1!=2", Constants.C_TRUE);
-    COMPUTED_EXPRESSIONS.put("10==2", Constants.C_FALSE);
-    COMPUTED_EXPRESSIONS.put("10!=2", Constants.C_TRUE);
+    COMPUTED_EXPRESSIONS.put("false", MBConstants.C_FALSE);
+    COMPUTED_EXPRESSIONS.put("!false", MBConstants.C_TRUE);
+    COMPUTED_EXPRESSIONS.put("true", MBConstants.C_TRUE);
+    COMPUTED_EXPRESSIONS.put("!true", MBConstants.C_FALSE);
+    COMPUTED_EXPRESSIONS.put("('EUR'=='EUR')", MBConstants.C_TRUE);
+    COMPUTED_EXPRESSIONS.put("!('EUR'=='EUR')", MBConstants.C_FALSE);
+    COMPUTED_EXPRESSIONS.put("('USD'=='EUR')", MBConstants.C_FALSE);
+    COMPUTED_EXPRESSIONS.put("!('USD'=='EUR')", MBConstants.C_TRUE);
+    COMPUTED_EXPRESSIONS.put("'EUR'=='EUR'", MBConstants.C_TRUE);
+    COMPUTED_EXPRESSIONS.put("1!=10", MBConstants.C_TRUE);
+    COMPUTED_EXPRESSIONS.put("10!=10", MBConstants.C_FALSE);
+    COMPUTED_EXPRESSIONS.put("1==2", MBConstants.C_FALSE);
+    COMPUTED_EXPRESSIONS.put("1!=2", MBConstants.C_TRUE);
+    COMPUTED_EXPRESSIONS.put("10==2", MBConstants.C_FALSE);
+    COMPUTED_EXPRESSIONS.put("10!=2", MBConstants.C_TRUE);
   }
 
   private MBScriptService()
@@ -86,7 +86,7 @@ public final class MBScriptService
   {
     String result = COMPUTED_EXPRESSIONS.get(expression);
     if (result != null) return result;
-    MBLog.d(Constants.APPLICATION_NAME, "expression for ScriptService=" + expression);
+    MBLog.d(MBConstants.APPLICATION_NAME, "expression for ScriptService=" + expression);
 
     String stub = "function x(){ var TRUE=true; var FALSE=false; try { return " + //
                   expression + //

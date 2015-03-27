@@ -35,7 +35,7 @@ import com.itude.mobile.mobbl.core.controller.MBViewManager;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.model.MBDocumentDiff;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.MBPathUtil;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
 
@@ -233,7 +233,7 @@ public class MBPage extends MBPanel
       {
         if (mustBe.equals("/"))
         {
-          MBLog.w(Constants.APPLICATION_NAME, "Ignoring path " + stripped + " because the document definition used root path " + mustBe
+          MBLog.w(MBConstants.APPLICATION_NAME, "Ignoring path " + stripped + " because the document definition used root path " + mustBe
                                               + ". Check your document attribute in your page definition. Maybe you meant: "
                                               + ((MBPageDefinition) getDefinition()).getDocumentName() + "/" + stripped);
           ignorePath = true;
@@ -373,7 +373,7 @@ public class MBPage extends MBPanel
     {
       _orientationPermission = OrientationPermission.UNDEFINED;
     }
-    else if (permissions.equals(Constants.C_PAGE_ORIENTATION_PERMISSION_ANY))
+    else if (permissions.equals(MBConstants.C_PAGE_ORIENTATION_PERMISSION_ANY))
     {
       _orientationPermission = OrientationPermission.ANY;
     }
@@ -385,11 +385,11 @@ public class MBPage extends MBPanel
       String[] permissionList = permissions.split("\\|");
       for (String permission : permissionList)
       {
-        if (permission.equals(Constants.C_PAGE_ORIENTATION_PERMISSION_LANDSCAPE))
+        if (permission.equals(MBConstants.C_PAGE_ORIENTATION_PERMISSION_LANDSCAPE))
         {
           allowedLandscapeOrientation = true;
         }
-        else if (permission.equals(Constants.C_PAGE_ORIENTATION_PERMISSION_PORTRAIT))
+        else if (permission.equals(MBConstants.C_PAGE_ORIENTATION_PERMISSION_PORTRAIT))
         {
           allowedPortraitOrientation = true;
         }

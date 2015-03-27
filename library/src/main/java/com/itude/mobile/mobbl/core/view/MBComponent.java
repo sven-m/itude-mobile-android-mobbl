@@ -23,7 +23,7 @@ import android.view.View;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl.core.controller.MBOutcome;
 import com.itude.mobile.mobbl.core.model.MBDocument;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.MBCustomAttributeContainer;
 
 public class MBComponent extends MBCustomAttributeContainer
@@ -120,12 +120,12 @@ public class MBComponent extends MBCustomAttributeContainer
 
     if (expression.equalsIgnoreCase("YES"))
     {
-      return Constants.C_TRUE;
+      return MBConstants.C_TRUE;
     }
 
     if (expression.equalsIgnoreCase("NO"))
     {
-      return Constants.C_FALSE;
+      return MBConstants.C_FALSE;
     }
 
     if (expression.indexOf('{') < 0)

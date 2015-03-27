@@ -25,13 +25,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.itude.mobile.mobbl.core.util.ScreenConstants;
+import com.itude.mobile.mobbl.core.util.MBScreenConstants;
 
 public class MBCirclePageIndicatorBar extends MBAbstractPageIndicator
 {
 
-  private int _circleSize = ScreenConstants.SIX;
-  private int _padding    = ScreenConstants.FIVE;
+  private int _circleSize = MBScreenConstants.SIX;
+  private int _padding    = MBScreenConstants.FIVE;
   private int _inactiveIndicatorColour;
   private int _activeIndicatorColour;
 

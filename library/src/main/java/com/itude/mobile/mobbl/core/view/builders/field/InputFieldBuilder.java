@@ -28,7 +28,7 @@ import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.services.MBLocalizationService;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.MBStringUtil;
 import com.itude.mobile.mobbl.core.view.MBField;
 
@@ -74,7 +74,7 @@ public class InputFieldBuilder extends MBBaseFieldBuilder
     }
 
     // Set type of value (so different keyboard will be shown)
-    if (field.getDataType() != null && field.getDataType().equals(Constants.C_FIELD_DATATYPE_INT))
+    if (field.getDataType() != null && field.getDataType().equals(MBConstants.C_FIELD_DATATYPE_INT))
     {
       inputField.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
 
@@ -85,13 +85,13 @@ public class InputFieldBuilder extends MBBaseFieldBuilder
       }
       catch (Exception e)
       {
-        MBLog.w(Constants.APPLICATION_NAME, "Inputfield with type \"" + field.getDataType() + "\" cannot have the value \"" + defaultValue
+        MBLog.w(MBConstants.APPLICATION_NAME, "Inputfield with type \"" + field.getDataType() + "\" cannot have the value \"" + defaultValue
                                             + "\"", e);
       }
     }
     else if (field.getDataType() != null
-             && (field.getDataType().equals(Constants.C_FIELD_DATATYPE_DOUBLE) || field.getDataType()
-                 .equals(Constants.C_FIELD_DATATYPE_FLOAT)))
+             && (field.getDataType().equals(MBConstants.C_FIELD_DATATYPE_DOUBLE) || field.getDataType()
+                 .equals(MBConstants.C_FIELD_DATATYPE_FLOAT)))
     {
       inputField.setKeyListener(MBStringUtil.getCurrencyNumberKeyListener());
 
@@ -102,14 +102,14 @@ public class InputFieldBuilder extends MBBaseFieldBuilder
       }
       catch (Exception e)
       {
-        MBLog.w(Constants.APPLICATION_NAME, "Inputfield with type \"" + field.getDataType() + "\" cannot have the value \"" + defaultValue
+        MBLog.w(MBConstants.APPLICATION_NAME, "Inputfield with type \"" + field.getDataType() + "\" cannot have the value \"" + defaultValue
                                             + "\"", e);
       }
 
       // Depending on the localeCode-settings in the applicationProperties, we want to display a comma or a dot as decimal seperator for floats and doubles
       if (MBLocalizationService.getInstance().getLocaleCode() != null
-          && (MBLocalizationService.getInstance().getLocaleCode().equals(Constants.C_LOCALE_CODE_DUTCH) || MBLocalizationService
-              .getInstance().getLocaleCode().equals(Constants.C_LOCALE_CODE_ITALIAN)))
+          && (MBLocalizationService.getInstance().getLocaleCode().equals(MBConstants.C_LOCALE_CODE_DUTCH) || MBLocalizationService
+              .getInstance().getLocaleCode().equals(MBConstants.C_LOCALE_CODE_ITALIAN)))
       {
 
         if (inputField.getText().toString().length() > 0)

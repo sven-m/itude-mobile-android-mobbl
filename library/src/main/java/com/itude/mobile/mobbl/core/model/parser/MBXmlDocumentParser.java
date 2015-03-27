@@ -39,7 +39,7 @@ import com.itude.mobile.mobbl.core.model.MBElement;
 import com.itude.mobile.mobbl.core.model.MBElementContainer;
 import com.itude.mobile.mobbl.core.model.exceptions.MBInvalidDocumentException;
 import com.itude.mobile.mobbl.core.model.exceptions.MBParseErrorException;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.MBPathUtil;
 
 /**
@@ -124,8 +124,8 @@ public class MBXmlDocumentParser extends DefaultHandler implements MBDocumentPar
       }
       catch (Exception e)
       {
-        MBLog.d(Constants.APPLICATION_NAME, new String(data));
-        MBLog.e(Constants.APPLICATION_NAME, "MBXmlDocumentParser.doParseFragment (for the data, see debug log above)", e);
+        MBLog.d(MBConstants.APPLICATION_NAME, new String(data));
+        MBLog.e(MBConstants.APPLICATION_NAME, "MBXmlDocumentParser.doParseFragment (for the data, see debug log above)", e);
       }
     }
   }
@@ -171,7 +171,7 @@ public class MBXmlDocumentParser extends DefaultHandler implements MBDocumentPar
       }
       catch (MBInvalidElementNameException e)
       {
-        MBLog.w(Constants.APPLICATION_NAME,
+        MBLog.w(MBConstants.APPLICATION_NAME,
                 "Skipping element with name " + localName + ". Element is not in definition " + _definition.getName());
         _ignoredPaths.add(getCurrentPath());
       }
@@ -228,7 +228,7 @@ public class MBXmlDocumentParser extends DefaultHandler implements MBDocumentPar
       }
       else
       {
-        MBLog.w(Constants.APPLICATION_NAME, "MBXmlDocumentParser.endElement: Text (" + string + ") specified in body of element "
+        MBLog.w(MBConstants.APPLICATION_NAME, "MBXmlDocumentParser.endElement: Text (" + string + ") specified in body of element "
                                             + localName + " is ignored because the element has no text() attribute defined");
       }
     }

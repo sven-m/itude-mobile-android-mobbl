@@ -28,7 +28,7 @@ import android.widget.RelativeLayout;
 
 import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBComponent;
 import com.itude.mobile.mobbl.core.view.MBPanel;
 import com.itude.mobile.mobbl.core.view.builders.MBPanelViewBuilder.BuildState;
@@ -97,7 +97,7 @@ public class RowPanelBuilder extends MBBasePanelBuilder
           RelativeLayout.LayoutParams.WRAP_CONTENT);
       childParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
-      if (!isFieldWithType(child, Constants.C_FIELD_BUTTON) && !isFieldWithType(child, Constants.C_FIELD_IMAGEBUTTON))
+      if (!isFieldWithType(child, MBConstants.C_FIELD_BUTTON) && !isFieldWithType(child, MBConstants.C_FIELD_IMAGEBUTTON))
       {
         if (nonButtonLayout == null)
         {
@@ -114,7 +114,7 @@ public class RowPanelBuilder extends MBBasePanelBuilder
           styleHandler.styleRowAlignment(nonButtonLayout);
         }
 
-        if (isFieldWithType(child, Constants.C_FIELD_LABEL) && !processingLabel)
+        if (isFieldWithType(child, MBConstants.C_FIELD_LABEL) && !processingLabel)
         {
           processingLabel = true;
           LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1);
@@ -125,7 +125,7 @@ public class RowPanelBuilder extends MBBasePanelBuilder
           labelLayout.addView(childView);
           nonButtonLayout.addView(labelLayout);
         }
-        else if (isFieldWithType(child, Constants.C_FIELD_SUBLABEL) && processingLabel)
+        else if (isFieldWithType(child, MBConstants.C_FIELD_SUBLABEL) && processingLabel)
         {
           // add this child below the previous child (the label in the if-block above)
           labelLayout.addView(childView);

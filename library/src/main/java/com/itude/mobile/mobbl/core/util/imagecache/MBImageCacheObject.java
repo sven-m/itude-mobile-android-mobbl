@@ -20,22 +20,22 @@ import java.util.Date;
 
 import android.graphics.Bitmap;
 
-public class ImageCacheObject implements Comparable<ImageCacheObject>
+public class MBImageCacheObject implements Comparable<MBImageCacheObject>
 {
   private final Date                   _timeLastUsed;
   private final SoftReference<Bitmap>  _bitmap;
   private final int                    _size;
 
-  public static final ImageCacheObject NULL = new ImageCacheObject();
+  public static final MBImageCacheObject NULL = new MBImageCacheObject();
 
-  public ImageCacheObject(Bitmap bitmap)
+  public MBImageCacheObject(Bitmap bitmap)
   {
     _timeLastUsed = new Date();
     _bitmap = new SoftReference<Bitmap>(bitmap);
     _size = bitmap.getRowBytes() * bitmap.getHeight();
   }
 
-  private ImageCacheObject()
+  private MBImageCacheObject()
   {
     _size = 0;
     _timeLastUsed = new Date();
@@ -65,7 +65,7 @@ public class ImageCacheObject implements Comparable<ImageCacheObject>
   }
 
   @Override
-  public int compareTo(ImageCacheObject another)
+  public int compareTo(MBImageCacheObject another)
   {
     return getTimeLastUsed().compareTo(another.getTimeLastUsed());
   }

@@ -19,7 +19,7 @@ import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.services.operation.MBDocumentOperation;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 /**
  * Base data handler
@@ -30,14 +30,14 @@ public class MBDataHandlerBase implements MBDataHandler
   @Override
   public MBDocument loadDocument(String documentName)
   {
-    MBLog.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No loadDocument implementation for " + documentName);
+    MBLog.w(MBConstants.APPLICATION_NAME, "MBDataHandlerBase: No loadDocument implementation for " + documentName);
     return null;
   }
 
   @Override
   public MBDocument loadFreshDocument(String documentName)
   {
-    MBLog.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No loadFreshDocument implementation for " + documentName);
+    MBLog.w(MBConstants.APPLICATION_NAME, "MBDataHandlerBase: No loadFreshDocument implementation for " + documentName);
     return null;
   }
 
@@ -63,14 +63,14 @@ public class MBDataHandlerBase implements MBDataHandler
   @Override
   public MBDocument loadDocument(String documentName, MBDocument args, MBEndPointDefinition endPoint)
   {
-    MBLog.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No loadDocument implementation for " + documentName);
+    MBLog.w(MBConstants.APPLICATION_NAME, "MBDataHandlerBase: No loadDocument implementation for " + documentName);
     return null;
   }
 
   @Override
   public MBDocument loadFreshDocument(String documentName, MBDocument args, MBEndPointDefinition endPoint)
   {
-    MBLog.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No loadFreshDocument implementation for " + documentName);
+    MBLog.w(MBConstants.APPLICATION_NAME, "MBDataHandlerBase: No loadFreshDocument implementation for " + documentName);
     return null;
   }
 
@@ -89,7 +89,7 @@ public class MBDataHandlerBase implements MBDataHandler
   @Override
   public void storeDocument(MBDocument document)
   {
-    MBLog.w(Constants.APPLICATION_NAME, "MBDataHandlerBase: No storeDocument implementation for " + document.getDefinition().getName());
+    MBLog.w(MBConstants.APPLICATION_NAME, "MBDataHandlerBase: No storeDocument implementation for " + document.getDefinition().getName());
   }
 
   @Override

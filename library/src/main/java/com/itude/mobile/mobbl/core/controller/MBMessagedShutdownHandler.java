@@ -22,16 +22,35 @@ import android.content.DialogInterface.OnClickListener;
 import com.itude.mobile.mobbl.core.services.MBLocalizationService;
 
 /**
- * {@link MBShutdownHandler} class handling the default shutdown
+ * {@link com.itude.mobile.mobbl.core.controller.MBShutdownHandler} class handling the shutdown by showing a message
  *
  */
-public class MBDefaultShutdownHandler extends MBShutdownHandler
+public class MBMessagedShutdownHandler extends MBShutdownHandler
 {
 
   @Override
   public void onShutdown()
   {
-    finish();
+    String message = MBLocalizationService.getInstance().getTextForKey("close app message");
+    String positive = MBLocalizationService.getInstance().getTextForKey("close app positive button");
+    String negative = MBLocalizationService.getInstance().getTextForKey("close app negative button");
+    new AlertDialog.Builder(getActivity()).setMessage(message).setPositiveButton(positive, new OnClickListener()
+    {
+
+      @Override
+      public void onClick(DialogInterface dialog, int which)
+      {
+        finish();
+      }
+    }).setNegativeButton(negative, new OnClickListener()
+    {
+
+      @Override
+      public void onClick(DialogInterface dialog, int which)
+      {
+        dialog.dismiss();
+      }
+    }).show();
   }
 
 }

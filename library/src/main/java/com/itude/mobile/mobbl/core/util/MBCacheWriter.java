@@ -73,9 +73,9 @@ public class MBCacheWriter extends Thread
         if (success && getData() != null)
         {
           success = FileUtil.getInstance().writeToFile(getData(), getFileName(), null);
-          if (!success) MBLog.e(Constants.APPLICATION_NAME, "Error caching data in " + getFileName());
+          if (!success) MBLog.e(MBConstants.APPLICATION_NAME, "Error caching data in " + getFileName());
         }
-        else if (!success) MBLog.w(Constants.APPLICATION_NAME, "Could not store the cache registry info in " + getRegistryFileName()
+        else if (!success) MBLog.w(MBConstants.APPLICATION_NAME, "Could not store the cache registry info in " + getRegistryFileName()
                                                                + " and/or " + getTtlsFileName() + " skipping writing to the cache!");
       }
 

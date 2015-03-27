@@ -34,7 +34,7 @@ apply from: '../maven_push.gradle'
 
 dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.itude.mobile.android.util:android-util-lib:3.0.0@aar'
+    compile 'com.itude.mobile.android.util:android-util-lib:3.1.0-SNAPSHOT@aar'
     compile 'rhino:js:1.7R2'
     compile 'org.apache.commons:commons-lang3:3.3.2'
 }

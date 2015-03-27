@@ -25,7 +25,7 @@ import android.annotation.TargetApi;
 import android.os.Build;
 
 import com.itude.mobile.android.util.log.MBLog;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 public final class MBThreadHandler
 {
@@ -79,7 +79,7 @@ public final class MBThreadHandler
 
   public synchronized void stopAllRunningThreads()
   {
-    MBLog.d(Constants.APPLICATION_NAME, "Stopping all running threads from MBThreadHandler");
+    MBLog.d(MBConstants.APPLICATION_NAME, "Stopping all running threads from MBThreadHandler");
 
     for (MBThread thread : _runningThreads)
     {

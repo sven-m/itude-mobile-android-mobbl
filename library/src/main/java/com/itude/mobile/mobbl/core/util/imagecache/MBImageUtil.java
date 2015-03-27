@@ -24,16 +24,16 @@ import android.widget.ImageView;
 
 import com.itude.mobile.mobbl.core.MBException;
 
-public final class ImageUtil
+public final class MBImageUtil
 {
-  private static ImageCache _cache;
+  private static MBImageCache _cache;
 
   /**
    * The method you're looking for ;) Loads the image stored at uri (either from cache or the internet) and puts it in the ImageView. 
    */
   public static void loadImage(final ImageView view, final Uri uri)
   {
-    loadImage(uri, new LoadedImageCallback()
+    loadImage(uri, new MBLoadedImageCallback()
     {
 
       @Override
@@ -51,16 +51,16 @@ public final class ImageUtil
 
   public static void loadImageCache(File cacheDir)
   {
-    _cache = new ImageCache(cacheDir);
+    _cache = new MBImageCache(cacheDir);
   }
 
-  public static ImageCache getCache()
+  public static MBImageCache getCache()
   {
     return _cache;
   }
 
   // not entirely threadsafe, but is only called from the UI thread
-  public static void loadImage(Uri uri, LoadedImageCallback callback)
+  public static void loadImage(Uri uri, MBLoadedImageCallback callback)
   {
     ImageRequest request = new ImageRequest(uri, callback);
     Bitmap bitmap = request.performRequestOnCache();
@@ -103,9 +103,9 @@ public final class ImageUtil
   private static final class ImageRequest
   {
     private final Uri                 _uri;
-    private final LoadedImageCallback _callback;
+    private final MBLoadedImageCallback _callback;
 
-    ImageRequest(Uri uri, LoadedImageCallback callback)
+    ImageRequest(Uri uri, MBLoadedImageCallback callback)
     {
       _uri = uri;
       _callback = callback;

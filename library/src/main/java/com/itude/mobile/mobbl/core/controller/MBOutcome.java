@@ -25,7 +25,7 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl.core.controller.exceptions.MBExpressionNotBooleanException;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.services.MBDataManagerService;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.MBCustomAttributeContainer;
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
 
@@ -287,7 +287,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
   @Override
   public int describeContents()
   {
-    return Constants.C_PARCELABLE_TYPE_OUTCOME;
+    return MBConstants.C_PARCELABLE_TYPE_OUTCOME;
   }
 
   @Override
@@ -482,7 +482,7 @@ public class MBOutcome extends MBCustomAttributeContainer implements Parcelable
     @Override
     public int describeContents()
     {
-      return Constants.C_PARCELABLE_TYPE_ORIGIN;
+      return MBConstants.C_PARCELABLE_TYPE_ORIGIN;
     }
 
     @Override

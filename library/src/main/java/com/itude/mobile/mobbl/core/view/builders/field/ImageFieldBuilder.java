@@ -23,8 +23,8 @@ import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.services.MBResourceService;
-import com.itude.mobile.mobbl.core.util.Constants;
-import com.itude.mobile.mobbl.core.util.imagecache.ImageUtil;
+import com.itude.mobile.mobbl.core.util.MBConstants;
+import com.itude.mobile.mobbl.core.util.imagecache.MBImageUtil;
 import com.itude.mobile.mobbl.core.view.MBField;
 
 public class ImageFieldBuilder extends MBBaseFieldBuilder
@@ -37,7 +37,7 @@ public class ImageFieldBuilder extends MBBaseFieldBuilder
     String path = field.getPath();
     if (StringUtil.isBlank(source) && StringUtil.isBlank(path))
     {
-      MBLog.w(Constants.APPLICATION_NAME, "Source or Path is null or empty for field");
+      MBLog.w(MBConstants.APPLICATION_NAME, "Source or Path is null or empty for field");
       return null;
     }
 
@@ -55,7 +55,7 @@ public class ImageFieldBuilder extends MBBaseFieldBuilder
     }
     else
     {
-      ImageUtil.loadImage(image, field.getValue());
+      MBImageUtil.loadImage(image, field.getValue());
     }
 
     getStyleHandler().styleImage(image);

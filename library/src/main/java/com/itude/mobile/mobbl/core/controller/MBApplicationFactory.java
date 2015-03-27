@@ -15,12 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
@@ -33,8 +27,13 @@ import com.itude.mobile.mobbl.core.view.MBPage;
 import com.itude.mobile.mobbl.core.view.MBPanel;
 import com.itude.mobile.mobbl.core.view.builders.MBContentViewWrapper;
 import com.itude.mobile.mobbl.core.view.builders.contentview.MBDefaultContentViewWrapper;
-import com.itude.mobile.mobbl.core.view.components.tabbar.MBActionBarBuilder;
 import com.itude.mobile.mobbl.core.view.listeners.MBPageConstructionListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Factory class for creating custom MBViewControllers, MBResultListeners and MBActions
@@ -55,7 +54,6 @@ public class MBApplicationFactory
   private final ActionMappings                _actions;
   private final ControllerMappings            _controllers;
   private final PageConstructor               _pageConstructor;
-  private Class<? extends MBActionBarBuilder> _actionBarBuilder;
 
   public MBApplicationFactory()
   {
@@ -116,16 +114,6 @@ public class MBApplicationFactory
   public final MBAlert createAlert(MBAlertDefinition definition, MBDocument document, String rootPath)
   {
     return new MBAlert(definition, document, rootPath);
-  }
-
-  public Class<? extends MBActionBarBuilder> getActionBarBuilder()
-  {
-    return _actionBarBuilder;
-  }
-
-  public void setActionBarBuilder(Class<? extends MBActionBarBuilder> actionBarBuilder)
-  {
-    _actionBarBuilder = actionBarBuilder;
   }
 
   protected ActionMappings.Registry getActionRegistry()

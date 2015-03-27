@@ -28,7 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBComponent;
 import com.itude.mobile.mobbl.core.view.MBField;
 import com.itude.mobile.mobbl.core.view.MBPanel;
@@ -80,7 +80,7 @@ public class MatrixHeaderBuilder extends MBBasePanelBuilder
     RelativeLayout.LayoutParams headerPanelParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     headerPanelParams.addRule(RelativeLayout.CENTER_VERTICAL);
     LinearLayout headerPanel = new LinearLayout(context);
-    headerPanel.setTag(Constants.C_MATRIXHEADER);
+    headerPanel.setTag(MBConstants.C_MATRIXHEADER);
     headerPanel.setLayoutParams(headerPanelParams);
     headerPanel.setOrientation(LinearLayout.VERTICAL);
     return headerPanel;
@@ -89,7 +89,7 @@ public class MatrixHeaderBuilder extends MBBasePanelBuilder
   private RelativeLayout buildContainer(Context context)
   {
     RelativeLayout headerPanelContainer = new RelativeLayout(context);
-    headerPanelContainer.setTag(Constants.C_MATRIXHEADER_CONTAINER);
+    headerPanelContainer.setTag(MBConstants.C_MATRIXHEADER_CONTAINER);
     headerPanelContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     return headerPanelContainer;
   }
@@ -134,7 +134,7 @@ public class MatrixHeaderBuilder extends MBBasePanelBuilder
       RelativeLayout headerLabel = new RelativeLayout(context);
       headerLabel.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
           RelativeLayout.LayoutParams.WRAP_CONTENT));
-      headerLabel.setTag(Constants.C_MATRIXTITLEROW);
+      headerLabel.setTag(MBConstants.C_MATRIXTITLEROW);
       getStyleHandler().styleMatrixHeaderTitleRow(panel, headerLabel);
 
       buildChildren(matrixTitles, headerLabel, new BuildChildrenCallback()
@@ -167,7 +167,7 @@ public class MatrixHeaderBuilder extends MBBasePanelBuilder
         MBField field = (MBField) mbComponent;
         if (!field.isHidden())
         {
-          if (Constants.C_FIELD_MATRIXTITLE.equals(field.getType()))
+          if (MBConstants.C_FIELD_MATRIXTITLE.equals(field.getType()))
           {
             matrixTitles.add(mbComponent);
           }
@@ -175,7 +175,7 @@ public class MatrixHeaderBuilder extends MBBasePanelBuilder
           {
             if (field.getStyle() == null)
             {
-              field.setStyle(Constants.C_FIELD_STYLE_MATRIXCOLUMN);
+              field.setStyle(MBConstants.C_FIELD_STYLE_MATRIXCOLUMN);
             }
             matrixLabels.add(mbComponent);
           }

@@ -55,7 +55,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
   private List<String> _domainAttributes;
   private List<String> _domainValidatorAttributes;
   private List<String> _variableAttributes;
-  private List<String> _toolAttributes;
   private List<String> _alertAttributes;
 
   @Override
@@ -227,18 +226,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
       _domainValidatorAttributes.add("value");
       _domainValidatorAttributes.add("lowerBound");
       _domainValidatorAttributes.add("upperBound");
-    }
-    if (_toolAttributes == null)
-    {
-      _toolAttributes = new ArrayList<String>();
-      _toolAttributes.add("xmlns");
-      _toolAttributes.add("name");
-      _toolAttributes.add("outcome");
-      _toolAttributes.add("type");
-      _toolAttributes.add("icon");
-      _toolAttributes.add("title");
-      _toolAttributes.add("preCondition");
-      _toolAttributes.add("visibility");
     }
     if (_alertAttributes == null)
     {
@@ -543,21 +530,6 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
 
       notifyProcessed(validatorDef);
     }
-    else if (elementName.equals("Tool"))
-    {
-      checkAttributesForElement(elementName, attributeDict, _toolAttributes);
-
-      MBToolDefinition toolDef = new MBToolDefinition();
-      toolDef.setName(attributeDict.get("name"));
-      toolDef.setType(attributeDict.get("type"));
-      toolDef.setOutcomeName(attributeDict.get("outcome"));
-      toolDef.setIcon(attributeDict.get("icon"));
-      toolDef.setTitle(attributeDict.get("title"));
-      toolDef.setPreCondition(attributeDict.get("preCondition"));
-      toolDef.setVisibility(attributeDict.get("visibility"));
-
-      notifyProcessed(toolDef);
-    }
     else if (elementName.equals("Alert"))
     {
       checkAttributesForElement(elementName, attributeDict, _alertAttributes);
@@ -651,7 +623,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
            || element.equals("Attribute") || element.equals("Action") || element.equals("Outcome") || element.equals("Page")
            || element.equals("PageStack") || element.equals("Dialog") || element.equals("ForEach") || element.equals("Variable")
            || element.equals("Panel") || element.equals("Field") || element.equals("Domain") || element.equals("DomainValidator")
-           || element.equals("Tool") || element.equals("Alert");
+           ||  element.equals("Alert");
   }
 
   @Override
@@ -659,7 +631,7 @@ public class MBMvcConfigurationParser extends MBConfigurationParser
   {
     return element.equals("Model") || element.equals("Dialogs") || element.equals("Domains") || element.equals("Documents")
            || element.equals("Controller") || element.equals("Actions") || element.equals("Wiring") || element.equals("View")
-           || element.equals("Toolbar") || element.equals("Alerts");
+           || element.equals("Alerts");
   }
 
   private void addExceptionDocument(MBConfigurationDefinition conf)

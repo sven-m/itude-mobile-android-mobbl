@@ -19,7 +19,7 @@ import android.content.Context;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
-import com.itude.mobile.mobbl.core.util.ScreenConstants;
+import com.itude.mobile.mobbl.core.util.MBScreenConstants;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
 
 /**
@@ -46,7 +46,7 @@ public class MBSegmentedControl extends RadioGroup
         RadioGroup.LayoutParams.WRAP_CONTENT, 1);
     MBSegmentedItem item = new MBSegmentedItem(getContext());
 
-    item.setPadding(0, ScreenConstants.FIVE, 0, ScreenConstants.FIVE);
+    item.setPadding(0, MBScreenConstants.FIVE, 0, MBScreenConstants.FIVE);
     item.setId(id);
     item.setText(text);
 

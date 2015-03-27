@@ -34,7 +34,7 @@ import com.itude.mobile.mobbl.core.configuration.resources.MBResourceDefinition;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.services.exceptions.MBBundleNotFoundException;
 import com.itude.mobile.mobbl.core.services.exceptions.MBResourceNotDefinedException;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.MBCacheManager;
 import com.itude.mobile.mobbl.core.util.resources.MBBundleBuilder;
 import com.itude.mobile.mobbl.core.util.resources.MBResourceBuilder;
@@ -198,11 +198,11 @@ public final class MBResourceService
 
         if (data == null)
         {
-          MBLog.w(Constants.APPLICATION_NAME, "Warning: could not load file=" + fileName + " based on URL=" + urlString);
+          MBLog.w(MBConstants.APPLICATION_NAME, "Warning: could not load file=" + fileName + " based on URL=" + urlString);
         }
         if (isPng)
         {
-          MBLog.i(Constants.APPLICATION_NAME, "png placed in cache: " + urlString);
+          MBLog.i(MBConstants.APPLICATION_NAME, "png placed in cache: " + urlString);
           _pngCache.put(urlString, data);
         }
 
@@ -210,7 +210,7 @@ public final class MBResourceService
       }
       catch (Exception e)
       {
-        MBLog.w(Constants.APPLICATION_NAME, "Warning: could not load file=" + fileName + " based on URL=" + urlString);
+        MBLog.w(MBConstants.APPLICATION_NAME, "Warning: could not load file=" + fileName + " based on URL=" + urlString);
       }
     }
 
@@ -257,7 +257,7 @@ public final class MBResourceService
       return resDef.getUrl();
     }
 
-    MBLog.w(Constants.APPLICATION_NAME, "No resource found for id " + resourceId);
+    MBLog.w(MBConstants.APPLICATION_NAME, "No resource found for id " + resourceId);
 
     return null;
   }
