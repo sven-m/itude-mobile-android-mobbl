@@ -272,22 +272,19 @@ public class MBBasicViewController extends DialogFragment
      * @param actionBarActivity android.support.v7.app.ActionBarActivity()
      */
     protected void buildToolbar(ViewGroup view, ActionBarActivity actionBarActivity) {
-        setToolbarTitle(view, actionBarActivity);
+        setToolbarTitle(actionBarActivity);
     }
 
     /**
      * Set the Toolbar or Actionbar title
-     * @param view the ViewGroup to display in a Fragment
      * @param actionBarActivity @see android.support.v7.app.ActionBarActivity()
      */
-    protected void setToolbarTitle(ViewGroup view, ActionBarActivity actionBarActivity)
+    protected void setToolbarTitle(ActionBarActivity actionBarActivity)
     {
         final ActionBar actionBar = actionBarActivity.getSupportActionBar();
         if (actionBar != null) {
             if (StringUtil.isNotBlank(getPage().getTitle())) {
                 actionBar.setTitle(getPage().getTitle());
-            } else {
-                actionBar.setTitle(getActivity().getTitle());
             }
         }
     }
@@ -437,7 +434,7 @@ public class MBBasicViewController extends DialogFragment
         if (_rebuildView) {
             rebuildView(true);
         } else {
-            setToolbarTitle((ViewGroup) getView(), (ActionBarActivity) getActivity());
+            setToolbarTitle((ActionBarActivity) getActivity());
         }
 
         // Make sure orientation for the page is as expected
