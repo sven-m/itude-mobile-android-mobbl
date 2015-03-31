@@ -15,17 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Stack;
-
-import android.app.SearchManager;
-import android.app.SearchableInfo;
-import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
@@ -47,12 +36,20 @@ import com.itude.mobile.mobbl.core.controller.helpers.MBActivityHelper;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.threads.MBThread;
 import com.itude.mobile.mobbl.core.util.threads.exception.MBInterruptedException;
 import com.itude.mobile.mobbl.core.view.MBPage;
 import com.itude.mobile.mobbl.core.view.builders.MBDialogDecorator;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Stack;
 
 /**
  * Dialog controller class
@@ -138,7 +135,7 @@ public class MBDialogController extends ContextWrapper
     }
     else
     {
-      MBLog.w(Constants.APPLICATION_NAME, "MBDialogController.onCreate: unable to find dialogName");
+      MBLog.w(MBConstants.APPLICATION_NAME, "MBDialogController.onCreate: unable to find dialogName");
       return false;
     }
   }
@@ -547,27 +544,6 @@ public class MBDialogController extends ContextWrapper
   public boolean onMenuItemSelected(int featureId, MenuItem item)
   {
     return false;
-  }
-
-  public boolean onSearchRequested()
-  {
-    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-    SearchableInfo searchableInfo = searchManager.getSearchableInfo(MBViewManager.getInstance().getComponentName());
-
-    if (searchableInfo == null)
-    {
-      return false;
-    }
-
-    MBViewManager.getInstance().runOnUiThread(new MBThread()
-    {
-      @Override
-      public void runMethod()
-      {
-        MBViewManager.getInstance().startSearch(null, false, null, false);
-      }
-    });
-    return true;
   }
 
   public boolean dispatchTouchEvent(MotionEvent ev)

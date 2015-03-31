@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBComponentContainer;
 import com.itude.mobile.mobbl.core.view.MBPanel;
 import com.itude.mobile.mobbl.core.view.builders.MBPanelViewBuilder.BuildState;
@@ -48,7 +48,7 @@ public class ListPanelBuilder extends MBBasePanelBuilder
     // Only add padding if this list isn't a direct child of a section
     MBComponentContainer parent = panel.getParent();
     boolean notDirectChildOfSection = (!(parent != null && parent instanceof MBPanel && (((MBPanel) parent).getType()) != null && ((MBPanel) parent)
-        .getType().equals(Constants.C_SECTION)));
+        .getType().equals(MBConstants.C_SECTION)));
 
     getStyleHandler().styleListPanel(result, panel.getStyle(), notDirectChildOfSection);
 

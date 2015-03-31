@@ -20,7 +20,7 @@ import java.util.Map;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBItem;
 import com.itude.mobile.mobbl.core.view.MBResource;
 
@@ -32,8 +32,8 @@ public class MBRadioGroupStatedResourceBuilder extends MBAbstractStatedResourceB
   {
     Map<String, MBItem> items = resource.getItems();
 
-    MBItem checked = items.get(Constants.C_STATED_RESOURCE_STATE_CHECKED);
-    MBItem unchecked = items.get(Constants.C_STATED_RESOURCE_STATE_UNCHECKED);
+    MBItem checked = items.get(MBConstants.C_STATED_RESOURCE_STATE_CHECKED);
+    MBItem unchecked = items.get(MBConstants.C_STATED_RESOURCE_STATE_UNCHECKED);
 
     StateListDrawable stateListDrawable = new StateListDrawable();
 

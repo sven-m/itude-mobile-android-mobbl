@@ -20,7 +20,7 @@ import android.content.Context;
 import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 
-public final class ScreenConstants
+public final class MBScreenConstants
 {
   private final static Context context               = MBApplicationController.getInstance().getBaseContext();
 

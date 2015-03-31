@@ -15,14 +15,13 @@
  */
 package com.itude.mobile.mobbl.core.util;
 
-public interface Constants
+public interface MBConstants
 {
 
   public static String       APPLICATION_NAME                                          = "MOBBL";
   public static String       C_STYLESCHEME                                             = "styleScheme";
 
   public static String       C_ENCODING                                                = "UTF-8";
-  public static String       C_LEAF                                                    = "leaf";
 
   public static String       C_APPLICATION_ENVIRONMENT                                 = "Environment";
 
@@ -33,7 +32,7 @@ public interface Constants
   //Framework outcomes
   public static final String C_MOBBL_ORIGIN_NAME_CONTROLLER                            = "Controller";
   public static final String C_MOBBL_ORIGIN_CONTROLLER_INIT                            = "init";
-  public static final String C_MOBBL_ORIGIN_CONTROLLER_NAME_SEARCH                     = "search";
+
 
   //container types
   public static final String C_SECTION                                                 = "SECTION";
@@ -112,8 +111,6 @@ public interface Constants
   public static final String C_FALSE                                                   = "false";
 
   public static final String C_PAGE_CONTENT_VIEW                                       = "PAGE-CONTENT-VIEW";
-  public static final String C_PAGE_CONTENT_HEADER_VIEW                                = "PAGE-CONTENT-HEADER-VIEW";
-  public static final String C_PAGE_CONTENT_HEADER_TITLE_VIEW                          = "PAGE-CONTENT-HEADER-TITLE-VIEW";
   public static final String C_PAGE_SOURCE_VIEW                                        = "PAGE-SOURCE-VIEW";
   public static final String C_PAGE_ORIENTATION_PERMISSION_LANDSCAPE                   = "LANDSCAPE";
   public static final String C_PAGE_ORIENTATION_PERMISSION_PORTRAIT                    = "PORTRAIT";
@@ -156,26 +153,6 @@ public interface Constants
   public static final String C_HTTP_REQUEST_METHOD_DELETE                              = "DELETE";
   public static final String C_HTTP_REQUEST_METHOD_HEAD                                = "HEAD";
   public static final String C_HTTP_REQUEST_CONTENT_TYPE                               = "Content-Type";
-
-  // Search
-  public static String       C_DOC_SEARCH_CONFIGURATION                                = "MBSearchConfiguration";
-  public static String       C_EL_SEARCH_CONFIGURATION                                 = "SearchConfiguration[0]";
-  public static String       C_EL_SEARCH_CONFIGURATION_ATTR_SEARCH_PAGE                = "@searchPage";
-  public static String       C_EL_SEARCH_CONFIGURATION_ATTR_SEARCH_ACTION              = "@searchAction";
-  public static String       C_EL_SEARCH_CONFIGURATION_ATTR_NORMAL_SEARCH_OUTCOME      = "@normalSearchOutcome";
-  public static String       C_EL_SEARCH_CONFIGURATION_ATTR_PROGRESSIVE_SEARCH_OUTCOME = "@progressiveSearchOutcome";
-  public static String       C_EL_SEARCH_CONFIGURATION_ATTR_SEARCH_PATH                = "@searchPath";
-
-  public static String       C_DOC_SEARCH_REQUEST                                      = "MBSearchRequestDoc";
-  public static String       C_EL_SEARCH_REQUEST                                       = "SearchRequest[0]";
-  public static String       C_EL_SEARCH_REQUEST_ATTR_QUERY                            = "@query";
-  public static String       C_EL_SEARCH_REQUEST_ATTR_IS_PROGRESSIVE                   = "@isProgressive";
-  public static String       C_EL_SEARCH_REQUEST_ATTR_NORMAL_SEARCH_OUTCOME            = "@normalSearchOutcome";
-  public static String       C_EL_SEARCH_REQUEST_ATTR_PROGRESSIVE_SEARCH_OUTCOME       = "@progressiveSearchOutcome";
-
-  public static String       C_BUNDLE_NORMAL_SEARCH_OUTCOME                            = "normalSearchOutcome";
-  public static String       C_BUNDLE_PROGRESSIVE_SEARCH_OUTCOME                       = "progressiveSearchOutcome";
-  public static String       C_BUNDLE_SEARCH_PATH                                      = "searchPath";
 
   // Gravity
   public static String       C_GRAVITY_LEFT                                            = "LEFT";

@@ -32,7 +32,7 @@ import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPathExc
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBUnknownVariableException;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.MBPathUtil;
 
 /**
@@ -250,7 +250,7 @@ public class MBDocumentDefinition extends MBDefinition
   @Override
   public int describeContents()
   {
-    return Constants.C_PARCELABLE_TYPE_DOCUMENT_DEFINITION;
+    return MBConstants.C_PARCELABLE_TYPE_DOCUMENT_DEFINITION;
   }
 
   @Override

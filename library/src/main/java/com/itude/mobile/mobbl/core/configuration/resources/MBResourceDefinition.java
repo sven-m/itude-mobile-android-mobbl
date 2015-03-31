@@ -23,7 +23,7 @@ import java.util.Map;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 /**
  * {@link MBDefinition} Class for a resource file
@@ -69,7 +69,7 @@ public class MBResourceDefinition extends MBDefinition
     String state = child.getState();
     if (StringUtil.isNotBlank(state) && _items.containsKey(state))
     {
-      MBLog.w(Constants.APPLICATION_NAME, "Item definition overridden: multiple definitions with the same state for resource " + getName());
+      MBLog.w(MBConstants.APPLICATION_NAME, "Item definition overridden: multiple definitions with the same state for resource " + getName());
     }
 
     _items.put(child.getState(), child);

@@ -23,7 +23,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.view.Gravity;
 
 import com.itude.mobile.mobbl.core.services.MBResourceService;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBItem;
 import com.itude.mobile.mobbl.core.view.MBResource;
 
@@ -67,23 +67,23 @@ public class MBLayeredImageResourceBuilder implements MBResourceBuilder.Builder<
 
   private void setBitmapGravity(String align, BitmapDrawable drawable)
   {
-    if (Constants.C_GRAVITY_LEFT.equals(align))
+    if (MBConstants.C_GRAVITY_LEFT.equals(align))
     {
       drawable.setGravity(Gravity.START);
     }
-    else if (Constants.C_GRAVITY_RIGHT.equals(align))
+    else if (MBConstants.C_GRAVITY_RIGHT.equals(align))
     {
       drawable.setGravity(Gravity.END);
     }
-    else if (Constants.C_GRAVITY_TOP.equals(align))
+    else if (MBConstants.C_GRAVITY_TOP.equals(align))
     {
       drawable.setGravity(Gravity.TOP);
     }
-    else if (Constants.C_GRAVITY_BOTTOM.equals(align))
+    else if (MBConstants.C_GRAVITY_BOTTOM.equals(align))
     {
       drawable.setGravity(Gravity.BOTTOM);
     }
-    else if (Constants.C_GRAVITY_CENTER.equals(align))
+    else if (MBConstants.C_GRAVITY_CENTER.equals(align))
     {
       drawable.setGravity(Gravity.CENTER);
     }

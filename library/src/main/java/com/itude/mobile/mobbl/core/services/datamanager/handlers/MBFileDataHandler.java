@@ -25,7 +25,7 @@ import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.model.MBDocumentFactory;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.services.datamanager.MBDataHandlerBase;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 /**
  * Retrieves and stores MBDocument instances using the device Filesystem 
@@ -42,7 +42,7 @@ public class MBFileDataHandler extends MBDataHandlerBase
   @Override
   public MBDocument loadDocument(String documentName, String parser)
   {
-    MBLog.d(Constants.APPLICATION_NAME, "MBFileDataHandler.loadDocument: " + documentName);
+    MBLog.d(MBConstants.APPLICATION_NAME, "MBFileDataHandler.loadDocument: " + documentName);
     String fileName = determineFileName(documentName, parser);
     MBDocumentDefinition docDef = MBMetadataService.getInstance().getDefinitionForDocumentName(documentName);
     byte[] data = DataUtil.getInstance().readFromAssetOrFile(fileName);
@@ -73,7 +73,7 @@ public class MBFileDataHandler extends MBDataHandlerBase
       StringBuffer sb = new StringBuffer(4096);
       String xml = document.asXmlWithLevel(sb, 0, false).toString();// TODO, set the last parameter to true if we want to properly escape the document to be stored
 
-      MBLog.d(Constants.APPLICATION_NAME, "Writing document " + document.getName() + " to " + fileName);
+      MBLog.d(MBConstants.APPLICATION_NAME, "Writing document " + document.getName() + " to " + fileName);
 
       try
       {
@@ -82,7 +82,7 @@ public class MBFileDataHandler extends MBDataHandlerBase
       }
       catch (Exception e)
       {
-        MBLog.w(Constants.APPLICATION_NAME, "MBFileDataHandler.storeDocument: Error writing document " + document.getName() + " to "
+        MBLog.w(MBConstants.APPLICATION_NAME, "MBFileDataHandler.storeDocument: Error writing document " + document.getName() + " to "
                                             + fileName, e);
       }
     }

@@ -3,7 +3,7 @@ package com.itude.mobile.mobbl.core.controller;
 import android.os.Bundle;
 
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 /**
  * Controller class responsible for the page stack
@@ -51,8 +51,8 @@ public class MBPageStackController
     {
       getParent().popView();
     }
-    else if ((Constants.C_DISPLAY_MODE_REPLACE.equals(entry.getDisplayMode()) //
-             || Constants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE.equals(entry.getDisplayMode()))
+    else if ((MBConstants.C_DISPLAY_MODE_REPLACE.equals(entry.getDisplayMode()) //
+             || MBConstants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE.equals(entry.getDisplayMode()))
              || ("SINGLE".equals(getMode())))
     {
       entry.setAddToBackStack(false);

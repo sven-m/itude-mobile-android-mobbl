@@ -29,7 +29,7 @@ import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBOutcomeListenerProtocol;
 
 /**
@@ -42,8 +42,8 @@ public class MBOutcomeHandler extends Handler
   @Override
   public void handleMessage(Message msg)
   {
-    MBLog.d(Constants.APPLICATION_NAME, "MBOutcomeHandler.handleMessage(): " + msg.what);
-    if (msg.what == Constants.C_MESSAGE_INITIAL_OUTCOMES_FINISHED)
+    MBLog.d(MBConstants.APPLICATION_NAME, "MBOutcomeHandler.handleMessage(): " + msg.what);
+    if (msg.what == MBConstants.C_MESSAGE_INITIAL_OUTCOMES_FINISHED)
     {
       MBApplicationController.getInstance().finishedInitialOutcomes();
       return;
@@ -102,7 +102,7 @@ public class MBOutcomeHandler extends Handler
     if (pageStackDef != null)
     {
 
-      MBLog.d(Constants.APPLICATION_NAME, "Dialog name '" + pageStackName + "' resolved to '" + pageStackDef.getName() + "'");
+      MBLog.d(MBConstants.APPLICATION_NAME, "Dialog name '" + pageStackName + "' resolved to '" + pageStackDef.getName() + "'");
       return pageStackDef.getName();
     }
 

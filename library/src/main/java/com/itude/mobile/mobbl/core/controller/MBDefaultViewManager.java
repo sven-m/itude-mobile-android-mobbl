@@ -15,18 +15,11 @@
  */
 package com.itude.mobile.mobbl.core.controller;
 
-import com.itude.mobile.mobbl.core.view.components.tabbar.MBActionBarBuilder;
-import com.itude.mobile.mobbl.core.view.components.tabbar.MBSearchActionBarBuilder;
-
 /**
- * {@link MBViewManager} for a phone view
+ * The Default {@link MBViewManager}
  *
  */
 public class MBDefaultViewManager extends MBViewManager
 {
-  @Override
-  protected MBActionBarBuilder getDefaultActionBar()
-  {
-    return new MBSearchActionBarBuilder(this);
-  }
+
 }

@@ -28,7 +28,7 @@ import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.model.MBElement;
 import com.itude.mobile.mobbl.core.model.MBElementContainer;
 import com.itude.mobile.mobbl.core.model.exceptions.MBParseErrorException;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 /**
  * Parser for JSON type documents
@@ -137,11 +137,11 @@ public class MBJsonDocumentParser implements MBDocumentParser
             {
               if ((Boolean) attributeValue)
               {
-                attributeValue = Constants.C_TRUE;
+                attributeValue = MBConstants.C_TRUE;
               }
               else
               {
-                attributeValue = Constants.C_FALSE;
+                attributeValue = MBConstants.C_FALSE;
               }
 
             }
@@ -212,11 +212,11 @@ public class MBJsonDocumentParser implements MBDocumentParser
               {
                 if ((Boolean) jsonChild)
                 {
-                  childElement.setBodyText(Constants.C_TRUE);
+                  childElement.setBodyText(MBConstants.C_TRUE);
                 }
                 else
                 {
-                  childElement.setBodyText(Constants.C_FALSE);
+                  childElement.setBodyText(MBConstants.C_FALSE);
                 }
               }
 

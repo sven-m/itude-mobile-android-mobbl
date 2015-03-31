@@ -15,11 +15,7 @@
  */
 package com.itude.mobile.mobbl.core.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.itude.mobile.android.util.DataUtil;
-import com.itude.mobile.android.util.DeviceUtil;
 import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndPointDefinition;
 import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndpointsConfiguration;
 import com.itude.mobile.mobbl.core.configuration.endpoints.MBEndpointsConfigurationParser;
@@ -33,7 +29,6 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBMvcConfigurationParser;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl.core.controller.MBOutcome;
 import com.itude.mobile.mobbl.core.services.exceptions.MBActionNotDefinedException;
 import com.itude.mobile.mobbl.core.services.exceptions.MBAlertNotDefinedException;
@@ -41,7 +36,9 @@ import com.itude.mobile.mobbl.core.services.exceptions.MBDialogNotDefinedExcepti
 import com.itude.mobile.mobbl.core.services.exceptions.MBDocumentNotDefinedException;
 import com.itude.mobile.mobbl.core.services.exceptions.MBDomainNotDefinedException;
 import com.itude.mobile.mobbl.core.services.exceptions.MBPageNotDefinedException;
-import com.itude.mobile.mobbl.core.services.exceptions.MBToolNotDefinedException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Service to handle meta data
@@ -239,23 +236,6 @@ public final class MBMetadataService
       throw new MBActionNotDefinedException(message);
     }
     return outcomeDefs;
-  }
-
-  public List<MBToolDefinition> getTools()
-  {
-    return new ArrayList<MBToolDefinition>(_cfg.getTools().values());
-  }
-
-  public List<MBToolDefinition> getToolDefinitionsForType(String type)
-  {
-    List<MBToolDefinition> toolDefs = _cfg.getToolDefinitionsForType(type);
-
-    if (toolDefs.size() == 0)
-    {
-      String message = "Tool with type=" + type + " not defined";
-      throw new MBToolNotDefinedException(message);
-    }
-    return toolDefs;
   }
 
   public MBAlertDefinition getDefinitionForAlertName(String alertName)

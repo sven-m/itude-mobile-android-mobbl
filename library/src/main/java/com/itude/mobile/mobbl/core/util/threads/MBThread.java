@@ -18,7 +18,7 @@ package com.itude.mobile.mobbl.core.util.threads;
 import android.os.Bundle;
 
 import com.itude.mobile.android.util.log.MBLog;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.threads.exception.MBInterruptedException;
 import com.itude.mobile.mobbl.core.view.MBPage;
 
@@ -83,7 +83,7 @@ public class MBThread extends Thread
     }
     catch (MBInterruptedException e)
     {
-      MBLog.w(Constants.APPLICATION_NAME, "Thread interrupted");
+      MBLog.w(MBConstants.APPLICATION_NAME, "Thread interrupted");
     }
     catch (Exception e)
     {
@@ -100,7 +100,7 @@ public class MBThread extends Thread
     }
     else
     {
-      MBLog.w(Constants.APPLICATION_NAME, "Exception thrown in thread " + getName(), e);
+      MBLog.w(MBConstants.APPLICATION_NAME, "Exception thrown in thread " + getName(), e);
     }
   }
 

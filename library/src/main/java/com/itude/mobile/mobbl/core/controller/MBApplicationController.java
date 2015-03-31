@@ -15,15 +15,8 @@
  */
 package com.itude.mobile.mobbl.core.controller;
 
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.List;
-
 import android.app.Application;
-import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -35,6 +28,7 @@ import com.itude.mobile.android.util.AssertUtil;
 import com.itude.mobile.android.util.ComparisonUtil;
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.DeviceUtil;
+import com.itude.mobile.android.util.ScreenUtil;
 import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.MBException;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBActionDefinition;
@@ -42,7 +36,6 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBAlertDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
-import com.itude.mobile.mobbl.core.controller.MBViewManager.MBActionBarInvalidationOption;
 import com.itude.mobile.mobbl.core.controller.exceptions.MBInvalidOutcomeException;
 import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.model.MBDocument;
@@ -53,11 +46,14 @@ import com.itude.mobile.mobbl.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.services.MBWindowChangeType.WindowChangeType;
 import com.itude.mobile.mobbl.core.services.exceptions.MBNoDocumentException;
-import com.itude.mobile.mobbl.core.util.Constants;
-import com.itude.mobile.mobbl.core.util.imagecache.ImageUtil;
+import com.itude.mobile.mobbl.core.util.MBConstants;
+import com.itude.mobile.mobbl.core.util.imagecache.MBImageUtil;
 import com.itude.mobile.mobbl.core.view.MBAlert;
 import com.itude.mobile.mobbl.core.view.MBOutcomeListenerProtocol;
 import com.itude.mobile.mobbl.core.view.MBPage;
+
+import java.util.Arrays;
+import java.util.List;
 
 /** 
  * Facade for all navigation control and logic sequencing.
@@ -91,6 +87,7 @@ public class MBApplicationController extends Application implements MBOutcomeLis
     Context context = getBaseContext();
     DataUtil.getInstance().setContext(context);
     DeviceUtil.getInstance().setContext(context);
+    ScreenUtil.getInstance().setContext(context);
     super.onCreate();
     _instance = this;
 
@@ -125,9 +122,9 @@ public class MBApplicationController extends Application implements MBOutcomeLis
 
   public void startApplication(MBApplicationFactory applicationFactory)
   {
-    MBLog.d(Constants.APPLICATION_NAME, "MBApplicationController.startApplication");
-    MBLog.d(Constants.APPLICATION_NAME, "Device info:\n");
-    MBLog.d(Constants.APPLICATION_NAME, DeviceUtil.getInstance().toString());
+    MBLog.d(MBConstants.APPLICATION_NAME, "MBApplicationController.startApplication");
+    MBLog.d(MBConstants.APPLICATION_NAME, "Device info:\n");
+    MBLog.d(MBConstants.APPLICATION_NAME, DeviceUtil.getInstance().toString());
 
     startOutcomeHandler();
 
@@ -137,7 +134,7 @@ public class MBApplicationController extends Application implements MBOutcomeLis
     _viewManager = MBViewManager.getInstance();
 
     _viewManager.prepareForApplicationStart();
-    ImageUtil.loadImageCache(getBaseContext().getCacheDir());
+    MBImageUtil.loadImageCache(getBaseContext().getCacheDir());
 
     fireInitialOutcomes();
   }
@@ -170,7 +167,7 @@ public class MBApplicationController extends Application implements MBOutcomeLis
   {
     if (outcome.getOrigin().matches("Controller") && outcome.getOutcomeName().equals("init"))
 
-    _outcomeHandler.sendEmptyMessage(Constants.C_MESSAGE_INITIAL_OUTCOMES_FINISHED);
+    _outcomeHandler.sendEmptyMessage(MBConstants.C_MESSAGE_INITIAL_OUTCOMES_FINISHED);
 
   }
 
@@ -183,21 +180,13 @@ public class MBApplicationController extends Application implements MBOutcomeLis
     _suppressPageSelection = false;
     _backStackEnabled = true;
 
-    final EnumSet<MBActionBarInvalidationOption> actionBarRefreshOptions = EnumSet.noneOf(MBActionBarInvalidationOption.class);
-
     _viewManager.runOnUiThread(new Runnable()
     {
       @Override
       public void run()
       {
-        MBViewManager.getInstance().invalidateActionBar(actionBarRefreshOptions);
         MBViewManager.getInstance().invalidateOptionsMenu(false, false);
         MBViewManager.getInstance().getDialogManager().activateHome();
-
-        /*
-        if (!homeDialogDefinition.isShowAsTab() || DeviceUtil.getInstance().isPhone()) {
-          activateDialogWithName(homeDialogDefinition.getName());
-        }*/
 
         MessageQueue myQueue = Looper.myQueue();
         myQueue.addIdleHandler(new IdleHandler()
@@ -219,7 +208,7 @@ public class MBApplicationController extends Application implements MBOutcomeLis
   protected void onApplicationStarted()
   {
     // Let's see if we want to fire an outcome after the initial ones but before we let the application know it's finished starting
-    final String outcomeName = _viewManager.getIntent().getStringExtra(Constants.C_INTENT_POST_INITIALOUTCOMES_OUTCOMENAME);
+    final String outcomeName = _viewManager.getIntent().getStringExtra(MBConstants.C_INTENT_POST_INITIALOUTCOMES_OUTCOMENAME);
     if (outcomeName != null)
     {
       _viewManager.runOnUiThread(new Runnable()
@@ -450,18 +439,18 @@ public class MBApplicationController extends Application implements MBOutcomeLis
 
       if (actionOutcome == null)
       {
-        MBLog.d(Constants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action "
+        MBLog.d(MBConstants.APPLICATION_NAME, "MBApplicationController.performActionInBackground: " + "No outcome produced by action "
                                             + actionDef.getName() + " (outcome == null); no further procesing.");
       }
       else
       {
-        if (Constants.C_DISPLAY_MODE_BACKGROUND.equals(causingOutcome.getDisplayMode()))
+        if (MBConstants.C_DISPLAY_MODE_BACKGROUND.equals(causingOutcome.getDisplayMode()))
         {
-          actionOutcome.setDisplayMode(Constants.C_DISPLAY_MODE_BACKGROUND);
+          actionOutcome.setDisplayMode(MBConstants.C_DISPLAY_MODE_BACKGROUND);
         }
-        else if (Constants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE.equals(causingOutcome.getDisplayMode()))
+        else if (MBConstants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE.equals(causingOutcome.getDisplayMode()))
         {
-          actionOutcome.setDisplayMode(Constants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE);
+          actionOutcome.setDisplayMode(MBConstants.C_DISPLAY_MODE_BACKGROUNDPIPELINEREPLACE);
         }
         actionOutcome.setPageStackName(ComparisonUtil.coalesce(actionOutcome.getPageStackName(), causingOutcome.getPageStackName()));
         MBOutcome.Origin origin = new MBOutcome.Origin();
@@ -531,13 +520,13 @@ public class MBApplicationController extends Application implements MBOutcomeLis
   {
     if (_outcomeHandler == null)
     {
-      MBLog.w(Constants.APPLICATION_NAME, "Skipping handleException because outcomeHandler is null");
+      MBLog.w(MBConstants.APPLICATION_NAME, "Skipping handleException because outcomeHandler is null");
       return;
     }
 
-    MBLog.w(Constants.APPLICATION_NAME, "________EXCEPTION RAISED______________________________________________________________");
-    MBLog.w(Constants.APPLICATION_NAME, exception);
-    MBLog.w(Constants.APPLICATION_NAME, "______________________________________________________________________________________");
+    MBLog.w(MBConstants.APPLICATION_NAME, "________EXCEPTION RAISED______________________________________________________________");
+    MBLog.w(MBConstants.APPLICATION_NAME, exception);
+    MBLog.w(MBConstants.APPLICATION_NAME, "______________________________________________________________________________________");
 
     MBDocument exceptionDocument = MBDataManagerService.getInstance().loadDocument(MBConfigurationDefinition.DOC_SYSTEM_EXCEPTION);
     String name = MBLocalizationService.getInstance().getTextForKey("General error");
@@ -596,14 +585,14 @@ public class MBApplicationController extends Application implements MBOutcomeLis
       outcomeDefinitions = metadataService.getOutcomeDefinitionsForOrigin(outcome.getOrigin(), "exception", false);
       if (outcomeDefinitions.isEmpty())
       {
-        MBLog.w(Constants.APPLICATION_NAME, "No outcome with origin=" + outcome
+        MBLog.w(MBConstants.APPLICATION_NAME, "No outcome with origin=" + outcome
                                             + " name=exception defined to handle errors; so re-throwing exception");
         throw new RuntimeException(exception);
       }
       if ("exception".equals(outcome.getOutcomeName()))
       {
         MBLog
-            .w(Constants.APPLICATION_NAME,
+            .w(MBConstants.APPLICATION_NAME,
                "Error in handling an outcome with name=exception (i.e. the error handling in the controller is probably misconfigured) Re-throwing exception");
         throw new RuntimeException(exception);
       }
@@ -631,7 +620,7 @@ public class MBApplicationController extends Application implements MBOutcomeLis
   {
     if (_outcomeHandler != null)
     {
-      MBLog.w(Constants.APPLICATION_NAME, "Outcome handler already started, so skipping");
+      MBLog.w(MBConstants.APPLICATION_NAME, "Outcome handler already started, so skipping");
       return;
     }
 
@@ -640,9 +629,9 @@ public class MBApplicationController extends Application implements MBOutcomeLis
 
     while ((_outcomeHandler = outcomeHandlerThread.getOutcomeHandler()) == null)
     {
-      MBLog.d(Constants.APPLICATION_NAME, "Waiting for OutcomeHandler to settle down...");
+      MBLog.d(MBConstants.APPLICATION_NAME, "Waiting for OutcomeHandler to settle down...");
     }
-    MBLog.d(Constants.APPLICATION_NAME, "OutcomeHandler settled, continue startup");
+    MBLog.d(MBConstants.APPLICATION_NAME, "OutcomeHandler settled, continue startup");
   }
 
   public void stopOutcomeHandler()
@@ -657,45 +646,6 @@ public class MBApplicationController extends Application implements MBOutcomeLis
         _viewManager.finish();
       }
     }
-  }
-
-  public void handleSearchRequest(Intent searchIntent)
-  {
-    final String query;
-    final boolean isProgressive;
-
-    query = searchIntent.getStringExtra(SearchManager.QUERY);
-
-    isProgressive = !Intent.ACTION_SEARCH.equals(searchIntent.getAction());
-
-    String searchPath = "";
-
-    MBDocument searchConfigDoc = MBDataManagerService.getInstance().loadDocument(Constants.C_DOC_SEARCH_CONFIGURATION);
-    String normalSearchOutcome = searchConfigDoc.getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/"
-                                                                 + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_NORMAL_SEARCH_OUTCOME);
-    String progressiveSearchOutcome = searchConfigDoc
-        .getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/" + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_PROGRESSIVE_SEARCH_OUTCOME);
-    searchPath = searchConfigDoc.getValueForPath(Constants.C_EL_SEARCH_CONFIGURATION + "/"
-                                                 + Constants.C_EL_SEARCH_CONFIGURATION_ATTR_SEARCH_PATH);
-
-    String path = Uri.decode(searchIntent.getDataString());
-
-    MBDocument searchRequest = MBDataManagerService.getInstance().loadDocument(Constants.C_DOC_SEARCH_REQUEST);
-    searchRequest.setValue(query, Constants.C_EL_SEARCH_REQUEST + "/" + Constants.C_EL_SEARCH_REQUEST_ATTR_QUERY);
-    searchRequest.setValue(isProgressive, Constants.C_EL_SEARCH_REQUEST + "/" + Constants.C_EL_SEARCH_REQUEST_ATTR_IS_PROGRESSIVE);
-    searchRequest.setValue(normalSearchOutcome, Constants.C_EL_SEARCH_REQUEST + "/"
-                                                + Constants.C_EL_SEARCH_REQUEST_ATTR_NORMAL_SEARCH_OUTCOME);
-    searchRequest.setValue(progressiveSearchOutcome, Constants.C_EL_SEARCH_REQUEST + "/"
-                                                     + Constants.C_EL_SEARCH_REQUEST_ATTR_PROGRESSIVE_SEARCH_OUTCOME);
-
-    MBOutcome searchOutcome = new MBOutcome();
-    searchOutcome.setOrigin(new MBOutcome.Origin().withDialog(Constants.C_MOBBL_ORIGIN_NAME_CONTROLLER));
-    searchOutcome.setOutcomeName(Constants.C_MOBBL_ORIGIN_CONTROLLER_NAME_SEARCH);
-    searchOutcome.setDocument(searchRequest);
-    searchOutcome.setPath((path != null) ? path + searchPath : null);
-
-    handleOutcome(searchOutcome);
-
   }
 
   public boolean getBackStackEnabled()

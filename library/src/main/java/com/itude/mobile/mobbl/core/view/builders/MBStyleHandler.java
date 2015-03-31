@@ -15,7 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.view.builders;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.graphics.Color;
@@ -40,30 +39,38 @@ import android.widget.TextView;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl.core.services.MBResourceService;
-import com.itude.mobile.mobbl.core.util.Constants;
-import com.itude.mobile.mobbl.core.util.ScreenConstants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
+import com.itude.mobile.mobbl.core.util.MBScreenConstants;
 import com.itude.mobile.mobbl.core.view.MBComponent;
 import com.itude.mobile.mobbl.core.view.MBField;
 import com.itude.mobile.mobbl.core.view.MBPage;
 import com.itude.mobile.mobbl.core.view.MBPanel;
-import com.itude.mobile.mobbl.core.view.components.MBCirclePageIndicatorBar;
-import com.itude.mobile.mobbl.core.view.components.MBDrawablePageIndicatorBar;
-import com.itude.mobile.mobbl.core.view.components.MBHeader;
 import com.itude.mobile.mobbl.core.view.components.MBSegmentedControlBar;
 import com.itude.mobile.mobbl.core.view.components.MBSegmentedControlContainer;
 import com.itude.mobile.mobbl.core.view.components.MBSegmentedItem;
-import com.itude.mobile.mobbl.core.view.components.tabbar.MBTab;
 
 import java.util.List;
 
 public class MBStyleHandler {
 
+    /**
+     * Apply Style for default MBComponent's
+     *
+     * @param component MBComponent
+     * @param view      View
+     */
     public void applyStyle(MBComponent component, View view) {
         if (component instanceof MBField) applyStyle(view, (MBField) component);
         else if (component instanceof MBPage) applyStyle(view, (MBPage) component);
         else if (component instanceof MBPanel) applyStyle(view, (MBPanel) component);
     }
 
+    /**
+     * Style a Textview
+     *
+     * @param view  TextView
+     * @param field MBField
+     */
     public void styleLabel(TextView view, MBField field) {
         view.setBackgroundColor(Color.TRANSPARENT);
 
@@ -81,9 +88,6 @@ public class MBStyleHandler {
     public void styleSubLabel(TextView view, String style) {
     }
 
-    public void styleMultilineLabel(View view, MBField field) {
-    }
-
     public void styleTextfield(View view, MBField field) {
         if (view instanceof EditText) {
             EditText textField = (EditText) view;
@@ -94,9 +98,6 @@ public class MBStyleHandler {
     }
 
     public void styleTextView(TextView view, MBField field) {
-    }
-
-    public void styleTextView(TextView textView, String name) {
     }
 
     public void styleButton(Button view, MBField field) {
@@ -119,9 +120,6 @@ public class MBStyleHandler {
     public void styleButtonWithName(Button view, String style) {
     }
 
-    public void styleButtonHeight(Button view, String style) {
-    }
-
     @Deprecated
     protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed) {
         StateListDrawable buttonStates = new StateListDrawable();
@@ -140,73 +138,13 @@ public class MBStyleHandler {
         return buttonStates;
     }
 
-    @Deprecated
-    protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed, String stateDisabled) {
-        StateListDrawable buttonStates = getStatedButtonBackground(stateNormal, statePressed);
-
-        if (stateDisabled != null) {
-            Drawable imageDisabled = MBResourceService.getInstance().getImageByID(stateDisabled);
-            buttonStates.addState(new int[]{-android.R.attr.state_enabled}, imageDisabled);
-        }
-
-        return buttonStates;
-    }
-
-    @Deprecated
-    protected StateListDrawable getStatedButtonBackground(String stateNormal, String statePressed, String stateDisabled, String stateSelected) {
-        // The order in which the states are being added is very important!
-        // See http://developer.android.com/guide/topics/resources/drawable-resource.html#StateList for more info
-
-        StateListDrawable buttonStates = new StateListDrawable();
-        Drawable imageDisabled = MBResourceService.getInstance().getImageByID(stateDisabled);
-        Drawable imageSelected = MBResourceService.getInstance().getImageByID(stateSelected);
-        Drawable imageNormal = MBResourceService.getInstance().getImageByID(stateNormal);
-        Drawable imagePressed = MBResourceService.getInstance().getImageByID(statePressed);
-
-        if (stateSelected != null)
-            buttonStates.addState(new int[]{android.R.attr.state_selected}, imageSelected);
-        if (statePressed != null)
-            buttonStates.addState(new int[]{android.R.attr.state_pressed}, imagePressed);
-        if (stateDisabled != null)
-            buttonStates.addState(new int[]{-android.R.attr.state_enabled}, imageDisabled);
-        if (stateNormal != null)
-            buttonStates.addState(new int[]{android.R.attr.state_enabled}, imageNormal);
-
-        return buttonStates;
-    }
-
-    protected StateListDrawable getStatedEditTextBackground(String stateNormal, String stateActive, String stateDisabled) {
-        StateListDrawable buttonStates = new StateListDrawable();
-        Drawable imageNormal = MBResourceService.getInstance().getImageByID(stateNormal);
-        Drawable imageActive = MBResourceService.getInstance().getImageByID(stateActive);
-        Drawable imageDisabled = MBResourceService.getInstance().getImageByID(stateDisabled);
-
-        if (stateActive != null)
-            buttonStates.addState(new int[]{android.R.attr.state_focused}, imageActive);
-        if (stateNormal != null)
-            buttonStates.addState(new int[]{android.R.attr.state_enabled}, imageNormal);
-        if (stateDisabled != null)
-            buttonStates.addState(new int[]{-android.R.attr.state_enabled}, imageDisabled);
-
-        return buttonStates;
-    }
-
-    public void styleImageButtonWithName(ImageButton view, String style) {
-    }
-
     public void styleInputfieldBackgroundWithName(EditText inputField, String style) {
-    }
-
-    public void styleEditableMatrixModeButton(Button view) {
     }
 
     public void styleMatrixHeaderTitle(TextView view) {
     }
 
     public void styleMatrixRowTitle(TextView view, MBField field) {
-    }
-
-    public void styleTabBarController(View tabBarController) {
     }
 
     public void styleSectionHeader(LinearLayout header) {
@@ -221,37 +159,12 @@ public class MBStyleHandler {
     public void styleSectionHeaderText(TextView title, MBPanel sectionPanel) {
     }
 
-    /**
-     * Style the fore and- background color of the view, based on the given delta
-     *
-     * @param view
-     * @param value foreground style based on positive, negative or zero value
-     * @param delta background style based on positive, negative or zero difference
-     */
-    public void styleChangedValue(TextView view, double value, double delta) {
-        if (delta < 0) {
-            view.setTextColor(Color.WHITE);
-            view.setBackgroundColor(Color.RED);
-        } else if (delta > 0) {
-            view.setTextColor(Color.WHITE);
-            view.setBackgroundColor(Color.GREEN);
-        }
-    }
-
     public void styleSectionContainer(LinearLayout view, boolean hasTitle) {
-        view.setPadding(0, ScreenConstants.SEVEN, 0, 0);
+        view.setPadding(0, MBScreenConstants.SEVEN, 0, 0);
     }
 
     public void styleSectionContainer(LinearLayout view, boolean hasTitle, MBPanel panel) {
-        view.setPadding(0, ScreenConstants.SEVEN, 0, 0);
-    }
-
-    public Object sizeForTextField(MBField field, Object bounds) {
-        return null;
-    }
-
-    public Object sizeForLabel(MBField field, Object bounds) {
-        return null;
+        view.setPadding(0, MBScreenConstants.SEVEN, 0, 0);
     }
 
     // The following methods are listed public so you can override them in a
@@ -270,13 +183,13 @@ public class MBStyleHandler {
     public void alignLabel(TextView label, String alignment) {
         if (alignment != null) {
             // Align the label
-            if (alignment.equals(Constants.C_ALIGNMENT_LEFT)) {
+            if (alignment.equals(MBConstants.C_ALIGNMENT_LEFT)) {
                 label.setGravity(Gravity.START);
-            } else if (alignment.equals(Constants.C_ALIGNMENT_CENTER)) {
+            } else if (alignment.equals(MBConstants.C_ALIGNMENT_CENTER)) {
                 label.setGravity(Gravity.CENTER_HORIZONTAL);
-            } else if (alignment.equals(Constants.C_ALIGNMENT_CENTER_VERTICAL)) {
+            } else if (alignment.equals(MBConstants.C_ALIGNMENT_CENTER_VERTICAL)) {
                 label.setGravity(Gravity.CENTER_VERTICAL);
-            } else if (alignment.equals(Constants.C_ALIGNMENT_RIGHT)) {
+            } else if (alignment.equals(MBConstants.C_ALIGNMENT_RIGHT)) {
                 label.setGravity(Gravity.END);
             }
         }
@@ -310,7 +223,7 @@ public class MBStyleHandler {
     }
 
     public void alignMatrixRow(MBPanel panel, LinearLayout row) {
-        List<MBField> fields = panel.getChildrenOfKindWithType(MBField.class, Constants.C_FIELD_MATRIXCELL, Constants.C_FIELD_MATRIXCELL);
+        List<MBField> fields = panel.getChildrenOfKindWithType(MBField.class, MBConstants.C_FIELD_MATRIXCELL, MBConstants.C_FIELD_MATRIXCELL);
         for (int idx = 0; idx < fields.size(); ++idx) {
             MBField field = fields.get(idx);
             if (idx > 0 && field.getAlignment() == null && field.getAttachedView() instanceof TextView)
@@ -335,12 +248,6 @@ public class MBStyleHandler {
         }
     }
 
-    public void styleMatrixHeaderRow(ViewGroup headerRow) {
-    }
-
-    public void styleMatrixHeaderTitleRow(ViewGroup headerRow) {
-    }
-
     public void styleMatrixHeaderTitleRow(MBPanel panel, ViewGroup headerRow) {
     }
 
@@ -353,39 +260,25 @@ public class MBStyleHandler {
     public void styleRow(RelativeLayout rowPanel, String style) {
     }
 
-    public void styleRow(ViewGroup rowPanel, String style) {
-    }
-
     public void styleRowButton(View button, RelativeLayout.LayoutParams params) {
     }
 
     public void styleClickableRow(RelativeLayout view, String style) {
-        view.setMinimumHeight(ScreenConstants.FIFTY);
+        view.setMinimumHeight(MBScreenConstants.FIFTY);
     }
 
     public void styleFragmentPadding(View fragment, int whichFragment) {
     }
 
     public void styleMatrixContainer(MBPanel matrixPanel, LinearLayout view) {
-        view.setPadding(0, ScreenConstants.SEVEN, 0, 0);
+        view.setPadding(0, MBScreenConstants.SEVEN, 0, 0);
     }
 
     public void styleMainScrollbarView(MBPage page, View scrollableView) {
         scrollableView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
     }
 
-    public void styleMainScrollbarView(MBPage page, View scrollableView, String name) {
-
-    }
-
-    public void styleSegmentedControl(View segmentedControl) {
-        segmentedControl.setPadding(0, ScreenConstants.SEVEN, 0, 0);
-    }
-
     public void styleSegmentedItem(MBSegmentedItem item) {
-    }
-
-    public void styleDrawablePageIndicatorBar(MBDrawablePageIndicatorBar indicatorBar) {
     }
 
     public Drawable getDrawablePageIndicatorDrawable() {
@@ -395,50 +288,13 @@ public class MBStyleHandler {
     public void styleDrawablePageIndicatorBarActiveIndicatorView(View view) {
     }
 
-    public void styleDrawablePageIndicatorBarInactiveIndicatorView(View view) {
-    }
-
-    public void styleCirclePageIndicatorBar(MBCirclePageIndicatorBar indicatorBar) {
-    }
-
-    public void styleDiffableValue(TextView label, double delta) {
-    }
-
-    public void styleSelectedItem(View view) {
-    }
-
     public void styleCheckBox(CheckBox checkBox) {
     }
 
     public void styleSpinner(Spinner spinner) {
     }
 
-    public void styleTabDropdownItem(View view) {
-    }
-
-    public void styleDropdownItem(View view) {
-    }
-
     public void styleCloseButtonDialog(Button button) {
-    }
-
-    // Style methods for tablet
-    public void styleHomeIcon(View homeIcon) {
-    }
-
-    @SuppressLint("NewApi")
-    public void styleActionBar(ActionBar actionBar) {
-    }
-
-    public void styleTab(MBTab mbTab) {
-
-    }
-
-    public void styleTabText(TextView view) {
-        view.setTextSize(18);
-    }
-
-    public void styleTabSpinnerText(TextView view) {
     }
 
     public void styleWebView(WebView webView, MBField field) {
@@ -450,12 +306,12 @@ public class MBStyleHandler {
 
             String alignment = field.getAlignment();
             if (StringUtil.isNotBlank(alignment)) {
-                if (alignment.equals(Constants.C_ALIGNMENT_RIGHT)) {
+                if (alignment.equals(MBConstants.C_ALIGNMENT_RIGHT)) {
                     childParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    childParams.setMargins(0, 0, ScreenConstants.FIVE, ScreenConstants.FIVE);
-                } else if (alignment.equals(Constants.C_ALIGNMENT_LEFT)) {
+                    childParams.setMargins(0, 0, MBScreenConstants.FIVE, MBScreenConstants.FIVE);
+                } else if (alignment.equals(MBConstants.C_ALIGNMENT_LEFT)) {
                     childParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    childParams.setMargins(ScreenConstants.FIVE, 0, 0, ScreenConstants.FIVE);
+                    childParams.setMargins(MBScreenConstants.FIVE, 0, 0, MBScreenConstants.FIVE);
                 } else {
                     childParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 }
@@ -466,12 +322,6 @@ public class MBStyleHandler {
             childParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         }
 
-    }
-
-    public void styleSearchPlate(LinearLayout searchLayout) {
-    }
-
-    public void styleSearchSubmitArea(LinearLayout submitArea) {
     }
 
     public void styleHint(EditText inputField) {
@@ -490,7 +340,7 @@ public class MBStyleHandler {
 
     public void styleListPanel(LinearLayout view, String style, boolean notDirectChildOfSection) {
         if (notDirectChildOfSection) {
-            view.setPadding(0, ScreenConstants.SEVEN, 0, ScreenConstants.SEVEN);
+            view.setPadding(0, MBScreenConstants.SEVEN, 0, MBScreenConstants.SEVEN);
         }
 
     }
@@ -558,15 +408,6 @@ public class MBStyleHandler {
     }
 
     public void styleDialogCloseButtonWrapper(View wrapper) {
-    }
-
-    public void styleDialogHeader(MBHeader dialogHeader) {
-    }
-
-    public void styleActionBarHeader(MBHeader header) {
-    }
-
-    public void styleActionBarHeaderTitle(TextView titleView) {
     }
 
 }

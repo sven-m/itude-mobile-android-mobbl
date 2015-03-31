@@ -33,7 +33,7 @@ public class SplitDialogBuilder extends MBDialogContentBuilder.Builder
       fragmentContainer.setId(sortedDialogIds.get(i));
 
       RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-          ScreenUtil.getWidthPixelsForPercentage(MBApplicationController.getInstance().getBaseContext(), LEFT_FRAGMENT_WIDTH_PERCENTAGE),
+              ScreenUtil.getWidthPixelsForPercentage(MBApplicationController.getInstance().getBaseContext(), LEFT_FRAGMENT_WIDTH_PERCENTAGE),
           RelativeLayout.LayoutParams.MATCH_PARENT);
 
       // position fragment containers next to each other

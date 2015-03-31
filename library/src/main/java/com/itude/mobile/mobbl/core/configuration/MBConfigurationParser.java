@@ -15,20 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.configuration;
 
-import java.io.ByteArrayInputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.exceptions.MBUnknownElementException;
@@ -44,11 +30,24 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBFileNotFoundException;
 import com.itude.mobile.mobbl.core.configuration.resources.MBItemDefinition;
 import com.itude.mobile.mobbl.core.configuration.resources.MBResourceDefinition;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import java.io.ByteArrayInputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 /**
 * Parsers the configuration file
@@ -87,7 +86,7 @@ public abstract class MBConfigurationParser extends DefaultHandler
     }
     catch (Exception e)
     {
-      MBLog.e(Constants.APPLICATION_NAME, "Unable to parse document " + documentName, e);
+      MBLog.e(MBConstants.APPLICATION_NAME, "Unable to parse document " + documentName, e);
 
       /*
        * CH: In some magical way, the exception itself can be null. Well it can't, but it sometimes is.
@@ -96,7 +95,7 @@ public abstract class MBConfigurationParser extends DefaultHandler
        */
       if (e == null)
       {
-        MBLog.e(Constants.APPLICATION_NAME, "Maybe the config is not loaded yet. (Hint: MBMetadataService)");
+        MBLog.e(MBConstants.APPLICATION_NAME, "Maybe the config is not loaded yet. (Hint: MBMetadataService)");
       }
     }
 
@@ -121,11 +120,11 @@ public abstract class MBConfigurationParser extends DefaultHandler
       }
       catch (InstantiationException e)
       {
-        MBLog.e(Constants.APPLICATION_NAME, "Unable to create new parser for element Include", e);
+        MBLog.e(MBConstants.APPLICATION_NAME, "Unable to create new parser for element Include", e);
       }
       catch (IllegalAccessException e)
       {
-        MBLog.e(Constants.APPLICATION_NAME, "Unable to create new parser for element Include", e);
+        MBLog.e(MBConstants.APPLICATION_NAME, "Unable to create new parser for element Include", e);
       }
 
       byte[] data = DataUtil.getInstance().readFromAssetOrFile(name);
@@ -176,7 +175,7 @@ public abstract class MBConfigurationParser extends DefaultHandler
       nextKey = keys.next();
       if (!valids.contains(nextKey))
       {
-        MBLog.w(Constants.APPLICATION_NAME, "****WARNING Invalid attribute " + nextKey + " for element " + elementName + " in document "
+        MBLog.w(MBConstants.APPLICATION_NAME, "****WARNING Invalid attribute " + nextKey + " for element " + elementName + " in document "
                                             + _documentName);
         result = false;
       }
@@ -246,12 +245,6 @@ public abstract class MBConfigurationParser extends DefaultHandler
   }
 
   public void notifyProcessed(MBDialogDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBToolDefinition definition)
   {
     getStack().peek().addChildElement(definition);
     getStack().push(definition);

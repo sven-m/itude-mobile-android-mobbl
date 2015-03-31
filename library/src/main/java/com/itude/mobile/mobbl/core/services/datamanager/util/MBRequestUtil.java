@@ -17,7 +17,7 @@ package com.itude.mobile.mobbl.core.services.datamanager.util;
 
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.model.MBElement;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 public final class MBRequestUtil
 {
@@ -44,7 +44,7 @@ public final class MBRequestUtil
    */
   public static void setRequestParameter(String rootElement, boolean value, String key, MBDocument doc)
   {
-    setRequestParameter(rootElement, value ? Constants.C_TRUE : Constants.C_FALSE, key, doc);
+    setRequestParameter(rootElement, value ? MBConstants.C_TRUE : MBConstants.C_FALSE, key, doc);
   }
 
   /**

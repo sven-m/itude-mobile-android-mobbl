@@ -41,7 +41,7 @@ import com.itude.mobile.mobbl.core.model.exceptions.MBIndexOutOfBoundsException;
 import com.itude.mobile.mobbl.core.model.exceptions.MBNoIndexSpecifiedException;
 import com.itude.mobile.mobbl.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl.core.services.MBScriptService;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.MBDynamicAttributeComparator;
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
 import com.itude.mobile.mobbl.core.util.MBPathUtil;
@@ -361,7 +361,7 @@ public class MBElementContainer implements Parcelable
 
   public void setValue(boolean value, String path)
   {
-    setValue(value ? Constants.C_TRUE : Constants.C_FALSE, path);
+    setValue(value ? MBConstants.C_TRUE : MBConstants.C_FALSE, path);
   }
 
   public void setValue(String value, String path)
@@ -707,7 +707,7 @@ public class MBElementContainer implements Parcelable
   @Override
   public int describeContents()
   {
-    return Constants.C_PARCELABLE_TYPE_ELEMENT_CONTAINER;
+    return MBConstants.C_PARCELABLE_TYPE_ELEMENT_CONTAINER;
   }
 
   @Override

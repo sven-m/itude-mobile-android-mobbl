@@ -15,12 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.controller;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Handler;
@@ -39,6 +33,12 @@ import com.itude.mobile.mobbl.core.controller.util.MBBasicViewController;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.util.threads.MBThread;
 import com.itude.mobile.mobbl.core.util.threads.exception.MBInterruptedException;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Manager to handle all dialog related functionality

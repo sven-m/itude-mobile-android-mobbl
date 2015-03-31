@@ -21,7 +21,7 @@ import android.os.Parcelable;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 /**
  * {@link MBDefinition} Class for an attribute
@@ -125,7 +125,7 @@ public class MBAttributeDefinition extends MBDefinition
   @Override
   public int describeContents()
   {
-    return Constants.C_PARCELABLE_TYPE_ATTRIBUTE_DEFINITION;
+    return MBConstants.C_PARCELABLE_TYPE_ATTRIBUTE_DEFINITION;
   }
 
   @Override

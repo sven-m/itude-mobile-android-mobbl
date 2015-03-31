@@ -22,7 +22,7 @@ import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.controller.MBOutcome;
 import com.itude.mobile.mobbl.core.controller.MBViewManager;
 import com.itude.mobile.mobbl.core.model.MBDocument;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBAlert;
 import com.itude.mobile.mobbl.core.view.MBComponent;
 import com.itude.mobile.mobbl.core.view.MBField;
@@ -47,12 +47,12 @@ public class MBAlertDialogBuilder
       {
         MBField field = (MBField) child;
 
-        if (Constants.C_FIELD_TEXT.equals(field.getType()))
+        if (MBConstants.C_FIELD_TEXT.equals(field.getType()))
         {
           builder.setMessage(field.getValuesForDisplay());
         }
 
-        else if (Constants.C_FIELD_BUTTON.equals(field.getType()))
+        else if (MBConstants.C_FIELD_BUTTON.equals(field.getType()))
         {
           String text = field.getLabel();
           if (C_FIELD_BUTTON_STYLE_NEGATIVE.equals(field.getStyle()))

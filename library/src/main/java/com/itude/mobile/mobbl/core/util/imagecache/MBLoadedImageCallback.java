@@ -13,25 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.itude.mobile.mobbl.core.view.components.tabbar;
+package com.itude.mobile.mobbl.core.util.imagecache;
 
-import java.util.EnumSet;
+import android.graphics.Bitmap;
 
-import android.support.v7.app.ActionBar;
-import android.view.Menu;
-
-import com.itude.mobile.mobbl.core.controller.MBViewManager.MBActionBarInvalidationOption;
-
-public interface MBActionBarBuilder
+public interface MBLoadedImageCallback
 {
-  public void fillActionBar(ActionBar actionBar, Menu menu);
-
-  public void showProgressIndicatorInTool();
-
-  public void hideProgressIndicatorInTool();
-
-  public void invalidateActionBar(EnumSet<MBActionBarInvalidationOption> flags);
-
-  public void selectTabWithoutReselection(String dialogName);
-
+  public void doneLoading(Bitmap bitmap);
 }

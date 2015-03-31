@@ -27,7 +27,7 @@ import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.model.MBDocumentFactory;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.services.datamanager.MBDataHandlerBase;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 /**
  * Retrieves and stores MBDocument instances in memory only
@@ -57,7 +57,7 @@ public class MBMemoryDataHandler extends MBDataHandlerBase
       }
       catch (DataParsingException e)
       {
-        MBLog.d(Constants.APPLICATION_NAME, "Unable to find file " + fileName + " in assets");
+        MBLog.d(MBConstants.APPLICATION_NAME, "Unable to find file " + fileName + " in assets");
       }
       MBDocumentDefinition docDef = MBMetadataService.getInstance().getDefinitionForDocumentName(documentName);
       return MBDocumentFactory.getInstance().getDocumentWithData(data, MBDocumentFactory.PARSER_XML, docDef);

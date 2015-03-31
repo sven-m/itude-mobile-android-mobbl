@@ -29,7 +29,7 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl.core.controller.exceptions.MBNoOutcomesDefinedException;
 import com.itude.mobile.mobbl.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBOutcomeListenerProtocol;
 
 /**
@@ -141,7 +141,7 @@ public class MBOutcomeRunner
       if (outcome.getPersist())
       {
         if (_outcome.getDocument() == null) Log
-            .w(Constants.APPLICATION_NAME,
+            .w(MBConstants.APPLICATION_NAME,
                "MBApplicationController.doHandleOutcome: origin="
                    + _outcome.getOrigin()
                    + "and name="
@@ -160,7 +160,7 @@ public class MBOutcomeRunner
 
   private MBOutcomeTaskManager setupTaskManager(MBOutcome outcome)
   {
-    MBLog.d(Constants.APPLICATION_NAME, "MBOutcomeRunner.setupTaskManager: " + outcome);
+    MBLog.d(MBConstants.APPLICATION_NAME, "MBOutcomeRunner.setupTaskManager: " + outcome);
 
     MBOutcomeTaskManager manager = new MBOutcomeTaskManager(outcome);
     MBMetadataService metadataService = MBMetadataService.getInstance();

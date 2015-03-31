@@ -20,7 +20,7 @@ import android.view.View;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBField;
 
 public class TextFieldBuilder extends MBBaseFieldBuilder
@@ -38,19 +38,19 @@ public class TextFieldBuilder extends MBBaseFieldBuilder
 
     if (field.getAlignment() != null)
     {
-      if (field.getAlignment().equals(Constants.C_ALIGNMENT_RIGHT))
+      if (field.getAlignment().equals(MBConstants.C_ALIGNMENT_RIGHT))
       {
         returnView.setGravity(Gravity.END);
       }
-      else if (field.getAlignment().equals(Constants.C_ALIGNMENT_LEFT))
+      else if (field.getAlignment().equals(MBConstants.C_ALIGNMENT_LEFT))
       {
         returnView.setGravity(Gravity.START);
       }
-      else if (field.getAlignment().equals(Constants.C_ALIGNMENT_CENTER_VERTICAL))
+      else if (field.getAlignment().equals(MBConstants.C_ALIGNMENT_CENTER_VERTICAL))
       {
         returnView.setGravity(Gravity.CENTER_VERTICAL);
       }
-      else if (field.getAlignment().equals(Constants.C_ALIGNMENT_CENTER))
+      else if (field.getAlignment().equals(MBConstants.C_ALIGNMENT_CENTER))
       {
         returnView.setGravity(Gravity.CENTER);
       }

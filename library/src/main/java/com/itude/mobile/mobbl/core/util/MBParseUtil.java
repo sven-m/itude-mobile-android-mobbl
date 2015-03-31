@@ -36,7 +36,7 @@ public final class MBParseUtil
     }
     catch (NumberFormatException e)
     {
-      MBLog.d(Constants.APPLICATION_NAME, "Could not convert " + stringToConvert + " to float");
+      MBLog.d(MBConstants.APPLICATION_NAME, "Could not convert " + stringToConvert + " to float");
     }
 
     return returnValue;
@@ -62,7 +62,7 @@ public final class MBParseUtil
     }
     catch (NumberFormatException e)
     {
-      MBLog.w(Constants.APPLICATION_NAME, "Could not convert " + stringToConvert + " to double");
+      MBLog.w(MBConstants.APPLICATION_NAME, "Could not convert " + stringToConvert + " to double");
     }
 
     return returnValue;
@@ -88,9 +88,9 @@ public final class MBParseUtil
   {
     if (StringUtil.isEmpty(bool)) return null;
     // you should only use C_TRUE; the rest is there for legacy purposes
-    if (bool.equalsIgnoreCase(Constants.C_TRUE) || bool.equals("1") || bool.equals("1.0") || bool.equalsIgnoreCase("true")
+    if (bool.equalsIgnoreCase(MBConstants.C_TRUE) || bool.equals("1") || bool.equals("1.0") || bool.equalsIgnoreCase("true")
         || bool.equalsIgnoreCase("yes")) return true;
-    else if (bool.equalsIgnoreCase(Constants.C_FALSE) || bool.equals("0") || bool.equals("0.0") || bool.equalsIgnoreCase("false")
+    else if (bool.equalsIgnoreCase(MBConstants.C_FALSE) || bool.equals("0") || bool.equals("0.0") || bool.equalsIgnoreCase("false")
              || bool.equalsIgnoreCase("no")) return false;
     else return null;
 

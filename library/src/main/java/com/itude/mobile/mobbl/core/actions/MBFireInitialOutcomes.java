@@ -28,7 +28,7 @@ import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.model.MBElement;
 import com.itude.mobile.mobbl.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 /**
  * This class is responsible for handling outcomes in the initial outcomes document.
@@ -108,7 +108,7 @@ public class MBFireInitialOutcomes implements MBAction
           }
           else
           {
-            oc.setDisplayMode(Constants.C_DISPLAY_MODE_BACKGROUND);
+            oc.setDisplayMode(MBConstants.C_DISPLAY_MODE_BACKGROUND);
             MBLog.d(this.getClass().getSimpleName(), "Firing in background: " + oc);
             MBApplicationController.getInstance().handleOutcome(oc);
 

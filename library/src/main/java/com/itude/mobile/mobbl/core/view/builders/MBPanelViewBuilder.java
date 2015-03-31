@@ -17,7 +17,7 @@ package com.itude.mobile.mobbl.core.view.builders;
 
 import android.view.ViewGroup;
 
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBPanel;
 import com.itude.mobile.mobbl.core.view.builders.panel.ListPanelBuilder;
 import com.itude.mobile.mobbl.core.view.builders.panel.MatrixHeaderBuilder;
@@ -37,14 +37,14 @@ public class MBPanelViewBuilder extends MBViewBuilder
   private void registerBuilders()
   {
     MBBuilderRegistry<MBPanel, Builder, String> builders = new MBBuilderRegistry<MBPanel, MBPanelViewBuilder.Builder, String>();
-    builders.registerBuilder(Constants.C_PLAIN, new PlainPanelBuilder());
-    builders.registerBuilder(Constants.C_LIST, new ListPanelBuilder());
-    builders.registerBuilder(Constants.C_SECTION, new SectionPanelBuilder());
-    builders.registerBuilder(Constants.C_ROW, new RowPanelBuilder());
-    builders.registerBuilder(Constants.C_MATRIX, new MatrixPanelBuilder());
-    builders.registerBuilder(Constants.C_MATRIXHEADER, new MatrixHeaderBuilder());
-    builders.registerBuilder(Constants.C_MATRIXROW, new MatrixRowPanelBuilder());
-    builders.registerBuilder(Constants.C_SEGMENTEDCONTROL, new SegmentedControlPanelBuilder());
+    builders.registerBuilder(MBConstants.C_PLAIN, new PlainPanelBuilder());
+    builders.registerBuilder(MBConstants.C_LIST, new ListPanelBuilder());
+    builders.registerBuilder(MBConstants.C_SECTION, new SectionPanelBuilder());
+    builders.registerBuilder(MBConstants.C_ROW, new RowPanelBuilder());
+    builders.registerBuilder(MBConstants.C_MATRIX, new MatrixPanelBuilder());
+    builders.registerBuilder(MBConstants.C_MATRIXHEADER, new MatrixHeaderBuilder());
+    builders.registerBuilder(MBConstants.C_MATRIXROW, new MatrixRowPanelBuilder());
+    builders.registerBuilder(MBConstants.C_SEGMENTEDCONTROL, new SegmentedControlPanelBuilder());
     builders.registerBuilder(null, new PlainPanelBuilder());
     _builders = builders;
   }

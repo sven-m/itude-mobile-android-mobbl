@@ -23,7 +23,7 @@ import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.services.MBResourceService;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBField;
 
 public class ImageButtonFieldBuilder extends MBBaseFieldBuilder
@@ -35,7 +35,7 @@ public class ImageButtonFieldBuilder extends MBBaseFieldBuilder
     String source = field.getSource();
     if (StringUtil.isBlank(source))
     {
-      MBLog.w(Constants.APPLICATION_NAME, "Source is null or empty for field");
+      MBLog.w(MBConstants.APPLICATION_NAME, "Source is null or empty for field");
       return null;
     }
 

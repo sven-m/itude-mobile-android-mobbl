@@ -24,7 +24,7 @@ import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.MBConditionalDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPageStackDefinitionException;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 /**
  * {@link MBConditionalDefinition} Class for a dialog
@@ -54,7 +54,7 @@ public class MBDialogDefinition extends MBConditionalDefinition
   {
     if (_children.contains(pageStackDef))
     {
-      MBLog.w(Constants.APPLICATION_NAME, "Group contains duplicate definitions for pagestack " + pageStackDef.getName() + " in dialog "
+      MBLog.w(MBConstants.APPLICATION_NAME, "Group contains duplicate definitions for pagestack " + pageStackDef.getName() + " in dialog "
                                           + getName());
     }
 
@@ -106,7 +106,7 @@ public class MBDialogDefinition extends MBConditionalDefinition
       // then override children to also be invalid
       for (MBPageStackDefinition child : getChildren())
       {
-        child.setPreCondition(Constants.C_FALSE);
+        child.setPreCondition(MBConstants.C_FALSE);
       }
     }
 
@@ -195,12 +195,12 @@ public class MBDialogDefinition extends MBConditionalDefinition
 
   public boolean isShowAsTab()
   {
-    return Constants.C_SHOW_AS_TAB.equals(_showAs);
+    return MBConstants.C_SHOW_AS_TAB.equals(_showAs);
   }
 
   public boolean isShowAsDocument()
   {
-    return Constants.C_SHOW_AS_DOCUMENT.equals(_showAs);
+    return MBConstants.C_SHOW_AS_DOCUMENT.equals(_showAs);
   }
 
   public void setDomain(String domain)

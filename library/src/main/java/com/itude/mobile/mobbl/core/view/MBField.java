@@ -44,7 +44,7 @@ import com.itude.mobile.mobbl.core.controller.MBViewManager;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl.core.view.builders.datatypes.MBDataTypeFormatterFactory;
@@ -99,13 +99,13 @@ public class MBField extends MBComponent
         }
         else
         {
-          MBLog.w(Constants.APPLICATION_NAME, fieldDef.getWidth() + " could not be parsed als int");
+          MBLog.w(MBConstants.APPLICATION_NAME, fieldDef.getWidth() + " could not be parsed als int");
         }
 
       }
       catch (NumberFormatException e)
       {
-        MBLog.d(Constants.APPLICATION_NAME, fieldDef.toString(), e);
+        MBLog.d(MBConstants.APPLICATION_NAME, fieldDef.toString(), e);
       }
     }
     if (fieldDef.getHeight() != null)
@@ -116,7 +116,7 @@ public class MBField extends MBComponent
       }
       catch (NumberFormatException e)
       {
-        MBLog.d(Constants.APPLICATION_NAME, fieldDef.toString(), e);
+        MBLog.d(MBConstants.APPLICATION_NAME, fieldDef.toString(), e);
       }
     }
 
@@ -337,7 +337,7 @@ public class MBField extends MBComponent
 
   public void setValue(boolean value)
   {
-    setValue(value ? Constants.C_TRUE : Constants.C_FALSE);
+    setValue(value ? MBConstants.C_TRUE : MBConstants.C_FALSE);
   }
 
   public void setValue(String value)
@@ -418,7 +418,7 @@ public class MBField extends MBComponent
       catch (MBInvalidPathException e)
       {
         // Button outcomes do not map to an attribute
-        MBLog.d(Constants.APPLICATION_NAME, "MBField.getAttributeDefinition() with path=" + path
+        MBLog.d(MBConstants.APPLICATION_NAME, "MBField.getAttributeDefinition() with path=" + path
                                             + " does not map to an attribute. Probably an outcomePath for a Button.");
       }
     }
@@ -521,7 +521,7 @@ public class MBField extends MBComponent
     {
       // dead code?
       appendToMe.append("<MBField errorInDefinition='" + e.getClass().getSimpleName() + ", " + e.getCause() + "'/>\n");
-      MBLog.d(Constants.APPLICATION_NAME, e.getMessage(), e);
+      MBLog.d(MBConstants.APPLICATION_NAME, e.getMessage(), e);
     }
 
     return appendToMe;
@@ -609,8 +609,8 @@ public class MBField extends MBComponent
     String textFieldValue = s.toString();
 
     // Representation to the User can be in Dutch (comma for decimal seperator). We need to check this before we store the value
-    if (MBLocalizationService.getInstance().getLocaleCode().equals(Constants.C_LOCALE_CODE_DUTCH)
-        || MBLocalizationService.getInstance().getLocaleCode().equals(Constants.C_LOCALE_CODE_ITALIAN))
+    if (MBLocalizationService.getInstance().getLocaleCode().equals(MBConstants.C_LOCALE_CODE_DUTCH)
+        || MBLocalizationService.getInstance().getLocaleCode().equals(MBConstants.C_LOCALE_CODE_ITALIAN))
     {
       if (getDataType().equals("double") || getDataType().equals("float"))
       {

@@ -49,7 +49,7 @@ public class MBCacheManager
   @SuppressWarnings("unchecked")
   protected void init()
   {
-    MBLog.d(Constants.APPLICATION_NAME, "init CacheManager");
+    MBLog.d(MBConstants.APPLICATION_NAME, "init CacheManager");
 
     /* 
      * AD: When writing our ttls to a file we should also read them. 
@@ -215,7 +215,7 @@ public class MBCacheManager
 
   private void doExpireDataForKey(String key)
   {
-    MBLog.d(Constants.APPLICATION_NAME, "removing " + key + "from cache");
+    MBLog.d(MBConstants.APPLICATION_NAME, "removing " + key + "from cache");
     deleteCachedFile(key);
     flushRegistry();
   }
@@ -252,7 +252,7 @@ public class MBCacheManager
     byte[] data = DataUtil.getInstance().decompress(zipped);
     if (data == null)
     {
-      MBLog.e(Constants.APPLICATION_NAME, "Error decompressing cached document");
+      MBLog.e(MBConstants.APPLICATION_NAME, "Error decompressing cached document");
       return null;
     }
 
@@ -269,14 +269,14 @@ public class MBCacheManager
     try
     {
       StringBuffer sb = new StringBuffer(4096);
-      byte[] data = document.asXmlWithLevel(sb, 0, true).toString().getBytes(Constants.C_ENCODING);
+      byte[] data = document.asXmlWithLevel(sb, 0, true).toString().getBytes(MBConstants.C_ENCODING);
       byte[] zipped = DataUtil.getInstance().compress(data);
 
       doSetValue(zipped, key, ttl);
     }
     catch (UnsupportedEncodingException e)
     {
-      MBLog.w(Constants.APPLICATION_NAME, e);
+      MBLog.w(MBConstants.APPLICATION_NAME, e);
     }
   }
 

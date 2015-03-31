@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.MissingFormatArgumentException;
 
 import com.itude.mobile.android.util.log.MBLog;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.MBProperties;
 import com.itude.mobile.mobbl.core.view.MBBundle;
 
@@ -85,7 +85,7 @@ public class MBLocalizationService
 
     if (text == null)
     {
-      MBLog.w(Constants.APPLICATION_NAME, "No translation defined for key " + key + " using languageCode=" + languageCode);
+      MBLog.w(MBConstants.APPLICATION_NAME, "No translation defined for key " + key + " using languageCode=" + languageCode);
       text = key;
     }
 
@@ -120,7 +120,7 @@ public class MBLocalizationService
     String text = dict.getText(key);
     if (text == null)
     {
-      MBLog.w(Constants.APPLICATION_NAME, "Warning: no translation defined for key '" + key + "' using languageCode="
+      MBLog.w(MBConstants.APPLICATION_NAME, "Warning: no translation defined for key '" + key + "' using languageCode="
                                           + getCurrentLanguage());
       // add the missing translation to prevent future warnings
       dict.putText(key, key);
@@ -155,7 +155,7 @@ public class MBLocalizationService
     }
     catch (MissingFormatArgumentException e)
     {
-      MBLog.w(Constants.APPLICATION_NAME, e);
+      MBLog.w(MBConstants.APPLICATION_NAME, e);
       result = text;
     }
 

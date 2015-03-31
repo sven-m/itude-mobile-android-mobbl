@@ -31,7 +31,7 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBAttributeDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl.core.model.exceptions.MBCannotAssignException;
 import com.itude.mobile.mobbl.core.model.exceptions.MBInvalidAttributeNameException;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.MBParseUtil;
 
 /**
@@ -94,7 +94,7 @@ public class MBElement extends MBElementContainer
    */
   public void setAttributeValue(boolean value, String attributeName)
   {
-    setAttributeValue(value ? Constants.C_TRUE : Constants.C_FALSE, attributeName, true);
+    setAttributeValue(value ? MBConstants.C_TRUE : MBConstants.C_FALSE, attributeName, true);
   }
 
   /**
@@ -432,7 +432,7 @@ public class MBElement extends MBElementContainer
   @Override
   public int describeContents()
   {
-    return Constants.C_PARCELABLE_TYPE_ELEMENT;
+    return MBConstants.C_PARCELABLE_TYPE_ELEMENT;
   }
 
   @Override

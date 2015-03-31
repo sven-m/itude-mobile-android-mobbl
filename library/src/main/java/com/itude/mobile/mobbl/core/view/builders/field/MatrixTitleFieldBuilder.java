@@ -18,7 +18,7 @@ package com.itude.mobile.mobbl.core.view.builders.field;
 import android.view.View;
 import android.widget.TextView;
 
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBField;
 import com.itude.mobile.mobbl.core.view.MBPanel;
 
@@ -34,11 +34,11 @@ public class MatrixTitleFieldBuilder extends MBBaseFieldBuilder
     TextView label = buildTextViewWithValue(value);
 
     // Decide which styling to apply
-    if (((MBPanel) field.getParent()).getType().equals(Constants.C_MATRIXHEADER))
+    if (((MBPanel) field.getParent()).getType().equals(MBConstants.C_MATRIXHEADER))
     {
       getStyleHandler().styleMatrixHeaderTitle(label);
     }
-    else if (((MBPanel) field.getParent()).getType().equals(Constants.C_MATRIXROW))
+    else if (((MBPanel) field.getParent()).getType().equals(MBConstants.C_MATRIXROW))
     {
       getStyleHandler().styleMatrixRowTitle(label, field);
     }

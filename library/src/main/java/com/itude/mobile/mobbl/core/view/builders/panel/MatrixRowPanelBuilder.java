@@ -28,8 +28,8 @@ import android.widget.RelativeLayout.LayoutParams;
 
 import com.itude.mobile.android.util.UniqueIntegerGenerator;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
-import com.itude.mobile.mobbl.core.util.Constants;
-import com.itude.mobile.mobbl.core.util.ScreenConstants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
+import com.itude.mobile.mobbl.core.util.MBScreenConstants;
 import com.itude.mobile.mobbl.core.view.MBComponent;
 import com.itude.mobile.mobbl.core.view.MBField;
 import com.itude.mobile.mobbl.core.view.MBPanel;
@@ -52,7 +52,7 @@ public class MatrixRowPanelBuilder extends MBBasePanelBuilder
     // the parent of all widgets in this row
     RelativeLayout rowPanel = new RelativeLayout(context);
     rowPanel.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-    rowPanel.setTag(Constants.C_MATRIXROW);
+    rowPanel.setTag(MBConstants.C_MATRIXROW);
 
     List<MBComponent> matrixRowLabels = new ArrayList<MBComponent>();
     List<MBField> matrixRowTitles = new ArrayList<MBField>();
@@ -93,11 +93,11 @@ public class MatrixRowPanelBuilder extends MBBasePanelBuilder
     }
     else if (matrixRowTitles.size() > 0 && matrixRowLabels.size() > 0)
     {
-      rowStyle = Constants.C_STYLE_DOUBLE_LINED_MATRIX_ROW;
+      rowStyle = MBConstants.C_STYLE_DOUBLE_LINED_MATRIX_ROW;
     }
     else
     {
-      rowStyle = Constants.C_STYLE_SINGLE_LINED_MATRIX_ROW;
+      rowStyle = MBConstants.C_STYLE_SINGLE_LINED_MATRIX_ROW;
     }
 
     styleHandler.styleMatrixRowPanel(panel, rowPanel, isClickable, rowStyle, buildState.getMatrixRow());
@@ -115,11 +115,11 @@ public class MatrixRowPanelBuilder extends MBBasePanelBuilder
         MBField field = (MBField) mbComponent;
         if (!field.isHidden())
         {
-          if (Constants.C_FIELD_MATRIXTITLE.equals(field.getType()))
+          if (MBConstants.C_FIELD_MATRIXTITLE.equals(field.getType()))
           {
             matrixRowTitles.add(field);
           }
-          else if (Constants.C_FIELD_MATRIXDESCRIPTION.equals(field.getType()))
+          else if (MBConstants.C_FIELD_MATRIXDESCRIPTION.equals(field.getType()))
           {
             matrixRowDescription.add(field);
           }
@@ -185,7 +185,7 @@ public class MatrixRowPanelBuilder extends MBBasePanelBuilder
       buildChildren(matrixRowTitles, rowPanel);
       // get the last child added to the rowpanel (this is our one and only label)
       View current = rowPanel.getChildAt(rowPanel.getChildCount() - 1);
-      current.setPadding(ScreenConstants.FOUR, ScreenConstants.TWO, ScreenConstants.FOUR, ScreenConstants.TWO);
+      current.setPadding(MBScreenConstants.FOUR, MBScreenConstants.TWO, MBScreenConstants.FOUR, MBScreenConstants.TWO);
 
       result = current;
 
