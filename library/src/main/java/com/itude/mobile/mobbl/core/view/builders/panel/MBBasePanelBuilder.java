@@ -18,6 +18,5 @@ package com.itude.mobile.mobbl.core.view.builders.panel;
 import com.itude.mobile.mobbl.core.view.builders.MBPanelViewBuilder.Builder;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilder;
 
-public abstract class MBBasePanelBuilder extends MBViewBuilder implements Builder
-{
+public abstract class MBBasePanelBuilder extends MBViewBuilder implements Builder {
 }

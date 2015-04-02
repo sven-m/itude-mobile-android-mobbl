@@ -18,36 +18,32 @@ package com.itude.mobile.mobbl.core.services.exceptions;
 import com.itude.mobile.mobbl.core.MBException;
 
 /**
- * {@link MBException} class used when a resource is not defined 
- *
+ * {@link MBException} class used when a resource is not defined
  */
-public class MBResourceNotDefinedException extends MBException
-{
+public class MBResourceNotDefinedException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = -5754123787762535939L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5754123787762535939L;
 
-  /**
-   * Constructor for MBResourceNotDefinedException.
-   * 
-   * @param msg exception message
-   */
-  public MBResourceNotDefinedException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBResourceNotDefinedException.
+     *
+     * @param msg exception message
+     */
+    public MBResourceNotDefinedException(String msg) {
+        super(msg);
+    }
 
-  /**
-   * Constructor for MBResourceNotDefinedException.
-   * 
-   * @param msg exception message
-   * @param throwable throwable {@link Throwable}
-   */
-  public MBResourceNotDefinedException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
+    /**
+     * Constructor for MBResourceNotDefinedException.
+     *
+     * @param msg       exception message
+     * @param throwable throwable {@link Throwable}
+     */
+    public MBResourceNotDefinedException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 
 }

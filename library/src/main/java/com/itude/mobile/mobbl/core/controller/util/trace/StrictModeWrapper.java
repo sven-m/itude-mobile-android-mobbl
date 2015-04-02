@@ -21,38 +21,29 @@ import android.os.StrictMode;
 
 /**
  * StricMode wrapper class
- *
  */
-public final class StrictModeWrapper
-{
+public final class StrictModeWrapper {
 
-  static
-  {
-    try
-    {
-      Class.forName("android.os.StrictMode", true, Thread.currentThread().getContextClassLoader());
+    static {
+        try {
+            Class.forName("android.os.StrictMode", true, Thread.currentThread().getContextClassLoader());
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
-    catch (Exception ex)
-    {
-      throw new RuntimeException(ex);
+
+    private StrictModeWrapper() {
     }
-  }
 
-  private StrictModeWrapper()
-  {
-  }
+    /**
+     * Check if StricMode is available
+     */
+    public static void checkAvailable() {
+    }
 
-  /**
-   * Check if StricMode is available
-   */
-  public static void checkAvailable()
-  {
-  }
-
-  @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-  public static void enableDefaults()
-  {
-    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
-    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
-  }
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    public static void enableDefaults() {
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
+    }
 }

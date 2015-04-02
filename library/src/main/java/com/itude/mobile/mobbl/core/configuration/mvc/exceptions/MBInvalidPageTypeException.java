@@ -19,35 +19,31 @@ import com.itude.mobile.mobbl.core.MBException;
 
 /**
  * {@link MBException} class used when the page type is invalid
- *
  */
-public class MBInvalidPageTypeException extends MBException
-{
+public class MBInvalidPageTypeException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = -7306721136666175447L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -7306721136666175447L;
 
-  /**
-   * Constructor for MBInvalidPageTypeException.
-   * 
-   * @param msg exception message
-   */
-  public MBInvalidPageTypeException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBInvalidPageTypeException.
+     *
+     * @param msg exception message
+     */
+    public MBInvalidPageTypeException(String msg) {
+        super(msg);
+    }
 
-  /**
-   * Constructor for MBInvalidPageTypeException.
-   * 
-   * @param msg exception message
-   * @param throwable throwable {@link Throwable}
-   */
-  public MBInvalidPageTypeException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
+    /**
+     * Constructor for MBInvalidPageTypeException.
+     *
+     * @param msg       exception message
+     * @param throwable throwable {@link Throwable}
+     */
+    public MBInvalidPageTypeException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 
 }

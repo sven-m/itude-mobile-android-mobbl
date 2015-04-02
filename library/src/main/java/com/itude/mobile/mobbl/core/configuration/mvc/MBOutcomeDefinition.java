@@ -20,136 +20,113 @@ import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 
 /**
  * {@link MBDefinition} Class for a outcome
- *
  */
-public class MBOutcomeDefinition extends MBDefinition
-{
-  private String  _origin;
-  private String  _action;
-  private String  _pageStack;
-  private String  _displayMode;
-  private String  _preCondition;
-  private boolean _persist;
-  private boolean _transferDocument;
-  private boolean _noBackgroundProcessing;
-  private String  _indicator;
+public class MBOutcomeDefinition extends MBDefinition {
+    private String _origin;
+    private String _action;
+    private String _pageStack;
+    private String _displayMode;
+    private String _preCondition;
+    private boolean _persist;
+    private boolean _transferDocument;
+    private boolean _noBackgroundProcessing;
+    private String _indicator;
 
-  @Override
-  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
-  {
+    @Override
+    public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level) {
 
-    return StringUtil.appendIndentString(appendToMe, level).append("<Outcome origin='").append(_origin).append("' name='")
-        .append(getName()).append("' action='").append(_action).append("' transferDocument='").append(_transferDocument)
-        .append("' persist='").append(_persist).append("' noBackgroundProcessing='").append(_noBackgroundProcessing).append("'")
-        .append(getAttributeAsXml("pageStack", _pageStack)).append(getAttributeAsXml("preCondition", _preCondition))
-        .append(getAttributeAsXml("displayMode", _displayMode)).append(getAttributeAsXml("indicator", _indicator)).append("/>\n");
-  }
+        return StringUtil.appendIndentString(appendToMe, level).append("<Outcome origin='").append(_origin).append("' name='")
+                .append(getName()).append("' action='").append(_action).append("' transferDocument='").append(_transferDocument)
+                .append("' persist='").append(_persist).append("' noBackgroundProcessing='").append(_noBackgroundProcessing).append("'")
+                .append(getAttributeAsXml("pageStack", _pageStack)).append(getAttributeAsXml("preCondition", _preCondition))
+                .append(getAttributeAsXml("displayMode", _displayMode)).append(getAttributeAsXml("indicator", _indicator)).append("/>\n");
+    }
 
-  public String getOrigin()
-  {
-    return _origin;
-  }
+    public String getOrigin() {
+        return _origin;
+    }
 
-  public void setOrigin(String origin)
-  {
-    _origin = origin;
-  }
+    public void setOrigin(String origin) {
+        _origin = origin;
+    }
 
-  public String getAction()
-  {
-    return _action;
-  }
+    public String getAction() {
+        return _action;
+    }
 
-  public void setAction(String action)
-  {
-    _action = action;
-  }
+    public void setAction(String action) {
+        _action = action;
+    }
 
-  /**
-   * @deprecated Use setPageStack instead
-   */
-  @Deprecated
-  public String getDialog()
-  {
-    return _pageStack;
-  }
+    /**
+     * @deprecated Use setPageStack instead
+     */
+    @Deprecated
+    public String getDialog() {
+        return _pageStack;
+    }
 
-  /**
-   * @deprecated Use setPageStack instead
-   */
-  @Deprecated
-  public void setDialog(String pageStack)
-  {
-    _pageStack = pageStack;
-  }
+    /**
+     * @deprecated Use setPageStack instead
+     */
+    @Deprecated
+    public void setDialog(String pageStack) {
+        _pageStack = pageStack;
+    }
 
-  public String getPageStack()
-  {
-    return _pageStack;
-  }
+    public String getPageStack() {
+        return _pageStack;
+    }
 
-  public void setPageStack(String pageStack)
-  {
-    _pageStack = pageStack;
-  }
+    public void setPageStack(String pageStack) {
+        _pageStack = pageStack;
+    }
 
-  public String getDisplayMode()
-  {
-    return _displayMode;
-  }
+    public String getDisplayMode() {
+        return _displayMode;
+    }
 
-  public void setDisplayMode(String displayMode)
-  {
-    _displayMode = displayMode;
-  }
+    public void setDisplayMode(String displayMode) {
+        _displayMode = displayMode;
+    }
 
-  public String getPreCondition()
-  {
-    return _preCondition;
-  }
+    public String getPreCondition() {
+        return _preCondition;
+    }
 
-  public void setPreCondition(String preCondition)
-  {
-    _preCondition = preCondition;
-  }
+    public void setPreCondition(String preCondition) {
+        _preCondition = preCondition;
+    }
 
-  public boolean getPersist()
-  {
-    return _persist;
-  }
+    public boolean getPersist() {
+        return _persist;
+    }
 
-  public void setPersist(boolean persist)
-  {
-    _persist = persist;
-  }
+    public void setPersist(boolean persist) {
+        _persist = persist;
+    }
 
-  public boolean getTransferDocument()
-  {
-    return _transferDocument;
-  }
+    public boolean getTransferDocument() {
+        return _transferDocument;
+    }
 
-  public void setTransferDocument(boolean transferDocument)
-  {
-    _transferDocument = transferDocument;
-  }
+    public void setTransferDocument(boolean transferDocument) {
+        _transferDocument = transferDocument;
+    }
 
-  public boolean getNoBackgroundProcessing()
-  {
-    return _noBackgroundProcessing;
-  }
+    public boolean getNoBackgroundProcessing() {
+        return _noBackgroundProcessing;
+    }
 
-  public void setNoBackgroundProcessing(boolean noBackgroundProcessing)
-  {
-    _noBackgroundProcessing = noBackgroundProcessing;
-  }
+    public void setNoBackgroundProcessing(boolean noBackgroundProcessing) {
+        _noBackgroundProcessing = noBackgroundProcessing;
+    }
 
-  public String getIndicator()
-  {
-    return _indicator;
-  }
+    public String getIndicator() {
+        return _indicator;
+    }
 
-  public void setIndicator(String indicator)
-  {
-    _indicator = indicator;
-  }
+    public void setIndicator(String indicator) {
+        _indicator = indicator;
+    }
 }

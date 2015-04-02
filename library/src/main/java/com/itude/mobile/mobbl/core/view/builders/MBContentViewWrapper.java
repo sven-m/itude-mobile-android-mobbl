@@ -4,7 +4,6 @@ import android.view.View;
 
 import com.itude.mobile.mobbl.core.controller.MBViewManager;
 
-public interface MBContentViewWrapper
-{
-  public View buildContentView(MBViewManager viewManager, View mainContainer);
+public interface MBContentViewWrapper {
+    public View buildContentView(MBViewManager viewManager, View mainContainer);
 }

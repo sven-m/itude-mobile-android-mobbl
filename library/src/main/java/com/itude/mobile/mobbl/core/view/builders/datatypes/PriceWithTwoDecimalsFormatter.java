@@ -17,14 +17,12 @@ package com.itude.mobile.mobbl.core.view.builders.datatypes;
 
 import com.itude.mobile.android.util.StringUtil;
 
-public class PriceWithTwoDecimalsFormatter extends MBBaseDataTypeFormatter
-{
+public class PriceWithTwoDecimalsFormatter extends MBBaseDataTypeFormatter {
 
-  @Override
-  protected String actuallyFormat(String value)
-  {
+    @Override
+    protected String actuallyFormat(String value) {
 
-    return StringUtil.formatPriceWithTwoDecimals(getLocale(), value);
-  }
+        return StringUtil.formatPriceWithTwoDecimals(getLocale(), value);
+    }
 
 }

@@ -18,55 +18,42 @@ package com.itude.mobile.mobbl.core.services;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 
 /**
- * Result listener defenition class 
- *
+ * Result listener defenition class
  */
-public class MBResultListenerDefinition extends MBDefinition
-{
-  private String   _matchExpression;
-  private String[] _matchParts;
+public class MBResultListenerDefinition extends MBDefinition {
+    private String _matchExpression;
+    private String[] _matchParts;
 
-  public String getMatchExpression()
-  {
-    return _matchExpression;
-  }
-
-  public void setMatchExpression(String matchExpression)
-  {
-    _matchExpression = matchExpression;
-  }
-
-  public String[] getMatchParts()
-  {
-    return _matchParts;
-  }
-
-  public void setMatchParts(String[] matchParts)
-  {
-    if (matchParts != null)
-    {
-      _matchParts = matchParts.clone();
+    public String getMatchExpression() {
+        return _matchExpression;
     }
-  }
 
-  public boolean matches(String result)
-  {
-    boolean match = false;
-    if (_matchParts == null)
-    {
-      _matchParts = _matchExpression.split("\\*");
+    public void setMatchExpression(String matchExpression) {
+        _matchExpression = matchExpression;
     }
-    for (String part : _matchParts)
-    {
-      if (result.indexOf(part) > -1)
-      {
-        match = true;
-      }
-      else
-      {
-        match = false;
-      }
+
+    public String[] getMatchParts() {
+        return _matchParts;
     }
-    return match;
-  }
+
+    public void setMatchParts(String[] matchParts) {
+        if (matchParts != null) {
+            _matchParts = matchParts.clone();
+        }
+    }
+
+    public boolean matches(String result) {
+        boolean match = false;
+        if (_matchParts == null) {
+            _matchParts = _matchExpression.split("\\*");
+        }
+        for (String part : _matchParts) {
+            if (result.indexOf(part) > -1) {
+                match = true;
+            } else {
+                match = false;
+            }
+        }
+        return match;
+    }
 }

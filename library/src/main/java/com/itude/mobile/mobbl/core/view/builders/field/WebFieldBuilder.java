@@ -25,37 +25,30 @@ import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.services.MBResourceService;
 import com.itude.mobile.mobbl.core.view.MBField;
 
-public class WebFieldBuilder extends MBBaseFieldBuilder
-{
+public class WebFieldBuilder extends MBBaseFieldBuilder {
 
-  @Override
-  public View buildField(MBField field)
-  {
-    WebView webView = new WebView(MBApplicationController.getInstance().getViewManager());
-    webView.setScrollContainer(false);
+    @Override
+    public View buildField(MBField field) {
+        WebView webView = new WebView(MBApplicationController.getInstance().getViewManager());
+        webView.setScrollContainer(false);
 
-    if (StringUtil.isNotBlank(field.getSource()))
-    {
-      webView.setOnTouchListener(new OnTouchListener()
-      {
-        @Override
-        public boolean onTouch(View v, MotionEvent event)
-        {
-          return true;
+        if (StringUtil.isNotBlank(field.getSource())) {
+            webView.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return true;
+                }
+            });
+
+            String url = MBResourceService.getInstance().getUrlById(field.getSource());
+            webView.loadUrl(url);
+        } else {
+            webView.loadDataWithBaseURL(null, field.getValuesForDisplay(), null, "UTF-8", null);
+
         }
-      });
+        getStyleHandler().styleWebView(webView, field);
 
-      String url = MBResourceService.getInstance().getUrlById(field.getSource());
-      webView.loadUrl(url);
+        return webView;
     }
-    else
-    {
-      webView.loadDataWithBaseURL(null, field.getValuesForDisplay(), null, "UTF-8", null);
-
-    }
-    getStyleHandler().styleWebView(webView, field);
-
-    return webView;
-  }
 
 }

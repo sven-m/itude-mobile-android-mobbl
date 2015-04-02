@@ -15,6 +15,14 @@
  */
 package com.itude.mobile.mobbl.core.util.imagecache;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+
+import com.itude.mobile.android.util.log.MBLog;
+import com.itude.mobile.mobbl.core.util.MBConstants;
+import com.itude.mobile.mobbl.core.util.MBProperties;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -33,364 +41,288 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
+public class MBImageCache {
+    private final Map<Uri, MBImageCacheObject> _images;
+    private long _cacheSize = 0;
+    private long _localCacheSize = 0;
 
-import com.itude.mobile.android.util.log.MBLog;
-import com.itude.mobile.mobbl.core.util.MBConstants;
-import com.itude.mobile.mobbl.core.util.MBProperties;
+    private final File _localCache;
 
-public class MBImageCache
-{
-  private final Map<Uri, MBImageCacheObject> _images;
-  private long                             _cacheSize        = 0;
-  private long                             _localCacheSize   = 0;
+    private static final int IO_BUFFER_SIZE = 4 * 1024;
 
-  private final File                       _localCache;
+    private static final long MEMORY_CACHE_SIZE = MBProperties.getInstance()
+            .getIntegerProperty(MBConstants.C_PROPERTY_IMAGE_CACHE_MEMORY, 3) * 1024 * 1024;
+    private static final long LOCAL_CACHE_SIZE = MBProperties.getInstance()
+            .getIntegerProperty(MBConstants.C_PROPERTY_IMAGE_CACHE_DISK, 10) * 1024 * 1024;
 
-  private static final int                 IO_BUFFER_SIZE    = 4 * 1024;
+    private static final String LOG_TAG = MBImageCache.class.getSimpleName();
 
-  private static final long                MEMORY_CACHE_SIZE = MBProperties.getInstance()
-                                                                 .getIntegerProperty(MBConstants.C_PROPERTY_IMAGE_CACHE_MEMORY, 3) * 1024 * 1024;
-  private static final long                LOCAL_CACHE_SIZE  = MBProperties.getInstance()
-                                                                 .getIntegerProperty(MBConstants.C_PROPERTY_IMAGE_CACHE_DISK, 10) * 1024 * 1024;
-
-  private static final String              LOG_TAG           = MBImageCache.class.getSimpleName();
-
-  public MBImageCache(File localCache)
-  {
-    _images = new LinkedHashMap<Uri, MBImageCacheObject>(100, 0.75f, true);
-    _localCache = localCache;
-    _localCacheSize = calculateLocalCacheSize();
-    cleanLocalCache();
-  }
-
-  public Bitmap getBitmapFromCache(Uri uri)
-  {
-    MBImageCacheObject ico = getFromMemoryCache(uri);
-    if (ico != null)
-    {
-      if (ico.isValid()) return ico.getBitmap();
-      else
-      {
-        removeFromCache(uri, ico);
-        //android.util.Log.d(LOG_TAG, "Removed " + uri + " from cache, since it has been garbage collected");
-      }
+    public MBImageCache(File localCache) {
+        _images = new LinkedHashMap<Uri, MBImageCacheObject>(100, 0.75f, true);
+        _localCache = localCache;
+        _localCacheSize = calculateLocalCacheSize();
+        cleanLocalCache();
     }
-    return null;
-  }
 
-  public Bitmap getBitmap(Uri uri)
-  {
-    try
-    {
-      MBImageCacheObject ico = getFromMemoryCache(uri);
-      if (ico != null)
-      {
-        if (ico.isValid()) return ico.getBitmap();
-        else
-        {
-          removeFromCache(uri, ico);
-          //android.util.Log.d(LOG_TAG, "Removed " + uri + " from cache, since it has been garbage collected");
+    public Bitmap getBitmapFromCache(Uri uri) {
+        MBImageCacheObject ico = getFromMemoryCache(uri);
+        if (ico != null) {
+            if (ico.isValid()) return ico.getBitmap();
+            else {
+                removeFromCache(uri, ico);
+                //android.util.Log.d(LOG_TAG, "Removed " + uri + " from cache, since it has been garbage collected");
+            }
         }
-      }
-
-      ico = getFromLocalCache(uri);
-      if (ico != null)
-      {
-        if (ico.isValid()) return ico.getBitmap();
-        else removeFromCache(uri, ico);
-      }
-
-      ico = getFromInternet(uri);
-      return ico.getBitmap();
-    }
-    finally
-    {
-      //android.util.Log.d(LOG_TAG, "Returned " + uri + " Cache size: " + _cacheSize);
-    }
-  }
-
-  private MBImageCacheObject getFromMemoryCache(Uri uri)
-  {
-    synchronized (_images)
-    {
-      MBImageCacheObject ico = _images.get(uri);
-      return ico;
-    }
-  }
-
-  private MBImageCacheObject getFromLocalCache(Uri uri)
-  {
-    File file = new File(_localCache, "" + uri.hashCode());
-    if (file.exists())
-    {
-      Uri localUri = Uri.fromFile(file);
-      MBImageCacheObject result = loadFromStream(localUri);
-      if (result != null && result.isValid())
-      {
-        file.setLastModified(System.currentTimeMillis());
-        addToCache(uri, result);
-      }
-      return result;
-    }
-    else return null;
-  }
-
-  private MBImageCacheObject getFromInternet(Uri uri)
-  {
-    MBImageCacheObject result = MBImageCacheObject.NULL;
-    try
-    {
-
-      URL url = new URL(uri.toString());
-
-      InputStream in = new BufferedInputStream(url.openStream(), IO_BUFFER_SIZE);
-      ByteArrayOutputStream boas = new ByteArrayOutputStream();
-      copy(in, boas);
-      Uri localUri = storeLocally(uri, boas.toByteArray());
-
-      result = loadFromStream(localUri);
-      if (result == null) result = MBImageCacheObject.NULL;
-
-    }
-    catch (IllegalStateException e)
-    {
-      // this is possible if the redirection goes wrong while trying to retrieve an image
-      MBLog.e(LOG_TAG, "Error loading from: " + uri, e);
-    }
-    catch (IOException e)
-    {
-      MBLog.e(LOG_TAG, "Error loading from: " + uri, e);
+        return null;
     }
 
-    addToCache(uri, result);
-    return result;
+    public Bitmap getBitmap(Uri uri) {
+        try {
+            MBImageCacheObject ico = getFromMemoryCache(uri);
+            if (ico != null) {
+                if (ico.isValid()) return ico.getBitmap();
+                else {
+                    removeFromCache(uri, ico);
+                    //android.util.Log.d(LOG_TAG, "Removed " + uri + " from cache, since it has been garbage collected");
+                }
+            }
 
-  }
+            ico = getFromLocalCache(uri);
+            if (ico != null) {
+                if (ico.isValid()) return ico.getBitmap();
+                else removeFromCache(uri, ico);
+            }
 
-  private void addToCache(Uri uri, MBImageCacheObject object)
-  {
-    synchronized (_images)
-    {
-
-      _images.put(uri, object);
-      _cacheSize += object.getSize();
-
-      cleanMemoryCache();
+            ico = getFromInternet(uri);
+            return ico.getBitmap();
+        } finally {
+            //android.util.Log.d(LOG_TAG, "Returned " + uri + " Cache size: " + _cacheSize);
+        }
     }
-  }
 
-  private void removeFromCache(Uri uri, MBImageCacheObject object)
-  {
-    synchronized (_images)
-    {
-
-      _images.remove(uri);
-      _cacheSize -= object.getSize();
+    private MBImageCacheObject getFromMemoryCache(Uri uri) {
+        synchronized (_images) {
+            MBImageCacheObject ico = _images.get(uri);
+            return ico;
+        }
     }
-  }
 
-  private Uri storeLocally(Uri uri, byte[] bytes)
-  {
-    Uri result = null;
-    if (_localCache != null)
-    {
-      OutputStream out = null;
-      InputStream in = null;
-      try
-      {
+    private MBImageCacheObject getFromLocalCache(Uri uri) {
         File file = new File(_localCache, "" + uri.hashCode());
-        out = new BufferedOutputStream(new FileOutputStream(file), IO_BUFFER_SIZE);
-        in = new ByteArrayInputStream(bytes);
-        copy(in, out);
-        _localCacheSize += bytes.length;
-
-        in.reset();
-
-        result = Uri.fromFile(file);
-
-        //android.util.Log.d(LOG_TAG, "Stored " + uri + " as " + file.getAbsolutePath() + " Local cache is now: " + _localCacheSize);
-      }
-      catch (FileNotFoundException e)
-      {
-        MBLog.e(LOG_TAG, "Could not cache photo " + uri + " to file " + uri.hashCode(), e);
-      }
-      catch (IOException e)
-      {
-        MBLog.e(LOG_TAG, "Could not cache photo " + uri + " to file " + uri.hashCode(), e);
-      }
-      finally
-      {
-        closeStream(in);
-        closeStream(out);
-      }
-
-      cleanLocalCache();
+        if (file.exists()) {
+            Uri localUri = Uri.fromFile(file);
+            MBImageCacheObject result = loadFromStream(localUri);
+            if (result != null && result.isValid()) {
+                file.setLastModified(System.currentTimeMillis());
+                addToCache(uri, result);
+            }
+            return result;
+        } else return null;
     }
 
-    return result;
-  }
+    private MBImageCacheObject getFromInternet(Uri uri) {
+        MBImageCacheObject result = MBImageCacheObject.NULL;
+        try {
 
-  public static Bitmap loadBitmap(Uri uri)
-  {
-    BufferedOutputStream out = null;
-    Bitmap bitmap = null;
-    InputStream in = null;
-    try
-    {
-      in = new BufferedInputStream(new URL(uri.toString()).openStream(), IO_BUFFER_SIZE);
-      final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
-      out = new BufferedOutputStream(dataStream, IO_BUFFER_SIZE);
-      copy(in, out);
-      out.flush();
+            URL url = new URL(uri.toString());
 
-      final byte[] data = dataStream.toByteArray();
-      bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+            InputStream in = new BufferedInputStream(url.openStream(), IO_BUFFER_SIZE);
+            ByteArrayOutputStream boas = new ByteArrayOutputStream();
+            copy(in, boas);
+            Uri localUri = storeLocally(uri, boas.toByteArray());
+
+            result = loadFromStream(localUri);
+            if (result == null) result = MBImageCacheObject.NULL;
+
+        } catch (IllegalStateException e) {
+            // this is possible if the redirection goes wrong while trying to retrieve an image
+            MBLog.e(LOG_TAG, "Error loading from: " + uri, e);
+        } catch (IOException e) {
+            MBLog.e(LOG_TAG, "Error loading from: " + uri, e);
+        }
+
+        addToCache(uri, result);
+        return result;
 
     }
-    catch (IOException e)
-    {
-      MBLog.e(LOG_TAG, "Could not load photo: " + uri, e);
+
+    private void addToCache(Uri uri, MBImageCacheObject object) {
+        synchronized (_images) {
+
+            _images.put(uri, object);
+            _cacheSize += object.getSize();
+
+            cleanMemoryCache();
+        }
     }
-    finally
-    {
-      closeStream(in);
-      closeStream(out);
+
+    private void removeFromCache(Uri uri, MBImageCacheObject object) {
+        synchronized (_images) {
+
+            _images.remove(uri);
+            _cacheSize -= object.getSize();
+        }
     }
 
-    return bitmap;
-  }
+    private Uri storeLocally(Uri uri, byte[] bytes) {
+        Uri result = null;
+        if (_localCache != null) {
+            OutputStream out = null;
+            InputStream in = null;
+            try {
+                File file = new File(_localCache, "" + uri.hashCode());
+                out = new BufferedOutputStream(new FileOutputStream(file), IO_BUFFER_SIZE);
+                in = new ByteArrayInputStream(bytes);
+                copy(in, out);
+                _localCacheSize += bytes.length;
 
-  private MBImageCacheObject loadFromStream(Uri uri)
-  {
+                in.reset();
 
-    Bitmap bitmap = null;
-    MBImageCacheObject result = null;
+                result = Uri.fromFile(file);
 
-    bitmap = loadBitmap(uri);
-    // decoding went wrong, apparently
-    if (bitmap == null) return MBImageCacheObject.NULL;
-    else result = new MBImageCacheObject(bitmap);
+                //android.util.Log.d(LOG_TAG, "Stored " + uri + " as " + file.getAbsolutePath() + " Local cache is now: " + _localCacheSize);
+            } catch (FileNotFoundException e) {
+                MBLog.e(LOG_TAG, "Could not cache photo " + uri + " to file " + uri.hashCode(), e);
+            } catch (IOException e) {
+                MBLog.e(LOG_TAG, "Could not cache photo " + uri + " to file " + uri.hashCode(), e);
+            } finally {
+                closeStream(in);
+                closeStream(out);
+            }
 
-    return result;
-  }
+            cleanLocalCache();
+        }
 
-  public static void copy(InputStream in, OutputStream out) throws IOException
-  {
-    byte[] b = new byte[IO_BUFFER_SIZE];
-    int read;
-    while ((read = in.read(b)) != -1)
-    {
-      out.write(b, 0, read);
+        return result;
     }
-  }
 
-  private static void closeStream(Closeable stream)
-  {
-    if (stream != null)
-    {
-      try
-      {
-        stream.close();
-      }
-      catch (IOException e)
-      {
-        MBLog.e(LOG_TAG, "Could not close stream", e);
-      }
+    public static Bitmap loadBitmap(Uri uri) {
+        BufferedOutputStream out = null;
+        Bitmap bitmap = null;
+        InputStream in = null;
+        try {
+            in = new BufferedInputStream(new URL(uri.toString()).openStream(), IO_BUFFER_SIZE);
+            final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+            out = new BufferedOutputStream(dataStream, IO_BUFFER_SIZE);
+            copy(in, out);
+            out.flush();
+
+            final byte[] data = dataStream.toByteArray();
+            bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+        } catch (IOException e) {
+            MBLog.e(LOG_TAG, "Could not load photo: " + uri, e);
+        } finally {
+            closeStream(in);
+            closeStream(out);
+        }
+
+        return bitmap;
     }
-  }
 
-  private long calculateLocalCacheSize()
-  {
-    long size = 0;
+    private MBImageCacheObject loadFromStream(Uri uri) {
 
-    File[] files = _localCache.listFiles();
-    for (File file : files)
-      if (file.isFile()) size += file.length();
+        Bitmap bitmap = null;
+        MBImageCacheObject result = null;
 
-    //android.util.Log.d(LOG_TAG, "Local cache is now: " + size);
-    return size;
-  }
+        bitmap = loadBitmap(uri);
+        // decoding went wrong, apparently
+        if (bitmap == null) return MBImageCacheObject.NULL;
+        else result = new MBImageCacheObject(bitmap);
 
-  private void cleanLocalCache()
-  {
-    if (_localCacheSize > LOCAL_CACHE_SIZE)
-    {
-      synchronized (_localCache)
-      {
+        return result;
+    }
+
+    public static void copy(InputStream in, OutputStream out) throws IOException {
+        byte[] b = new byte[IO_BUFFER_SIZE];
+        int read;
+        while ((read = in.read(b)) != -1) {
+            out.write(b, 0, read);
+        }
+    }
+
+    private static void closeStream(Closeable stream) {
+        if (stream != null) {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                MBLog.e(LOG_TAG, "Could not close stream", e);
+            }
+        }
+    }
+
+    private long calculateLocalCacheSize() {
+        long size = 0;
 
         File[] files = _localCache.listFiles();
-        Arrays.sort(files, new Comparator<File>()
-        {
-
-          @Override
-          public int compare(File arg0, File arg1)
-          {
-            long dif = arg1.lastModified() - arg0.lastModified();
-            if (dif < 0) return -1;
-            else if (dif == 0) return 0;
-            else return 1;
-          }
-        });
-
-        long size = _localCacheSize;
         for (File file : files)
-        {
-          if (size > LOCAL_CACHE_SIZE)
-          {
-            size -= file.length();
-            file.delete();
-            //android.util.Log.d(LOG_TAG, "Purged " + file.getAbsolutePath() + " from local cache. Size is now " + size);
-          }
-        }
+            if (file.isFile()) size += file.length();
 
-        size = calculateLocalCacheSize();
-      }
+        //android.util.Log.d(LOG_TAG, "Local cache is now: " + size);
+        return size;
     }
-  }
 
-  private void cleanMemoryCache()
-  {
-    if (_cacheSize > MEMORY_CACHE_SIZE)
-    {
-      synchronized (_images)
-      {
+    private void cleanLocalCache() {
+        if (_localCacheSize > LOCAL_CACHE_SIZE) {
+            synchronized (_localCache) {
 
-        purgeInvalid();
-        if (_cacheSize > MEMORY_CACHE_SIZE)
-        {
-          long size = _cacheSize;
-          Iterator<Map.Entry<Uri, MBImageCacheObject>> it = _images.entrySet().iterator();
-          while (it.hasNext() && size > MEMORY_CACHE_SIZE)
-          {
-            Map.Entry<Uri, MBImageCacheObject> entry = it.next();
-            size -= entry.getValue().getSize();
-            //android.util.Log.d(LOG_TAG, "Removed " + entry.getKey() + " from memory cache. Size is now " + size);
-            it.remove();
-          }
-          _cacheSize = size;
+                File[] files = _localCache.listFiles();
+                Arrays.sort(files, new Comparator<File>() {
+
+                    @Override
+                    public int compare(File arg0, File arg1) {
+                        long dif = arg1.lastModified() - arg0.lastModified();
+                        if (dif < 0) return -1;
+                        else if (dif == 0) return 0;
+                        else return 1;
+                    }
+                });
+
+                long size = _localCacheSize;
+                for (File file : files) {
+                    if (size > LOCAL_CACHE_SIZE) {
+                        size -= file.length();
+                        file.delete();
+                        //android.util.Log.d(LOG_TAG, "Purged " + file.getAbsolutePath() + " from local cache. Size is now " + size);
+                    }
+                }
+
+                size = calculateLocalCacheSize();
+            }
         }
-      }
     }
-  }
 
-  private void purgeInvalid()
-  {
-    synchronized (_images)
-    {
-      Iterator<Map.Entry<Uri, MBImageCacheObject>> it = _images.entrySet().iterator();
-      while (it.hasNext())
-      {
-        Map.Entry<Uri, MBImageCacheObject> entry = it.next();
-        if (!entry.getValue().isValid())
-        {
-          it.remove();
-          _cacheSize -= entry.getValue().getSize();
+    private void cleanMemoryCache() {
+        if (_cacheSize > MEMORY_CACHE_SIZE) {
+            synchronized (_images) {
+
+                purgeInvalid();
+                if (_cacheSize > MEMORY_CACHE_SIZE) {
+                    long size = _cacheSize;
+                    Iterator<Map.Entry<Uri, MBImageCacheObject>> it = _images.entrySet().iterator();
+                    while (it.hasNext() && size > MEMORY_CACHE_SIZE) {
+                        Map.Entry<Uri, MBImageCacheObject> entry = it.next();
+                        size -= entry.getValue().getSize();
+                        //android.util.Log.d(LOG_TAG, "Removed " + entry.getKey() + " from memory cache. Size is now " + size);
+                        it.remove();
+                    }
+                    _cacheSize = size;
+                }
+            }
         }
-      }
     }
-  }
+
+    private void purgeInvalid() {
+        synchronized (_images) {
+            Iterator<Map.Entry<Uri, MBImageCacheObject>> it = _images.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<Uri, MBImageCacheObject> entry = it.next();
+                if (!entry.getValue().isValid()) {
+                    it.remove();
+                    _cacheSize -= entry.getValue().getSize();
+                }
+            }
+        }
+    }
 
 }

@@ -25,73 +25,66 @@ import android.widget.LinearLayout;
 import com.itude.mobile.mobbl.core.view.builders.MBStyleHandler;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
 
-public class MBDrawablePageIndicatorBar extends MBAbstractPageIndicator
-{
+public class MBDrawablePageIndicatorBar extends MBAbstractPageIndicator {
 
-  public MBDrawablePageIndicatorBar(Context context)
-  {
-    super(context);
-  }
+    public MBDrawablePageIndicatorBar(Context context) {
+        super(context);
+    }
 
-  public MBDrawablePageIndicatorBar(Context context, AttributeSet attributes)
-  {
-    super(context, attributes);
-  }
+    public MBDrawablePageIndicatorBar(Context context, AttributeSet attributes) {
+        super(context, attributes);
+    }
 
-  @Override
-  protected ViewGroup setupIndicatorContainer()
-  {
-    LinearLayout container = new LinearLayout(this.getContext());
-    container.setOrientation(LinearLayout.HORIZONTAL);
-    container.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-    removeAllViews();
+    @Override
+    protected ViewGroup setupIndicatorContainer() {
+        LinearLayout container = new LinearLayout(this.getContext());
+        container.setOrientation(LinearLayout.HORIZONTAL);
+        container.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        removeAllViews();
 
-    return container;
-  }
+        return container;
+    }
 
-  @Override
-  protected View setupActiveIndicatorView()
-  {
-    MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
+    @Override
+    protected View setupActiveIndicatorView() {
+        MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
 
-    ImageView activeIndicatorView = new ImageView(getContext());
-    activeIndicatorView.setBackgroundDrawable(styleHandler.getDrawablePageIndicatorDrawable());
+        ImageView activeIndicatorView = new ImageView(getContext());
+        activeIndicatorView.setBackgroundDrawable(styleHandler.getDrawablePageIndicatorDrawable());
 
-    styleHandler.styleDrawablePageIndicatorBarActiveIndicatorView(activeIndicatorView);
+        styleHandler.styleDrawablePageIndicatorBarActiveIndicatorView(activeIndicatorView);
 
-    activeIndicatorView.setSelected(true);
+        activeIndicatorView.setSelected(true);
 
-    return activeIndicatorView;
-  }
+        return activeIndicatorView;
+    }
 
-  @Override
-  protected View setupInactiveIndicatorView()
-  {
-    MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
+    @Override
+    protected View setupInactiveIndicatorView() {
+        MBStyleHandler styleHandler = MBViewBuilderFactory.getInstance().getStyleHandler();
 
-    ImageView inactiveIndicatorView = new ImageView(getContext());
-    inactiveIndicatorView.setBackgroundDrawable(styleHandler.getDrawablePageIndicatorDrawable());
+        ImageView inactiveIndicatorView = new ImageView(getContext());
+        inactiveIndicatorView.setBackgroundDrawable(styleHandler.getDrawablePageIndicatorDrawable());
 
-    styleHandler.styleDrawablePageIndicatorBarActiveIndicatorView(inactiveIndicatorView);
+        styleHandler.styleDrawablePageIndicatorBarActiveIndicatorView(inactiveIndicatorView);
 
-    inactiveIndicatorView.setSelected(false);
+        inactiveIndicatorView.setSelected(false);
 
-    return inactiveIndicatorView;
-  }
+        return inactiveIndicatorView;
+    }
 
-  @Override
-  public void setActiveIndicator(int activatingIndicator)
-  {
+    @Override
+    public void setActiveIndicator(int activatingIndicator) {
 
-    ImageView currentIndicator = (ImageView) getIndicatorList().get(getActiveIndicatorIndex());
-    currentIndicator.setSelected(false);
+        ImageView currentIndicator = (ImageView) getIndicatorList().get(getActiveIndicatorIndex());
+        currentIndicator.setSelected(false);
 
-    setActiveIndicatorIndex(activatingIndicator);
+        setActiveIndicatorIndex(activatingIndicator);
 
-    currentIndicator = (ImageView) getIndicatorList().get(activatingIndicator);
-    currentIndicator.setSelected(true);
+        currentIndicator = (ImageView) getIndicatorList().get(activatingIndicator);
+        currentIndicator.setSelected(true);
 
-    getIndicatorContainer().invalidate();
+        getIndicatorContainer().invalidate();
 
-  }
+    }
 }

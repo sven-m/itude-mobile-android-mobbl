@@ -17,7 +17,6 @@ package com.itude.mobile.mobbl.core.util.imagecache;
 
 import android.graphics.Bitmap;
 
-public interface MBLoadedImageCallback
-{
-  public void doneLoading(Bitmap bitmap);
+public interface MBLoadedImageCallback {
+    public void doneLoading(Bitmap bitmap);
 }

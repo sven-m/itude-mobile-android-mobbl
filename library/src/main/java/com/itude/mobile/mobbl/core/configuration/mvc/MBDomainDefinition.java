@@ -15,11 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.configuration.mvc;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -27,129 +22,113 @@ import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 import com.itude.mobile.mobbl.core.util.MBConstants;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * {@link MBDefinition} Class for a domain
- *
  */
-public class MBDomainDefinition extends MBDefinition
-{
-  private String                            _type;
-  private BigDecimal                        _maxLength;
-  private List<MBDomainValidatorDefinition> _validators;
+public class MBDomainDefinition extends MBDefinition {
+    private String _type;
+    private BigDecimal _maxLength;
+    private List<MBDomainValidatorDefinition> _validators;
 
-  public MBDomainDefinition()
-  {
-    _validators = new ArrayList<MBDomainValidatorDefinition>();
-  }
-
-  @Override
-  public void addChildElement(MBDomainValidatorDefinition child)
-  {
-    addValidator(child);
-  }
-
-  public void addValidator(MBDomainValidatorDefinition validator)
-  {
-    _validators.add(validator);
-  }
-
-  public void removeValidatorAtIndex(int index)
-  {
-    if (_validators.get(index) != null)
-    {
-      _validators.remove(index);
-    }
-  }
-
-  @Override
-  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
-  {
-    StringUtil.appendIndentString(appendToMe, level).append("<Domain name='").append(getName()).append("' type='").append(_type)
-        .append("'").append(getAttributeAsXml("maxLength", _maxLength)).append(">\n");
-
-    for (MBDomainValidatorDefinition vld : _validators)
-    {
-      vld.asXmlWithLevel(appendToMe, level + 2);
+    public MBDomainDefinition() {
+        _validators = new ArrayList<MBDomainValidatorDefinition>();
     }
 
-    return StringUtil.appendIndentString(appendToMe, level).append("</Domain>\n");
-  }
+    @Override
+    public void addChildElement(MBDomainValidatorDefinition child) {
+        addValidator(child);
+    }
 
-  public String getType()
-  {
-    return _type;
-  }
+    public void addValidator(MBDomainValidatorDefinition validator) {
+        _validators.add(validator);
+    }
 
-  public void setType(String type)
-  {
-    _type = type;
-  }
+    public void removeValidatorAtIndex(int index) {
+        if (_validators.get(index) != null) {
+            _validators.remove(index);
+        }
+    }
 
-  public List<MBDomainValidatorDefinition> getDomainValidators()
-  {
-    return _validators;
-  }
+    @Override
+    public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level) {
+        StringUtil.appendIndentString(appendToMe, level).append("<Domain name='").append(getName()).append("' type='").append(_type)
+                .append("'").append(getAttributeAsXml("maxLength", _maxLength)).append(">\n");
 
-  public void setDomainValidators(List<MBDomainValidatorDefinition> domainValidators)
-  {
-    _validators = domainValidators;
-  }
+        for (MBDomainValidatorDefinition vld : _validators) {
+            vld.asXmlWithLevel(appendToMe, level + 2);
+        }
 
-  public BigDecimal getMaxLength()
-  {
-    return _maxLength;
-  }
+        return StringUtil.appendIndentString(appendToMe, level).append("</Domain>\n");
+    }
 
-  public void setMaxLength(BigDecimal maxLength)
-  {
-    _maxLength = maxLength;
-  }
+    public String getType() {
+        return _type;
+    }
 
-  //Parcelable stuff
+    public void setType(String type) {
+        _type = type;
+    }
 
-  private MBDomainDefinition(Parcel in)
-  {
-    super(in);
+    public List<MBDomainValidatorDefinition> getDomainValidators() {
+        return _validators;
+    }
 
-    _type = in.readString();
-    _maxLength = (BigDecimal) in.readSerializable();
-    MBDomainValidatorDefinition[] validators = (MBDomainValidatorDefinition[]) in.readParcelableArray(null);
-    _validators = Arrays.asList(validators);
-  }
+    public void setDomainValidators(List<MBDomainValidatorDefinition> domainValidators) {
+        _validators = domainValidators;
+    }
 
-  @Override
-  public int describeContents()
-  {
-    return MBConstants.C_PARCELABLE_TYPE_DOMAIN_DEFINITION;
-  }
+    public BigDecimal getMaxLength() {
+        return _maxLength;
+    }
 
-  @Override
-  public void writeToParcel(Parcel out, int flags)
-  {
-    super.writeToParcel(out, flags);
+    public void setMaxLength(BigDecimal maxLength) {
+        _maxLength = maxLength;
+    }
 
-    MBDomainValidatorDefinition[] validators = (MBDomainValidatorDefinition[]) _validators.toArray();
+    //Parcelable stuff
 
-    out.writeString(_type);
-    out.writeSerializable(_maxLength);
-    out.writeParcelableArray(validators, flags);
-  }
+    private MBDomainDefinition(Parcel in) {
+        super(in);
 
-  public static final Parcelable.Creator<MBDomainDefinition> CREATOR = new Creator<MBDomainDefinition>()
-                                                                     {
-                                                                       @Override
-                                                                       public MBDomainDefinition[] newArray(int size)
-                                                                       {
-                                                                         return new MBDomainDefinition[size];
-                                                                       }
+        _type = in.readString();
+        _maxLength = (BigDecimal) in.readSerializable();
+        MBDomainValidatorDefinition[] validators = (MBDomainValidatorDefinition[]) in.readParcelableArray(null);
+        _validators = Arrays.asList(validators);
+    }
 
-                                                                       @Override
-                                                                       public MBDomainDefinition createFromParcel(Parcel in)
-                                                                       {
-                                                                         return new MBDomainDefinition(in);
-                                                                       }
-                                                                     };
+    @Override
+    public int describeContents() {
+        return MBConstants.C_PARCELABLE_TYPE_DOMAIN_DEFINITION;
+    }
 
-  // End of parcelable stuff
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        super.writeToParcel(out, flags);
+
+        MBDomainValidatorDefinition[] validators = (MBDomainValidatorDefinition[]) _validators.toArray();
+
+        out.writeString(_type);
+        out.writeSerializable(_maxLength);
+        out.writeParcelableArray(validators, flags);
+    }
+
+    public static final Parcelable.Creator<MBDomainDefinition> CREATOR = new Creator<MBDomainDefinition>() {
+        @Override
+        public MBDomainDefinition[] newArray(int size) {
+            return new MBDomainDefinition[size];
+        }
+
+        @Override
+        public MBDomainDefinition createFromParcel(Parcel in) {
+            return new MBDomainDefinition(in);
+        }
+    };
+
+    // End of parcelable stuff
 
 }

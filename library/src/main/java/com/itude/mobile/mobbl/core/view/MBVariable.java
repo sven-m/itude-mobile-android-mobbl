@@ -21,62 +21,54 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBForEachDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBVariableDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 
-public class MBVariable extends MBComponentContainer
-{
-  private String _expression;
-  private String _name;
+public class MBVariable extends MBComponentContainer {
+    private String _expression;
+    private String _name;
 
-  public MBVariable(MBDefinition definition, MBDocument document, MBComponentContainer parent)
-  {
-    super(definition, document, parent);
+    public MBVariable(MBDefinition definition, MBDocument document, MBComponentContainer parent) {
+        super(definition, document, parent);
 
-    MBVariableDefinition varDef = (MBVariableDefinition) getDefinition();
+        MBVariableDefinition varDef = (MBVariableDefinition) getDefinition();
 
-    setName(substituteExpressions(varDef.getName()));
-    setExpression(substituteExpressions(varDef.getExpression()));
+        setName(substituteExpressions(varDef.getName()));
+        setExpression(substituteExpressions(varDef.getExpression()));
 
-    MBForEachDefinition eachDef = (MBForEachDefinition) getParent().getParent().getDefinition();
-    eachDef.addVariable(varDef);
+        MBForEachDefinition eachDef = (MBForEachDefinition) getParent().getParent().getDefinition();
+        eachDef.addVariable(varDef);
 
-  }
+    }
 
-  public void setName(String name)
-  {
-    this._name = name;
-  }
+    public void setName(String name) {
+        this._name = name;
+    }
 
-  @Override
-  public String getName()
-  {
-    return _name;
-  }
+    @Override
+    public String getName() {
+        return _name;
+    }
 
-  public void setExpression(String expression)
-  {
-    this._expression = expression;
-  }
+    public void setExpression(String expression) {
+        this._expression = expression;
+    }
 
-  public String getExpression()
-  {
-    return _expression;
-  }
+    public String getExpression() {
+        return _expression;
+    }
 
-  @Override
-  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
-  {
-    StringUtil.appendIndentString(appendToMe, level).append("<MBVariable ").append(attributeAsXml("name", _name)).append(" ")
-        .append(attributeAsXml("expression", _expression)).append(">\n");
+    @Override
+    public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level) {
+        StringUtil.appendIndentString(appendToMe, level).append("<MBVariable ").append(attributeAsXml("name", _name)).append(" ")
+                .append(attributeAsXml("expression", _expression)).append(">\n");
 
-    childrenAsXmlWithLevel(appendToMe, level + 2);
+        childrenAsXmlWithLevel(appendToMe, level + 2);
 
-    return StringUtil.appendIndentString(appendToMe, level).append("</MBVariable>\n");
-  }
+        return StringUtil.appendIndentString(appendToMe, level).append("</MBVariable>\n");
+    }
 
-  @Override
-  public String toString()
-  {
-    StringBuffer rt = new StringBuffer();
-    return asXmlWithLevel(rt, 0).toString();
-  }
+    @Override
+    public String toString() {
+        StringBuffer rt = new StringBuffer();
+        return asXmlWithLevel(rt, 0).toString();
+    }
 
 }

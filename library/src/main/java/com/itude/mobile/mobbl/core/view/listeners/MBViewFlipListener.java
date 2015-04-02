@@ -17,7 +17,6 @@ package com.itude.mobile.mobbl.core.view.listeners;
 
 import android.view.View;
 
-public interface MBViewFlipListener
-{
-  public void viewFlipped(View view);
+public interface MBViewFlipListener {
+    public void viewFlipped(View view);
 }

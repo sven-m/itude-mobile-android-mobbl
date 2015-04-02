@@ -23,17 +23,14 @@ import com.itude.mobile.mobbl.core.services.MBResourceService;
 import com.itude.mobile.mobbl.core.view.MBItem;
 import com.itude.mobile.mobbl.core.view.MBResource;
 
-public abstract class MBAbstractStatedResourceBuilder implements MBResourceBuilder.Builder<Drawable>
-{
-  protected void validateItemInStatedResource(MBResource resource) throws MBInvalidItemException
-  {
-  }
+public abstract class MBAbstractStatedResourceBuilder implements MBResourceBuilder.Builder<Drawable> {
+    protected void validateItemInStatedResource(MBResource resource) throws MBInvalidItemException {
+    }
 
-  protected void processItem(StateListDrawable stateListDrawable, MBItem item, int[] itemStates)
-  {
-    String itemResource = item.getResource();
-    Drawable drawable = MBResourceService.getInstance().getImageByID(itemResource);
+    protected void processItem(StateListDrawable stateListDrawable, MBItem item, int[] itemStates) {
+        String itemResource = item.getResource();
+        Drawable drawable = MBResourceService.getInstance().getImageByID(itemResource);
 
-    stateListDrawable.addState(itemStates, drawable);
-  }
+        stateListDrawable.addState(itemStates, drawable);
+    }
 }

@@ -19,35 +19,31 @@ import com.itude.mobile.mobbl.core.MBException;
 
 /**
  * {@link MBException} class used when the element name is invalid
- *
  */
-public class MBInvalidElementNameException extends MBException
-{
+public class MBInvalidElementNameException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 3851378891388368409L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3851378891388368409L;
 
-  /**
-   * Constructor for MBInvalidElementNameException.
-   * 
-   * @param msg exception message
-   */
-  public MBInvalidElementNameException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBInvalidElementNameException.
+     *
+     * @param msg exception message
+     */
+    public MBInvalidElementNameException(String msg) {
+        super(msg);
+    }
 
-  /**
-   * Constructor for MBInvalidElementNameException.
-   * 
-   * @param msg exception message
-   * @param throwable throwable {@link Throwable}
-   */
-  public MBInvalidElementNameException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
+    /**
+     * Constructor for MBInvalidElementNameException.
+     *
+     * @param msg       exception message
+     * @param throwable throwable {@link Throwable}
+     */
+    public MBInvalidElementNameException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 
 }

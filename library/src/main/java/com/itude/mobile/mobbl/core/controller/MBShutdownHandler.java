@@ -20,24 +20,21 @@ import android.app.Activity;
 import com.itude.mobile.mobbl.core.util.helper.MBSecurityHelper;
 
 /**
- * Class to handle the shutdown process 
+ * Class to handle the shutdown process
  */
-public abstract class MBShutdownHandler
-{
+public abstract class MBShutdownHandler {
 
-  protected void finish()
-  {
-    MBApplicationController.getInstance().setShuttingDown(true);
-    MBSecurityHelper.getInstance().logOutIfCheckNotSelected();
-    getActivity().finish();
-    MBApplicationController.getInstance().setShuttingDown(false);
-  }
+    protected void finish() {
+        MBApplicationController.getInstance().setShuttingDown(true);
+        MBSecurityHelper.getInstance().logOutIfCheckNotSelected();
+        getActivity().finish();
+        MBApplicationController.getInstance().setShuttingDown(false);
+    }
 
-  protected Activity getActivity()
-  {
-    return MBViewManager.getInstance();
-  }
+    protected Activity getActivity() {
+        return MBViewManager.getInstance();
+    }
 
-  public abstract void onShutdown();
+    public abstract void onShutdown();
 
 }

@@ -18,36 +18,32 @@ package com.itude.mobile.mobbl.core.services.exceptions;
 import com.itude.mobile.mobbl.core.MBException;
 
 /**
- * {@link MBException} class used when a resource is invalid 
- *
+ * {@link MBException} class used when a resource is invalid
  */
-public class MBResourceInvalidException extends MBException
-{
+public class MBResourceInvalidException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = -5871849971476543264L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5871849971476543264L;
 
-  /**
-   * Constructor for MBResourceInvalidException.
-   * 
-   * @param msg exception message
-   */
-  public MBResourceInvalidException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBResourceInvalidException.
+     *
+     * @param msg exception message
+     */
+    public MBResourceInvalidException(String msg) {
+        super(msg);
+    }
 
-  /**
-   * Constructor for MBResourceInvalidException.
-   * 
-   * @param msg exception message
-   * @param throwable throwable {@link Throwable}
-   */
-  public MBResourceInvalidException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
+    /**
+     * Constructor for MBResourceInvalidException.
+     *
+     * @param msg       exception message
+     * @param throwable throwable {@link Throwable}
+     */
+    public MBResourceInvalidException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 
 }

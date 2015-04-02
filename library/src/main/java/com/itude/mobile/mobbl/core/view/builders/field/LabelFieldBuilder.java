@@ -21,19 +21,17 @@ import android.widget.TextView;
 
 import com.itude.mobile.mobbl.core.view.MBField;
 
-public class LabelFieldBuilder extends MBBaseFieldBuilder
-{
-  @Override
-  public View buildField(MBField field)
-  {
+public class LabelFieldBuilder extends MBBaseFieldBuilder {
+    @Override
+    public View buildField(MBField field) {
 
-    String value = field.getValuesForDisplay();
+        String value = field.getValuesForDisplay();
 
-    TextView label = buildTextViewWithValue(value);
-    label.setSingleLine(true);
-    label.setEllipsize(TruncateAt.END);
-    getStyleHandler().styleLabel(label, field);
+        TextView label = buildTextViewWithValue(value);
+        label.setSingleLine(true);
+        label.setEllipsize(TruncateAt.END);
+        getStyleHandler().styleLabel(label, field);
 
-    return label;
-  }
+        return label;
+    }
 }

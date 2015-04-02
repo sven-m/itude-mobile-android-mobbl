@@ -15,9 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.services.datamanager.handlers;
 
-import java.util.Hashtable;
-import java.util.Map;
-
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.exceptions.DataParsingException;
 import com.itude.mobile.android.util.log.MBLog;
@@ -29,64 +26,56 @@ import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.services.datamanager.MBDataHandlerBase;
 import com.itude.mobile.mobbl.core.util.MBConstants;
 
+import java.util.Hashtable;
+import java.util.Map;
+
 /**
  * Retrieves and stores MBDocument instances in memory only
  */
-public class MBMemoryDataHandler extends MBDataHandlerBase
-{
-  private final Map<String, MBDocument> _dictionary;
+public class MBMemoryDataHandler extends MBDataHandlerBase {
+    private final Map<String, MBDocument> _dictionary;
 
-  public MBMemoryDataHandler()
-  {
-    super();
-    _dictionary = new Hashtable<String, MBDocument>();
-  }
-
-  @Override
-  public MBDocument loadDocument(String documentName)
-  {
-    MBDocument doc = _dictionary.get(documentName);
-    if (doc == null)
-    {
-      // Not yet in the store; handle default construction of the document using a file as template
-      String fileName = "documents/" + documentName + ".xml";
-      byte[] data = null;
-      try
-      {
-        data = DataUtil.getInstance().readFromAssetOrFile(fileName);
-      }
-      catch (DataParsingException e)
-      {
-        MBLog.d(MBConstants.APPLICATION_NAME, "Unable to find file " + fileName + " in assets");
-      }
-      MBDocumentDefinition docDef = MBMetadataService.getInstance().getDefinitionForDocumentName(documentName);
-      return MBDocumentFactory.getInstance().getDocumentWithData(data, MBDocumentFactory.PARSER_XML, docDef);
-    }
-    return doc;
-  }
-
-  @Override
-  public MBDocument loadDocument(String documentName, MBDocument args, MBEndPointDefinition endPoint)
-  {
-    return loadDocument(documentName);
-  }
-
-  @Override
-  public void storeDocument(MBDocument document)
-  {
-    _dictionary.put(document.getName(), document);
-  }
-
-  @Override
-  public MBDocument loadFreshDocument(String documentName)
-  {
-
-    if (_dictionary.containsKey(documentName))
-    {
-      _dictionary.remove(documentName);
+    public MBMemoryDataHandler() {
+        super();
+        _dictionary = new Hashtable<String, MBDocument>();
     }
 
-    return loadDocument(documentName);
-  }
+    @Override
+    public MBDocument loadDocument(String documentName) {
+        MBDocument doc = _dictionary.get(documentName);
+        if (doc == null) {
+            // Not yet in the store; handle default construction of the document using a file as template
+            String fileName = "documents/" + documentName + ".xml";
+            byte[] data = null;
+            try {
+                data = DataUtil.getInstance().readFromAssetOrFile(fileName);
+            } catch (DataParsingException e) {
+                MBLog.d(MBConstants.APPLICATION_NAME, "Unable to find file " + fileName + " in assets");
+            }
+            MBDocumentDefinition docDef = MBMetadataService.getInstance().getDefinitionForDocumentName(documentName);
+            return MBDocumentFactory.getInstance().getDocumentWithData(data, MBDocumentFactory.PARSER_XML, docDef);
+        }
+        return doc;
+    }
+
+    @Override
+    public MBDocument loadDocument(String documentName, MBDocument args, MBEndPointDefinition endPoint) {
+        return loadDocument(documentName);
+    }
+
+    @Override
+    public void storeDocument(MBDocument document) {
+        _dictionary.put(document.getName(), document);
+    }
+
+    @Override
+    public MBDocument loadFreshDocument(String documentName) {
+
+        if (_dictionary.containsKey(documentName)) {
+            _dictionary.remove(documentName);
+        }
+
+        return loadDocument(documentName);
+    }
 
 }

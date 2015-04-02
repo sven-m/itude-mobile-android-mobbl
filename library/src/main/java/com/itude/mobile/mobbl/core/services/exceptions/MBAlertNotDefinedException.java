@@ -19,35 +19,31 @@ import com.itude.mobile.mobbl.core.MBException;
 
 /**
  * {@link MBException} class used when an alert is not defined
- *
  */
-public class MBAlertNotDefinedException extends MBException
-{
+public class MBAlertNotDefinedException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 4183802163615960775L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 4183802163615960775L;
 
-  /**
-   * Constructor for MBAlertNotDefinedException.
-   * 
-   * @param msg exception message
-   */
-  public MBAlertNotDefinedException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBAlertNotDefinedException.
+     *
+     * @param msg exception message
+     */
+    public MBAlertNotDefinedException(String msg) {
+        super(msg);
+    }
 
-  /**
-   * Constructor for MBAlertNotDefinedException.
-   * 
-   * @param msg exception message
-   * @param throwable throwable {@link Throwable}
-   */
-  public MBAlertNotDefinedException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
+    /**
+     * Constructor for MBAlertNotDefinedException.
+     *
+     * @param msg       exception message
+     * @param throwable throwable {@link Throwable}
+     */
+    public MBAlertNotDefinedException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 
 }

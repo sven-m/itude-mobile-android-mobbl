@@ -17,9 +17,7 @@ package com.itude.mobile.mobbl.core.controller;
 
 /**
  * The Default {@link MBViewManager}
- *
  */
-public class MBDefaultViewManager extends MBViewManager
-{
+public class MBDefaultViewManager extends MBViewManager {
 
 }

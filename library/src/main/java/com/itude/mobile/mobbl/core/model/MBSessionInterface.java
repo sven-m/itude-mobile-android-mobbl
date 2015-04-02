@@ -17,26 +17,24 @@ package com.itude.mobile.mobbl.core.model;
 
 /**
  * Class responsible for the session
- *
  */
-public interface MBSessionInterface
-{
-  /**
-   * Should return the session document that stores the current session state
-   * 
-   * IMPORTANT: THIS METHOD IS NOT IMPLEMENTED! It needs to be overridden in a superclass
-   * 
-   * @return a {@link MBDocument} that keeps track of the current session state (e.g. A MBDocument that stores the current session state)
-   */
-  public MBDocument getDocument();
+public interface MBSessionInterface {
+    /**
+     * Should return the session document that stores the current session state
+     * <p/>
+     * IMPORTANT: THIS METHOD IS NOT IMPLEMENTED! It needs to be overridden in a superclass
+     *
+     * @return a {@link MBDocument} that keeps track of the current session state (e.g. A MBDocument that stores the current session state)
+     */
+    public MBDocument getDocument();
 
-  /**
-   * Should logOff the current session (e.g. clear the current session state from the session document)
-   * 
-   * IMPORTANT: THIS METHOD IS NOT IMPLEMENTED! It needs to be overridden in a superclass
-   */
-  public void logOff();
+    /**
+     * Should logOff the current session (e.g. clear the current session state from the session document)
+     * <p/>
+     * IMPORTANT: THIS METHOD IS NOT IMPLEMENTED! It needs to be overridden in a superclass
+     */
+    public void logOff();
 
-  public boolean isLoggedOn();
+    public boolean isLoggedOn();
 
 }

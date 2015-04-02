@@ -15,8 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.util.resources;
 
-import java.util.Map;
-
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
@@ -24,33 +22,31 @@ import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBItem;
 import com.itude.mobile.mobbl.core.view.MBResource;
 
-public class MBRadioGroupStatedResourceBuilder extends MBAbstractStatedResourceBuilder
-{
+import java.util.Map;
 
-  @Override
-  public Drawable buildResource(MBResource resource)
-  {
-    Map<String, MBItem> items = resource.getItems();
+public class MBRadioGroupStatedResourceBuilder extends MBAbstractStatedResourceBuilder {
 
-    MBItem checked = items.get(MBConstants.C_STATED_RESOURCE_STATE_CHECKED);
-    MBItem unchecked = items.get(MBConstants.C_STATED_RESOURCE_STATE_UNCHECKED);
+    @Override
+    public Drawable buildResource(MBResource resource) {
+        Map<String, MBItem> items = resource.getItems();
 
-    StateListDrawable stateListDrawable = new StateListDrawable();
+        MBItem checked = items.get(MBConstants.C_STATED_RESOURCE_STATE_CHECKED);
+        MBItem unchecked = items.get(MBConstants.C_STATED_RESOURCE_STATE_UNCHECKED);
 
-    if (checked != null)
-    {
-      int[] itemStates = new int[]{android.R.attr.state_checked};
+        StateListDrawable stateListDrawable = new StateListDrawable();
 
-      processItem(stateListDrawable, checked, itemStates);
+        if (checked != null) {
+            int[] itemStates = new int[]{android.R.attr.state_checked};
+
+            processItem(stateListDrawable, checked, itemStates);
+        }
+        if (unchecked != null) {
+            int[] itemStates = new int[]{-android.R.attr.state_checked};
+
+            processItem(stateListDrawable, unchecked, itemStates);
+        }
+
+        return stateListDrawable;
     }
-    if (unchecked != null)
-    {
-      int[] itemStates = new int[]{-android.R.attr.state_checked};
-
-      processItem(stateListDrawable, unchecked, itemStates);
-    }
-
-    return stateListDrawable;
-  }
 
 }

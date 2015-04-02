@@ -21,65 +21,54 @@ import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPageSta
 
 /**
  * {@link MBConditionalDefinition} Class for a pagestack
- *
  */
-public class MBPageStackDefinition extends MBConditionalDefinition
-{
+public class MBPageStackDefinition extends MBConditionalDefinition {
 
-  private String _mode;
-  private String _parent;
-  private String _localName;
+    private String _mode;
+    private String _parent;
+    private String _localName;
 
-  @Override
-  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
-  {
-    return StringUtil.appendIndentString(appendToMe, level)//
-        .append("<PageStack name='")//
-        .append(getName())//
-        .append('\'')//
-        .append(getAttributeAsXml("mode", _mode))//
-        .append(getAttributeAsXml("localName", _localName))//
-        .append("/>\n");
-  }
-
-  @Override
-  public void validateDefinition()
-  {
-    if (getName() == null)
-    {
-      String message = "no name set for pagestack";
-      throw new MBInvalidPageStackDefinitionException(message);
+    @Override
+    public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level) {
+        return StringUtil.appendIndentString(appendToMe, level)//
+                .append("<PageStack name='")//
+                .append(getName())//
+                .append('\'')//
+                .append(getAttributeAsXml("mode", _mode))//
+                .append(getAttributeAsXml("localName", _localName))//
+                .append("/>\n");
     }
-  }
 
-  public void setMode(String mode)
-  {
-    _mode = mode;
-  }
+    @Override
+    public void validateDefinition() {
+        if (getName() == null) {
+            String message = "no name set for pagestack";
+            throw new MBInvalidPageStackDefinitionException(message);
+        }
+    }
 
-  public String getMode()
-  {
-    return _mode;
-  }
+    public void setMode(String mode) {
+        _mode = mode;
+    }
 
-  public String getParent()
-  {
-    return _parent;
-  }
+    public String getMode() {
+        return _mode;
+    }
 
-  public void setParent(String parent)
-  {
-    _parent = parent;
-  }
+    public String getParent() {
+        return _parent;
+    }
 
-  public String getLocalName()
-  {
-    return _localName;
-  }
+    public void setParent(String parent) {
+        _parent = parent;
+    }
 
-  public void setLocalName(String localName)
-  {
-    _localName = localName;
-  }
+    public String getLocalName() {
+        return _localName;
+    }
+
+    public void setLocalName(String localName) {
+        _localName = localName;
+    }
 
 }

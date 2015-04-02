@@ -18,46 +18,38 @@ package com.itude.mobile.mobbl.core.view;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 
-public class MBConditionalPage extends MBPage
-{
-  public MBConditionalPage(MBPageDefinition definition, MBDocument document, String rootPath)
-  {
-    super(definition, document, rootPath);
-  }
+public class MBConditionalPage extends MBPage {
+    public MBConditionalPage(MBPageDefinition definition, MBDocument document, String rootPath) {
+        super(definition, document, rootPath);
+    }
 
-  private MBPageDefinition _definitionWhenFalse;
-  private MBPageDefinition _definitionWhenTrue;
+    private MBPageDefinition _definitionWhenFalse;
+    private MBPageDefinition _definitionWhenTrue;
 
-  public MBPageDefinition getDefinitionWhenFalse()
-  {
-    return _definitionWhenFalse;
-  }
+    public MBPageDefinition getDefinitionWhenFalse() {
+        return _definitionWhenFalse;
+    }
 
-  public void setDefinitionWhenFalse(MBPageDefinition definitionWhenFalse)
-  {
-    _definitionWhenFalse = definitionWhenFalse;
-  }
+    public void setDefinitionWhenFalse(MBPageDefinition definitionWhenFalse) {
+        _definitionWhenFalse = definitionWhenFalse;
+    }
 
-  public MBPageDefinition getDefinitionWhenTrue()
-  {
-    return _definitionWhenTrue;
-  }
+    public MBPageDefinition getDefinitionWhenTrue() {
+        return _definitionWhenTrue;
+    }
 
-  public void setDefinitionWhenTrue(MBPageDefinition definitionWhenTrue)
-  {
-    _definitionWhenTrue = definitionWhenTrue;
-  }
+    public void setDefinitionWhenTrue(MBPageDefinition definitionWhenTrue) {
+        _definitionWhenTrue = definitionWhenTrue;
+    }
 
-  public Object initWithDefinitionWhenTrue(MBPageDefinition definitionWhenTrue, MBPageDefinition definitionWhenFalse,
-                                           Object viewController, MBDocument document, String rootPath)
-  {
-    return null;
-  }
+    public Object initWithDefinitionWhenTrue(MBPageDefinition definitionWhenTrue, MBPageDefinition definitionWhenFalse,
+                                             Object viewController, MBDocument document, String rootPath) {
+        return null;
+    }
 
-  public Object initWithDefinitionWhenTrue(MBPageDefinition definitionWhenTrue, MBPageDefinition definitionWhenFalse, MBDocument document,
-                                           String rootPath, Object bounds)
-  {
-    return null;
-  }
+    public Object initWithDefinitionWhenTrue(MBPageDefinition definitionWhenTrue, MBPageDefinition definitionWhenFalse, MBDocument document,
+                                             String rootPath, Object bounds) {
+        return null;
+    }
 
 }

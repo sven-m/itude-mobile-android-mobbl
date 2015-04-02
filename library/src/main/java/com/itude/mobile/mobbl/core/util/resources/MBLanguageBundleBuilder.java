@@ -15,8 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.util.resources;
 
-import java.util.List;
-
 import com.itude.mobile.mobbl.core.configuration.mvc.MBConfigurationDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.model.MBDocumentFactory;
@@ -26,29 +24,27 @@ import com.itude.mobile.mobbl.core.services.MBResourceService;
 import com.itude.mobile.mobbl.core.util.resources.MBBundleBuilder.Builder;
 import com.itude.mobile.mobbl.core.view.MBBundle;
 
-public class MBLanguageBundleBuilder implements Builder
-{
+import java.util.List;
 
-  @Override
-  public MBBundle buildBundle(MBBundle bundle)
-  {
-    List<byte[]> dataSources = MBResourceService.getInstance().getResourceByURL(bundle);
+public class MBLanguageBundleBuilder implements Builder {
 
-    bundle.clear();
+    @Override
+    public MBBundle buildBundle(MBBundle bundle) {
+        List<byte[]> dataSources = MBResourceService.getInstance().getResourceByURL(bundle);
 
-    for (byte[] dataSource : dataSources)
-    {
-      MBDocument bundleDoc = MBDocumentFactory.getInstance()
-          .getDocumentWithData(dataSource, MBDocumentFactory.PARSER_XML,
-                               MBMetadataService.getInstance().getDefinitionForDocumentName(MBConfigurationDefinition.DOC_SYSTEM_LANGUAGE));
+        bundle.clear();
 
-      for (MBElement text : (List<MBElement>) bundleDoc.getValueForPath("/Text"))
-      {
-        bundle.putText(text.getValueForAttribute("key"), text.getValueForAttribute("value"));
-      }
+        for (byte[] dataSource : dataSources) {
+            MBDocument bundleDoc = MBDocumentFactory.getInstance()
+                    .getDocumentWithData(dataSource, MBDocumentFactory.PARSER_XML,
+                            MBMetadataService.getInstance().getDefinitionForDocumentName(MBConfigurationDefinition.DOC_SYSTEM_LANGUAGE));
+
+            for (MBElement text : (List<MBElement>) bundleDoc.getValueForPath("/Text")) {
+                bundle.putText(text.getValueForAttribute("key"), text.getValueForAttribute("value"));
+            }
+        }
+
+        return bundle;
     }
-
-    return bundle;
-  }
 
 }

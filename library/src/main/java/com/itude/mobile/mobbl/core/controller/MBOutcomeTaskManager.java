@@ -21,36 +21,30 @@ import java.util.Queue;
 /**
  * Manager to handle all outcome related functionality
  */
-public class MBOutcomeTaskManager
-{
+public class MBOutcomeTaskManager {
 
-  private final Queue<MBOutcomeTask<?>> _tasks;
-  private final MBOutcome               _outcome;
+    private final Queue<MBOutcomeTask<?>> _tasks;
+    private final MBOutcome _outcome;
 
-  public MBOutcomeTaskManager(MBOutcome outcome)
-  {
-    _outcome = outcome;
-    _tasks = new LinkedList<MBOutcomeTask<?>>();
-  }
+    public MBOutcomeTaskManager(MBOutcome outcome) {
+        _outcome = outcome;
+        _tasks = new LinkedList<MBOutcomeTask<?>>();
+    }
 
-  public void run()
-  {
-    MBOutcomeTask<?> task = _tasks.poll();
-    if (task != null) task.start();
-  }
+    public void run() {
+        MBOutcomeTask<?> task = _tasks.poll();
+        if (task != null) task.start();
+    }
 
-  public void addTask(MBOutcomeTask<?> task)
-  {
-    _tasks.add(task);
-  }
+    public void addTask(MBOutcomeTask<?> task) {
+        _tasks.add(task);
+    }
 
-  public MBOutcome getOutcome()
-  {
-    return _outcome;
-  }
+    public MBOutcome getOutcome() {
+        return _outcome;
+    }
 
-  public void finished(MBOutcomeTask<?> task)
-  {
-    run();
-  }
+    public void finished(MBOutcomeTask<?> task) {
+        run();
+    }
 }

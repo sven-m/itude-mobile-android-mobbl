@@ -23,27 +23,24 @@ import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.view.MBPanel;
 import com.itude.mobile.mobbl.core.view.builders.MBPanelViewBuilder.BuildState;
 
-public class MatrixPanelBuilder extends MBBasePanelBuilder
-{
+public class MatrixPanelBuilder extends MBBasePanelBuilder {
 
-  @Override
-  public ViewGroup buildPanel(MBPanel panel, BuildState buildState)
-  {
-    buildState.resetMatrixRow();
+    @Override
+    public ViewGroup buildPanel(MBPanel panel, BuildState buildState) {
+        buildState.resetMatrixRow();
 
-    LinearLayout result = new LinearLayout(MBApplicationController.getInstance().getBaseContext());
-    result.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-    result.setOrientation(LinearLayout.VERTICAL);
-    buildChildren(panel.getChildren(), result);
+        LinearLayout result = new LinearLayout(MBApplicationController.getInstance().getBaseContext());
+        result.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        result.setOrientation(LinearLayout.VERTICAL);
+        buildChildren(panel.getChildren(), result);
 
-    getStyleHandler().styleMatrixContainer(panel, result);
+        getStyleHandler().styleMatrixContainer(panel, result);
 
-    if (StringUtil.isNotEmpty(panel.getOutcomeName()))
-    {
-      result.setOnClickListener(panel);
+        if (StringUtil.isNotEmpty(panel.getOutcomeName())) {
+            result.setOnClickListener(panel);
+        }
+
+        return result;
+
     }
-
-    return result;
-
-  }
 }

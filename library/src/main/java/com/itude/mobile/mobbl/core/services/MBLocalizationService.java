@@ -15,187 +15,156 @@
  */
 package com.itude.mobile.mobbl.core.services;
 
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingFormatArgumentException;
-
 import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.MBProperties;
 import com.itude.mobile.mobbl.core.view.MBBundle;
 
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.Map;
+import java.util.MissingFormatArgumentException;
+
 /**
  * Service Class containing localization methods
- *
  */
-public class MBLocalizationService
-{
-  private final Map<String, MBBundle>  _languages;         //DictionaryofDictionaries(languagecode->(key->value))
-  private String                       _currentLanguage;
-  private MBBundle                     _currentLanguageMap;
-  private String                       _localeCode;
+public class MBLocalizationService {
+    private final Map<String, MBBundle> _languages;         //DictionaryofDictionaries(languagecode->(key->value))
+    private String _currentLanguage;
+    private MBBundle _currentLanguageMap;
+    private String _localeCode;
 
-  private static MBLocalizationService _instance;
+    private static MBLocalizationService _instance;
 
-  private MBLocalizationService()
-  {
-    _languages = new Hashtable<String, MBBundle>();
+    private MBLocalizationService() {
+        _languages = new Hashtable<String, MBBundle>();
 
-    // Let's set our language to the one we've set in our applicationproperties.xml or to a default one if none were found.
-    setCurrentLanguage(getLocale().getLanguage());
-  }
-
-  public static MBLocalizationService getInstance()
-  {
-    // so called double-check
-    if (_instance == null)
-    {
-      synchronized (MBLocalizationService.class)
-      {
-        if (_instance == null) _instance = new MBLocalizationService();
-      }
+        // Let's set our language to the one we've set in our applicationproperties.xml or to a default one if none were found.
+        setCurrentLanguage(getLocale().getLanguage());
     }
 
-    return _instance;
-  }
+    public static MBLocalizationService getInstance() {
+        // so called double-check
+        if (_instance == null) {
+            synchronized (MBLocalizationService.class) {
+                if (_instance == null) _instance = new MBLocalizationService();
+            }
+        }
 
-  private MBBundle getLanguageForCode(String languageCode)
-  {
-    MBBundle result = null;
-    result = _languages.get(languageCode);
-    if (result == null)
-    {
-      result = MBResourceService.getInstance().getBundle(languageCode);
-      _languages.put(languageCode, result);
+        return _instance;
     }
 
-    return result;
-  }
+    private MBBundle getLanguageForCode(String languageCode) {
+        MBBundle result = null;
+        result = _languages.get(languageCode);
+        if (result == null) {
+            result = MBResourceService.getInstance().getBundle(languageCode);
+            _languages.put(languageCode, result);
+        }
 
-  public String getTextForLanguageCode(String key, String languageCode)
-  {
-    if (getCurrentLanguage().equals(languageCode))
-    {
-      return getTextForKey(key);
+        return result;
     }
 
-    MBBundle bundle = getLanguageForCode(languageCode);
-    String text = bundle.getText(key);
+    public String getTextForLanguageCode(String key, String languageCode) {
+        if (getCurrentLanguage().equals(languageCode)) {
+            return getTextForKey(key);
+        }
 
-    if (text == null)
-    {
-      MBLog.w(MBConstants.APPLICATION_NAME, "No translation defined for key " + key + " using languageCode=" + languageCode);
-      text = key;
+        MBBundle bundle = getLanguageForCode(languageCode);
+        String text = bundle.getText(key);
+
+        if (text == null) {
+            MBLog.w(MBConstants.APPLICATION_NAME, "No translation defined for key " + key + " using languageCode=" + languageCode);
+            text = key;
+        }
+
+        return text;
     }
 
-    return text;
-  }
-
-  public String getCurrentLanguage()
-  {
-    return _currentLanguage;
-  }
-
-  public synchronized void setCurrentLanguage(String currentLanguage)
-  {
-    // If no localeCode was found then we set the default language to nl
-    if (currentLanguage == null || currentLanguage.length() <= 0)
-    {
-      currentLanguage = "nl";
+    public String getCurrentLanguage() {
+        return _currentLanguage;
     }
 
-    _currentLanguage = currentLanguage;
-    _currentLanguageMap = getLanguageForCode(_currentLanguage);
-  }
+    public synchronized void setCurrentLanguage(String currentLanguage) {
+        // If no localeCode was found then we set the default language to nl
+        if (currentLanguage == null || currentLanguage.length() <= 0) {
+            currentLanguage = "nl";
+        }
 
-  public String getTextForKey(String key)
-  {
-    if (key == null)
-    {
-      return null;
+        _currentLanguage = currentLanguage;
+        _currentLanguageMap = getLanguageForCode(_currentLanguage);
     }
 
-    MBBundle dict = _currentLanguageMap;
-    String text = dict.getText(key);
-    if (text == null)
-    {
-      MBLog.w(MBConstants.APPLICATION_NAME, "Warning: no translation defined for key '" + key + "' using languageCode="
-                                          + getCurrentLanguage());
-      // add the missing translation to prevent future warnings
-      dict.putText(key, key);
-      text = key;
+    public String getTextForKey(String key) {
+        if (key == null) {
+            return null;
+        }
+
+        MBBundle dict = _currentLanguageMap;
+        String text = dict.getText(key);
+        if (text == null) {
+            MBLog.w(MBConstants.APPLICATION_NAME, "Warning: no translation defined for key '" + key + "' using languageCode="
+                    + getCurrentLanguage());
+            // add the missing translation to prevent future warnings
+            dict.putText(key, key);
+            text = key;
+        }
+
+        return text;
     }
 
-    return text;
-  }
-
-  public static String getLocalizedString(String key)
-  {
-    return getInstance().getTextForKey(key);
-  }
-
-  /***
-   * @param key Key
-   * @param args Objects
-   * @return text
-   */
-  public String getText(String key, Object... args)
-  {
-    if (key == null)
-    {
-      return null;
+    public static String getLocalizedString(String key) {
+        return getInstance().getTextForKey(key);
     }
 
-    String text = getTextForKey(key);
-    String result = "";
-    try
-    {
-      result = String.format(text, args);
-    }
-    catch (MissingFormatArgumentException e)
-    {
-      MBLog.w(MBConstants.APPLICATION_NAME, e);
-      result = text;
-    }
+    /**
+     * @param key  Key
+     * @param args Objects
+     * @return text
+     */
+    public String getText(String key, Object... args) {
+        if (key == null) {
+            return null;
+        }
 
-    return result;
+        String text = getTextForKey(key);
+        String result = "";
+        try {
+            result = String.format(text, args);
+        } catch (MissingFormatArgumentException e) {
+            MBLog.w(MBConstants.APPLICATION_NAME, e);
+            result = text;
+        }
 
-  }
-
-  public String getLocaleCode()
-  {
-    if (_localeCode == null)
-    {
-      _localeCode = MBProperties.getInstance().getValueForProperty("localeCode");
-      if (_localeCode == null)
-      {
-        _localeCode = Locale.getDefault().toString();
-      }
-    }
-    return _localeCode;
-  }
-
-  public Locale getLocale()
-  {
-    String localeCode = getLocaleCode();
-
-    if (localeCode != null && localeCode.length() > 0)
-    {
-      String[] parts = localeCode.split("_");
-
-      if (parts.length == 1)
-      {
-        return new Locale(parts[0]);
-      }
-      else if (parts.length == 2)
-      {
-        return new Locale(parts[0], parts[1]);
-      }
+        return result;
 
     }
 
-    return null;
-  }
+    public String getLocaleCode() {
+        if (_localeCode == null) {
+            _localeCode = MBProperties.getInstance().getValueForProperty("localeCode");
+            if (_localeCode == null) {
+                _localeCode = Locale.getDefault().toString();
+            }
+        }
+        return _localeCode;
+    }
+
+    public Locale getLocale() {
+        String localeCode = getLocaleCode();
+
+        if (localeCode != null && localeCode.length() > 0) {
+            String[] parts = localeCode.split("_");
+
+            if (parts.length == 1) {
+                return new Locale(parts[0]);
+            } else if (parts.length == 2) {
+                return new Locale(parts[0], parts[1]);
+            }
+
+        }
+
+        return null;
+    }
 
 }

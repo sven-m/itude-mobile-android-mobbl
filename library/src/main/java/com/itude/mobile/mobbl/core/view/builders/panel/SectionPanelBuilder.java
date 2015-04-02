@@ -25,48 +25,45 @@ import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.view.MBPanel;
 import com.itude.mobile.mobbl.core.view.builders.MBPanelViewBuilder.BuildState;
 
-public class SectionPanelBuilder extends MBBasePanelBuilder
-{
+public class SectionPanelBuilder extends MBBasePanelBuilder {
 
-  @Override
-  public ViewGroup buildPanel(MBPanel panel, BuildState buildState)
-  {
-    boolean hasTitle = false;
-    Context context = MBApplicationController.getInstance().getBaseContext();
+    @Override
+    public ViewGroup buildPanel(MBPanel panel, BuildState buildState) {
+        boolean hasTitle = false;
+        Context context = MBApplicationController.getInstance().getBaseContext();
 
-    LinearLayout panelView = new LinearLayout(context);
-    panelView.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout panelView = new LinearLayout(context);
+        panelView.setOrientation(LinearLayout.VERTICAL);
 
-    if (panel.getTitle() != null)
-    {
-      // Show header at top of the section
-      hasTitle = true;
+        if (panel.getTitle() != null) {
+            // Show header at top of the section
+            hasTitle = true;
 
-      LinearLayout header = new LinearLayout(context);
-      header.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-      header.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout header = new LinearLayout(context);
+            header.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+            header.setOrientation(LinearLayout.VERTICAL);
 
-      TextView title = new TextView(header.getContext());
-      title.setText(panel.getTitle());
+            TextView title = new TextView(header.getContext());
+            title.setText(panel.getTitle());
 
-      getStyleHandler().styleSectionHeaderText(title);
-      getStyleHandler().styleSectionHeaderText(title, panel);
+            getStyleHandler().styleSectionHeaderText(title);
+            getStyleHandler().styleSectionHeaderText(title, panel);
 
-      header.addView(title);
+            header.addView(title);
 
-      getStyleHandler().styleSectionHeader(header);
-      getStyleHandler().styleSectionHeader(header, panel);
+            getStyleHandler().styleSectionHeader(header);
+            getStyleHandler().styleSectionHeader(header, panel);
 
-      panelView.addView(header);
+            panelView.addView(header);
+        }
+
+        buildChildren(panel.getChildren(), panelView);
+
+        getStyleHandler().styleSectionContainer(panelView, hasTitle);
+        getStyleHandler().styleSectionContainer(panelView, hasTitle, panel);
+
+        return panelView;
+
     }
-
-    buildChildren(panel.getChildren(), panelView);
-
-    getStyleHandler().styleSectionContainer(panelView, hasTitle);
-    getStyleHandler().styleSectionContainer(panelView, hasTitle, panel);
-
-    return panelView;
-
-  }
 
 }

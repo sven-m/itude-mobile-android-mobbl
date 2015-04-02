@@ -20,34 +20,29 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBAlertDefinition;
 /**
  * {@link MBOutcomeTask} class describing a alert task
  */
-public class MBAlertTask extends MBOutcomeTask
-{
-  private final MBAlertDefinition _alertDefinition;
+public class MBAlertTask extends MBOutcomeTask {
+    private final MBAlertDefinition _alertDefinition;
 
-  public MBAlertTask(MBOutcomeTaskManager manager, MBAlertDefinition alertDefinition)
-  {
-    super(manager);
-    _alertDefinition = alertDefinition;
-  }
+    public MBAlertTask(MBOutcomeTaskManager manager, MBAlertDefinition alertDefinition) {
+        super(manager);
+        _alertDefinition = alertDefinition;
+    }
 
-  public MBAlertDefinition getAlertDefinition()
-  {
-    return _alertDefinition;
-  }
+    public MBAlertDefinition getAlertDefinition() {
+        return _alertDefinition;
+    }
 
-  @Override
-  protected Threading getThreading()
-  {
-    return Threading.UI;
-  }
+    @Override
+    protected Threading getThreading() {
+        return Threading.UI;
+    }
 
-  @Override
-  protected void execute()
-  {
-    final MBApplicationController applicationController = MBApplicationController.getInstance();
-    applicationController.prepareAlert(new MBOutcome(getOutcome()), getAlertDefinition().getName(),
-                                       applicationController.getBackStackEnabled());
+    @Override
+    protected void execute() {
+        final MBApplicationController applicationController = MBApplicationController.getInstance();
+        applicationController.prepareAlert(new MBOutcome(getOutcome()), getAlertDefinition().getName(),
+                applicationController.getBackStackEnabled());
 
-  }
+    }
 
 }

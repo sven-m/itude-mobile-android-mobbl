@@ -20,27 +20,22 @@ import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 
 /**
  * {@link MBDefinition} Class for an action
- *
  */
-public class MBActionDefinition extends MBDefinition
-{
-  private String _className;
+public class MBActionDefinition extends MBDefinition {
+    private String _className;
 
-  @Override
-  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
-  {
-    return StringUtil.appendIndentString(appendToMe, level).append("<Action name='").append(getName()).append("' className='")
-        .append(getClassName()).append("'/>\n");
-  }
+    @Override
+    public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level) {
+        return StringUtil.appendIndentString(appendToMe, level).append("<Action name='").append(getName()).append("' className='")
+                .append(getClassName()).append("'/>\n");
+    }
 
-  public String getClassName()
-  {
-    return _className;
-  }
+    public String getClassName() {
+        return _className;
+    }
 
-  public void setClassName(String className)
-  {
-    _className = className;
-  }
+    public void setClassName(String className) {
+        _className = className;
+    }
 
 }

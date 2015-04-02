@@ -17,21 +17,17 @@ package com.itude.mobile.mobbl.core.services;
 
 /**
  * {@link MBEvent} class to hanlde session events
- *
  */
-public class MBSessionEvent extends MBEvent
-{
+public class MBSessionEvent extends MBEvent {
 
-  private final boolean _loggedIn;
+    private final boolean _loggedIn;
 
-  public MBSessionEvent(boolean loggedIn)
-  {
-    _loggedIn = loggedIn;
-  }
+    public MBSessionEvent(boolean loggedIn) {
+        _loggedIn = loggedIn;
+    }
 
-  public boolean isLoggedIn()
-  {
-    return _loggedIn;
-  }
+    public boolean isLoggedIn() {
+        return _loggedIn;
+    }
 
 }

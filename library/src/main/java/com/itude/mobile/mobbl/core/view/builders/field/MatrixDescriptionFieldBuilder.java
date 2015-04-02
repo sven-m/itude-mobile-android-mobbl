@@ -20,20 +20,18 @@ import android.widget.TextView;
 
 import com.itude.mobile.mobbl.core.view.MBField;
 
-public class MatrixDescriptionFieldBuilder extends MBBaseFieldBuilder
-{
+public class MatrixDescriptionFieldBuilder extends MBBaseFieldBuilder {
 
-  @Override
-  public View buildField(MBField field)
-  {
-    String value = field.getValuesForDisplay();
+    @Override
+    public View buildField(MBField field) {
+        String value = field.getValuesForDisplay();
 
-    // Title TextView
-    TextView label = buildTextViewWithValue(value);
+        // Title TextView
+        TextView label = buildTextViewWithValue(value);
 
-    getStyleHandler().styleMatrixRowDescription(label, field);
+        getStyleHandler().styleMatrixRowDescription(label, field);
 
-    return label;
-  }
+        return label;
+    }
 
 }

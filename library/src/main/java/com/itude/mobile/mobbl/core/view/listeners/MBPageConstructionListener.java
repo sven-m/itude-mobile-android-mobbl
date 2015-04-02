@@ -18,9 +18,8 @@ package com.itude.mobile.mobbl.core.view.listeners;
 import com.itude.mobile.mobbl.core.view.MBField;
 import com.itude.mobile.mobbl.core.view.MBPanel;
 
-public interface MBPageConstructionListener
-{
-  public void onConstructedField(MBField field);
+public interface MBPageConstructionListener {
+    public void onConstructedField(MBField field);
 
-  public void onConstructedPanel(MBPanel panel);
+    public void onConstructedPanel(MBPanel panel);
 }

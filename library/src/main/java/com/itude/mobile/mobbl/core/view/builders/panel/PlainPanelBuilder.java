@@ -24,27 +24,24 @@ import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.view.MBPanel;
 import com.itude.mobile.mobbl.core.view.builders.MBPanelViewBuilder.BuildState;
 
-public class PlainPanelBuilder extends MBBasePanelBuilder
-{
+public class PlainPanelBuilder extends MBBasePanelBuilder {
 
-  @Override
-  public ViewGroup buildPanel(MBPanel panel, BuildState buildState)
-  {
-    LinearLayout result = new LinearLayout(MBApplicationController.getInstance().getBaseContext());
+    @Override
+    public ViewGroup buildPanel(MBPanel panel, BuildState buildState) {
+        LinearLayout result = new LinearLayout(MBApplicationController.getInstance().getBaseContext());
 
-    final Context context = MBApplicationController.getInstance().getBaseContext();
+        final Context context = MBApplicationController.getInstance().getBaseContext();
 
-    getStyleHandler().styleBasicPanelHeader(result, panel.getStyle());
+        getStyleHandler().styleBasicPanelHeader(result, panel.getStyle());
 
-    if (panel.getTitle() != null)
-    {
-      TextView title = new TextView(context);
-      title.setText(panel.getTitle());
-      result.addView(title);
-      getStyleHandler().styleBasicPanelHeaderText(title);
+        if (panel.getTitle() != null) {
+            TextView title = new TextView(context);
+            title.setText(panel.getTitle());
+            result.addView(title);
+            getStyleHandler().styleBasicPanelHeaderText(title);
+        }
+        buildChildren(panel.getChildren(), result);
+        return result;
     }
-    buildChildren(panel.getChildren(), result);
-    return result;
-  }
 
 }

@@ -22,31 +22,30 @@ import com.itude.mobile.mobbl.core.services.operation.MBDocumentOperation;
 /**
  * Data handler interface
  */
-public interface MBDataHandler
-{
-  public MBDocument loadDocument(String documentName);
+public interface MBDataHandler {
+    public MBDocument loadDocument(String documentName);
 
-  public MBDocument loadFreshDocument(String documentName);
+    public MBDocument loadFreshDocument(String documentName);
 
-  public MBDocument loadDocument(String documentName, MBDocument args, MBEndPointDefinition endPointDefenition);
+    public MBDocument loadDocument(String documentName, MBDocument args, MBEndPointDefinition endPointDefenition);
 
-  public MBDocument loadFreshDocument(String documentName, MBDocument args, MBEndPointDefinition endPointDefenition);
+    public MBDocument loadFreshDocument(String documentName, MBDocument args, MBEndPointDefinition endPointDefenition);
 
-  public MBDocument loadDocument(String documentName, MBDocument args, String parser, MBEndPointDefinition endPoint);
+    public MBDocument loadDocument(String documentName, MBDocument args, String parser, MBEndPointDefinition endPoint);
 
-  public MBDocument loadFreshDocument(String documentName, MBDocument args, String parser, MBEndPointDefinition endPoint);
+    public MBDocument loadFreshDocument(String documentName, MBDocument args, String parser, MBEndPointDefinition endPoint);
 
-  public MBDocument loadDocument(String documentName, String parser);
+    public MBDocument loadDocument(String documentName, String parser);
 
-  public MBDocument loadFreshDocument(String documentName, String parser);
+    public MBDocument loadFreshDocument(String documentName, String parser);
 
-  public void storeDocument(MBDocument document);
+    public void storeDocument(MBDocument document);
 
-  public MBDocument loadDocument(String documentName, MBDocument args, MBEndPointDefinition endPointDefenition, String documentParser);
+    public MBDocument loadDocument(String documentName, MBDocument args, MBEndPointDefinition endPointDefenition, String documentParser);
 
-  public MBDocument loadFreshDocument(String documentName, MBDocument args, MBEndPointDefinition endPointDefenition, String documentParser);
+    public MBDocument loadFreshDocument(String documentName, MBDocument args, MBEndPointDefinition endPointDefenition, String documentParser);
 
-  public MBDocumentOperation createLoadDocumentOperation(String documentName, MBDocument arguments);
+    public MBDocumentOperation createLoadDocumentOperation(String documentName, MBDocument arguments);
 
-  public MBDocumentOperation createStoreDocumentOperation(MBDocument document);
+    public MBDocumentOperation createStoreDocumentOperation(MBDocument document);
 }

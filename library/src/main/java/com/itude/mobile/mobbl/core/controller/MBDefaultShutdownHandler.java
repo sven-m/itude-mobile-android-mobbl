@@ -15,23 +15,14 @@
  */
 package com.itude.mobile.mobbl.core.controller;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-
-import com.itude.mobile.mobbl.core.services.MBLocalizationService;
-
 /**
  * {@link MBShutdownHandler} class handling the default shutdown
- *
  */
-public class MBDefaultShutdownHandler extends MBShutdownHandler
-{
+public class MBDefaultShutdownHandler extends MBShutdownHandler {
 
-  @Override
-  public void onShutdown()
-  {
-    finish();
-  }
+    @Override
+    public void onShutdown() {
+        finish();
+    }
 
 }

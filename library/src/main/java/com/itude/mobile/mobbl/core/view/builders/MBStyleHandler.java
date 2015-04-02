@@ -20,7 +20,6 @@ import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
-import android.support.v7.app.ActionBar;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;

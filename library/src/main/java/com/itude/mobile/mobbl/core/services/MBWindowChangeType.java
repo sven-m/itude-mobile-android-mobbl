@@ -18,23 +18,20 @@ package com.itude.mobile.mobbl.core.services;
 /**
  * Window change types
  */
-public class MBWindowChangeType
-{
+public class MBWindowChangeType {
 
-  private final WindowChangeType eventType;
+    private final WindowChangeType eventType;
 
-  public enum WindowChangeType {
-    ACTIVATE, LEAVING, DESTROY
-  }
+    public enum WindowChangeType {
+        ACTIVATE, LEAVING, DESTROY
+    }
 
-  public MBWindowChangeType(WindowChangeType type)
-  {
-    this.eventType = type;
-  }
+    public MBWindowChangeType(WindowChangeType type) {
+        this.eventType = type;
+    }
 
-  public WindowChangeType getEventType()
-  {
-    return this.eventType;
-  }
+    public WindowChangeType getEventType() {
+        return this.eventType;
+    }
 
 }

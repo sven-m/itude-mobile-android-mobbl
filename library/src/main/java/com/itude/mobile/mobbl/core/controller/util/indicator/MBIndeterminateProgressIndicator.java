@@ -23,46 +23,37 @@ import com.itude.mobile.mobbl.core.util.MBCustomAttributeContainer;
 /**
  * {@link MBCountingIndicator} class defines an indeterminate progress indicator
  */
-public final class MBIndeterminateProgressIndicator extends MBCountingIndicator
-{
-  /**
-   * Default private constructor
-   */
-  MBIndeterminateProgressIndicator()
-  {
-
-  }
-
-  /**
-   * @see com.itude.mobile.mobbl.core.controller.util.indicator.MBCountingIndicator#show(android.app.Activity, com.itude.mobile.mobbl.core.util.MBCustomAttributeContainer)
-   */
-  @Override
-  protected void show(final Activity activity, MBCustomAttributeContainer customAttributes)
-  {
-    if (activity instanceof ActionBarActivity)
-    {
-      ((ActionBarActivity) activity).setSupportProgressBarIndeterminate(true);
-      ((ActionBarActivity) activity).setSupportProgressBarIndeterminateVisibility(true);
+public final class MBIndeterminateProgressIndicator extends MBCountingIndicator {
+    /**
+     * Default private constructor
+     */
+    MBIndeterminateProgressIndicator() {
 
     }
-    else
-    {
-      activity.setProgressBarIndeterminate(true);
-      activity.setProgressBarIndeterminateVisibility(true);
-    }
-  }
 
-  /**
-   * @see com.itude.mobile.mobbl.core.controller.util.indicator.MBCountingIndicator#dismiss(android.app.Activity)
-   */
-  @Override
-  protected void dismiss(final Activity activity)
-  {
-    if (activity instanceof ActionBarActivity)
-    {
-      ((ActionBarActivity) activity).setSupportProgressBarIndeterminateVisibility(false);
+    /**
+     * @see com.itude.mobile.mobbl.core.controller.util.indicator.MBCountingIndicator#show(android.app.Activity, com.itude.mobile.mobbl.core.util.MBCustomAttributeContainer)
+     */
+    @Override
+    protected void show(final Activity activity, MBCustomAttributeContainer customAttributes) {
+        if (activity instanceof ActionBarActivity) {
+            ((ActionBarActivity) activity).setSupportProgressBarIndeterminate(true);
+            ((ActionBarActivity) activity).setSupportProgressBarIndeterminateVisibility(true);
 
+        } else {
+            activity.setProgressBarIndeterminate(true);
+            activity.setProgressBarIndeterminateVisibility(true);
+        }
     }
-    else activity.setProgressBarIndeterminateVisibility(false);
-  }
+
+    /**
+     * @see com.itude.mobile.mobbl.core.controller.util.indicator.MBCountingIndicator#dismiss(android.app.Activity)
+     */
+    @Override
+    protected void dismiss(final Activity activity) {
+        if (activity instanceof ActionBarActivity) {
+            ((ActionBarActivity) activity).setSupportProgressBarIndeterminateVisibility(false);
+
+        } else activity.setProgressBarIndeterminateVisibility(false);
+    }
 }

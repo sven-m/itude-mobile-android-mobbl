@@ -25,84 +25,74 @@ import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBPage;
 
-public class MBPageViewBuilder extends MBViewBuilder
-{
+public class MBPageViewBuilder extends MBViewBuilder {
 
-  public ViewGroup buildPageView(MBPage page, boolean buildWithContent)
-  {
-    Context context = MBApplicationController.getInstance().getBaseContext();
-    MBStyleHandler styleHandler = getStyleHandler();
+    public ViewGroup buildPageView(MBPage page, boolean buildWithContent) {
+        Context context = MBApplicationController.getInstance().getBaseContext();
+        MBStyleHandler styleHandler = getStyleHandler();
 
     /*
      * Our view that will contain our header and potentially the page content
      */
-    LinearLayout main = new LinearLayout(context);
-    main.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-    main.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout main = new LinearLayout(context);
+        main.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        main.setOrientation(LinearLayout.VERTICAL);
 
-    if (page == null)
-    {
-      return main;
-    }
+        if (page == null) {
+            return main;
+        }
 
     /*
      * Create the content of this page if we want to
      */
-    LinearLayout view = null;
-    if (buildWithContent)
-    {
-      view = new LinearLayout(context);
-      view.setOrientation(LinearLayout.VERTICAL);
-      view.setScrollContainer(true);
-      view.setFadingEdgeLength(0);
-      view.setVerticalFadingEdgeEnabled(false);
+        LinearLayout view = null;
+        if (buildWithContent) {
+            view = new LinearLayout(context);
+            view.setOrientation(LinearLayout.VERTICAL);
+            view.setScrollContainer(true);
+            view.setFadingEdgeLength(0);
+            view.setVerticalFadingEdgeEnabled(false);
 
-      buildChildren(page.getChildren(), view);
+            buildChildren(page.getChildren(), view);
 
-      styleHandler.applyStyle(page, view);
-    }
+            styleHandler.applyStyle(page, view);
+        }
 
     /*
      * If we want to have a scrollview we will create one and add our content to it
      * If we don't want a scrollview but do want content we will add our content directly to our main view
      */
-    boolean buildWithScrollView = page.isScrollable();
+        boolean buildWithScrollView = page.isScrollable();
 
-    if (buildWithScrollView)
-    {
-      ScrollView scrollView = new ScrollView(context);
-      scrollView.setTag(MBConstants.C_PAGE_CONTENT_VIEW);
-      scrollView.setFadingEdgeLength(0);
-      scrollView.setVerticalFadingEdgeEnabled(false);
-      styleHandler.styleMainScrollbarView(page, scrollView);
+        if (buildWithScrollView) {
+            ScrollView scrollView = new ScrollView(context);
+            scrollView.setTag(MBConstants.C_PAGE_CONTENT_VIEW);
+            scrollView.setFadingEdgeLength(0);
+            scrollView.setVerticalFadingEdgeEnabled(false);
+            styleHandler.styleMainScrollbarView(page, scrollView);
 
-      if (buildWithContent)
-      {
-        scrollView.addView(view);
-      }
+            if (buildWithContent) {
+                scrollView.addView(view);
+            }
 
-      main.addView(scrollView);
+            main.addView(scrollView);
+        } else if (buildWithContent && view != null) {
+            styleHandler.styleMainScrollbarView(page, view);
+            main.addView(view);
+        }
+
+        main.setFadingEdgeLength(0);
+        main.setVerticalFadingEdgeEnabled(false);
+
+        return main;
     }
-    else if (buildWithContent && view != null)
-    {
-      styleHandler.styleMainScrollbarView(page, view);
-      main.addView(view);
+
+    public ViewGroup buildPageView(MBPage page) {
+        return buildPageView(page, true);
     }
 
-    main.setFadingEdgeLength(0);
-    main.setVerticalFadingEdgeEnabled(false);
-
-    return main;
-  }
-
-  public ViewGroup buildPageView(MBPage page)
-  {
-    return buildPageView(page, true);
-  }
-
-  public ViewGroup buildPageViewWithoutContent(MBPage page)
-  {
-    return buildPageView(page, false);
-  }
+    public ViewGroup buildPageViewWithoutContent(MBPage page) {
+        return buildPageView(page, false);
+    }
 
 }

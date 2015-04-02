@@ -21,21 +21,19 @@ import android.widget.LinearLayout;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.view.MBForEach;
 
-public class MBForEachViewBuilder extends MBViewBuilder
-{
+public class MBForEachViewBuilder extends MBViewBuilder {
 
-  public ViewGroup buildForEachView(MBForEach forEach)
-  {
+    public ViewGroup buildForEachView(MBForEach forEach) {
 
-    LinearLayout view = new LinearLayout(MBApplicationController.getInstance().getBaseContext());
-    view.setOrientation(LinearLayout.VERTICAL);
-    buildChildren(forEach.getRows(), view);
+        LinearLayout view = new LinearLayout(MBApplicationController.getInstance().getBaseContext());
+        view.setOrientation(LinearLayout.VERTICAL);
+        buildChildren(forEach.getRows(), view);
 
-    buildChildren(forEach.getChildren(), view);
+        buildChildren(forEach.getChildren(), view);
 
-    getStyleHandler().applyStyle(forEach, view);
+        getStyleHandler().applyStyle(forEach, view);
 
-    return view;
-  }
+        return view;
+    }
 
 }

@@ -15,173 +15,145 @@
  */
 package com.itude.mobile.mobbl.core.util;
 
-import java.util.Hashtable;
-import java.util.Map;
-
 import com.itude.mobile.android.util.FileUtil;
 import com.itude.mobile.android.util.log.MBLog;
 
-public class MBCacheWriter extends Thread
-{
-  private Map<String, String>       _registry;
-  private Map<String, String>       _documentTypes;
-  private Hashtable<String, String> _ttls;
-  private String                    _registryFileName;
-  private String                    _ttlsFileName;
-  private String                    _fileName;
-  private byte[]                    _data;
-  private Map<String, byte[]>       _temporaryMemoryCache;
-  private String                    _key;
+import java.util.Hashtable;
+import java.util.Map;
 
-  public MBCacheWriter(Map<String, String> registry, String registryFileName, Map<String, String> documentTypes,
-                       Hashtable<String, String> ttls, String ttlsFileName, String fileName, byte[] data,
-                       Map<String, byte[]> temporaryMemoryCache, String key)
-  {
-    setRegistry(registry);
-    setRegistryFileName(registryFileName);
-    setDocumentTypes(documentTypes);
-    setTtls(ttls);
-    setTtlsFileName(ttlsFileName);
-    setFileName(fileName);
-    setData(data);
-    setTemporaryMemoryCache(temporaryMemoryCache);
-    setKey(key);
-  }
+public class MBCacheWriter extends Thread {
+    private Map<String, String> _registry;
+    private Map<String, String> _documentTypes;
+    private Hashtable<String, String> _ttls;
+    private String _registryFileName;
+    private String _ttlsFileName;
+    private String _fileName;
+    private byte[] _data;
+    private Map<String, byte[]> _temporaryMemoryCache;
+    private String _key;
 
-  @Override
-  public void run()
-  {
-    try
-    {
-      synchronized (getRegistry())
-      {
+    public MBCacheWriter(Map<String, String> registry, String registryFileName, Map<String, String> documentTypes,
+                         Hashtable<String, String> ttls, String ttlsFileName, String fileName, byte[] data,
+                         Map<String, byte[]> temporaryMemoryCache, String key) {
+        setRegistry(registry);
+        setRegistryFileName(registryFileName);
+        setDocumentTypes(documentTypes);
+        setTtls(ttls);
+        setTtlsFileName(ttlsFileName);
+        setFileName(fileName);
+        setData(data);
+        setTemporaryMemoryCache(temporaryMemoryCache);
+        setKey(key);
+    }
 
-        Hashtable<String, String> combined = new Hashtable<String, String>();
+    @Override
+    public void run() {
+        try {
+            synchronized (getRegistry()) {
 
-        for (String key : getRegistry().keySet())
-        {
-          String value = getRegistry().get(key);
-          String docType = getDocumentTypes().get(key);
+                Hashtable<String, String> combined = new Hashtable<String, String>();
 
-          if (docType != null) value = value + ":" + docType;
-          combined.put(key, value);
+                for (String key : getRegistry().keySet()) {
+                    String value = getRegistry().get(key);
+                    String docType = getDocumentTypes().get(key);
+
+                    if (docType != null) value = value + ":" + docType;
+                    combined.put(key, value);
+                }
+
+                boolean success = FileUtil.getInstance().writeObjectToFile(getTtls(), getTtlsFileName());
+                success &= FileUtil.getInstance().writeObjectToFile(combined, getRegistryFileName());
+
+                if (success && getData() != null) {
+                    success = FileUtil.getInstance().writeToFile(getData(), getFileName(), null);
+                    if (!success)
+                        MBLog.e(MBConstants.APPLICATION_NAME, "Error caching data in " + getFileName());
+                } else if (!success)
+                    MBLog.w(MBConstants.APPLICATION_NAME, "Could not store the cache registry info in " + getRegistryFileName()
+                            + " and/or " + getTtlsFileName() + " skipping writing to the cache!");
+            }
+
+        } finally {
+            Map<String, byte[]> temporaryMemoryCache = getTemporaryMemoryCache();
+            synchronized (temporaryMemoryCache) {
+                if (getKey() != null) temporaryMemoryCache.remove(getKey());
+            }
         }
+    }
 
-        boolean success = FileUtil.getInstance().writeObjectToFile(getTtls(), getTtlsFileName());
-        success &= FileUtil.getInstance().writeObjectToFile(combined, getRegistryFileName());
+    ////////////////////////////
 
-        if (success && getData() != null)
-        {
-          success = FileUtil.getInstance().writeToFile(getData(), getFileName(), null);
-          if (!success) MBLog.e(MBConstants.APPLICATION_NAME, "Error caching data in " + getFileName());
+    public Map<String, String> getRegistry() {
+        return _registry;
+    }
+
+    public void setRegistry(Map<String, String> registry) {
+        _registry = registry;
+    }
+
+    public Map<String, String> getDocumentTypes() {
+        return _documentTypes;
+    }
+
+    public void setDocumentTypes(Map<String, String> documentTypes) {
+        _documentTypes = documentTypes;
+    }
+
+    public String getRegistryFileName() {
+        return _registryFileName;
+    }
+
+    public void setRegistryFileName(String registryFileName) {
+        _registryFileName = registryFileName;
+    }
+
+    public Hashtable<String, String> getTtls() {
+        return _ttls;
+    }
+
+    public void setTtls(Hashtable<String, String> ttls) {
+        _ttls = ttls;
+    }
+
+    public String getTtlsFileName() {
+        return _ttlsFileName;
+    }
+
+    public void setTtlsFileName(String ttlsFileName) {
+        _ttlsFileName = ttlsFileName;
+    }
+
+    public String getFileName() {
+        return _fileName;
+    }
+
+    public void setFileName(String fileName) {
+        _fileName = fileName;
+    }
+
+    public byte[] getData() {
+        return _data;
+    }
+
+    public void setData(byte[] data) {
+        if (data != null) {
+            _data = data.clone();
         }
-        else if (!success) MBLog.w(MBConstants.APPLICATION_NAME, "Could not store the cache registry info in " + getRegistryFileName()
-                                                               + " and/or " + getTtlsFileName() + " skipping writing to the cache!");
-      }
-
     }
-    finally
-    {
-      Map<String, byte[]> temporaryMemoryCache = getTemporaryMemoryCache();
-      synchronized (temporaryMemoryCache)
-      {
-        if (getKey() != null) temporaryMemoryCache.remove(getKey());
-      }
+
+    public Map<String, byte[]> getTemporaryMemoryCache() {
+        return _temporaryMemoryCache;
     }
-  }
 
-  ////////////////////////////
-
-  public Map<String, String> getRegistry()
-  {
-    return _registry;
-  }
-
-  public void setRegistry(Map<String, String> registry)
-  {
-    _registry = registry;
-  }
-
-  public Map<String, String> getDocumentTypes()
-  {
-    return _documentTypes;
-  }
-
-  public void setDocumentTypes(Map<String, String> documentTypes)
-  {
-    _documentTypes = documentTypes;
-  }
-
-  public String getRegistryFileName()
-  {
-    return _registryFileName;
-  }
-
-  public void setRegistryFileName(String registryFileName)
-  {
-    _registryFileName = registryFileName;
-  }
-
-  public Hashtable<String, String> getTtls()
-  {
-    return _ttls;
-  }
-
-  public void setTtls(Hashtable<String, String> ttls)
-  {
-    _ttls = ttls;
-  }
-
-  public String getTtlsFileName()
-  {
-    return _ttlsFileName;
-  }
-
-  public void setTtlsFileName(String ttlsFileName)
-  {
-    _ttlsFileName = ttlsFileName;
-  }
-
-  public String getFileName()
-  {
-    return _fileName;
-  }
-
-  public void setFileName(String fileName)
-  {
-    _fileName = fileName;
-  }
-
-  public byte[] getData()
-  {
-    return _data;
-  }
-
-  public void setData(byte[] data)
-  {
-    if (data != null)
-    {
-      _data = data.clone();
+    public void setTemporaryMemoryCache(Map<String, byte[]> temporaryMemoryCache) {
+        _temporaryMemoryCache = temporaryMemoryCache;
     }
-  }
 
-  public Map<String, byte[]> getTemporaryMemoryCache()
-  {
-    return _temporaryMemoryCache;
-  }
+    public String getKey() {
+        return _key;
+    }
 
-  public void setTemporaryMemoryCache(Map<String, byte[]> temporaryMemoryCache)
-  {
-    _temporaryMemoryCache = temporaryMemoryCache;
-  }
-
-  public String getKey()
-  {
-    return _key;
-  }
-
-  public void setKey(String key)
-  {
-    _key = key;
-  }
+    public void setKey(String key) {
+        _key = key;
+    }
 }

@@ -21,15 +21,13 @@ import android.widget.LinearLayout;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.view.MBForEachItem;
 
-public class MBForEachItemViewBuilder extends MBViewBuilder
-{
+public class MBForEachItemViewBuilder extends MBViewBuilder {
 
-  public ViewGroup buildForEachItemView(MBForEachItem row)
-  {
-    LinearLayout rowView = new LinearLayout(MBApplicationController.getInstance().getBaseContext());
-    buildChildren(row.getChildren(), rowView);
-    getStyleHandler().applyStyle(row, rowView);
-    return rowView;
-  }
+    public ViewGroup buildForEachItemView(MBForEachItem row) {
+        LinearLayout rowView = new LinearLayout(MBApplicationController.getInstance().getBaseContext());
+        buildChildren(row.getChildren(), rowView);
+        getStyleHandler().applyStyle(row, rowView);
+        return rowView;
+    }
 
 }

@@ -19,35 +19,31 @@ import com.itude.mobile.mobbl.core.MBException;
 
 /**
  * {@link MBException} class used when a document is invalid
- *
  */
-public class MBInvalidDocumentException extends MBException
-{
+public class MBInvalidDocumentException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 5444574699024339383L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 5444574699024339383L;
 
-  /**
-   * Constructor for MBInvalidDocumentException.
-   * 
-   * @param msg exception message
-   */
-  public MBInvalidDocumentException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBInvalidDocumentException.
+     *
+     * @param msg exception message
+     */
+    public MBInvalidDocumentException(String msg) {
+        super(msg);
+    }
 
-  /**
-   * Constructor for MBInvalidDocumentException.
-   * 
-   * @param msg exception message
-   * @param throwable throwable {@link Throwable}
-   */
-  public MBInvalidDocumentException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
+    /**
+     * Constructor for MBInvalidDocumentException.
+     *
+     * @param msg       exception message
+     * @param throwable throwable {@link Throwable}
+     */
+    public MBInvalidDocumentException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 
 }

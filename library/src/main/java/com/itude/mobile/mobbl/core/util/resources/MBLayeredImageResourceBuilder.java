@@ -15,8 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.util.resources;
 
-import java.util.List;
-
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -27,69 +25,54 @@ import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBItem;
 import com.itude.mobile.mobbl.core.view.MBResource;
 
-public class MBLayeredImageResourceBuilder implements MBResourceBuilder.Builder<Drawable>
-{
+import java.util.List;
 
-  @Override
-  public Drawable buildResource(MBResource resource)
-  {
-    List<MBItem> items = resource.getSortedItemsReversed();
+public class MBLayeredImageResourceBuilder implements MBResourceBuilder.Builder<Drawable> {
 
-    if (items.isEmpty())
-    {
-      return null;
+    @Override
+    public Drawable buildResource(MBResource resource) {
+        List<MBItem> items = resource.getSortedItemsReversed();
+
+        if (items.isEmpty()) {
+            return null;
+        }
+
+        Drawable[] layers = new Drawable[items.size()];
+
+        for (int i = 0; i < items.size(); i++) {
+            MBItem item = items.get(i);
+
+            String itemResource = item.getResource();
+
+            Drawable drawable = MBResourceService.getInstance().getImageByID(itemResource);
+
+            String align = item.getAlign();
+            if (drawable instanceof BitmapDrawable) {
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                setBitmapGravity(align, bitmapDrawable);
+
+                drawable = bitmapDrawable;
+            }
+            layers[i] = drawable;
+        }
+
+        LayerDrawable layerDrawable = new LayerDrawable(layers);
+        return layerDrawable;
     }
 
-    Drawable[] layers = new Drawable[items.size()];
-
-    for (int i = 0; i < items.size(); i++)
-    {
-      MBItem item = items.get(i);
-
-      String itemResource = item.getResource();
-
-      Drawable drawable = MBResourceService.getInstance().getImageByID(itemResource);
-
-      String align = item.getAlign();
-      if (drawable instanceof BitmapDrawable)
-      {
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-        setBitmapGravity(align, bitmapDrawable);
-
-        drawable = bitmapDrawable;
-      }
-      layers[i] = drawable;
+    private void setBitmapGravity(String align, BitmapDrawable drawable) {
+        if (MBConstants.C_GRAVITY_LEFT.equals(align)) {
+            drawable.setGravity(Gravity.START);
+        } else if (MBConstants.C_GRAVITY_RIGHT.equals(align)) {
+            drawable.setGravity(Gravity.END);
+        } else if (MBConstants.C_GRAVITY_TOP.equals(align)) {
+            drawable.setGravity(Gravity.TOP);
+        } else if (MBConstants.C_GRAVITY_BOTTOM.equals(align)) {
+            drawable.setGravity(Gravity.BOTTOM);
+        } else if (MBConstants.C_GRAVITY_CENTER.equals(align)) {
+            drawable.setGravity(Gravity.CENTER);
+        } else {
+            drawable.setGravity(Gravity.CENTER);
+        }
     }
-
-    LayerDrawable layerDrawable = new LayerDrawable(layers);
-    return layerDrawable;
-  }
-
-  private void setBitmapGravity(String align, BitmapDrawable drawable)
-  {
-    if (MBConstants.C_GRAVITY_LEFT.equals(align))
-    {
-      drawable.setGravity(Gravity.START);
-    }
-    else if (MBConstants.C_GRAVITY_RIGHT.equals(align))
-    {
-      drawable.setGravity(Gravity.END);
-    }
-    else if (MBConstants.C_GRAVITY_TOP.equals(align))
-    {
-      drawable.setGravity(Gravity.TOP);
-    }
-    else if (MBConstants.C_GRAVITY_BOTTOM.equals(align))
-    {
-      drawable.setGravity(Gravity.BOTTOM);
-    }
-    else if (MBConstants.C_GRAVITY_CENTER.equals(align))
-    {
-      drawable.setGravity(Gravity.CENTER);
-    }
-    else
-    {
-      drawable.setGravity(Gravity.CENTER);
-    }
-  }
 }

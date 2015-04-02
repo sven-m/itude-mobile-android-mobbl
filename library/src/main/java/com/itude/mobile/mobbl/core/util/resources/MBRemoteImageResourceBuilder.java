@@ -15,11 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.util.resources;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import android.graphics.drawable.Drawable;
 
 import com.itude.mobile.android.util.log.MBLog;
@@ -27,29 +22,27 @@ import com.itude.mobile.mobbl.core.services.MBResourceService;
 import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBResource;
 
-public class MBRemoteImageResourceBuilder implements MBResourceBuilder.Builder<Drawable>
-{
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-  @Override
-  public Drawable buildResource(MBResource resource)
-  {
-    Drawable image;
-    try
-    {
-      image = Drawable.createFromStream((InputStream) new URL(resource.getUrl()).getContent(), "src");
-    }
-    catch (MalformedURLException e)
-    {
-      MBLog.e(MBConstants.APPLICATION_NAME, "Not a correct img source: " + e.getMessage());
-      image = MBResourceService.getInstance().getImageByID(MBConstants.C_ICON_TRANSPARENT);
-    }
-    catch (IOException e)
-    {
-      MBLog.e(MBConstants.APPLICATION_NAME, "Could not read img: " + e.getMessage());
-      image = MBResourceService.getInstance().getImageByID(MBConstants.C_ICON_TRANSPARENT);
-    }
+public class MBRemoteImageResourceBuilder implements MBResourceBuilder.Builder<Drawable> {
 
-    return image;
-  }
+    @Override
+    public Drawable buildResource(MBResource resource) {
+        Drawable image;
+        try {
+            image = Drawable.createFromStream((InputStream) new URL(resource.getUrl()).getContent(), "src");
+        } catch (MalformedURLException e) {
+            MBLog.e(MBConstants.APPLICATION_NAME, "Not a correct img source: " + e.getMessage());
+            image = MBResourceService.getInstance().getImageByID(MBConstants.C_ICON_TRANSPARENT);
+        } catch (IOException e) {
+            MBLog.e(MBConstants.APPLICATION_NAME, "Could not read img: " + e.getMessage());
+            image = MBResourceService.getInstance().getImageByID(MBConstants.C_ICON_TRANSPARENT);
+        }
+
+        return image;
+    }
 
 }

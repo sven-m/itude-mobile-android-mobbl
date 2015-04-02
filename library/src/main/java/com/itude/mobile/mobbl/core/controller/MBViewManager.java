@@ -78,7 +78,7 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
     private int _defaultScreenOrientation;
 
     private MBDialogManager _dialogManager;
-    private MBHomeButtonHandler      _homeButtonHandler;
+    private MBHomeButtonHandler _homeButtonHandler;
     private MBShutdownHandler _shutdownHandler = new MBDefaultShutdownHandler();
 
     private View _container;
@@ -591,10 +591,8 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (item.getItemId() == android.R.id.home)
-        {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
             onHomeSelected();
             return true;
         }
@@ -602,10 +600,8 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
         return super.onOptionsItemSelected(item);
     }
 
-    public void onHomeSelected()
-    {
-        if (_homeButtonHandler != null)
-        {
+    public void onHomeSelected() {
+        if (_homeButtonHandler != null) {
             _homeButtonHandler.handleButton();
         }
     }
@@ -666,13 +662,11 @@ public abstract class MBViewManager extends ActionBarActivity implements MBDialo
         return _menu;
     }
 
-    public void setHomeButtonHandler(MBHomeButtonHandler handler)
-    {
+    public void setHomeButtonHandler(MBHomeButtonHandler handler) {
         _homeButtonHandler = handler;
     }
 
-    public void resetDefaultHomeButtonHandler()
-    {
+    public void resetDefaultHomeButtonHandler() {
         _homeButtonHandler = new MBDefaultHomeButtonHandler();
     }
 

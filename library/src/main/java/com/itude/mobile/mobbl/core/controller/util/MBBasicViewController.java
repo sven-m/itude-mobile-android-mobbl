@@ -277,10 +277,10 @@ public class MBBasicViewController extends DialogFragment
 
     /**
      * Set the Toolbar or Actionbar title
+     *
      * @param actionBarActivity @see android.support.v7.app.ActionBarActivity()
      */
-    protected void setToolbarTitle(ActionBarActivity actionBarActivity)
-    {
+    protected void setToolbarTitle(ActionBarActivity actionBarActivity) {
         final ActionBar actionBar = actionBarActivity.getSupportActionBar();
         if (actionBar != null) {
             if (StringUtil.isNotBlank(getPage().getTitle())) {

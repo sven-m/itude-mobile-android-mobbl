@@ -15,10 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.view;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -49,641 +45,529 @@ import com.itude.mobile.mobbl.core.util.MBParseUtil;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
 import com.itude.mobile.mobbl.core.view.builders.datatypes.MBDataTypeFormatterFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
 public class MBField extends MBComponent
-    implements
-      OnClickListener,
-      OnItemSelectedListener,
-      OnCheckedChangeListener,
-      TextWatcher,
-      OnKeyListener
-{
-  private static final Pattern  NUMBERPATTERN            = Pattern.compile("\\[[0-9]+\\]");
+        implements
+        OnClickListener,
+        OnItemSelectedListener,
+        OnCheckedChangeListener,
+        TextWatcher,
+        OnKeyListener {
+    private static final Pattern NUMBERPATTERN = Pattern.compile("\\[[0-9]+\\]");
 
-  private MBAttributeDefinition _attributeDefinition;
-  private boolean               _domainDetermined;
-  private MBDomainDefinition    _domainDefinition;
-  private String                _translatedPath;
-  private String                _label;
-  private String[]              _labelAttrs;
-  private String                _source;
-  private String                _dataType;
-  private String                _formatMask;
-  private String                _alignment;
-  private String                _valueIfNil;
-  private boolean               _hidden;
-  private int                   _width;
-  private int                   _height;
-  private String                _hint;
+    private MBAttributeDefinition _attributeDefinition;
+    private boolean _domainDetermined;
+    private MBDomainDefinition _domainDefinition;
+    private String _translatedPath;
+    private String _label;
+    private String[] _labelAttrs;
+    private String _source;
+    private String _dataType;
+    private String _formatMask;
+    private String _alignment;
+    private String _valueIfNil;
+    private boolean _hidden;
+    private int _width;
+    private int _height;
+    private String _hint;
 
-  private String                _cachedValue             = null;
-  private String                _cachedUntranslatedValue = null;
-  private boolean               _cachedValueSet          = false;
+    private String _cachedValue = null;
+    private String _cachedUntranslatedValue = null;
+    private boolean _cachedValueSet = false;
 
-  public MBField(MBDefinition definition, MBDocument document, MBComponentContainer parent)
-  {
-    super(definition, document, parent);
+    public MBField(MBDefinition definition, MBDocument document, MBComponentContainer parent) {
+        super(definition, document, parent);
 
-    _attributeDefinition = null;
-    _domainDetermined = false;
+        _attributeDefinition = null;
+        _domainDetermined = false;
 
-    MBFieldDefinition fieldDef = (MBFieldDefinition) getDefinition();
+        MBFieldDefinition fieldDef = (MBFieldDefinition) getDefinition();
 
-    if (fieldDef.getWidth() != null)
-    {
-      try
-      {
-        String theWidth = substituteExpressions(fieldDef.getWidth());
-        if (theWidth != null && theWidth.length() > 0)
-        {
-          setWidth(Integer.parseInt(theWidth));
+        if (fieldDef.getWidth() != null) {
+            try {
+                String theWidth = substituteExpressions(fieldDef.getWidth());
+                if (theWidth != null && theWidth.length() > 0) {
+                    setWidth(Integer.parseInt(theWidth));
+                } else {
+                    MBLog.w(MBConstants.APPLICATION_NAME, fieldDef.getWidth() + " could not be parsed als int");
+                }
+
+            } catch (NumberFormatException e) {
+                MBLog.d(MBConstants.APPLICATION_NAME, fieldDef.toString(), e);
+            }
         }
-        else
-        {
-          MBLog.w(MBConstants.APPLICATION_NAME, fieldDef.getWidth() + " could not be parsed als int");
+        if (fieldDef.getHeight() != null) {
+            try {
+                setHeight(Integer.parseInt(substituteExpressions(fieldDef.getHeight())));
+            } catch (NumberFormatException e) {
+                MBLog.d(MBConstants.APPLICATION_NAME, fieldDef.toString(), e);
+            }
         }
 
-      }
-      catch (NumberFormatException e)
-      {
-        MBLog.d(MBConstants.APPLICATION_NAME, fieldDef.toString(), e);
-      }
-    }
-    if (fieldDef.getHeight() != null)
-    {
-      try
-      {
-        setHeight(Integer.parseInt(substituteExpressions(fieldDef.getHeight())));
-      }
-      catch (NumberFormatException e)
-      {
-        MBLog.d(MBConstants.APPLICATION_NAME, fieldDef.toString(), e);
-      }
+        setStyle(substituteExpressions(fieldDef.getStyle()));
+        setDataType(substituteExpressions(fieldDef.getDataType()));
+        setValueIfNil(substituteExpressions(fieldDef.getValueIfNil()));
+        setLabel(substituteExpressions(fieldDef.getLabel()));
+        String labelAttrs = fieldDef.getLabelAttrs();
+        setLabelAttrs((labelAttrs != null) ? labelAttrs.split(",") : null);
+        setSource(substituteExpressions(fieldDef.getSource()));
+        setFormatMask(substituteExpressions(fieldDef.getFormatMask()));
+        setAlignment(substituteExpressions(fieldDef.getAlignment()));
+        setHidden(Boolean.parseBoolean(substituteExpressions(fieldDef.getHidden())));
+        setHint(substituteExpressions(fieldDef.getHint()));
+
+        MBApplicationFactory.getInstance().getPageConstructor().onConstructedField(this);
     }
 
-    setStyle(substituteExpressions(fieldDef.getStyle()));
-    setDataType(substituteExpressions(fieldDef.getDataType()));
-    setValueIfNil(substituteExpressions(fieldDef.getValueIfNil()));
-    setLabel(substituteExpressions(fieldDef.getLabel()));
-    String labelAttrs = fieldDef.getLabelAttrs();
-    setLabelAttrs((labelAttrs != null) ? labelAttrs.split(",") : null);
-    setSource(substituteExpressions(fieldDef.getSource()));
-    setFormatMask(substituteExpressions(fieldDef.getFormatMask()));
-    setAlignment(substituteExpressions(fieldDef.getAlignment()));
-    setHidden(Boolean.parseBoolean(substituteExpressions(fieldDef.getHidden())));
-    setHint(substituteExpressions(fieldDef.getHint()));
-
-    MBApplicationFactory.getInstance().getPageConstructor().onConstructedField(this);
-  }
-
-  @Override
-  public View buildView()
-  {
-    return MBViewBuilderFactory.getInstance().getFieldViewBuilder().buildFieldView(this);
-  }
-
-  public int getWidth()
-  {
-    return _width;
-  }
-
-  public void setWidth(int width)
-  {
-    _width = width;
-  }
-
-  public int getHeight()
-  {
-    return _height;
-  }
-
-  public void setHeight(int height)
-  {
-    _height = height;
-  }
-
-  public String getLabel()
-  {
-    if (getLabelAttrs() == null)
-    {
-      return MBLocalizationService.getInstance().getTextForKey(_label);
+    @Override
+    public View buildView() {
+        return MBViewBuilderFactory.getInstance().getFieldViewBuilder().buildFieldView(this);
     }
-    else
-    {
-      return MBLocalizationService.getInstance().getText(_label, (Object[]) getLabelAttrs());
+
+    public int getWidth() {
+        return _width;
     }
-  }
 
-  public void setLabel(String label)
-  {
-    _label = label;
-  }
-
-  public void setLabelAttrs(String[] labelAttrs)
-  {
-    if (labelAttrs != null && labelAttrs.length > 0)
-    {
-      String[] substitutes = new String[labelAttrs.length];
-      for (int i = 0; i < substitutes.length; i++)
-      {
-        String attr = labelAttrs[i];
-        String substituded = substituteExpressions(attr);
-        substitutes[i] = (substituded == null) ? getValueIfNil() : substituded;
-      }
-      labelAttrs = substitutes;
+    public void setWidth(int width) {
+        _width = width;
     }
-    _labelAttrs = labelAttrs;
-  }
 
-  public String[] getLabelAttrs()
-  {
-    return _labelAttrs;
-  }
-
-  public String getSource()
-  {
-    return _source;
-  }
-
-  public void setSource(String source)
-  {
-    _source = source;
-  }
-
-  public String getDataType()
-  {
-    String result = _dataType;
-    if (result == null)
-    {
-      MBDomainDefinition domain = getDomain();
-      if (domain != null) result = getDomain().getType();
-      if (result == null)
-      {
-        MBAttributeDefinition ad = getAttributeDefinition();
-        if (ad != null) result = getAttributeDefinition().getType();
-      }
+    public int getHeight() {
+        return _height;
     }
-    return result;
-  }
 
-  public boolean isNumeric()
-  {
-    String tp = getDataType();
+    public void setHeight(int height) {
+        _height = height;
+    }
 
-    return "int".equals(tp) || "float".equals(tp) || "double".equals(tp);
-  }
-
-  public void setDataType(String dataType)
-  {
-    _dataType = dataType;
-  }
-
-  public String getFormatMask()
-  {
-    return _formatMask;
-  }
-
-  public void setFormatMask(String formatMask)
-  {
-    _formatMask = formatMask;
-  }
-
-  public String getAlignment()
-  {
-    return _alignment;
-  }
-
-  public void setAlignment(String alignment)
-  {
-    _alignment = alignment;
-  }
-
-  public String getUntranslatedValueIfNil()
-  {
-    return _valueIfNil;
-  }
-
-  public String getValueIfNil()
-  {
-    return MBLocalizationService.getInstance().getTextForKey(_valueIfNil);
-  }
-
-  public void setValueIfNil(String valueIfNil)
-  {
-    _valueIfNil = valueIfNil;
-  }
-
-  public boolean isHidden()
-  {
-    return _hidden;
-  }
-
-  public void setHidden(boolean hidden)
-  {
-    _hidden = hidden;
-  }
-
-  public String getHint()
-  {
-    return _hint;
-  }
-
-  public void setHint(String hint)
-  {
-    _hint = hint;
-  }
-
-  /**
-   * Returns the value of this field, please note this is an EXPENSIVE call.
-   * Try not to call it repeatedly, but cache the value.
-   * @see #getValuesForDisplay()
-   */
-  public String getValue()
-  {
-    calculateValueIfNeeded();
-    return _cachedValue;
-  }
-
-  public String getUntranslatedValue()
-  {
-    calculateValueIfNeeded();
-    return _cachedUntranslatedValue;
-  }
-
-  private void calculateValueIfNeeded()
-  {
-    if (!_cachedValueSet)
-    {
-      String result = null;
-
-      if (getDocument() != null)
-      {
-        Object value = getDocument().getValueForPath(getAbsoluteDataPath());
-        if (value instanceof String) result = (String) value;
-        else if (value != null) result = value.toString();
-
-        _cachedUntranslatedValue = result;
-        // don't use the getter here!
-        if (_dataType == null)
-        {
-          result = MBLocalizationService.getInstance().getTextForKey(result);
+    public String getLabel() {
+        if (getLabelAttrs() == null) {
+            return MBLocalizationService.getInstance().getTextForKey(_label);
+        } else {
+            return MBLocalizationService.getInstance().getText(_label, (Object[]) getLabelAttrs());
         }
-      }
-      _cachedValue = result;
-      _cachedValueSet = true;
-
     }
 
-  }
-
-  public void setValue(boolean value)
-  {
-    setValue(value ? MBConstants.C_TRUE : MBConstants.C_FALSE);
-  }
-
-  public void setValue(String value)
-  {
-    String path = getAbsoluteDataPath();
-    String originalValue = (String) getDocument().getValueForPath(path);
-
-    boolean valueChanged = !ComparisonUtil.safeEquals(value, originalValue);
-
-    if (valueChanged && notifyValueWillChange(value, originalValue, path))
-    {
-      _cachedValueSet = false;
-      getDocument().setValue(value, path);
-      notifyValueChanged(value, originalValue, path);
+    public void setLabel(String label) {
+        _label = label;
     }
 
-  }
-
-  public String getPath()
-  {
-    return ((MBFieldDefinition) getDefinition()).getPath();
-  }
-
-  @Override
-  public String getType()
-  {
-    return ((MBFieldDefinition) getDefinition()).getDisplayType();
-  }
-
-  public String dataType()
-  {
-    return null;
-  }
-
-  public String getText()
-  {
-    return MBLocalizationService.getInstance().getTextForKey(((MBFieldDefinition) getDefinition()).getText());
-  }
-
-  @Override
-  public String getOutcomeName()
-  {
-    return ((MBFieldDefinition) getDefinition()).getOutcomeName();
-  }
-
-  public boolean required()
-  {
-    return false;
-  }
-
-  public MBDomainDefinition getDomain()
-  {
-    if (!_domainDetermined)
-    {
-      MBAttributeDefinition attrDef = getAttributeDefinition();
-      if (attrDef != null)
-      {
-        _domainDefinition = MBMetadataService.getInstance().getDefinitionForDomainName(attrDef.getType(), false);
-        _domainDetermined = true;
-      }
-    }
-    return _domainDefinition;
-  }
-
-  public MBAttributeDefinition getAttributeDefinition()
-  {
-    if (_attributeDefinition == null && getAbsoluteDataPath() != null)
-    {
-      String path = NUMBERPATTERN.matcher(getAbsoluteDataPath()).replaceAll("");
-      if (path == null)
-      {
-        return null;
-      }
-      try
-      {
-        _attributeDefinition = getDocument().getDefinition().getAttributeWithPath(path);
-      }
-      catch (MBInvalidPathException e)
-      {
-        // Button outcomes do not map to an attribute
-        MBLog.d(MBConstants.APPLICATION_NAME, "MBField.getAttributeDefinition() with path=" + path
-                                            + " does not map to an attribute. Probably an outcomePath for a Button.");
-      }
-    }
-
-    return _attributeDefinition;
-  }
-
-  // This will translate any expression that are part of the path to their actual values
-  @Override
-  public void translatePath()
-  {
-    _translatedPath = substituteExpressions(getAbsoluteDataPath());
-  }
-
-  @Override
-  public String getComponentDataPath()
-  {
-    String path = ((MBFieldDefinition) getDefinition()).getPath();
-    if (StringUtil.isEmpty(path))
-    {
-      return null;
-    }
-    return substituteExpressions(path);
-  }
-
-  @Override
-  public String getAbsoluteDataPath()
-  {
-    if (_translatedPath != null)
-    {
-      return _translatedPath;
-    }
-
-    return super.getAbsoluteDataPath();
-  }
-
-  private String formatValue()
-  {
-    String fieldValue = MBDataTypeFormatterFactory.getInstance().formatField(this);
-
-    if (fieldValue == null) return null;
-
-    // CURRENCY Symbols
-    if ("EURO".equals(getStyle()))
-    {
-      fieldValue = "€ " + fieldValue;
-    }
-
-    return fieldValue;
-  }
-
-  // Returns a path that has indexed expressions evaluated (translated) i.e. something like myelement[someattr='xx'] -> myelement[12]
-  // for the current document; where the 12th element is matched
-  public String evaluatedDataPath()
-  {
-    String path = getAbsoluteDataPath();
-    if (path != null && path.length() > 0 && path.contains("="))
-    {
-      // Now translate the index expressions like [someAttr=='x' and someOther=='y'] into [idx]
-      // We can only do this if the row that matches the expression does exist!
-      List<String> components = new ArrayList<String>();
-      String value = (String) getDocument().getValueForPath(path, components);
-
-      // Now glue together the components to make a full path again:
-      String result = "";
-      for (String part : components)
-      {
-        if (!part.endsWith(":"))
-        {
-          result += "/";
+    public void setLabelAttrs(String[] labelAttrs) {
+        if (labelAttrs != null && labelAttrs.length > 0) {
+            String[] substitutes = new String[labelAttrs.length];
+            for (int i = 0; i < substitutes.length; i++) {
+                String attr = labelAttrs[i];
+                String substituded = substituteExpressions(attr);
+                substitutes[i] = (substituded == null) ? getValueIfNil() : substituded;
+            }
+            labelAttrs = substitutes;
         }
-        result += part;
-      }
-      if (value != null)
-      {
+        _labelAttrs = labelAttrs;
+    }
+
+    public String[] getLabelAttrs() {
+        return _labelAttrs;
+    }
+
+    public String getSource() {
+        return _source;
+    }
+
+    public void setSource(String source) {
+        _source = source;
+    }
+
+    public String getDataType() {
+        String result = _dataType;
+        if (result == null) {
+            MBDomainDefinition domain = getDomain();
+            if (domain != null) result = getDomain().getType();
+            if (result == null) {
+                MBAttributeDefinition ad = getAttributeDefinition();
+                if (ad != null) result = getAttributeDefinition().getType();
+            }
+        }
         return result;
-      }
-
     }
 
-    return path;
-  }
+    public boolean isNumeric() {
+        String tp = getDataType();
 
-  @Override
-  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
-  {
-    try
-    {
-
-      StringUtil.appendIndentString(appendToMe, level).append("<MBField ").append(attributeAsXml("value", getValue())).append(" ")
-          .append(attributeAsXml("path", getAbsoluteDataPath())).append(" ").append(attributeAsXml("style", getStyle())).append(" ")
-          .append(attributeAsXml("label", getLabel())).append(" ").append(attributeAsXml("type", getType())).append(" ")
-          .append(attributeAsXml("dataType", getDataType())).append(" ").append(attributeAsXml("outcomeName", getOutcomeName()))
-          .append(" ").append(attributeAsXml("formatMask", getFormatMask())).append(" ")
-          .append(attributeAsXml("alignment", getAlignment())).append(" ").append(attributeAsXml("valueIfNil", getValueIfNil()))
-          .append(" ").append(" width='").append(getWidth()).append("' height='").append(getHeight()).append(" hint='").append(getHint())
-          .append("'/>\n");
-    }
-    catch (Exception e)
-    {
-      // dead code?
-      appendToMe.append("<MBField errorInDefinition='" + e.getClass().getSimpleName() + ", " + e.getCause() + "'/>\n");
-      MBLog.d(MBConstants.APPLICATION_NAME, e.getMessage(), e);
+        return "int".equals(tp) || "float".equals(tp) || "double".equals(tp);
     }
 
-    return appendToMe;
-  }
-
-  @Override
-  public String toString()
-  {
-    StringBuffer rt = new StringBuffer();
-    return asXmlWithLevel(rt, 0).toString();
-  }
-
-  // android.view.View.OnClickListener method
-  @Override
-  public void onClick(View v)
-  {
-
-    // Force the onscreen keyboard to be hidden
-    MBViewManager.getInstance().hideSoftKeyBoard(v);
-
-    // When this is being used as a ToggleButton
-    if (v instanceof ToggleButton)
-    {
-      ToggleButton tb = (ToggleButton) v;
-
-      if (tb.isChecked())
-      {
-        setValue(true);
-      }
-      else
-      {
-        setValue(false);
-      }
+    public void setDataType(String dataType) {
+        _dataType = dataType;
     }
-    else
-    {
-      // When this is being used as a Button
-      handleOutcome(getOutcomeName(), getAbsoluteDataPath());
+
+    public String getFormatMask() {
+        return _formatMask;
     }
-  }
 
-  // OnItemSelectedListener Methods
-  @Override
-  public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-  {
-    if (getDomain() != null && !getDomain().getDomainValidators().isEmpty())
-    {
-      String value = getDomain().getDomainValidators().get(position).getValue();
-      setValue(value);
+    public void setFormatMask(String formatMask) {
+        _formatMask = formatMask;
     }
-  }
 
-  @Override
-  public void onNothingSelected(AdapterView<?> parent)
-  {
-  }
-
-  //OnCheckedChangeListener Method
-  @Override
-  public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-  {
-    if (isChecked)
-    {
-      setValue(true);
+    public String getAlignment() {
+        return _alignment;
     }
-    else
-    {
-      setValue(false);
+
+    public void setAlignment(String alignment) {
+        _alignment = alignment;
     }
-  }
 
-  @Override
-  public void afterTextChanged(Editable s)
-  {
-  }
+    public String getUntranslatedValueIfNil() {
+        return _valueIfNil;
+    }
 
-  @Override
-  public void beforeTextChanged(CharSequence s, int start, int count, int after)
-  {
-  }
+    public String getValueIfNil() {
+        return MBLocalizationService.getInstance().getTextForKey(_valueIfNil);
+    }
 
-  @Override
-  public void onTextChanged(CharSequence s, int start, int before, int count)
-  {
-    String textFieldValue = s.toString();
+    public void setValueIfNil(String valueIfNil) {
+        _valueIfNil = valueIfNil;
+    }
 
-    // Representation to the User can be in Dutch (comma for decimal seperator). We need to check this before we store the value
-    if (MBLocalizationService.getInstance().getLocaleCode().equals(MBConstants.C_LOCALE_CODE_DUTCH)
-        || MBLocalizationService.getInstance().getLocaleCode().equals(MBConstants.C_LOCALE_CODE_ITALIAN))
-    {
-      if (getDataType().equals("double") || getDataType().equals("float"))
-      {
-        Float doubleValue = MBParseUtil.floatValueDutch(textFieldValue);
-        if (doubleValue != null)
-        {
-          textFieldValue = Float.toString(doubleValue);
+    public boolean isHidden() {
+        return _hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        _hidden = hidden;
+    }
+
+    public String getHint() {
+        return _hint;
+    }
+
+    public void setHint(String hint) {
+        _hint = hint;
+    }
+
+    /**
+     * Returns the value of this field, please note this is an EXPENSIVE call.
+     * Try not to call it repeatedly, but cache the value.
+     *
+     * @see #getValuesForDisplay()
+     */
+    public String getValue() {
+        calculateValueIfNeeded();
+        return _cachedValue;
+    }
+
+    public String getUntranslatedValue() {
+        calculateValueIfNeeded();
+        return _cachedUntranslatedValue;
+    }
+
+    private void calculateValueIfNeeded() {
+        if (!_cachedValueSet) {
+            String result = null;
+
+            if (getDocument() != null) {
+                Object value = getDocument().getValueForPath(getAbsoluteDataPath());
+                if (value instanceof String) result = (String) value;
+                else if (value != null) result = value.toString();
+
+                _cachedUntranslatedValue = result;
+                // don't use the getter here!
+                if (_dataType == null) {
+                    result = MBLocalizationService.getInstance().getTextForKey(result);
+                }
+            }
+            _cachedValue = result;
+            _cachedValueSet = true;
+
         }
-      }
-    }
-
-    setValue(textFieldValue);
-  }
-
-  @Override
-  public boolean onKey(View v, int keyCode, KeyEvent event)
-  {
-    if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK)
-    {
-      MBViewManager.getInstance().onKeyDown(keyCode, event);
-      return true;
-    }
-    else if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_MENU)
-    {
-      MBViewManager.getInstance().onMenuKeyDown(keyCode, event, v);
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Optimized method that does all formatting etc, it makes sure
-   * not to call expensive methods repeatedly.
-   * 
-   * @return the value to use for display on a view
-   */
-  public String getValuesForDisplay()
-  {
-    // note that getLabel does an expensive localization call
-    // therefore we directly check our member variable to determine
-    // if label is null
-    String value = getValueForDisplay();
-
-    if (_label != null)
-    {
-      String label = getLabel();
-      if (StringUtil.isNotBlank(value))
-      {
-        return label + " " + value;
-      }
-      else
-      {
-        return label;
-      }
 
     }
 
-    // getValue is not a simple getter, so make sure it isn't called
-    // unneeded
-    if (StringUtil.isNotBlank(value))
-    {
-      return value;
+    public void setValue(boolean value) {
+        setValue(value ? MBConstants.C_TRUE : MBConstants.C_FALSE);
     }
 
-    if (getValueIfNil() != null) return getValueIfNil();
+    public void setValue(String value) {
+        String path = getAbsoluteDataPath();
+        String originalValue = (String) getDocument().getValueForPath(path);
 
-    return null;
-  }
+        boolean valueChanged = !ComparisonUtil.safeEquals(value, originalValue);
 
-  private String getValueForDisplay()
-  {
-    //getValue is not a simple getter, so make sure it isn't called
-    // unneeded
-    return formatValue();
-  }
+        if (valueChanged && notifyValueWillChange(value, originalValue, path)) {
+            _cachedValueSet = false;
+            getDocument().setValue(value, path);
+            notifyValueChanged(value, originalValue, path);
+        }
+
+    }
+
+    public String getPath() {
+        return ((MBFieldDefinition) getDefinition()).getPath();
+    }
+
+    @Override
+    public String getType() {
+        return ((MBFieldDefinition) getDefinition()).getDisplayType();
+    }
+
+    public String dataType() {
+        return null;
+    }
+
+    public String getText() {
+        return MBLocalizationService.getInstance().getTextForKey(((MBFieldDefinition) getDefinition()).getText());
+    }
+
+    @Override
+    public String getOutcomeName() {
+        return ((MBFieldDefinition) getDefinition()).getOutcomeName();
+    }
+
+    public boolean required() {
+        return false;
+    }
+
+    public MBDomainDefinition getDomain() {
+        if (!_domainDetermined) {
+            MBAttributeDefinition attrDef = getAttributeDefinition();
+            if (attrDef != null) {
+                _domainDefinition = MBMetadataService.getInstance().getDefinitionForDomainName(attrDef.getType(), false);
+                _domainDetermined = true;
+            }
+        }
+        return _domainDefinition;
+    }
+
+    public MBAttributeDefinition getAttributeDefinition() {
+        if (_attributeDefinition == null && getAbsoluteDataPath() != null) {
+            String path = NUMBERPATTERN.matcher(getAbsoluteDataPath()).replaceAll("");
+            if (path == null) {
+                return null;
+            }
+            try {
+                _attributeDefinition = getDocument().getDefinition().getAttributeWithPath(path);
+            } catch (MBInvalidPathException e) {
+                // Button outcomes do not map to an attribute
+                MBLog.d(MBConstants.APPLICATION_NAME, "MBField.getAttributeDefinition() with path=" + path
+                        + " does not map to an attribute. Probably an outcomePath for a Button.");
+            }
+        }
+
+        return _attributeDefinition;
+    }
+
+    // This will translate any expression that are part of the path to their actual values
+    @Override
+    public void translatePath() {
+        _translatedPath = substituteExpressions(getAbsoluteDataPath());
+    }
+
+    @Override
+    public String getComponentDataPath() {
+        String path = ((MBFieldDefinition) getDefinition()).getPath();
+        if (StringUtil.isEmpty(path)) {
+            return null;
+        }
+        return substituteExpressions(path);
+    }
+
+    @Override
+    public String getAbsoluteDataPath() {
+        if (_translatedPath != null) {
+            return _translatedPath;
+        }
+
+        return super.getAbsoluteDataPath();
+    }
+
+    private String formatValue() {
+        String fieldValue = MBDataTypeFormatterFactory.getInstance().formatField(this);
+
+        if (fieldValue == null) return null;
+
+        // CURRENCY Symbols
+        if ("EURO".equals(getStyle())) {
+            fieldValue = "€ " + fieldValue;
+        }
+
+        return fieldValue;
+    }
+
+    // Returns a path that has indexed expressions evaluated (translated) i.e. something like myelement[someattr='xx'] -> myelement[12]
+    // for the current document; where the 12th element is matched
+    public String evaluatedDataPath() {
+        String path = getAbsoluteDataPath();
+        if (path != null && path.length() > 0 && path.contains("=")) {
+            // Now translate the index expressions like [someAttr=='x' and someOther=='y'] into [idx]
+            // We can only do this if the row that matches the expression does exist!
+            List<String> components = new ArrayList<String>();
+            String value = (String) getDocument().getValueForPath(path, components);
+
+            // Now glue together the components to make a full path again:
+            String result = "";
+            for (String part : components) {
+                if (!part.endsWith(":")) {
+                    result += "/";
+                }
+                result += part;
+            }
+            if (value != null) {
+                return result;
+            }
+
+        }
+
+        return path;
+    }
+
+    @Override
+    public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level) {
+        try {
+
+            StringUtil.appendIndentString(appendToMe, level).append("<MBField ").append(attributeAsXml("value", getValue())).append(" ")
+                    .append(attributeAsXml("path", getAbsoluteDataPath())).append(" ").append(attributeAsXml("style", getStyle())).append(" ")
+                    .append(attributeAsXml("label", getLabel())).append(" ").append(attributeAsXml("type", getType())).append(" ")
+                    .append(attributeAsXml("dataType", getDataType())).append(" ").append(attributeAsXml("outcomeName", getOutcomeName()))
+                    .append(" ").append(attributeAsXml("formatMask", getFormatMask())).append(" ")
+                    .append(attributeAsXml("alignment", getAlignment())).append(" ").append(attributeAsXml("valueIfNil", getValueIfNil()))
+                    .append(" ").append(" width='").append(getWidth()).append("' height='").append(getHeight()).append(" hint='").append(getHint())
+                    .append("'/>\n");
+        } catch (Exception e) {
+            // dead code?
+            appendToMe.append("<MBField errorInDefinition='" + e.getClass().getSimpleName() + ", " + e.getCause() + "'/>\n");
+            MBLog.d(MBConstants.APPLICATION_NAME, e.getMessage(), e);
+        }
+
+        return appendToMe;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer rt = new StringBuffer();
+        return asXmlWithLevel(rt, 0).toString();
+    }
+
+    // android.view.View.OnClickListener method
+    @Override
+    public void onClick(View v) {
+
+        // Force the onscreen keyboard to be hidden
+        MBViewManager.getInstance().hideSoftKeyBoard(v);
+
+        // When this is being used as a ToggleButton
+        if (v instanceof ToggleButton) {
+            ToggleButton tb = (ToggleButton) v;
+
+            if (tb.isChecked()) {
+                setValue(true);
+            } else {
+                setValue(false);
+            }
+        } else {
+            // When this is being used as a Button
+            handleOutcome(getOutcomeName(), getAbsoluteDataPath());
+        }
+    }
+
+    // OnItemSelectedListener Methods
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (getDomain() != null && !getDomain().getDomainValidators().isEmpty()) {
+            String value = getDomain().getDomainValidators().get(position).getValue();
+            setValue(value);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+    }
+
+    //OnCheckedChangeListener Method
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            setValue(true);
+        } else {
+            setValue(false);
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        String textFieldValue = s.toString();
+
+        // Representation to the User can be in Dutch (comma for decimal seperator). We need to check this before we store the value
+        if (MBLocalizationService.getInstance().getLocaleCode().equals(MBConstants.C_LOCALE_CODE_DUTCH)
+                || MBLocalizationService.getInstance().getLocaleCode().equals(MBConstants.C_LOCALE_CODE_ITALIAN)) {
+            if (getDataType().equals("double") || getDataType().equals("float")) {
+                Float doubleValue = MBParseUtil.floatValueDutch(textFieldValue);
+                if (doubleValue != null) {
+                    textFieldValue = Float.toString(doubleValue);
+                }
+            }
+        }
+
+        setValue(textFieldValue);
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK) {
+            MBViewManager.getInstance().onKeyDown(keyCode, event);
+            return true;
+        } else if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_MENU) {
+            MBViewManager.getInstance().onMenuKeyDown(keyCode, event, v);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Optimized method that does all formatting etc, it makes sure
+     * not to call expensive methods repeatedly.
+     *
+     * @return the value to use for display on a view
+     */
+    public String getValuesForDisplay() {
+        // note that getLabel does an expensive localization call
+        // therefore we directly check our member variable to determine
+        // if label is null
+        String value = getValueForDisplay();
+
+        if (_label != null) {
+            String label = getLabel();
+            if (StringUtil.isNotBlank(value)) {
+                return label + " " + value;
+            } else {
+                return label;
+            }
+
+        }
+
+        // getValue is not a simple getter, so make sure it isn't called
+        // unneeded
+        if (StringUtil.isNotBlank(value)) {
+            return value;
+        }
+
+        if (getValueIfNil() != null) return getValueIfNil();
+
+        return null;
+    }
+
+    private String getValueForDisplay() {
+        //getValue is not a simple getter, so make sure it isn't called
+        // unneeded
+        return formatValue();
+    }
 }

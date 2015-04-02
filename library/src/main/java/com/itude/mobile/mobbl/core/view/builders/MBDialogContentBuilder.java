@@ -15,10 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.view.builders;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.content.res.Configuration;
 import android.view.ViewGroup;
 import android.widget.LinearLayout.LayoutParams;
@@ -31,71 +27,69 @@ import com.itude.mobile.mobbl.core.controller.MBDialogController;
 import com.itude.mobile.mobbl.core.view.builders.dialog.SingleDialogBuilder;
 import com.itude.mobile.mobbl.core.view.builders.dialog.SplitDialogBuilder;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Coen Houtman
- *
- * Base class for all DialogBuilders
+ *         <p/>
+ *         Base class for all DialogBuilders
  */
-public class MBDialogContentBuilder
-{
-  public static abstract class Builder
-  {
-    public abstract ViewGroup buildDialog(List<Integer> sortedDialogIds);
+public class MBDialogContentBuilder {
+    public static abstract class Builder {
+        public abstract ViewGroup buildDialog(List<Integer> sortedDialogIds);
 
-    public void configurationChanged(Configuration newConfig, MBDialogController dialog)
-    {
+        public void configurationChanged(Configuration newConfig, MBDialogController dialog) {
+        }
+
+        /**
+         * Build the container in which to place the fragments. A RelativeLayout should provide
+         * enough flexibility to build any possible view. The view ids can be retrieved from the _sortedDialogIds.
+         *
+         * @return {@link android.widget.RelativeLayout}
+         */
+        protected RelativeLayout buildContainer() {
+            RelativeLayout mainContainer = new RelativeLayout(MBApplicationController.getInstance().getBaseContext());
+            mainContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+            return mainContainer;
+        }
+
+        protected MBStyleHandler getStyleHandler() {
+            return MBViewBuilderFactory.getInstance().getStyleHandler();
+        }
     }
 
-    /**
-     * Build the container in which to place the fragments. A RelativeLayout should provide
-     * enough flexibility to build any possible view. The view ids can be retrieved from the _sortedDialogIds.
-     * @return {@link android.widget.RelativeLayout}
-     */
-    protected RelativeLayout buildContainer()
-    {
-      RelativeLayout mainContainer = new RelativeLayout(MBApplicationController.getInstance().getBaseContext());
-      mainContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+    public static final String DEFAULT_SINGLE = "SINGLE";
+    public static final String DEFAULT_SPLIT = "SPLIT";
 
-      return mainContainer;
+    private Map<String, Builder> _registry;
+
+    public MBDialogContentBuilder() {
+        _registry = new HashMap<String, Builder>();
+        registerBuilder(DEFAULT_SPLIT, new SplitDialogBuilder());
+        registerBuilder(DEFAULT_SINGLE, new SingleDialogBuilder());
     }
 
-    protected MBStyleHandler getStyleHandler()
-    {
-      return MBViewBuilderFactory.getInstance().getStyleHandler();
+    public void registerBuilder(String type, Builder builder) {
+        AssertUtil.notNull("type", type);
+        AssertUtil.notNull("builder", builder);
+        _registry.put(type, builder);
     }
-  }
 
-  public static final String   DEFAULT_SINGLE = "SINGLE";
-  public static final String   DEFAULT_SPLIT  = "SPLIT";
+    public ViewGroup buildDialog(String dialogType, List<Integer> sortedDialogIds) {
+        Builder builder = _registry.get(dialogType);
+        if (builder == null)
+            throw new MBException("No dialog content builder for " + dialogType + " registered!");
+        return builder.buildDialog(sortedDialogIds);
+    }
 
-  private Map<String, Builder> _registry;
-
-  public MBDialogContentBuilder()
-  {
-    _registry = new HashMap<String, Builder>();
-    registerBuilder(DEFAULT_SPLIT, new SplitDialogBuilder());
-    registerBuilder(DEFAULT_SINGLE, new SingleDialogBuilder());
-  }
-
-  public void registerBuilder(String type, Builder builder)
-  {
-    AssertUtil.notNull("type", type);
-    AssertUtil.notNull("builder", builder);
-    _registry.put(type, builder);
-  }
-
-  public ViewGroup buildDialog(String dialogType, List<Integer> sortedDialogIds)
-  {
-    Builder builder = _registry.get(dialogType);
-    if (builder == null) throw new MBException("No dialog content builder for " + dialogType + " registered!");
-    return builder.buildDialog(sortedDialogIds);
-  }
-
-  public void handleConfigurationChanged(Configuration configuration, MBDialogController dialog)
-  {
-    Builder builder = _registry.get(dialog.getContentType());
-    if (builder == null) throw new MBException("No dialog content builder for " + dialog.getContentType() + " registered!");
-    builder.configurationChanged(configuration, dialog);
-  }
+    public void handleConfigurationChanged(Configuration configuration, MBDialogController dialog) {
+        Builder builder = _registry.get(dialog.getContentType());
+        if (builder == null)
+            throw new MBException("No dialog content builder for " + dialog.getContentType() + " registered!");
+        builder.configurationChanged(configuration, dialog);
+    }
 
 }

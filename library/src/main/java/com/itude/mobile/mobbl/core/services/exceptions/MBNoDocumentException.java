@@ -18,25 +18,22 @@ package com.itude.mobile.mobbl.core.services.exceptions;
 import com.itude.mobile.mobbl.core.MBException;
 
 /**
- * {@link MBException} class used when there is no document 
- *
+ * {@link MBException} class used when there is no document
  */
-public class MBNoDocumentException extends MBException
-{
+public class MBNoDocumentException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = -5786084215520035339L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5786084215520035339L;
 
-  /**
-   * Constructor for MBNoDocumentException.
-   * 
-   * @param msg exception message
-   */
-  public MBNoDocumentException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBNoDocumentException.
+     *
+     * @param msg exception message
+     */
+    public MBNoDocumentException(String msg) {
+        super(msg);
+    }
 
 }
