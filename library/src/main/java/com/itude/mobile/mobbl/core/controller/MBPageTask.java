@@ -18,44 +18,39 @@ package com.itude.mobile.mobbl.core.controller;
 import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController.PageBuildResult;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 
 /**
  * {@link MBOutcomeTask} class describing a page task
  */
-public class MBPageTask extends MBOutcomeTask<PageBuildResult>
-{
+public class MBPageTask extends MBOutcomeTask<PageBuildResult> {
 
-  private final MBPageDefinition _pageDefinition;
+    private final MBPageDefinition _pageDefinition;
 
-  public MBPageTask(MBOutcomeTaskManager manager, MBPageDefinition pageDefinition)
-  {
-    super(manager);
-    _pageDefinition = pageDefinition;
+    public MBPageTask(MBOutcomeTaskManager manager, MBPageDefinition pageDefinition) {
+        super(manager);
+        _pageDefinition = pageDefinition;
 
-  }
+    }
 
-  public MBPageDefinition getPageDefinition()
-  {
-    return _pageDefinition;
-  }
+    public MBPageDefinition getPageDefinition() {
+        return _pageDefinition;
+    }
 
-  @Override
-  protected Threading getThreading()
-  {
-    return getOutcome().getNoBackgroundProcessing() ? Threading.CURRENT : Threading.BACKGROUND;
-  }
+    @Override
+    protected Threading getThreading() {
+        return getOutcome().getNoBackgroundProcessing() ? Threading.CURRENT : Threading.BACKGROUND;
+    }
 
-  @Override
-  protected void execute()
-  {
-    MBLog.d(Constants.APPLICATION_NAME, "Going to page " + getPageDefinition().getName());
+    @Override
+    protected void execute() {
+        MBLog.d(MBConstants.APPLICATION_NAME, "Going to page " + getPageDefinition().getName());
 
-    final MBApplicationController applicationController = MBApplicationController.getInstance();
-    PageBuildResult result = applicationController.preparePage(new MBOutcome(getOutcome()), getPageDefinition().getName(),
-                                                               applicationController.getBackStackEnabled());
+        final MBApplicationController applicationController = MBApplicationController.getInstance();
+        PageBuildResult result = applicationController.preparePage(new MBOutcome(getOutcome()), getPageDefinition().getName(),
+                applicationController.getBackStackEnabled());
 
-    setResult(result);
-  }
+        setResult(result);
+    }
 
 }

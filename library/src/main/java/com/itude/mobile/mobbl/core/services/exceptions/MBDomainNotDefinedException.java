@@ -18,35 +18,31 @@ package com.itude.mobile.mobbl.core.services.exceptions;
 import com.itude.mobile.mobbl.core.MBException;
 
 /**
- * {@link MBException} class used when a domain is not defined 
- *
+ * {@link MBException} class used when a domain is not defined
  */
-public class MBDomainNotDefinedException extends MBException
-{
+public class MBDomainNotDefinedException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = -1075187635800211060L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -1075187635800211060L;
 
-  /**
-   * Constructor for MBDomainNotDefinedException.
-   * 
-   * @param msg exception message
-   */
-  public MBDomainNotDefinedException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBDomainNotDefinedException.
+     *
+     * @param msg exception message
+     */
+    public MBDomainNotDefinedException(String msg) {
+        super(msg);
+    }
 
-  /**
-   * Constructor for MBDomainNotDefinedException.
-   * 
-   * @param msg exception message
-   * @param throwable throwable {@link Throwable}
-   */
-  public MBDomainNotDefinedException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
+    /**
+     * Constructor for MBDomainNotDefinedException.
+     *
+     * @param msg       exception message
+     * @param throwable throwable {@link Throwable}
+     */
+    public MBDomainNotDefinedException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 }

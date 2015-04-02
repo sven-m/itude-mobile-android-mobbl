@@ -15,65 +15,58 @@
  */
 package com.itude.mobile.mobbl.core.util.resources;
 
-import java.util.Map;
-
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBItem;
 import com.itude.mobile.mobbl.core.view.MBResource;
 
-public class MBStatedImageResourceBuilder extends MBAbstractStatedResourceBuilder
-{
+import java.util.Map;
 
-  @Override
-  public Drawable buildResource(MBResource resource)
-  {
-    Map<String, MBItem> items = resource.getItems();
+public class MBStatedImageResourceBuilder extends MBAbstractStatedResourceBuilder {
 
-    MBItem enabled = items.get(Constants.C_STATED_RESOURCE_STATE_ENABLED);
-    MBItem selected = items.get(Constants.C_STATED_RESOURCE_STATE_SELECTED);
-    MBItem pressed = items.get(Constants.C_STATED_RESOURCE_STATE_PRESSED);
-    MBItem disabled = items.get(Constants.C_STATED_RESOURCE_STATE_DISABLED);
-    MBItem checked = items.get(Constants.C_STATED_RESOURCE_STATE_CHECKED);
+    @Override
+    public Drawable buildResource(MBResource resource) {
+        Map<String, MBItem> items = resource.getItems();
 
-    StateListDrawable stateListDrawable = new StateListDrawable();
+        MBItem enabled = items.get(MBConstants.C_STATED_RESOURCE_STATE_ENABLED);
+        MBItem selected = items.get(MBConstants.C_STATED_RESOURCE_STATE_SELECTED);
+        MBItem pressed = items.get(MBConstants.C_STATED_RESOURCE_STATE_PRESSED);
+        MBItem disabled = items.get(MBConstants.C_STATED_RESOURCE_STATE_DISABLED);
+        MBItem checked = items.get(MBConstants.C_STATED_RESOURCE_STATE_CHECKED);
 
-    if (pressed != null)
-    {
-      int[] itemStates = new int[]{android.R.attr.state_pressed};
+        StateListDrawable stateListDrawable = new StateListDrawable();
 
-      processItem(stateListDrawable, pressed, itemStates);
+        if (pressed != null) {
+            int[] itemStates = new int[]{android.R.attr.state_pressed};
+
+            processItem(stateListDrawable, pressed, itemStates);
+        }
+
+        if (enabled != null) {
+            int[] itemStates = new int[]{android.R.attr.state_enabled, -android.R.attr.state_selected};
+
+            processItem(stateListDrawable, enabled, itemStates);
+        }
+
+        if (disabled != null) {
+            int[] itemStates = new int[]{-android.R.attr.state_enabled};
+
+            processItem(stateListDrawable, disabled, itemStates);
+        }
+
+        if (selected != null) {
+            int[] itemStates = new int[]{android.R.attr.state_selected};
+
+            processItem(stateListDrawable, selected, itemStates);
+        }
+        if (checked != null) {
+            int[] itemStates = new int[]{android.R.attr.state_checked};
+
+            processItem(stateListDrawable, checked, itemStates);
+        }
+
+        return stateListDrawable;
     }
-
-    if (enabled != null)
-    {
-      int[] itemStates = new int[]{android.R.attr.state_enabled, -android.R.attr.state_selected};
-
-      processItem(stateListDrawable, enabled, itemStates);
-    }
-
-    if (disabled != null)
-    {
-      int[] itemStates = new int[]{-android.R.attr.state_enabled};
-
-      processItem(stateListDrawable, disabled, itemStates);
-    }
-
-    if (selected != null)
-    {
-      int[] itemStates = new int[]{android.R.attr.state_selected};
-
-      processItem(stateListDrawable, selected, itemStates);
-    }
-    if (checked != null)
-    {
-      int[] itemStates = new int[]{android.R.attr.state_checked};
-
-      processItem(stateListDrawable, checked, itemStates);
-    }
-
-    return stateListDrawable;
-  }
 }

@@ -19,24 +19,21 @@ import com.itude.mobile.mobbl.core.MBException;
 
 /**
  * {@link MBException} class used when an expression is not a boolean
- *
  */
-public class MBExpressionNotBooleanException extends MBException
-{
+public class MBExpressionNotBooleanException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 8019728941382376259L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 8019728941382376259L;
 
-  /**
-   * Constructor for MBExpressionNotBooleanException.
-   * 
-   * @param msg exception message
-   */
-  public MBExpressionNotBooleanException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBExpressionNotBooleanException.
+     *
+     * @param msg exception message
+     */
+    public MBExpressionNotBooleanException(String msg) {
+        super(msg);
+    }
 
 }

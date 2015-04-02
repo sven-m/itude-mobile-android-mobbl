@@ -25,44 +25,38 @@ import com.itude.mobile.mobbl.core.controller.MBViewManager;
 import com.itude.mobile.mobbl.core.view.MBDateField;
 import com.itude.mobile.mobbl.core.view.MBField;
 
-public class DateFieldBuilder extends DateTimeFieldBuilder
-{
+public class DateFieldBuilder extends DateTimeFieldBuilder {
 
-  @Override
-  protected View.OnClickListener getOnClickListener(final MBField field, final MBDateField df, final TextView value)
-  {
-    return new View.OnClickListener()
-    {
+    @Override
+    protected View.OnClickListener getOnClickListener(final MBField field, final MBDateField df, final TextView value) {
+        return new View.OnClickListener() {
 
-      @Override
-      public void onClick(View v)
-      {
-        final DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener()
-        {
-          @Override
-          public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
-          {
-            df.setDate(year, monthOfYear, dayOfMonth);
+            @Override
+            public void onClick(View v) {
+                final DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        df.setDate(year, monthOfYear, dayOfMonth);
 
-            field.setValue(DateUtil.dateToString(df.getCalender().getTime()));
+                        field.setValue(DateUtil.dateToString(df.getCalender().getTime()));
 
-            // Update our label
-            value.setText(DateUtil.dateToString(df.getCalender().getTime(), field.getFormatMask()));
+                        // Update our label
+                        value.setText(DateUtil.dateToString(df.getCalender().getTime(), field.getFormatMask()));
 
-          }
+                    }
+                };
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(MBViewManager.getInstance(), listener, df.getYear(), df.getMonth(),
+                        df.getDay());
+                datePickerDialog.setTitle(field.getLabel());
+                getStyleHandler().styleDatePickerDialog(datePickerDialog, field);
+                getStyleHandler().styleDatePickerDialog(datePickerDialog, value, field);
+
+                datePickerDialog.show();
+
+            }
         };
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(MBViewManager.getInstance(), listener, df.getYear(), df.getMonth(),
-            df.getDay());
-        datePickerDialog.setTitle(field.getLabel());
-        getStyleHandler().styleDatePickerDialog(datePickerDialog, field);
-        getStyleHandler().styleDatePickerDialog(datePickerDialog, value, field);
-
-        datePickerDialog.show();
-
-      }
-    };
-
-  }
+    }
 
 }

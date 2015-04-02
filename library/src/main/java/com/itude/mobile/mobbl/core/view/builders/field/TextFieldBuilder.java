@@ -20,45 +20,35 @@ import android.view.View;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBField;
 
-public class TextFieldBuilder extends MBBaseFieldBuilder
-{
+public class TextFieldBuilder extends MBBaseFieldBuilder {
 
-  @Override
-  public View buildField(MBField field)
-  {
-    String value = field.getValuesForDisplay();
+    @Override
+    public View buildField(MBField field) {
+        String value = field.getValuesForDisplay();
 
-    // Title TextView
-    TextView returnView = buildTextViewWithValue(value, TextType.html);
-    returnView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-    returnView.setEllipsize(null);
+        // Title TextView
+        TextView returnView = buildTextViewWithValue(value, TextType.html);
+        returnView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        returnView.setEllipsize(null);
 
-    if (field.getAlignment() != null)
-    {
-      if (field.getAlignment().equals(Constants.C_ALIGNMENT_RIGHT))
-      {
-        returnView.setGravity(Gravity.END);
-      }
-      else if (field.getAlignment().equals(Constants.C_ALIGNMENT_LEFT))
-      {
-        returnView.setGravity(Gravity.START);
-      }
-      else if (field.getAlignment().equals(Constants.C_ALIGNMENT_CENTER_VERTICAL))
-      {
-        returnView.setGravity(Gravity.CENTER_VERTICAL);
-      }
-      else if (field.getAlignment().equals(Constants.C_ALIGNMENT_CENTER))
-      {
-        returnView.setGravity(Gravity.CENTER);
-      }
+        if (field.getAlignment() != null) {
+            if (field.getAlignment().equals(MBConstants.C_ALIGNMENT_RIGHT)) {
+                returnView.setGravity(Gravity.END);
+            } else if (field.getAlignment().equals(MBConstants.C_ALIGNMENT_LEFT)) {
+                returnView.setGravity(Gravity.START);
+            } else if (field.getAlignment().equals(MBConstants.C_ALIGNMENT_CENTER_VERTICAL)) {
+                returnView.setGravity(Gravity.CENTER_VERTICAL);
+            } else if (field.getAlignment().equals(MBConstants.C_ALIGNMENT_CENTER)) {
+                returnView.setGravity(Gravity.CENTER);
+            }
+        }
+
+        getStyleHandler().styleTextView(returnView, field);
+
+        return returnView;
     }
-
-    getStyleHandler().styleTextView(returnView, field);
-
-    return returnView;
-  }
 
 }

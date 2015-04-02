@@ -19,13 +19,11 @@ import android.graphics.Color;
 
 import com.itude.mobile.mobbl.core.view.MBResource;
 
-public class MBColorResourceBuilder implements MBResourceBuilder.Builder<Integer>
-{
+public class MBColorResourceBuilder implements MBResourceBuilder.Builder<Integer> {
 
-  @Override
-  public Integer buildResource(MBResource resource)
-  {
-    return Color.parseColor(resource.getColor());
-  }
+    @Override
+    public Integer buildResource(MBResource resource) {
+        return Color.parseColor(resource.getColor());
+    }
 
 }

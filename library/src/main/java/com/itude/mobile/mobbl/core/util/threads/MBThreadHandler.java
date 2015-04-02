@@ -15,77 +15,64 @@
  */
 package com.itude.mobile.mobbl.core.util.threads;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+
+import com.itude.mobile.android.util.log.MBLog;
+import com.itude.mobile.mobbl.core.util.MBConstants;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-import android.annotation.TargetApi;
-import android.os.Build;
+public final class MBThreadHandler {
+    private final Set<MBThread> _runningThreads;
 
-import com.itude.mobile.android.util.log.MBLog;
-import com.itude.mobile.mobbl.core.util.Constants;
+    private static MBThreadHandler _instance = null;
 
-public final class MBThreadHandler
-{
-  private final Set<MBThread>    _runningThreads;
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    private MBThreadHandler() {
+        Set<MBThread> set;
+        try {
+            set = new ConcurrentSkipListSet<MBThread>(new Comparator<MBThread>() {
 
-  private static MBThreadHandler _instance = null;
+                @Override
+                public int compare(MBThread lhs, MBThread rhs) {
+                    return (int) (lhs.getId() - rhs.getId());
+                }
 
-  @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-  private MBThreadHandler()
-  {
-    Set<MBThread> set;
-    try
-    {
-      set = new ConcurrentSkipListSet<MBThread>(new Comparator<MBThread>()
-      {
+            });
+        } catch (Exception e) {
+            set = Collections.synchronizedSet(new HashSet<MBThread>());
+        }
+        _runningThreads = set;
+    }
 
-        @Override
-        public int compare(MBThread lhs, MBThread rhs)
-        {
-          return (int) (lhs.getId() - rhs.getId());
+    public static final MBThreadHandler getInstance() {
+        if (_instance == null) {
+            _instance = new MBThreadHandler();
         }
 
-      });
-    }
-    catch (Exception e)
-    {
-      set = Collections.synchronizedSet(new HashSet<MBThread>());
-    }
-    _runningThreads = set;
-  }
-
-  public static final MBThreadHandler getInstance()
-  {
-    if (_instance == null)
-    {
-      _instance = new MBThreadHandler();
+        return _instance;
     }
 
-    return _instance;
-  }
-
-  public void register(MBThread thread)
-  {
-    _runningThreads.add(thread);
-  }
-
-  public void unregister(MBThread thread)
-  {
-    _runningThreads.remove(thread);
-  }
-
-  public synchronized void stopAllRunningThreads()
-  {
-    MBLog.d(Constants.APPLICATION_NAME, "Stopping all running threads from MBThreadHandler");
-
-    for (MBThread thread : _runningThreads)
-    {
-      thread.interrupt();
+    public void register(MBThread thread) {
+        _runningThreads.add(thread);
     }
 
-    _runningThreads.clear();
-  }
+    public void unregister(MBThread thread) {
+        _runningThreads.remove(thread);
+    }
+
+    public synchronized void stopAllRunningThreads() {
+        MBLog.d(MBConstants.APPLICATION_NAME, "Stopping all running threads from MBThreadHandler");
+
+        for (MBThread thread : _runningThreads) {
+            thread.interrupt();
+        }
+
+        _runningThreads.clear();
+    }
 }

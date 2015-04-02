@@ -17,18 +17,14 @@ package com.itude.mobile.mobbl.core;
 
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.controller.MBApplicationFactory;
-import com.itude.mobile.mobbl.core.services.MBMetadataService;
 
 /**
  * {@link MBApplicationController} class with minimal settings
- *
  */
-public class MBApplicationCore extends MBApplicationController
-{
+public class MBApplicationCore extends MBApplicationController {
 
-  @Override
-  public void startController()
-  {
-    startApplication(MBApplicationFactory.getInstance());
-  }
+    @Override
+    public void startController() {
+        startApplication(MBApplicationFactory.getInstance());
+    }
 }

@@ -15,30 +15,26 @@
  */
 package com.itude.mobile.mobbl.core.controller.util;
 
+import com.itude.mobile.mobbl.core.controller.MBHomeButtonHandler;
 import com.itude.mobile.mobbl.core.controller.MBViewManager;
-import com.itude.mobile.mobbl.core.controller.MBViewManager.HomeButtonHandler;
 
 /**
- * {@link HomeButtonHandler} class to handle the default home button
- *
+ * {@link com.itude.mobile.mobbl.core.controller.MBHomeButtonHandler} class to handle the default home button
  */
-public class DefaultHomeButtonHandler implements HomeButtonHandler
-{
+public class MBDefaultHomeButtonHandler implements MBHomeButtonHandler {
 
-  /**
-   * @see com.itude.mobile.mobbl.core.controller.MBViewManager.HomeButtonHandler#handleButton()
-   */
-  @Override
-  public void handleButton()
-  {
-    MBViewManager viewManager = MBViewManager.getInstance();
+    /**
+     * @see com.itude.mobile.mobbl.core.controller.MBHomeButtonHandler#handleButton()
+     */
+    @Override
+    public void handleButton() {
+        MBViewManager viewManager = MBViewManager.getInstance();
 
-    if (viewManager == null)
-    {
-      return;
+        if (viewManager == null) {
+            return;
+        }
+        viewManager.getDialogManager().activateHome();
+
     }
-    viewManager.getDialogManager().activateHome();
-
-  }
 
 }

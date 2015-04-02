@@ -8,43 +8,35 @@ import com.itude.mobile.mobbl.core.controller.MBDialogController;
 import com.itude.mobile.mobbl.core.controller.MBViewManager;
 import com.itude.mobile.mobbl.core.view.builders.MBDialogDecorator;
 
-public class DefaultDialogDecorator extends MBDialogDecorator
-{
+public class DefaultDialogDecorator extends MBDialogDecorator {
 
-  public DefaultDialogDecorator(MBDialogController dialog)
-  {
-    super(dialog);
-  }
-
-  @Override
-  public void show()
-  {
-    MBViewManager.getInstance().setContentView(getDialog().getMainContainer());
-    MBViewManager.getInstance().setTitle(getDialog().getTitle());
-  }
-
-  @Override
-  public void presentFragment(Fragment fragment, int containerId, String name, boolean addToBackStack)
-  {
-
-    FragmentManager manager = MBViewManager.getInstance().getSupportFragmentManager();
-    FragmentTransaction transaction = manager.beginTransaction();
-    if (addToBackStack)
-    {
-      transaction.addToBackStack(name);
+    public DefaultDialogDecorator(MBDialogController dialog) {
+        super(dialog);
     }
-    else
-    {
-      if (manager.getBackStackEntryCount() != 0)
-      {
-        manager.popBackStack();
-        transaction.addToBackStack(name);
-      }
+
+    @Override
+    public void show() {
+        MBViewManager.getInstance().setContentView(getDialog().getMainContainer());
+        MBViewManager.getInstance().setTitle(getDialog().getTitle());
     }
-    transaction.replace(containerId, fragment, name);
 
-    transaction.commitAllowingStateLoss();
+    @Override
+    public void presentFragment(Fragment fragment, int containerId, String name, boolean addToBackStack) {
 
-  }
+        FragmentManager manager = MBViewManager.getInstance().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        if (addToBackStack) {
+            transaction.addToBackStack(name);
+        } else {
+            if (manager.getBackStackEntryCount() != 0) {
+                manager.popBackStack();
+                transaction.addToBackStack(name);
+            }
+        }
+        transaction.replace(containerId, fragment, name);
+
+        transaction.commitAllowingStateLoss();
+
+    }
 
 }

@@ -19,35 +19,31 @@ import com.itude.mobile.mobbl.core.MBException;
 
 /**
  * {@link MBException} class used when no index is specified
- *
  */
-public class MBNoIndexSpecifiedException extends MBException
-{
+public class MBNoIndexSpecifiedException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 5559020541333037781L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 5559020541333037781L;
 
-  /**
-   * Constructor for MBNoIndexSpecifiedException.
-   * 
-   * @param msg exception message
-   */
-  public MBNoIndexSpecifiedException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBNoIndexSpecifiedException.
+     *
+     * @param msg exception message
+     */
+    public MBNoIndexSpecifiedException(String msg) {
+        super(msg);
+    }
 
-  /**
-   * Constructor for MBNoIndexSpecifiedException.
-   * 
-   * @param msg exception message
-   * @param throwable throwable {@link Throwable}
-   */
-  public MBNoIndexSpecifiedException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
+    /**
+     * Constructor for MBNoIndexSpecifiedException.
+     *
+     * @param msg       exception message
+     * @param throwable throwable {@link Throwable}
+     */
+    public MBNoIndexSpecifiedException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 
 }

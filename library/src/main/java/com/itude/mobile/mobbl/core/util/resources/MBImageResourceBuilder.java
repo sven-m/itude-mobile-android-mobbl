@@ -15,8 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.util.resources;
 
-import java.util.Locale;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -28,95 +26,75 @@ import android.view.Gravity;
 import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 import com.itude.mobile.mobbl.core.services.MBResourceService;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.view.MBResource;
 
-public class MBImageResourceBuilder implements MBResourceBuilder.Builder<Drawable>
-{
+import java.util.Locale;
 
-  @Override
-  public Drawable buildResource(MBResource resource)
-  {
+public class MBImageResourceBuilder implements MBResourceBuilder.Builder<Drawable> {
 
-    // Only return an error if ways of getting the image fail
-    Exception error = null;
+    @Override
+    public Drawable buildResource(MBResource resource) {
 
-    String url = resource.getUrl();
-    if (url != null && url.startsWith("file://"))
-    {
+        // Only return an error if ways of getting the image fail
+        Exception error = null;
 
-      Context baseContext = MBApplicationController.getInstance().getBaseContext();
+        String url = resource.getUrl();
+        if (url != null && url.startsWith("file://")) {
 
-      String imageName = url.substring(7);
-      imageName = imageName.substring(0, imageName.indexOf(".")).toLowerCase(Locale.US);
+            Context baseContext = MBApplicationController.getInstance().getBaseContext();
 
-      Resources resources = baseContext.getResources();
+            String imageName = url.substring(7);
+            imageName = imageName.substring(0, imageName.indexOf(".")).toLowerCase(Locale.US);
 
-      try
-      {
-        int identifier = resources.getIdentifier(imageName, "drawable", baseContext.getPackageName());
-        Drawable drawable = resources.getDrawable(identifier);
-        if (drawable instanceof BitmapDrawable)
-        {
-          setBitmapGravity(resource.getAlign(), (BitmapDrawable) drawable);
+            Resources resources = baseContext.getResources();
+
+            try {
+                int identifier = resources.getIdentifier(imageName, "drawable", baseContext.getPackageName());
+                Drawable drawable = resources.getDrawable(identifier);
+                if (drawable instanceof BitmapDrawable) {
+                    setBitmapGravity(resource.getAlign(), (BitmapDrawable) drawable);
+                }
+                return drawable;
+            } catch (Exception e) {
+                error = e;
+            }
         }
-        return drawable;
-      }
-      catch (Exception e)
-      {
-        error = e;
-      }
+
+        // Now attempt to get the image from different sources
+        byte[] bytes = MBResourceService.getInstance().getResourceByURL(resource);
+        if (bytes == null) {
+            if (error != null) {
+                MBLog.w(MBConstants.APPLICATION_NAME, "Warning: could not load file for resource=" + resource.getId(), error);
+            } else {
+                MBLog.w(MBConstants.APPLICATION_NAME, "Warning: could not load file for resource=" + resource.getId());
+            }
+            return null;
+        }
+
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        if (bitmap == null) {
+            MBLog.w(MBConstants.APPLICATION_NAME, "Could not create image for resource=" + resource.getId());
+        }
+
+        Resources res = MBApplicationController.getInstance().getBaseContext().getResources();
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(res, bitmap);
+        setBitmapGravity(resource.getAlign(), bitmapDrawable);
+
+        return bitmapDrawable;
     }
 
-    // Now attempt to get the image from different sources
-    byte[] bytes = MBResourceService.getInstance().getResourceByURL(resource);
-    if (bytes == null)
-    {
-      if (error != null)
-      {
-        MBLog.w(Constants.APPLICATION_NAME, "Warning: could not load file for resource=" + resource.getId(), error);
-      }
-      else
-      {
-        MBLog.w(Constants.APPLICATION_NAME, "Warning: could not load file for resource=" + resource.getId());
-      }
-      return null;
+    private void setBitmapGravity(String align, BitmapDrawable drawable) {
+        if ("LEFT".equals(align)) {
+            drawable.setGravity(Gravity.START);
+        } else if ("RIGHT".equals(align)) {
+            drawable.setGravity(Gravity.END);
+        } else if ("TOP".equals(align)) {
+            drawable.setGravity(Gravity.TOP);
+        } else if ("BOTTOM".equals(align)) {
+            drawable.setGravity(Gravity.BOTTOM);
+        } else if ("CENTER".equals(align)) {
+            drawable.setGravity(Gravity.CENTER);
+        }
     }
-
-    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-    if (bitmap == null)
-    {
-      MBLog.w(Constants.APPLICATION_NAME, "Could not create image for resource=" + resource.getId());
-    }
-
-    Resources res = MBApplicationController.getInstance().getBaseContext().getResources();
-    BitmapDrawable bitmapDrawable = new BitmapDrawable(res, bitmap);
-    setBitmapGravity(resource.getAlign(), bitmapDrawable);
-
-    return bitmapDrawable;
-  }
-
-  private void setBitmapGravity(String align, BitmapDrawable drawable)
-  {
-    if ("LEFT".equals(align))
-    {
-      drawable.setGravity(Gravity.START);
-    }
-    else if ("RIGHT".equals(align))
-    {
-      drawable.setGravity(Gravity.END);
-    }
-    else if ("TOP".equals(align))
-    {
-      drawable.setGravity(Gravity.TOP);
-    }
-    else if ("BOTTOM".equals(align))
-    {
-      drawable.setGravity(Gravity.BOTTOM);
-    }
-    else if ("CENTER".equals(align))
-    {
-      drawable.setGravity(Gravity.CENTER);
-    }
-  }
 }

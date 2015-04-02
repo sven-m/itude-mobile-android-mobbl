@@ -20,38 +20,31 @@ import com.itude.mobile.mobbl.core.configuration.MBDefinition;
 
 /**
  * {@link MBDefinition} Class for a bundle
- *
  */
-public class MBBundleDefinition extends MBDefinition
-{
-  private String _languageCode;
-  private String _url;
+public class MBBundleDefinition extends MBDefinition {
+    private String _languageCode;
+    private String _url;
 
-  @Override
-  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
-  {
-    return StringUtil.appendIndentString(appendToMe, level).append("<Bundle languageCode='").append(getLanguageCode()).append("' url='")
-        .append(getUrl()).append("' />");
-  }
+    @Override
+    public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level) {
+        return StringUtil.appendIndentString(appendToMe, level).append("<Bundle languageCode='").append(getLanguageCode()).append("' url='")
+                .append(getUrl()).append("' />");
+    }
 
-  public String getLanguageCode()
-  {
-    return _languageCode;
-  }
+    public String getLanguageCode() {
+        return _languageCode;
+    }
 
-  public void setLanguageCode(String languageCode)
-  {
-    _languageCode = languageCode;
-  }
+    public void setLanguageCode(String languageCode) {
+        _languageCode = languageCode;
+    }
 
-  public String getUrl()
-  {
-    return _url;
-  }
+    public String getUrl() {
+        return _url;
+    }
 
-  public void setUrl(String url)
-  {
-    _url = url;
-  }
+    public void setUrl(String url) {
+        _url = url;
+    }
 
 }

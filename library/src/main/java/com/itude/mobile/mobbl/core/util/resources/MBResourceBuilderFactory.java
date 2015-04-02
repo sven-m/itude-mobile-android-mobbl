@@ -15,46 +15,38 @@
  */
 package com.itude.mobile.mobbl.core.util.resources;
 
-public class MBResourceBuilderFactory
-{
-  private static MBResourceBuilderFactory _instance;
+public class MBResourceBuilderFactory {
+    private static MBResourceBuilderFactory _instance;
 
-  private MBResourceBuilder               _resourceBuilder;
-  private MBBundleBuilder                 _bundleResourceBuilder;
+    private MBResourceBuilder _resourceBuilder;
+    private MBBundleBuilder _bundleResourceBuilder;
 
-  private MBResourceBuilderFactory()
-  {
-    _resourceBuilder = new MBResourceBuilder();
-    _bundleResourceBuilder = new MBBundleBuilder();
-  }
-
-  public static MBResourceBuilderFactory getInstance()
-  {
-    if (_instance == null)
-    {
-      _instance = new MBResourceBuilderFactory();
+    private MBResourceBuilderFactory() {
+        _resourceBuilder = new MBResourceBuilder();
+        _bundleResourceBuilder = new MBBundleBuilder();
     }
 
-    return _instance;
-  }
+    public static MBResourceBuilderFactory getInstance() {
+        if (_instance == null) {
+            _instance = new MBResourceBuilderFactory();
+        }
 
-  public MBResourceBuilder getResourceBuilder()
-  {
-    return _resourceBuilder;
-  }
+        return _instance;
+    }
 
-  public void setResourceBuilder(MBResourceBuilder resourceBuilder)
-  {
-    _resourceBuilder = resourceBuilder;
-  }
+    public MBResourceBuilder getResourceBuilder() {
+        return _resourceBuilder;
+    }
 
-  public MBBundleBuilder getBundleResourceBuilder()
-  {
-    return _bundleResourceBuilder;
-  }
+    public void setResourceBuilder(MBResourceBuilder resourceBuilder) {
+        _resourceBuilder = resourceBuilder;
+    }
 
-  public void setBundleResourceBuilder(MBBundleBuilder bundleResourceBuilder)
-  {
-    _bundleResourceBuilder = bundleResourceBuilder;
-  }
+    public MBBundleBuilder getBundleResourceBuilder() {
+        return _bundleResourceBuilder;
+    }
+
+    public void setBundleResourceBuilder(MBBundleBuilder bundleResourceBuilder) {
+        _bundleResourceBuilder = bundleResourceBuilder;
+    }
 }

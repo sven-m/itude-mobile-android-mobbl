@@ -19,35 +19,31 @@ import com.itude.mobile.mobbl.core.MBException;
 
 /**
  * {@link MBException} class used when a file is not found
- *
  */
-public class MBFileNotFoundException extends MBException
-{
+public class MBFileNotFoundException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = -3520108136271868523L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -3520108136271868523L;
 
-  /**
-   * Constructor for MBFileNotFoundException.
-   * 
-   * @param msg exception message
-   */
-  public MBFileNotFoundException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBFileNotFoundException.
+     *
+     * @param msg exception message
+     */
+    public MBFileNotFoundException(String msg) {
+        super(msg);
+    }
 
-  /**
-   * Constructor for MBFileNotFoundException.
-   * 
-   * @param msg exception message
-   * @param throwable throwable {@link Throwable}
-   */
-  public MBFileNotFoundException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
+    /**
+     * Constructor for MBFileNotFoundException.
+     *
+     * @param msg       exception message
+     * @param throwable throwable {@link Throwable}
+     */
+    public MBFileNotFoundException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 
 }

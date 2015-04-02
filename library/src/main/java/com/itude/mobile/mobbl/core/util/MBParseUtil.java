@@ -18,82 +18,67 @@ package com.itude.mobile.mobbl.core.util;
 import com.itude.mobile.android.util.StringUtil;
 import com.itude.mobile.android.util.log.MBLog;
 
-public final class MBParseUtil
-{
-  private MBParseUtil()
-  {
-  }
-
-  public static Float floatValueDutch(String stringToConvert)
-  {
-    // if we have a comma, replace with a dot
-    String converted = stringToConvert.replace(",", ".");
-
-    Float returnValue = null;
-    try
-    {
-      returnValue = Float.parseFloat(converted);
-    }
-    catch (NumberFormatException e)
-    {
-      MBLog.d(Constants.APPLICATION_NAME, "Could not convert " + stringToConvert + " to float");
+public final class MBParseUtil {
+    private MBParseUtil() {
     }
 
-    return returnValue;
-  }
+    public static Float floatValueDutch(String stringToConvert) {
+        // if we have a comma, replace with a dot
+        String converted = stringToConvert.replace(",", ".");
 
-  public static Double doubleValueDutch(String stringToConvert)
-  {
-    if (stringToConvert == null)
-    {
-      return null;
+        Float returnValue = null;
+        try {
+            returnValue = Float.parseFloat(converted);
+        } catch (NumberFormatException e) {
+            MBLog.d(MBConstants.APPLICATION_NAME, "Could not convert " + stringToConvert + " to float");
+        }
+
+        return returnValue;
     }
 
-    // if we have a comma, replace with a dot
-    String converted = stringToConvert.replace(",", ".");
+    public static Double doubleValueDutch(String stringToConvert) {
+        if (stringToConvert == null) {
+            return null;
+        }
 
-    // remove everything but a dash, point/period, comma and numerics
-    converted = converted.replaceAll("[^-.,0-9]", "");
+        // if we have a comma, replace with a dot
+        String converted = stringToConvert.replace(",", ".");
 
-    Double returnValue = null;
-    try
-    {
-      returnValue = Double.parseDouble(converted);
-    }
-    catch (NumberFormatException e)
-    {
-      MBLog.w(Constants.APPLICATION_NAME, "Could not convert " + stringToConvert + " to double");
-    }
+        // remove everything but a dash, point/period, comma and numerics
+        converted = converted.replaceAll("[^-.,0-9]", "");
 
-    return returnValue;
-  }
+        Double returnValue = null;
+        try {
+            returnValue = Double.parseDouble(converted);
+        } catch (NumberFormatException e) {
+            MBLog.w(MBConstants.APPLICATION_NAME, "Could not convert " + stringToConvert + " to double");
+        }
 
-  public static boolean booleanValue(String bool, boolean returnValueIfNotParsed)
-  {
-    Boolean parsed = strictBooleanValue(bool);
-    if (parsed == null)
-    {
-      return returnValueIfNotParsed;
+        return returnValue;
     }
 
-    return parsed;
-  }
+    public static boolean booleanValue(String bool, boolean returnValueIfNotParsed) {
+        Boolean parsed = strictBooleanValue(bool);
+        if (parsed == null) {
+            return returnValueIfNotParsed;
+        }
 
-  public static boolean booleanValue(String bool)
-  {
-    return booleanValue(bool, false);
-  }
+        return parsed;
+    }
 
-  public static Boolean strictBooleanValue(String bool)
-  {
-    if (StringUtil.isEmpty(bool)) return null;
-    // you should only use C_TRUE; the rest is there for legacy purposes
-    if (bool.equalsIgnoreCase(Constants.C_TRUE) || bool.equals("1") || bool.equals("1.0") || bool.equalsIgnoreCase("true")
-        || bool.equalsIgnoreCase("yes")) return true;
-    else if (bool.equalsIgnoreCase(Constants.C_FALSE) || bool.equals("0") || bool.equals("0.0") || bool.equalsIgnoreCase("false")
-             || bool.equalsIgnoreCase("no")) return false;
-    else return null;
+    public static boolean booleanValue(String bool) {
+        return booleanValue(bool, false);
+    }
 
-  }
+    public static Boolean strictBooleanValue(String bool) {
+        if (StringUtil.isEmpty(bool)) return null;
+        // you should only use C_TRUE; the rest is there for legacy purposes
+        if (bool.equalsIgnoreCase(MBConstants.C_TRUE) || bool.equals("1") || bool.equals("1.0") || bool.equalsIgnoreCase("true")
+                || bool.equalsIgnoreCase("yes")) return true;
+        else if (bool.equalsIgnoreCase(MBConstants.C_FALSE) || bool.equals("0") || bool.equals("0.0") || bool.equalsIgnoreCase("false")
+                || bool.equalsIgnoreCase("no")) return false;
+        else return null;
+
+    }
 
 }

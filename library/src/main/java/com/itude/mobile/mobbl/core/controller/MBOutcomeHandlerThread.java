@@ -19,32 +19,26 @@ import android.os.HandlerThread;
 
 /**
  * {@link HandlerThread} class for a outcome
- *
  */
-public class MBOutcomeHandlerThread extends HandlerThread
-{
-  private MBOutcomeHandler _outcomeHandler;
+public class MBOutcomeHandlerThread extends HandlerThread {
+    private MBOutcomeHandler _outcomeHandler;
 
-  public MBOutcomeHandlerThread(String name)
-  {
-    super(name);
-  }
+    public MBOutcomeHandlerThread(String name) {
+        super(name);
+    }
 
-  @Override
-  public void run()
-  {
-    super.run();
-    _outcomeHandler = null;
-  }
+    @Override
+    public void run() {
+        super.run();
+        _outcomeHandler = null;
+    }
 
-  @Override
-  protected void onLooperPrepared()
-  {
-    _outcomeHandler = new MBOutcomeHandler();
-  }
+    @Override
+    protected void onLooperPrepared() {
+        _outcomeHandler = new MBOutcomeHandler();
+    }
 
-  public MBOutcomeHandler getOutcomeHandler()
-  {
-    return _outcomeHandler;
-  }
+    public MBOutcomeHandler getOutcomeHandler() {
+        return _outcomeHandler;
+    }
 }

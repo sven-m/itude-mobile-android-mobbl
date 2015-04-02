@@ -19,39 +19,34 @@ import android.content.Context;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
-import com.itude.mobile.mobbl.core.util.ScreenConstants;
+import com.itude.mobile.mobbl.core.util.MBScreenConstants;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
 
 /**
  * @deprecated
- *
  */
 @Deprecated
-public class MBSegmentedControl extends RadioGroup
-{
-  public MBSegmentedControl(Context context)
-  {
-    super(context);
-    setOrientation(RadioGroup.HORIZONTAL);
-  }
+public class MBSegmentedControl extends RadioGroup {
+    public MBSegmentedControl(Context context) {
+        super(context);
+        setOrientation(RadioGroup.HORIZONTAL);
+    }
 
-  public void addItem(int id, String text)
-  {
-    addItem(id, getChildCount(), text);
-  }
+    public void addItem(int id, String text) {
+        addItem(id, getChildCount(), text);
+    }
 
-  public void addItem(int id, int index, String text)
-  {
-    LinearLayout.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
-        RadioGroup.LayoutParams.WRAP_CONTENT, 1);
-    MBSegmentedItem item = new MBSegmentedItem(getContext());
+    public void addItem(int id, int index, String text) {
+        LinearLayout.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
+                RadioGroup.LayoutParams.WRAP_CONTENT, 1);
+        MBSegmentedItem item = new MBSegmentedItem(getContext());
 
-    item.setPadding(0, ScreenConstants.FIVE, 0, ScreenConstants.FIVE);
-    item.setId(id);
-    item.setText(text);
+        item.setPadding(0, MBScreenConstants.FIVE, 0, MBScreenConstants.FIVE);
+        item.setId(id);
+        item.setText(text);
 
-    MBViewBuilderFactory.getInstance().getStyleHandler().styleSegmentedItem(item);
+        MBViewBuilderFactory.getInstance().getStyleHandler().styleSegmentedItem(item);
 
-    addView(item, index, layoutParams);
-  }
+        addView(item, index, layoutParams);
+    }
 }

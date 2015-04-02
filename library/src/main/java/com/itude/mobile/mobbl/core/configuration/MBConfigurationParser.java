@@ -15,20 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.configuration;
 
-import java.io.ByteArrayInputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 import com.itude.mobile.android.util.DataUtil;
 import com.itude.mobile.android.util.log.MBLog;
 import com.itude.mobile.mobbl.core.configuration.exceptions.MBUnknownElementException;
@@ -44,312 +30,266 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBOutcomeDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBPageStackDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBToolDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBFileNotFoundException;
 import com.itude.mobile.mobbl.core.configuration.resources.MBItemDefinition;
 import com.itude.mobile.mobbl.core.configuration.resources.MBResourceDefinition;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import java.io.ByteArrayInputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 /**
-* Parsers the configuration file
-*/
-public abstract class MBConfigurationParser extends DefaultHandler
-{
-  private Stack<MBDefinition>    _stack;
-  private StringBuffer           _characters;
-  private String                 _documentName;
-  private MBIncludableDefinition _rootConfig;
+ * Parsers the configuration file
+ */
+public abstract class MBConfigurationParser extends DefaultHandler {
+    private Stack<MBDefinition> _stack;
+    private StringBuffer _characters;
+    private String _documentName;
+    private MBIncludableDefinition _rootConfig;
 
-  public String getDocumentName()
-  {
-    return _documentName;
-  }
-
-  public void setDocumentName(String documentName)
-  {
-    _documentName = documentName;
-  }
-
-  public MBDefinition parseData(byte[] data, String documentName)
-  {
-
-    _stack = new Stack<MBDefinition>();
-    _characters = new StringBuffer();
-
-    try
-    {
-      SAXParserFactory factory = SAXParserFactory.newInstance();
-      SAXParser parser = factory.newSAXParser();
-
-      parser.parse(new ByteArrayInputStream(data), this);
-
-      return _stack.peek();
+    public String getDocumentName() {
+        return _documentName;
     }
-    catch (Exception e)
-    {
-      MBLog.e(Constants.APPLICATION_NAME, "Unable to parse document " + documentName, e);
+
+    public void setDocumentName(String documentName) {
+        _documentName = documentName;
+    }
+
+    public MBDefinition parseData(byte[] data, String documentName) {
+
+        _stack = new Stack<MBDefinition>();
+        _characters = new StringBuffer();
+
+        try {
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            SAXParser parser = factory.newSAXParser();
+
+            parser.parse(new ByteArrayInputStream(data), this);
+
+            return _stack.peek();
+        } catch (Exception e) {
+            MBLog.e(MBConstants.APPLICATION_NAME, "Unable to parse document " + documentName, e);
 
       /*
        * CH: In some magical way, the exception itself can be null. Well it can't, but it sometimes is.
        * In my case I used the MBMetadataService before the config was loaded. Please add hints if the hint below
        * doesn't suffice. Please ignore the dead code warning!!
        */
-      if (e == null)
-      {
-        MBLog.e(Constants.APPLICATION_NAME, "Maybe the config is not loaded yet. (Hint: MBMetadataService)");
-      }
+            if (e == null) {
+                MBLog.e(MBConstants.APPLICATION_NAME, "Maybe the config is not loaded yet. (Hint: MBMetadataService)");
+            }
+        }
+
+        return null;
     }
 
-    return null;
-  }
-
-  public void parser(Object parser, String string)
-  {
-  }
-
-  public boolean processElement(String elementName, Map<String, String> attributeDict)
-  {
-    if (elementName.equals("Include"))
-    {
-      String name = attributeDict.get("name");
-
-      MBConfigurationParser parser = null;
-      try
-      {
-        // creates a new parser of the same type, e.g: an MBMvcConfigurationParser for the config
-        parser = getClass().newInstance();
-      }
-      catch (InstantiationException e)
-      {
-        MBLog.e(Constants.APPLICATION_NAME, "Unable to create new parser for element Include", e);
-      }
-      catch (IllegalAccessException e)
-      {
-        MBLog.e(Constants.APPLICATION_NAME, "Unable to create new parser for element Include", e);
-      }
-
-      byte[] data = DataUtil.getInstance().readFromAssetOrFile(name);
-      if (data == null)
-      {
-        throw new MBFileNotFoundException(name);
-      }
-
-      //      MBConfigurationDefinition include = (MBConfigurationDefinition) parser.parseData(data, name);
-      MBIncludableDefinition definition = (MBIncludableDefinition) parser.parseData(data, name);
-
-      // dynamically cast the definition
-      _rootConfig.getClass().cast(definition);
-      _rootConfig.addAll(definition);
-    }
-    else
-    {
-      return false;
+    public void parser(Object parser, String string) {
     }
 
-    return true;
-  }
+    public boolean processElement(String elementName, Map<String, String> attributeDict) {
+        if (elementName.equals("Include")) {
+            String name = attributeDict.get("name");
 
-  //  public abstract MBConfigurationParser getNewInstance();
+            MBConfigurationParser parser = null;
+            try {
+                // creates a new parser of the same type, e.g: an MBMvcConfigurationParser for the config
+                parser = getClass().newInstance();
+            } catch (InstantiationException e) {
+                MBLog.e(MBConstants.APPLICATION_NAME, "Unable to create new parser for element Include", e);
+            } catch (IllegalAccessException e) {
+                MBLog.e(MBConstants.APPLICATION_NAME, "Unable to create new parser for element Include", e);
+            }
 
-  public void didProcessElement(String elementName)
-  {
-  }
+            byte[] data = DataUtil.getInstance().readFromAssetOrFile(name);
+            if (data == null) {
+                throw new MBFileNotFoundException(name);
+            }
 
-  public boolean isConcreteElement(String element)
-  {
-    return element.equals("Include");
-  }
+            //      MBConfigurationDefinition include = (MBConfigurationDefinition) parser.parseData(data, name);
+            MBIncludableDefinition definition = (MBIncludableDefinition) parser.parseData(data, name);
 
-  public boolean isIgnoredElement(String element)
-  {
-    return false;
-  }
+            // dynamically cast the definition
+            _rootConfig.getClass().cast(definition);
+            _rootConfig.addAll(definition);
+        } else {
+            return false;
+        }
 
-  public boolean checkAttributesForElement(String elementName, Map<String, String> attributes, List<String> valids)
-  {
-    boolean result = true;
-
-    Iterator<String> keys = attributes.keySet().iterator();
-    String nextKey = "";
-    while (keys.hasNext())
-    {
-      nextKey = keys.next();
-      if (!valids.contains(nextKey))
-      {
-        MBLog.w(Constants.APPLICATION_NAME, "****WARNING Invalid attribute " + nextKey + " for element " + elementName + " in document "
-                                            + _documentName);
-        result = false;
-      }
+        return true;
     }
 
-    return result;
-  }
+    //  public abstract MBConfigurationParser getNewInstance();
 
-  public void notifyProcessed(MBDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBDocumentDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBActionDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBDomainValidatorDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBElementDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBAttributeDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBDomainDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBOutcomeDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBPageDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBPageStackDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBDialogDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBToolDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBAlertDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBResourceDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBBundleDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public void notifyProcessed(MBItemDefinition definition)
-  {
-    getStack().peek().addChildElement(definition);
-    getStack().push(definition);
-  }
-
-  public Stack<MBDefinition> getStack()
-  {
-    if (_stack == null)
-    {
-      _stack = new Stack<MBDefinition>();
-    }
-    return _stack;
-  }
-
-  public String getCharacters()
-  {
-    return _characters.toString();
-  }
-
-  @Override
-  public void characters(char[] ch, int start, int length) throws SAXException
-  {
-    _characters.append(ch, start, length);
-  }
-
-  @Override
-  public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
-  {
-    _characters = new StringBuffer();
-
-    if (isConcreteElement(localName))
-    {
-      HashMap<String, String> attributeValues = new HashMap<String, String>();
-      for (int i = 0; i < attributes.getLength(); i++)
-      {
-        attributeValues.put(attributes.getLocalName(i), attributes.getValue(i));
-      }
-
-      if (!processElement(localName, attributeValues))
-      {
-        String message = "Document " + _documentName + ": Element " + localName + " not defined";
-        throw new MBUnknownElementException(message);
-      }
-
-      _stack.peek().validateDefinition();
+    public void didProcessElement(String elementName) {
     }
 
-  }
-
-  @Override
-  public void endElement(String uri, String localName, String qName) throws SAXException
-  {
-
-    if (!isIgnoredElement(localName))
-    {
-      if (!isConcreteElement(localName))
-      {
-        String message = "Document " + _documentName + ": Element " + localName + " not defined";
-        throw new MBUnknownElementException(message);
-      }
-
-      didProcessElement(localName);
+    public boolean isConcreteElement(String element) {
+        return element.equals("Include");
     }
 
-  }
+    public boolean isIgnoredElement(String element) {
+        return false;
+    }
 
-  protected MBIncludableDefinition getRootConfig()
-  {
-    return _rootConfig;
-  }
+    public boolean checkAttributesForElement(String elementName, Map<String, String> attributes, List<String> valids) {
+        boolean result = true;
 
-  protected void setRootConfig(MBIncludableDefinition rootConfig)
-  {
-    _rootConfig = rootConfig;
-  }
+        Iterator<String> keys = attributes.keySet().iterator();
+        String nextKey = "";
+        while (keys.hasNext()) {
+            nextKey = keys.next();
+            if (!valids.contains(nextKey)) {
+                MBLog.w(MBConstants.APPLICATION_NAME, "****WARNING Invalid attribute " + nextKey + " for element " + elementName + " in document "
+                        + _documentName);
+                result = false;
+            }
+        }
+
+        return result;
+    }
+
+    public void notifyProcessed(MBDefinition definition) {
+        getStack().peek().addChildElement(definition);
+        getStack().push(definition);
+    }
+
+    public void notifyProcessed(MBDocumentDefinition definition) {
+        getStack().peek().addChildElement(definition);
+        getStack().push(definition);
+    }
+
+    public void notifyProcessed(MBActionDefinition definition) {
+        getStack().peek().addChildElement(definition);
+        getStack().push(definition);
+    }
+
+    public void notifyProcessed(MBDomainValidatorDefinition definition) {
+        getStack().peek().addChildElement(definition);
+        getStack().push(definition);
+    }
+
+    public void notifyProcessed(MBElementDefinition definition) {
+        getStack().peek().addChildElement(definition);
+        getStack().push(definition);
+    }
+
+    public void notifyProcessed(MBAttributeDefinition definition) {
+        getStack().peek().addChildElement(definition);
+        getStack().push(definition);
+    }
+
+    public void notifyProcessed(MBDomainDefinition definition) {
+        getStack().peek().addChildElement(definition);
+        getStack().push(definition);
+    }
+
+    public void notifyProcessed(MBOutcomeDefinition definition) {
+        getStack().peek().addChildElement(definition);
+        getStack().push(definition);
+    }
+
+    public void notifyProcessed(MBPageDefinition definition) {
+        getStack().peek().addChildElement(definition);
+        getStack().push(definition);
+    }
+
+    public void notifyProcessed(MBPageStackDefinition definition) {
+        getStack().peek().addChildElement(definition);
+        getStack().push(definition);
+    }
+
+    public void notifyProcessed(MBDialogDefinition definition) {
+        getStack().peek().addChildElement(definition);
+        getStack().push(definition);
+    }
+
+    public void notifyProcessed(MBAlertDefinition definition) {
+        getStack().peek().addChildElement(definition);
+        getStack().push(definition);
+    }
+
+    public void notifyProcessed(MBResourceDefinition definition) {
+        getStack().peek().addChildElement(definition);
+        getStack().push(definition);
+    }
+
+    public void notifyProcessed(MBBundleDefinition definition) {
+        getStack().peek().addChildElement(definition);
+        getStack().push(definition);
+    }
+
+    public void notifyProcessed(MBItemDefinition definition) {
+        getStack().peek().addChildElement(definition);
+        getStack().push(definition);
+    }
+
+    public Stack<MBDefinition> getStack() {
+        if (_stack == null) {
+            _stack = new Stack<MBDefinition>();
+        }
+        return _stack;
+    }
+
+    public String getCharacters() {
+        return _characters.toString();
+    }
+
+    @Override
+    public void characters(char[] ch, int start, int length) throws SAXException {
+        _characters.append(ch, start, length);
+    }
+
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        _characters = new StringBuffer();
+
+        if (isConcreteElement(localName)) {
+            HashMap<String, String> attributeValues = new HashMap<String, String>();
+            for (int i = 0; i < attributes.getLength(); i++) {
+                attributeValues.put(attributes.getLocalName(i), attributes.getValue(i));
+            }
+
+            if (!processElement(localName, attributeValues)) {
+                String message = "Document " + _documentName + ": Element " + localName + " not defined";
+                throw new MBUnknownElementException(message);
+            }
+
+            _stack.peek().validateDefinition();
+        }
+
+    }
+
+    @Override
+    public void endElement(String uri, String localName, String qName) throws SAXException {
+
+        if (!isIgnoredElement(localName)) {
+            if (!isConcreteElement(localName)) {
+                String message = "Document " + _documentName + ": Element " + localName + " not defined";
+                throw new MBUnknownElementException(message);
+            }
+
+            didProcessElement(localName);
+        }
+
+    }
+
+    protected MBIncludableDefinition getRootConfig() {
+        return _rootConfig;
+    }
+
+    protected void setRootConfig(MBIncludableDefinition rootConfig) {
+        _rootConfig = rootConfig;
+    }
 
 }

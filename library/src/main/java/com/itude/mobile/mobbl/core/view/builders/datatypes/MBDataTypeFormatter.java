@@ -17,7 +17,6 @@ package com.itude.mobile.mobbl.core.view.builders.datatypes;
 
 import com.itude.mobile.mobbl.core.view.MBField;
 
-public interface MBDataTypeFormatter
-{
-  public String format(MBField field);
+public interface MBDataTypeFormatter {
+    public String format(MBField field);
 }

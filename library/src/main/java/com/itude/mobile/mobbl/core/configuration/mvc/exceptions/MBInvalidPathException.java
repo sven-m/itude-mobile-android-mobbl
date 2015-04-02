@@ -19,35 +19,31 @@ import com.itude.mobile.mobbl.core.MBException;
 
 /**
  * {@link MBException} class used when a path is invalid
- *
  */
-public class MBInvalidPathException extends MBException
-{
+public class MBInvalidPathException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 9152312521594480636L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 9152312521594480636L;
 
-  /**
-   * Constructor for MBInvalidPathException.
-   * 
-   * @param msg exception message
-   */
-  public MBInvalidPathException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBInvalidPathException.
+     *
+     * @param msg exception message
+     */
+    public MBInvalidPathException(String msg) {
+        super(msg);
+    }
 
-  /**
-   * Constructor for MBInvalidPathException.
-   * 
-   * @param msg exception message
-   * @param throwable throwable {@link Throwable}
-   */
-  public MBInvalidPathException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
+    /**
+     * Constructor for MBInvalidPathException.
+     *
+     * @param msg       exception message
+     * @param throwable throwable {@link Throwable}
+     */
+    public MBInvalidPathException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 
 }

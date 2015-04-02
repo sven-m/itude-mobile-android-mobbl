@@ -17,13 +17,11 @@ package com.itude.mobile.mobbl.core.view.builders.datatypes;
 
 import com.itude.mobile.android.util.StringUtil;
 
-public class PriceWithThreeDecimalsFormatter extends MBBaseDataTypeFormatter
-{
+public class PriceWithThreeDecimalsFormatter extends MBBaseDataTypeFormatter {
 
-  @Override
-  protected String actuallyFormat(String value)
-  {
-    return StringUtil.formatPriceWithThreeDecimals(getLocale(), value);
-  }
+    @Override
+    protected String actuallyFormat(String value) {
+        return StringUtil.formatPriceWithThreeDecimals(getLocale(), value);
+    }
 
 }

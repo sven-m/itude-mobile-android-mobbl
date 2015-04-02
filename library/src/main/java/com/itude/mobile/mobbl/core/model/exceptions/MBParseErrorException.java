@@ -18,37 +18,33 @@ package com.itude.mobile.mobbl.core.model.exceptions;
 import com.itude.mobile.mobbl.core.MBException;
 
 /**
-/**
+ * /**
  * {@link MBException} class used when a file or element can't be parsed
- *
  */
-public class MBParseErrorException extends MBException
-{
+public class MBParseErrorException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 4941998504577182545L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 4941998504577182545L;
 
-  /**
-   * Constructor for MBParseErrorException.
-   * 
-   * @param msg exception message
-   */
-  public MBParseErrorException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBParseErrorException.
+     *
+     * @param msg exception message
+     */
+    public MBParseErrorException(String msg) {
+        super(msg);
+    }
 
-  /**
-   * Constructor for MBParseErrorException.
-   * 
-   * @param msg exception message
-   * @param throwable throwable {@link Throwable}
-   */
-  public MBParseErrorException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
+    /**
+     * Constructor for MBParseErrorException.
+     *
+     * @param msg       exception message
+     * @param throwable throwable {@link Throwable}
+     */
+    public MBParseErrorException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 
 }

@@ -22,22 +22,20 @@ import android.widget.TextView;
 
 import com.itude.mobile.mobbl.core.view.MBField;
 
-public class MatrixCellFieldBuilder extends MBBaseFieldBuilder
-{
+public class MatrixCellFieldBuilder extends MBBaseFieldBuilder {
 
-  @Override
-  public View buildField(MBField field)
-  {
-    String value = field.getValuesForDisplay();
+    @Override
+    public View buildField(MBField field) {
+        String value = field.getValuesForDisplay();
 
-    // Title TextView
-    TextView label = buildTextViewWithValue(value);
-    label.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1));
-    label.setSingleLine();
+        // Title TextView
+        TextView label = buildTextViewWithValue(value);
+        label.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1));
+        label.setSingleLine();
 
-    // default styling
-    getStyleHandler().styleMatrixCell(field, label);
-    return label;
-  }
+        // default styling
+        getStyleHandler().styleMatrixCell(field, label);
+        return label;
+    }
 
 }

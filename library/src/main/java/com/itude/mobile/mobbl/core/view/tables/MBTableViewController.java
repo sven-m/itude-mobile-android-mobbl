@@ -15,40 +15,34 @@
  */
 package com.itude.mobile.mobbl.core.view.tables;
 
-import java.util.List;
-
 import com.itude.mobile.mobbl.core.view.MBPage;
 
-public class MBTableViewController extends Object
-{
-  private List   _sections;
-  private MBPage _page;
+import java.util.List;
 
-  // allows subclasses to attach behaviour to a field.-(void)
-  // fieldWasSelected:(MBField *)field;
-  public Object initWebView()
-  {
-    return null;
-  }
+public class MBTableViewController extends Object {
+    private List _sections;
+    private MBPage _page;
 
-  public List getSections()
-  {
-    return _sections;
-  }
+    // allows subclasses to attach behaviour to a field.-(void)
+    // fieldWasSelected:(MBField *)field;
+    public Object initWebView() {
+        return null;
+    }
 
-  public void setSections(List sections)
-  {
-    _sections = sections;
-  }
+    public List getSections() {
+        return _sections;
+    }
 
-  public MBPage getPage()
-  {
-    return _page;
-  }
+    public void setSections(List sections) {
+        _sections = sections;
+    }
 
-  public void setPage(MBPage page)
-  {
-    _page = page;
-  }
+    public MBPage getPage() {
+        return _page;
+    }
+
+    public void setPage(MBPage page) {
+        _page = page;
+    }
 
 }

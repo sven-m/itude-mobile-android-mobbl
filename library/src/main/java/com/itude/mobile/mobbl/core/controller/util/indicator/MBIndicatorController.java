@@ -21,80 +21,74 @@ import com.itude.mobile.mobbl.core.util.MBCustomAttributeContainer;
 
 /**
  * The indicator controller class
- *
  */
-public class MBIndicatorController
-{
-  private static MBIndicatorController _instance;
+public class MBIndicatorController {
+    private static MBIndicatorController _instance;
 
-  public static MBIndicatorController getInstance()
-  {
-    if (_instance == null) _instance = new MBIndicatorController();
-    return _instance;
-  }
+    public static MBIndicatorController getInstance() {
+        if (_instance == null) _instance = new MBIndicatorController();
+        return _instance;
+    }
 
-  private MBCountingIndicator _activityIndicator      = new MBActivityIndicator();
-  private MBCountingIndicator _indeterminateIndicator = new MBIndeterminateProgressIndicator();
+    private MBCountingIndicator _activityIndicator = new MBActivityIndicator();
+    private MBCountingIndicator _indeterminateIndicator = new MBIndeterminateProgressIndicator();
 
-  /**
-   * Set the activity indicator
-   * 
-   * @param activityIndicator {@link MBCountingIndicator}
-   */
-  public void setActivityIndicator(MBCountingIndicator activityIndicator)
-  {
-    _activityIndicator = activityIndicator;
-  }
+    /**
+     * Set the activity indicator
+     *
+     * @param activityIndicator {@link MBCountingIndicator}
+     */
+    public void setActivityIndicator(MBCountingIndicator activityIndicator) {
+        _activityIndicator = activityIndicator;
+    }
 
-  /**
-   * Set the indeterminate indicator
-   * 
-   * @param indeterminateIndicator {@link MBCountingIndicator}
-   */
-  public void setIndeterminateIndicator(MBCountingIndicator indeterminateIndicator)
-  {
-    _indeterminateIndicator = indeterminateIndicator;
-  }
+    /**
+     * Set the indeterminate indicator
+     *
+     * @param indeterminateIndicator {@link MBCountingIndicator}
+     */
+    public void setIndeterminateIndicator(MBCountingIndicator indeterminateIndicator) {
+        _indeterminateIndicator = indeterminateIndicator;
+    }
 
-  /**
-   * Show the indeterminate progress indicator
-   * 
-   * @param activity {@link Activity}
-   * @param customAttributes {@link MBCustomAttributeContainer}
-   */
-  void showIndeterminateProgressIndicator(Activity activity, MBCustomAttributeContainer customAttributes)
-  {
-    if (_indeterminateIndicator != null) _indeterminateIndicator.increaseCount(activity, customAttributes);
-  }
+    /**
+     * Show the indeterminate progress indicator
+     *
+     * @param activity         {@link Activity}
+     * @param customAttributes {@link MBCustomAttributeContainer}
+     */
+    void showIndeterminateProgressIndicator(Activity activity, MBCustomAttributeContainer customAttributes) {
+        if (_indeterminateIndicator != null)
+            _indeterminateIndicator.increaseCount(activity, customAttributes);
+    }
 
-  /**
-   * Hide the indeterminate progress indicator
-   * 
-   * @param activity {@link Activity}
-   */
-  void hideIndeterminateProgressIndicator(Activity activity)
-  {
-    if (_indeterminateIndicator != null) _indeterminateIndicator.decreaseCount(activity);
-  }
+    /**
+     * Hide the indeterminate progress indicator
+     *
+     * @param activity {@link Activity}
+     */
+    void hideIndeterminateProgressIndicator(Activity activity) {
+        if (_indeterminateIndicator != null) _indeterminateIndicator.decreaseCount(activity);
+    }
 
-  /**
-   * Show the activity indicator
-   * 
-   * @param activity {@link Activity}
-   * @param customAttributes MBCustomAttributeContainer
-   */
-  void showActivityIndicator(Activity activity, MBCustomAttributeContainer customAttributes)
-  {
-    if (_activityIndicator != null) _activityIndicator.increaseCount(activity, customAttributes);
-  }
+    /**
+     * Show the activity indicator
+     *
+     * @param activity         {@link Activity}
+     * @param customAttributes MBCustomAttributeContainer
+     */
+    void showActivityIndicator(Activity activity, MBCustomAttributeContainer customAttributes) {
+        if (_activityIndicator != null)
+            _activityIndicator.increaseCount(activity, customAttributes);
+    }
 
-  /**
-   * Hide the activity indicator
-   * @param activity {@link Activity}
-   */
-  void hideActivityIndicator(Activity activity)
-  {
-    if (_activityIndicator != null) _activityIndicator.decreaseCount(activity);
-  }
+    /**
+     * Hide the activity indicator
+     *
+     * @param activity {@link Activity}
+     */
+    void hideActivityIndicator(Activity activity) {
+        if (_activityIndicator != null) _activityIndicator.decreaseCount(activity);
+    }
 
 }

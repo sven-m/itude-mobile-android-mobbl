@@ -17,13 +17,11 @@ package com.itude.mobile.mobbl.core.services;
 
 /**
  * Event listener inferface to handle window changes
- *
  */
-public interface MBWindowChangedEventListener
-{
+public interface MBWindowChangedEventListener {
 
-  public void handleOnWindowActivated();
+    public void handleOnWindowActivated();
 
-  public void handleOnLeavingWindow();
+    public void handleOnLeavingWindow();
 
 }

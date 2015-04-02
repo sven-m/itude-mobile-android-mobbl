@@ -102,7 +102,7 @@ public class MBCacheManagerTest extends ApplicationTestCase<MBApplicationCore>
     }
     catch (Exception e)
     {
-      Log.d(Constants.APPLICATION_NAME, "Thread.sleep failed");
+      Log.d(MBConstants.APPLICATION_NAME, "Thread.sleep failed");
     }
 
     // now test expiration
@@ -149,7 +149,7 @@ public class MBCacheManagerTest extends ApplicationTestCase<MBApplicationCore>
     }
     catch (Exception e)
     {
-      Log.d(Constants.APPLICATION_NAME, "Thread.sleep failed");
+      Log.d(MBConstants.APPLICATION_NAME, "Thread.sleep failed");
     }
 
     // now test expiration

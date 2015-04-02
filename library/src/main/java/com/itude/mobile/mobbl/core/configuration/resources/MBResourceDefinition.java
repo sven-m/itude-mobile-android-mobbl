@@ -15,180 +15,150 @@
  */
 package com.itude.mobile.mobbl.core.configuration.resources;
 
+import com.itude.mobile.android.util.StringUtil;
+import com.itude.mobile.android.util.log.MBLog;
+import com.itude.mobile.mobbl.core.configuration.MBDefinition;
+import com.itude.mobile.mobbl.core.util.MBConstants;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.itude.mobile.android.util.StringUtil;
-import com.itude.mobile.android.util.log.MBLog;
-import com.itude.mobile.mobbl.core.configuration.MBDefinition;
-import com.itude.mobile.mobbl.core.util.Constants;
-
 /**
  * {@link MBDefinition} Class for a resource file
- *
  */
-public class MBResourceDefinition extends MBDefinition
-{
-  private String                        _resourceId;
-  private String                        _type;
-  private String                        _url;
-  private String                        _color;
-  private String                        _align;
-  private String                        _languageCode;
-  private String                        _viewType;
-  private boolean                       _cacheable;
-  private int                           _ttl;
+public class MBResourceDefinition extends MBDefinition {
+    private String _resourceId;
+    private String _type;
+    private String _url;
+    private String _color;
+    private String _align;
+    private String _languageCode;
+    private String _viewType;
+    private boolean _cacheable;
+    private int _ttl;
 
-  private Map<String, MBItemDefinition> _items;
-  private List<MBItemDefinition>        _sortedItems;
+    private Map<String, MBItemDefinition> _items;
+    private List<MBItemDefinition> _sortedItems;
 
-  public MBResourceDefinition()
-  {
-    _items = new HashMap<String, MBItemDefinition>();
-    _sortedItems = new ArrayList<MBItemDefinition>();
-  }
-
-  @Override
-  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
-  {
-    return StringUtil.appendIndentString(appendToMe, level).append("<Resource id='").append(getResourceId()).append("' type='")
-        .append(getType()).append("' url='").append(getUrl()).append("' cacheable='").append(getCacheable()).append("' ttl='")
-        .append(getTtl()).append("' color='").append(getColor()).append("' align='").append(getAlign()).append("' />");
-  }
-
-  @Override
-  public void addChildElement(MBItemDefinition child)
-  {
-    addItem(child);
-  }
-
-  public void addItem(MBItemDefinition child)
-  {
-    String state = child.getState();
-    if (StringUtil.isNotBlank(state) && _items.containsKey(state))
-    {
-      MBLog.w(Constants.APPLICATION_NAME, "Item definition overridden: multiple definitions with the same state for resource " + getName());
+    public MBResourceDefinition() {
+        _items = new HashMap<String, MBItemDefinition>();
+        _sortedItems = new ArrayList<MBItemDefinition>();
     }
 
-    _items.put(child.getState(), child);
-    _sortedItems.add(child);
-  }
+    @Override
+    public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level) {
+        return StringUtil.appendIndentString(appendToMe, level).append("<Resource id='").append(getResourceId()).append("' type='")
+                .append(getType()).append("' url='").append(getUrl()).append("' cacheable='").append(getCacheable()).append("' ttl='")
+                .append(getTtl()).append("' color='").append(getColor()).append("' align='").append(getAlign()).append("' />");
+    }
 
-  public String getResourceId()
-  {
-    return _resourceId;
-  }
+    @Override
+    public void addChildElement(MBItemDefinition child) {
+        addItem(child);
+    }
 
-  public void setResourceId(String resourceId)
-  {
-    _resourceId = resourceId;
-  }
+    public void addItem(MBItemDefinition child) {
+        String state = child.getState();
+        if (StringUtil.isNotBlank(state) && _items.containsKey(state)) {
+            MBLog.w(MBConstants.APPLICATION_NAME, "Item definition overridden: multiple definitions with the same state for resource " + getName());
+        }
 
-  public String getUrl()
-  {
-    return _url;
-  }
+        _items.put(child.getState(), child);
+        _sortedItems.add(child);
+    }
 
-  public void setUrl(String url)
-  {
-    _url = url;
-  }
+    public String getResourceId() {
+        return _resourceId;
+    }
 
-  public boolean getCacheable()
-  {
-    return _cacheable;
-  }
+    public void setResourceId(String resourceId) {
+        _resourceId = resourceId;
+    }
 
-  public void setCacheable(boolean cacheable)
-  {
-    _cacheable = cacheable;
-  }
+    public String getUrl() {
+        return _url;
+    }
 
-  public int getTtl()
-  {
-    return _ttl;
-  }
+    public void setUrl(String url) {
+        _url = url;
+    }
 
-  public void setTtl(int ttl)
-  {
-    _ttl = ttl;
-  }
+    public boolean getCacheable() {
+        return _cacheable;
+    }
 
-  public String getColor()
-  {
-    return _color;
-  }
+    public void setCacheable(boolean cacheable) {
+        _cacheable = cacheable;
+    }
 
-  public void setColor(String color)
-  {
-    _color = color;
-  }
+    public int getTtl() {
+        return _ttl;
+    }
 
-  public String getAlign()
-  {
-    return _align;
-  }
+    public void setTtl(int ttl) {
+        _ttl = ttl;
+    }
 
-  public void setAlign(String align)
-  {
-    _align = align;
-  }
+    public String getColor() {
+        return _color;
+    }
 
-  public String getType()
-  {
-    return _type;
-  }
+    public void setColor(String color) {
+        _color = color;
+    }
 
-  public void setType(String type)
-  {
-    _type = type;
-  }
+    public String getAlign() {
+        return _align;
+    }
 
-  public String getLanguageCode()
-  {
-    return _languageCode;
-  }
+    public void setAlign(String align) {
+        _align = align;
+    }
 
-  public void setLanguageCode(String languageCode)
-  {
-    _languageCode = languageCode;
-  }
+    public String getType() {
+        return _type;
+    }
 
-  public String getViewType()
-  {
-    return _viewType;
-  }
+    public void setType(String type) {
+        _type = type;
+    }
 
-  public void setViewType(String viewType)
-  {
-    _viewType = viewType;
-  }
+    public String getLanguageCode() {
+        return _languageCode;
+    }
 
-  public boolean hasItems()
-  {
-    return !_items.isEmpty();
-  }
+    public void setLanguageCode(String languageCode) {
+        _languageCode = languageCode;
+    }
 
-  public Map<String, MBItemDefinition> getItems()
-  {
-    return _items;
-  }
+    public String getViewType() {
+        return _viewType;
+    }
 
-  public void setItems(Map<String, MBItemDefinition> items)
-  {
-    _items = items;
-  }
+    public void setViewType(String viewType) {
+        _viewType = viewType;
+    }
 
-  public List<MBItemDefinition> getSortedItems()
-  {
-    return _sortedItems;
-  }
+    public boolean hasItems() {
+        return !_items.isEmpty();
+    }
 
-  public void setSortedItems(List<MBItemDefinition> sortedItems)
-  {
-    _sortedItems = sortedItems;
-  }
+    public Map<String, MBItemDefinition> getItems() {
+        return _items;
+    }
+
+    public void setItems(Map<String, MBItemDefinition> items) {
+        _items = items;
+    }
+
+    public List<MBItemDefinition> getSortedItems() {
+        return _sortedItems;
+    }
+
+    public void setSortedItems(List<MBItemDefinition> sortedItems) {
+        _sortedItems = sortedItems;
+    }
 
 }

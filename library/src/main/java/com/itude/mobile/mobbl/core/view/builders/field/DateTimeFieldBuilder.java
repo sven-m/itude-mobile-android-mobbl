@@ -32,74 +32,68 @@ import com.itude.mobile.mobbl.core.view.MBDateField;
 import com.itude.mobile.mobbl.core.view.MBField;
 import com.itude.mobile.mobbl.core.view.builders.MBStyleHandler;
 
-public abstract class DateTimeFieldBuilder extends MBBaseFieldBuilder
-{
+public abstract class DateTimeFieldBuilder extends MBBaseFieldBuilder {
 
-  @Override
-  public View buildField(MBField field)
-  {
-    final Context context = MBApplicationController.getInstance().getBaseContext();
+    @Override
+    public View buildField(MBField field) {
+        final Context context = MBApplicationController.getInstance().getBaseContext();
 
-    final MBStyleHandler styleHandler = getStyleHandler();
+        final MBStyleHandler styleHandler = getStyleHandler();
 
-    final MBDocument doc = field.getDocument();
-    final String path = field.getPath();
+        final MBDocument doc = field.getDocument();
+        final String path = field.getPath();
 
-    final MBDateField df = new MBDateField();
+        final MBDateField df = new MBDateField();
 
-    // Create our container which will fill the whole width
-    LinearLayout container = new LinearLayout(context);
-    container.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-    container.setGravity(Gravity.CENTER_VERTICAL);
+        // Create our container which will fill the whole width
+        LinearLayout container = new LinearLayout(context);
+        container.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        container.setGravity(Gravity.CENTER_VERTICAL);
 
-    // Add our label (if one exists)
-    TextView label = buildTextViewWithValue(field.getLabel());
-    label.setGravity(Gravity.CENTER_VERTICAL);
-    label.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 50));
+        // Add our label (if one exists)
+        TextView label = buildTextViewWithValue(field.getLabel());
+        label.setGravity(Gravity.CENTER_VERTICAL);
+        label.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 50));
 
-    styleHandler.styleLabel(label, field);
+        styleHandler.styleLabel(label, field);
 
-    final TextView value = new TextView(context);
-    value.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 50));
-    value.setGravity(Gravity.CENTER_VERTICAL);
+        final TextView value = new TextView(context);
+        value.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 50));
+        value.setGravity(Gravity.CENTER_VERTICAL);
 
-    // Find out if we have previously set a time
-    String dateTimeString = doc.getValueForPath(path);
-    String valueLabelText = "";
+        // Find out if we have previously set a time
+        String dateTimeString = doc.getValueForPath(path);
+        String valueLabelText = "";
 
-    String nillValue = field.getValueIfNil();
-    if (StringUtil.isNotBlank(nillValue))
-    {
-      valueLabelText = field.getValueIfNil();
+        String nillValue = field.getValueIfNil();
+        if (StringUtil.isNotBlank(nillValue)) {
+            valueLabelText = field.getValueIfNil();
+        }
+
+        if (StringUtil.isNotBlank(dateTimeString)) {
+            df.setTime(dateTimeString);
+            valueLabelText = DateUtil.dateToString(df.getCalender().getTime(), field.getFormatMask());
+        }
+
+        if (StringUtil.isNotBlank(valueLabelText)) {
+            value.setText(valueLabelText);
+        }
+
+        styleHandler.styleDateOrTimeSelectorValue(value, field);
+
+        String source = field.getSource();
+        if (StringUtil.isNotBlank(source)) {
+            Drawable drawable = MBResourceService.getInstance().getImageByID(source);
+            value.setBackgroundDrawable(drawable);
+        }
+
+        value.setOnClickListener(getOnClickListener(field, df, value));
+        container.addView(label);
+        container.addView(value);
+
+        return container;
     }
 
-    if (StringUtil.isNotBlank(dateTimeString))
-    {
-      df.setTime(dateTimeString);
-      valueLabelText = DateUtil.dateToString(df.getCalender().getTime(), field.getFormatMask());
-    }
-
-    if (StringUtil.isNotBlank(valueLabelText))
-    {
-      value.setText(valueLabelText);
-    }
-
-    styleHandler.styleDateOrTimeSelectorValue(value, field);
-
-    String source = field.getSource();
-    if (StringUtil.isNotBlank(source))
-    {
-      Drawable drawable = MBResourceService.getInstance().getImageByID(source);
-      value.setBackgroundDrawable(drawable);
-    }
-
-    value.setOnClickListener(getOnClickListener(field, df, value));
-    container.addView(label);
-    container.addView(value);
-
-    return container;
-  }
-
-  protected abstract View.OnClickListener getOnClickListener(MBField field, MBDateField df, TextView value);
+    protected abstract View.OnClickListener getOnClickListener(MBField field, MBDateField df, TextView value);
 
 }

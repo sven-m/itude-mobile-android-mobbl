@@ -17,13 +17,12 @@ package com.itude.mobile.mobbl.core.services;
 
 import com.itude.mobile.mobbl.core.model.MBDocument;
 
-/** 
+/**
  * Protocol for processing results call to a server.
  * <br/>
  * Classes which use this protocol can be added to the webservice endpoint definition file (typically endpoints.xml) to catch errors or provide logic for specific server responses.
  */
-public interface MBResultListener
-{
-  public void handleResult(String result, MBDocument requestDocument, MBResultListenerDefinition definition);
+public interface MBResultListener {
+    public void handleResult(String result, MBDocument requestDocument, MBResultListenerDefinition definition);
 
 }

@@ -18,36 +18,32 @@ package com.itude.mobile.mobbl.core.services.exceptions;
 import com.itude.mobile.mobbl.core.MBException;
 
 /**
- * {@link MBException} class used when a bundle is not found 
- *
+ * {@link MBException} class used when a bundle is not found
  */
-public class MBBundleNotFoundException extends MBException
-{
+public class MBBundleNotFoundException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = -4475909702846830986L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -4475909702846830986L;
 
-  /**
-   * Constructor for MBBundleNotFoundException.
-   * 
-   * @param msg exception message
-   */
-  public MBBundleNotFoundException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBBundleNotFoundException.
+     *
+     * @param msg exception message
+     */
+    public MBBundleNotFoundException(String msg) {
+        super(msg);
+    }
 
-  /**
-   * Constructor for MBBundleNotFoundException.
-   * 
-   * @param msg exception message
-   * @param throwable throwable {@link Throwable}
-   */
-  public MBBundleNotFoundException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
+    /**
+     * Constructor for MBBundleNotFoundException.
+     *
+     * @param msg       exception message
+     * @param throwable throwable {@link Throwable}
+     */
+    public MBBundleNotFoundException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 
 }

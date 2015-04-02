@@ -19,35 +19,31 @@ import com.itude.mobile.mobbl.core.MBException;
 
 /**
  * {@link MBException} class used when elements can't be assigned
- *
  */
-public class MBCannotAssignException extends MBException
-{
+public class MBCannotAssignException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = -4515819821558295854L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -4515819821558295854L;
 
-  /**
-   * Constructor for MBCannotAssignException.
-   * 
-   * @param msg exception message
-   */
-  public MBCannotAssignException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBCannotAssignException.
+     *
+     * @param msg exception message
+     */
+    public MBCannotAssignException(String msg) {
+        super(msg);
+    }
 
-  /**
-   * Constructor for MBCannotAssignException.
-   * 
-   * @param msg exception message
-   * @param throwable throwable {@link Throwable}
-   */
-  public MBCannotAssignException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
+    /**
+     * Constructor for MBCannotAssignException.
+     *
+     * @param msg       exception message
+     * @param throwable throwable {@link Throwable}
+     */
+    public MBCannotAssignException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 
 }

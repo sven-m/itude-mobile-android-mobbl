@@ -23,106 +23,83 @@ import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.services.MBLocalizationService;
 import com.itude.mobile.mobbl.core.view.builders.MBViewBuilderFactory;
 
-public class MBAlert extends MBComponentContainer
-{
+public class MBAlert extends MBComponentContainer {
 
-  private String _alertName;
-  private String _rootPath;
-  private String _title;
+    private String _alertName;
+    private String _rootPath;
+    private String _title;
 
-  public MBAlert(MBAlertDefinition definition, MBDocument document, String rootPath)
-  {
-    super(definition, document, null);
-    setRootPath(rootPath);
-    setAlertName(definition.getName());
-    setTitle(definition.getTitle());
+    public MBAlert(MBAlertDefinition definition, MBDocument document, String rootPath) {
+        super(definition, document, null);
+        setRootPath(rootPath);
+        setAlertName(definition.getName());
+        setTitle(definition.getTitle());
 
-    // Ok, now we can build the children
-    buildChildren(definition, document, getParent());
-  }
-
-  final private void buildChildren(MBAlertDefinition definition, MBDocument document, MBComponentContainer parent)
-  {
-    for (MBDefinition def : definition.getChildren())
-    {
-      String parentAbsoluteDataPath = null;
-      if (parent != null)
-      {
-        parentAbsoluteDataPath = parent.getAbsoluteDataPath();
-      }
-
-      if (def.isPreConditionValid(document, parentAbsoluteDataPath))
-      {
-        addChild(MBComponentFactory.getComponentFromDefinition(def, document, this));
-      }
+        // Ok, now we can build the children
+        buildChildren(definition, document, getParent());
     }
-  }
 
-  public AlertDialog buildAlertDialog()
-  {
-    return MBViewBuilderFactory.getInstance().getAlertViewBuilder().buildAlertDialog(this);
-  }
+    final private void buildChildren(MBAlertDefinition definition, MBDocument document, MBComponentContainer parent) {
+        for (MBDefinition def : definition.getChildren()) {
+            String parentAbsoluteDataPath = null;
+            if (parent != null) {
+                parentAbsoluteDataPath = parent.getAbsoluteDataPath();
+            }
 
-  public String getAlertName()
-  {
-    return _alertName;
-  }
-
-  public void setAlertName(String _alertName)
-  {
-    this._alertName = _alertName;
-  }
-
-  public String getRootPath()
-  {
-    return _rootPath;
-  }
-
-  public void setRootPath(String _rootPath)
-  {
-    this._rootPath = _rootPath;
-  }
-
-  public String getTitle()
-  {
-    String result = _title;
-
-    if (_title != null)
-    {
-      result = _title;
+            if (def.isPreConditionValid(document, parentAbsoluteDataPath)) {
+                addChild(MBComponentFactory.getComponentFromDefinition(def, document, this));
+            }
+        }
     }
-    else
-    {
-      MBAlertDefinition definition = (MBAlertDefinition) getDefinition();
-      if (definition.getTitle() != null)
-      {
-        result = definition.getTitle();
-      }
-      else if (definition.getTitlePath() != null)
-      {
-        String path = definition.getTitlePath();
-        if (!path.startsWith("/"))
-        {
-          if (getRootPath() != null)
-          {
-            path = getRootPath() + "/" + path;
-          }
-          else
-          {
-            path = getAbsoluteDataPath() + "/" + path;
-          }
+
+    public AlertDialog buildAlertDialog() {
+        return MBViewBuilderFactory.getInstance().getAlertViewBuilder().buildAlertDialog(this);
+    }
+
+    public String getAlertName() {
+        return _alertName;
+    }
+
+    public void setAlertName(String _alertName) {
+        this._alertName = _alertName;
+    }
+
+    public String getRootPath() {
+        return _rootPath;
+    }
+
+    public void setRootPath(String _rootPath) {
+        this._rootPath = _rootPath;
+    }
+
+    public String getTitle() {
+        String result = _title;
+
+        if (_title != null) {
+            result = _title;
+        } else {
+            MBAlertDefinition definition = (MBAlertDefinition) getDefinition();
+            if (definition.getTitle() != null) {
+                result = definition.getTitle();
+            } else if (definition.getTitlePath() != null) {
+                String path = definition.getTitlePath();
+                if (!path.startsWith("/")) {
+                    if (getRootPath() != null) {
+                        path = getRootPath() + "/" + path;
+                    } else {
+                        path = getAbsoluteDataPath() + "/" + path;
+                    }
+                }
+
+                result = (String) getDocument().getValueForPath(path);
+            }
         }
 
-        result = (String) getDocument().getValueForPath(path);
-      }
+        return MBLocalizationService.getInstance().getTextForKey(result);
     }
 
-    return MBLocalizationService.getInstance().getTextForKey(result);
-  }
-
-  public void setTitle(String _title)
-  {
-    this._title = _title;
-  }
+    public void setTitle(String _title) {
+        this._title = _title;
+    }
 
 }

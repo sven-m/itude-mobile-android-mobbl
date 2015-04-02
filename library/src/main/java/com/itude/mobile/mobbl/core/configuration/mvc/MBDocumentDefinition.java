@@ -15,11 +15,6 @@
  */
 package com.itude.mobile.mobbl.core.configuration.mvc;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -32,269 +27,228 @@ import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBInvalidPathExc
 import com.itude.mobile.mobbl.core.configuration.mvc.exceptions.MBUnknownVariableException;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
-import com.itude.mobile.mobbl.core.util.Constants;
+import com.itude.mobile.mobbl.core.util.MBConstants;
 import com.itude.mobile.mobbl.core.util.MBPathUtil;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * {@link MBDefinition} Class for a document
- *
  */
-public class MBDocumentDefinition extends MBDefinition
-{
-  private final Map<String, MBElementDefinition> _elements = new TreeMap<String, MBElementDefinition>();
-  private String                                 _dataManager;
-  private boolean                                _autoCreate;
-  private String                                 _rootElement;
+public class MBDocumentDefinition extends MBDefinition {
+    private final Map<String, MBElementDefinition> _elements = new TreeMap<String, MBElementDefinition>();
+    private String _dataManager;
+    private boolean _autoCreate;
+    private String _rootElement;
 
-  public MBDocumentDefinition()
-  {
-  }
-
-  @Override
-  public String toString()
-  {
-    StringBuffer b = new StringBuffer();
-    return asXmlWithLevel(b, 0).toString();
-  }
-
-  @Override
-  public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level)
-  {
-    StringUtil.appendIndentString(appendToMe, level).append("<Document name='").append(getName()).append("' dataManager='")
-        .append(_dataManager).append("' autoCreate='" + _autoCreate).append("' rootElement='" + _rootElement).append("'>\n");
-    for (MBElementDefinition elem : _elements.values())
-      elem.asXmlWithLevel(appendToMe, level + 2);
-
-    return StringUtil.appendIndentString(appendToMe, level).append("</Document>\n");
-  }
-
-  @Override
-  public void addChildElement(MBElementDefinition child)
-  {
-    if (child instanceof MBElementDefinition)
-    {
-      addElement(child);
+    public MBDocumentDefinition() {
     }
 
-  }
-
-  @Override
-  public Collection<MBElementDefinition> getChildElements()
-  {
-    return _elements.values();
-  }
-
-  public void addElement(MBElementDefinition element)
-  {
-    _elements.put(element.getName(), element);
-  }
-
-  @Override
-  public boolean isValidChild(String elementName)
-  {
-    return _elements.get(elementName) != null;
-  }
-
-  public Collection<MBElementDefinition> getChildren()
-  {
-    return _elements.values();
-  }
-
-  public MBElementDefinition getChildWithName(String elementName)
-  {
-    if (!isValidChild(elementName))
-    {
-      throw new MBInvalidElementNameException(elementName);
+    @Override
+    public String toString() {
+        StringBuffer b = new StringBuffer();
+        return asXmlWithLevel(b, 0).toString();
     }
-    return _elements.get(elementName);
-  }
 
-  public MBElementDefinition getElementWithPathComponents(List<String> pathComponents)
-  {
-    if (pathComponents.size() > 0)
-    {
-      MBElementDefinition root = getChildWithName(pathComponents.get(0));
-      pathComponents.remove(0);
-      return root.getElementWithPathComponents(pathComponents);
+    @Override
+    public StringBuffer asXmlWithLevel(StringBuffer appendToMe, int level) {
+        StringUtil.appendIndentString(appendToMe, level).append("<Document name='").append(getName()).append("' dataManager='")
+                .append(_dataManager).append("' autoCreate='" + _autoCreate).append("' rootElement='" + _rootElement).append("'>\n");
+        for (MBElementDefinition elem : _elements.values())
+            elem.asXmlWithLevel(appendToMe, level + 2);
+
+        return StringUtil.appendIndentString(appendToMe, level).append("</Document>\n");
     }
-    throw new MBEmptyPathException("No path specified");
-  }
 
-  public MBElementDefinition getElementWithPath(String path)
-  {
-    List<String> pathComponents = MBPathUtil.splitPath(path);
-
-    // If there is a ':' in the name of the first component; we might need a different document than 'self'
-    if (pathComponents.size() > 0)
-    {
-      int location = path.indexOf(":");
-
-      if (location > -1)
-      {
-        String documentName = pathComponents.get(0).substring(0, location);
-        String rootElementName = pathComponents.get(0).substring(location + 1);
-
-        if (!documentName.equals(getName()))
-        {
-          // Different document! Dispatch the valueForPath
-          MBDocumentDefinition docDef = MBMetadataService.getInstance().getDefinitionForDocumentName(documentName);
-          if (rootElementName.length() > 0)
-          {
-            pathComponents.set(0, rootElementName);
-          }
-          else
-          {
-            pathComponents.remove(0);
-          }
-
-          return docDef.getElementWithPathComponents(pathComponents);
+    @Override
+    public void addChildElement(MBElementDefinition child) {
+        if (child instanceof MBElementDefinition) {
+            addElement(child);
         }
-      }
+
     }
 
-    return getElementWithPathComponents(pathComponents);
-  }
-
-  public MBAttributeDefinition getAttributeWithPath(String path) throws MBInvalidPathException
-  {
-    int location = path.indexOf("@");
-
-    if (location == -1)
-    {
-      throw new MBInvalidPathException(path);
-    }
-    String elementPath = path.substring(0, location);
-    String attrName = path.substring(location + 1);
-
-    MBElementDefinition elemDef = getElementWithPath(elementPath);
-    return elemDef.getAttributeWithName(attrName);
-  }
-
-  public String getChildElementNames()
-  {
-    String result = "";
-    for (MBElementDefinition ed : _elements.values())
-    {
-      if (result.length() > 0)
-      {
-        result += ", ";
-      }
-      result += ed.getName();
+    @Override
+    public Collection<MBElementDefinition> getChildElements() {
+        return _elements.values();
     }
 
-    if (result.equals(""))
-    {
-      result = "[none]";
+    public void addElement(MBElementDefinition element) {
+        _elements.put(element.getName(), element);
     }
 
-    return result;
-  }
-
-  public MBDocument createDocument()
-  {
-    MBDocument doc = new MBDocument(this);
-
-    for (MBElementDefinition elementDef : _elements.values())
-    {
-      for (int i = 0; i < elementDef.getMinOccurs(); i++)
-      {
-        doc.addElement(elementDef.createElement());
-      }
+    @Override
+    public boolean isValidChild(String elementName) {
+        return _elements.get(elementName) != null;
     }
 
-    return doc;
-  }
-
-  public String evaluateExpression(String variableName)
-  {
-    throw new MBUnknownVariableException("Unknown variable: " + variableName);
-  }
-
-  public String getDataManager()
-  {
-    return _dataManager;
-  }
-
-  public void setDataManager(String dataManager)
-  {
-    _dataManager = dataManager;
-  }
-
-  public boolean getAutoCreate()
-  {
-    return _autoCreate;
-  }
-
-  public void setAutoCreate(boolean autoCreate)
-  {
-    _autoCreate = autoCreate;
-  }
-
-  //Parcelable stuff
-
-  private MBDocumentDefinition(Parcel in)
-  {
-    super(in);
-
-    Bundle elements = in.readBundle(MBDocumentDefinition.class.getClassLoader());
-    _dataManager = in.readString();
-    _autoCreate = (Boolean) in.readValue(null);
-    _rootElement = in.readString();
-
-    for (String key : elements.keySet())
-    {
-      _elements.put(key, (MBElementDefinition) elements.get(key));
-    }
-  }
-
-  @Override
-  public int describeContents()
-  {
-    return Constants.C_PARCELABLE_TYPE_DOCUMENT_DEFINITION;
-  }
-
-  @Override
-  public void writeToParcel(Parcel out, int flags)
-  {
-    super.writeToParcel(out, flags);
-
-    Bundle elements = new Bundle();
-
-    for (String key : _elements.keySet())
-    {
-      elements.putParcelable(key, _elements.get(key));
+    public Collection<MBElementDefinition> getChildren() {
+        return _elements.values();
     }
 
-    out.writeBundle(elements);
-    out.writeString(_dataManager);
-    out.writeValue(_autoCreate);
-  }
+    public MBElementDefinition getChildWithName(String elementName) {
+        if (!isValidChild(elementName)) {
+            throw new MBInvalidElementNameException(elementName);
+        }
+        return _elements.get(elementName);
+    }
 
-  public void setRootElement(String rootElement)
-  {
-    _rootElement = rootElement;
-  }
+    public MBElementDefinition getElementWithPathComponents(List<String> pathComponents) {
+        if (pathComponents.size() > 0) {
+            MBElementDefinition root = getChildWithName(pathComponents.get(0));
+            pathComponents.remove(0);
+            return root.getElementWithPathComponents(pathComponents);
+        }
+        throw new MBEmptyPathException("No path specified");
+    }
 
-  public String getRootElement()
-  {
-    return _rootElement;
-  }
+    public MBElementDefinition getElementWithPath(String path) {
+        List<String> pathComponents = MBPathUtil.splitPath(path);
 
-  public static final Parcelable.Creator<MBDocumentDefinition> CREATOR = new Creator<MBDocumentDefinition>()
-                                                                       {
-                                                                         @Override
-                                                                         public MBDocumentDefinition[] newArray(int size)
-                                                                         {
-                                                                           return new MBDocumentDefinition[size];
-                                                                         }
+        // If there is a ':' in the name of the first component; we might need a different document than 'self'
+        if (pathComponents.size() > 0) {
+            int location = path.indexOf(":");
 
-                                                                         @Override
-                                                                         public MBDocumentDefinition createFromParcel(Parcel in)
-                                                                         {
-                                                                           return new MBDocumentDefinition(in);
-                                                                         }
-                                                                       };
+            if (location > -1) {
+                String documentName = pathComponents.get(0).substring(0, location);
+                String rootElementName = pathComponents.get(0).substring(location + 1);
 
-  // End of parcelable stuff
+                if (!documentName.equals(getName())) {
+                    // Different document! Dispatch the valueForPath
+                    MBDocumentDefinition docDef = MBMetadataService.getInstance().getDefinitionForDocumentName(documentName);
+                    if (rootElementName.length() > 0) {
+                        pathComponents.set(0, rootElementName);
+                    } else {
+                        pathComponents.remove(0);
+                    }
+
+                    return docDef.getElementWithPathComponents(pathComponents);
+                }
+            }
+        }
+
+        return getElementWithPathComponents(pathComponents);
+    }
+
+    public MBAttributeDefinition getAttributeWithPath(String path) throws MBInvalidPathException {
+        int location = path.indexOf("@");
+
+        if (location == -1) {
+            throw new MBInvalidPathException(path);
+        }
+        String elementPath = path.substring(0, location);
+        String attrName = path.substring(location + 1);
+
+        MBElementDefinition elemDef = getElementWithPath(elementPath);
+        return elemDef.getAttributeWithName(attrName);
+    }
+
+    public String getChildElementNames() {
+        String result = "";
+        for (MBElementDefinition ed : _elements.values()) {
+            if (result.length() > 0) {
+                result += ", ";
+            }
+            result += ed.getName();
+        }
+
+        if (result.equals("")) {
+            result = "[none]";
+        }
+
+        return result;
+    }
+
+    public MBDocument createDocument() {
+        MBDocument doc = new MBDocument(this);
+
+        for (MBElementDefinition elementDef : _elements.values()) {
+            for (int i = 0; i < elementDef.getMinOccurs(); i++) {
+                doc.addElement(elementDef.createElement());
+            }
+        }
+
+        return doc;
+    }
+
+    public String evaluateExpression(String variableName) {
+        throw new MBUnknownVariableException("Unknown variable: " + variableName);
+    }
+
+    public String getDataManager() {
+        return _dataManager;
+    }
+
+    public void setDataManager(String dataManager) {
+        _dataManager = dataManager;
+    }
+
+    public boolean getAutoCreate() {
+        return _autoCreate;
+    }
+
+    public void setAutoCreate(boolean autoCreate) {
+        _autoCreate = autoCreate;
+    }
+
+    //Parcelable stuff
+
+    private MBDocumentDefinition(Parcel in) {
+        super(in);
+
+        Bundle elements = in.readBundle(MBDocumentDefinition.class.getClassLoader());
+        _dataManager = in.readString();
+        _autoCreate = (Boolean) in.readValue(null);
+        _rootElement = in.readString();
+
+        for (String key : elements.keySet()) {
+            _elements.put(key, (MBElementDefinition) elements.get(key));
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return MBConstants.C_PARCELABLE_TYPE_DOCUMENT_DEFINITION;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        super.writeToParcel(out, flags);
+
+        Bundle elements = new Bundle();
+
+        for (String key : _elements.keySet()) {
+            elements.putParcelable(key, _elements.get(key));
+        }
+
+        out.writeBundle(elements);
+        out.writeString(_dataManager);
+        out.writeValue(_autoCreate);
+    }
+
+    public void setRootElement(String rootElement) {
+        _rootElement = rootElement;
+    }
+
+    public String getRootElement() {
+        return _rootElement;
+    }
+
+    public static final Parcelable.Creator<MBDocumentDefinition> CREATOR = new Creator<MBDocumentDefinition>() {
+        @Override
+        public MBDocumentDefinition[] newArray(int size) {
+            return new MBDocumentDefinition[size];
+        }
+
+        @Override
+        public MBDocumentDefinition createFromParcel(Parcel in) {
+            return new MBDocumentDefinition(in);
+        }
+    };
+
+    // End of parcelable stuff
 
 }

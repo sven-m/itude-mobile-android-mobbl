@@ -24,38 +24,34 @@ import com.itude.mobile.mobbl.core.util.MBCustomAttributeContainer;
 /**
  * {@link MBCountingIndicator} class defines an Activity indicator
  */
-public final class MBActivityIndicator extends MBCountingIndicator
-{
+public final class MBActivityIndicator extends MBCountingIndicator {
 
-  private ProgressDialog _dialog = null;
+    private ProgressDialog _dialog = null;
 
-  /**
-   * Default private constructor
-   */
-  MBActivityIndicator()
-  {
-  }
+    /**
+     * Default private constructor
+     */
+    MBActivityIndicator() {
+    }
 
-  /**
-   * @see com.itude.mobile.mobbl.core.controller.util.indicator.MBCountingIndicator#show(android.app.Activity, com.itude.mobile.mobbl.core.util.MBCustomAttributeContainer)
-   */
-  @Override
-  protected void show(final Activity activity, MBCustomAttributeContainer customAttributes)
-  {
+    /**
+     * @see com.itude.mobile.mobbl.core.controller.util.indicator.MBCountingIndicator#show(android.app.Activity, com.itude.mobile.mobbl.core.util.MBCustomAttributeContainer)
+     */
+    @Override
+    protected void show(final Activity activity, MBCustomAttributeContainer customAttributes) {
 
-    _dialog = ProgressDialog.show(activity, MBLocalizationService.getInstance().getTextForKey("title_loading"), MBLocalizationService
-        .getInstance().getTextForKey("msg_loading"), true, false);
-  }
+        _dialog = ProgressDialog.show(activity, MBLocalizationService.getInstance().getTextForKey("title_loading"), MBLocalizationService
+                .getInstance().getTextForKey("msg_loading"), true, false);
+    }
 
-  /**
-   * @see com.itude.mobile.mobbl.core.controller.util.indicator.MBCountingIndicator#dismiss(android.app.Activity)
-   */
-  @Override
-  protected void dismiss(final Activity activity)
-  {
+    /**
+     * @see com.itude.mobile.mobbl.core.controller.util.indicator.MBCountingIndicator#dismiss(android.app.Activity)
+     */
+    @Override
+    protected void dismiss(final Activity activity) {
 
-    _dialog.dismiss();
-    _dialog = null;
-  }
+        _dialog.dismiss();
+        _dialog = null;
+    }
 
 }

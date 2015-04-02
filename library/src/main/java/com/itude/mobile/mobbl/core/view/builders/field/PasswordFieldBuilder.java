@@ -22,18 +22,16 @@ import android.widget.EditText;
 
 import com.itude.mobile.mobbl.core.view.MBField;
 
-public class PasswordFieldBuilder extends InputFieldBuilder
-{
+public class PasswordFieldBuilder extends InputFieldBuilder {
 
-  @Override
-  public View buildField(MBField field)
-  {
-    EditText inputField = (EditText) super.buildField(field);
+    @Override
+    public View buildField(MBField field) {
+        EditText inputField = (EditText) super.buildField(field);
 
-    inputField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-    inputField.setTransformationMethod(new PasswordTransformationMethod());
+        inputField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        inputField.setTransformationMethod(new PasswordTransformationMethod());
 
-    return inputField;
-  }
+        return inputField;
+    }
 
 }

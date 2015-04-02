@@ -18,17 +18,14 @@ package com.itude.mobile.mobbl.core.view.listeners;
 import com.itude.mobile.mobbl.core.view.MBField;
 import com.itude.mobile.mobbl.core.view.MBPanel;
 
-public class MBBasePageConstructionListener implements MBPageConstructionListener
-{
+public class MBBasePageConstructionListener implements MBPageConstructionListener {
 
-  @Override
-  public void onConstructedField(MBField field)
-  {
-  }
+    @Override
+    public void onConstructedField(MBField field) {
+    }
 
-  @Override
-  public void onConstructedPanel(MBPanel panel)
-  {
-  }
+    @Override
+    public void onConstructedPanel(MBPanel panel) {
+    }
 
 }

@@ -18,36 +18,32 @@ package com.itude.mobile.mobbl.core.services.exceptions;
 import com.itude.mobile.mobbl.core.MBException;
 
 /**
- * {@link MBException} class used when a document is not defined 
- *
+ * {@link MBException} class used when a document is not defined
  */
-public class MBDocumentNotDefinedException extends MBException
-{
+public class MBDocumentNotDefinedException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 2392748771879566275L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 2392748771879566275L;
 
-  /**
-   * Constructor for MBDocumentNotDefinedException.
-   * 
-   * @param msg exception message
-   */
-  public MBDocumentNotDefinedException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBDocumentNotDefinedException.
+     *
+     * @param msg exception message
+     */
+    public MBDocumentNotDefinedException(String msg) {
+        super(msg);
+    }
 
-  /**
-   * Constructor for MBDocumentNotDefinedException.
-   * 
-   * @param msg exception message
-   * @param throwable throwable {@link Throwable}
-   */
-  public MBDocumentNotDefinedException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
+    /**
+     * Constructor for MBDocumentNotDefinedException.
+     *
+     * @param msg       exception message
+     * @param throwable throwable {@link Throwable}
+     */
+    public MBDocumentNotDefinedException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 
 }

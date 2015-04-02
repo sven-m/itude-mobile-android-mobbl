@@ -22,57 +22,47 @@ import com.itude.mobile.mobbl.core.services.operation.MBDocumentOperationDelegat
 /**
  * {@link MBDocumentOperationDelegate} wrapper class to handle document operations including the use of a indicator
  */
-public class MBDocumentOperationDelegateWrapper implements MBDocumentOperationDelegate
-{
-  final MBDocumentOperationDelegate _actualDelegate;
-  final MBIndicator                 _indicator;
+public class MBDocumentOperationDelegateWrapper implements MBDocumentOperationDelegate {
+    final MBDocumentOperationDelegate _actualDelegate;
+    final MBIndicator _indicator;
 
-  /**
-   * Constructor so you handle a document operator including a indicator.
-   * 
-   * @param actualDelegate {@link MBDocumentOperationDelegate}
-   * @param indicator {@link MBIndicator}
-   */
-  public MBDocumentOperationDelegateWrapper(MBDocumentOperationDelegate actualDelegate, MBIndicator indicator)
-  {
-    AssertUtil.notNull("actualDelegate", actualDelegate);
-    AssertUtil.notNull("indicator", indicator);
-    _actualDelegate = actualDelegate;
-    _indicator = indicator;
-  }
-
-  /**
-   * @see com.itude.mobile.mobbl.core.services.operation.MBDocumentOperationDelegate#processResult(com.itude.mobile.mobbl.core.model.MBDocument)
-   */
-  @Override
-  public void processResult(MBDocument document)
-  {
-
-    try
-    {
-      _actualDelegate.processResult(document);
-    }
-    finally
-    {
-      _indicator.release();
+    /**
+     * Constructor so you handle a document operator including a indicator.
+     *
+     * @param actualDelegate {@link MBDocumentOperationDelegate}
+     * @param indicator      {@link MBIndicator}
+     */
+    public MBDocumentOperationDelegateWrapper(MBDocumentOperationDelegate actualDelegate, MBIndicator indicator) {
+        AssertUtil.notNull("actualDelegate", actualDelegate);
+        AssertUtil.notNull("indicator", indicator);
+        _actualDelegate = actualDelegate;
+        _indicator = indicator;
     }
 
-  }
+    /**
+     * @see com.itude.mobile.mobbl.core.services.operation.MBDocumentOperationDelegate#processResult(com.itude.mobile.mobbl.core.model.MBDocument)
+     */
+    @Override
+    public void processResult(MBDocument document) {
 
-  /**
-   * @see com.itude.mobile.mobbl.core.services.operation.MBDocumentOperationDelegate#processException(java.lang.Exception)
-   */
-  @Override
-  public void processException(Exception e)
-  {
-    try
-    {
-      _actualDelegate.processException(e);
+        try {
+            _actualDelegate.processResult(document);
+        } finally {
+            _indicator.release();
+        }
+
     }
-    finally
-    {
-      _indicator.release();
+
+    /**
+     * @see com.itude.mobile.mobbl.core.services.operation.MBDocumentOperationDelegate#processException(java.lang.Exception)
+     */
+    @Override
+    public void processException(Exception e) {
+        try {
+            _actualDelegate.processException(e);
+        } finally {
+            _indicator.release();
+        }
     }
-  }
 
 }

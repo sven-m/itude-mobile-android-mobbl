@@ -15,9 +15,8 @@
  */
 package com.itude.mobile.mobbl.core.view;
 
-public interface MBStylableDefinition
-{
+public interface MBStylableDefinition {
 
-  public String getStyle();
+    public String getStyle();
 
 }

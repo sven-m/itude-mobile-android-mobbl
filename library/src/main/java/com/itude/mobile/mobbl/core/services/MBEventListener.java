@@ -17,15 +17,13 @@ package com.itude.mobile.mobbl.core.services;
 
 /**
  * Event listener class
- *
  */
-public interface MBEventListener
-{
+public interface MBEventListener {
 
-  public void addEventToQueue(MBEvent event);
+    public void addEventToQueue(MBEvent event);
 
-  public void removeEventFromQueue(MBEvent event);
+    public void removeEventFromQueue(MBEvent event);
 
-  public void onAfterHandlingEvents();
+    public void onAfterHandlingEvents();
 
 }

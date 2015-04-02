@@ -15,8 +15,7 @@
  */
 package com.itude.mobile.mobbl.core.util.helper;
 
-public interface MBSecurityInterface
-{
-  public void logOutIfCheckNotSelected();
+public interface MBSecurityInterface {
+    public void logOutIfCheckNotSelected();
 
 }

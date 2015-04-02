@@ -23,77 +23,69 @@ import com.itude.mobile.mobbl.core.controller.MBApplicationController;
 
 /**
  * Class responsible for the session
- *
  */
-public final class MBSession implements MBSessionInterface
-{
+public final class MBSession implements MBSessionInterface {
 
-  private static MBSessionInterface _instance;
+    private static MBSessionInterface _instance;
 
-  private MBSession()
-  {
+    private MBSession() {
 
-  }
-
-  /**
-   * Returns the current session instance
-   * 
-   * @return {@link MBSessionInterface}
-   */
-  public static MBSessionInterface getInstance()
-  {
-    if (_instance == null)
-    {
-      _instance = new MBSession();
     }
 
-    return _instance;
-  }
+    /**
+     * Returns the current session instance
+     *
+     * @return {@link MBSessionInterface}
+     */
+    public static MBSessionInterface getInstance() {
+        if (_instance == null) {
+            _instance = new MBSession();
+        }
 
-  /**
-   * Sets the given sessions as the instance
-   * 
-   * @param session {@link MBSessionInterface}
-   */
-  public static void setInstance(MBSessionInterface session)
-  {
-    // To maintain a decent security, the user should be logged out as soon as the application is brought to the background; this is checked in MBViewManager.onPause.
-    // However, the GET_TASKS permission is needed to verify it; to make sure an application has it when needed, an exception is thrown if an application tries to install
-    // a MBSession without this permission.
-    // Since the default MBSession doesn't do anything, this is only validated when installing an alternative session.
-    if (MBApplicationController.getInstance().checkCallingOrSelfPermission(Manifest.permission.GET_TASKS) == PackageManager.PERMISSION_DENIED) throw new MBException(
-        "The GET_TASKS permission is needed when using session management");
+        return _instance;
+    }
 
-    _instance = session;
-  }
+    /**
+     * Sets the given sessions as the instance
+     *
+     * @param session {@link MBSessionInterface}
+     */
+    public static void setInstance(MBSessionInterface session) {
+        // To maintain a decent security, the user should be logged out as soon as the application is brought to the background; this is checked in MBViewManager.onPause.
+        // However, the GET_TASKS permission is needed to verify it; to make sure an application has it when needed, an exception is thrown if an application tries to install
+        // a MBSession without this permission.
+        // Since the default MBSession doesn't do anything, this is only validated when installing an alternative session.
+        if (MBApplicationController.getInstance().checkCallingOrSelfPermission(Manifest.permission.GET_TASKS) == PackageManager.PERMISSION_DENIED)
+            throw new MBException(
+                    "The GET_TASKS permission is needed when using session management");
 
-  /**
-   * Should return the session document that stores the current session state
-   * 
-   * IMPORTANT: THIS METHOD IS NOT IMPLEMENTED! It needs to be overridden in a superclass
-   * 
-   * @return a {@link MBDocument} that keeps track of the current session state (e.g. A MBDocument that stores the current session state)
-   */
-  @Override
-  public MBDocument getDocument()
-  {
-    return null;
-  }
+        _instance = session;
+    }
 
-  /**
-   * Should logOff the current session (e.g. clear the current session state from the session document)
-   * 
-   * IMPORTANT: THIS METHOD IS NOT IMPLEMENTED! It needs to be overridden in a superclass
-   */
-  @Override
-  public void logOff()
-  {
-  }
+    /**
+     * Should return the session document that stores the current session state
+     * <p/>
+     * IMPORTANT: THIS METHOD IS NOT IMPLEMENTED! It needs to be overridden in a superclass
+     *
+     * @return a {@link MBDocument} that keeps track of the current session state (e.g. A MBDocument that stores the current session state)
+     */
+    @Override
+    public MBDocument getDocument() {
+        return null;
+    }
 
-  @Override
-  public boolean isLoggedOn()
-  {
-    return false;
-  }
+    /**
+     * Should logOff the current session (e.g. clear the current session state from the session document)
+     * <p/>
+     * IMPORTANT: THIS METHOD IS NOT IMPLEMENTED! It needs to be overridden in a superclass
+     */
+    @Override
+    public void logOff() {
+    }
+
+    @Override
+    public boolean isLoggedOn() {
+        return false;
+    }
 
 }

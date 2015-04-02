@@ -19,35 +19,31 @@ import com.itude.mobile.mobbl.core.MBException;
 
 /**
  * {@link MBException} class used when a data type is unknown
- *
  */
-public class MBUnknownDataTypeException extends MBException
-{
+public class MBUnknownDataTypeException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 8582328344519066950L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 8582328344519066950L;
 
-  /**
-   * Constructor for MBUnknownDataTypeException.
-   * 
-   * @param msg exception message
-   */
-  public MBUnknownDataTypeException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBUnknownDataTypeException.
+     *
+     * @param msg exception message
+     */
+    public MBUnknownDataTypeException(String msg) {
+        super(msg);
+    }
 
-  /**
-   * Constructor for MBUnknownDataTypeException.
-   * 
-   * @param msg exception message
-   * @param throwable throwable {@link Throwable}
-   */
-  public MBUnknownDataTypeException(String msg, Throwable throwable)
-  {
-    super(msg, throwable);
-  }
+    /**
+     * Constructor for MBUnknownDataTypeException.
+     *
+     * @param msg       exception message
+     * @param throwable throwable {@link Throwable}
+     */
+    public MBUnknownDataTypeException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 
 }

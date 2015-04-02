@@ -15,74 +15,63 @@
  */
 package com.itude.mobile.mobbl.core.view;
 
+import com.itude.mobile.mobbl.core.configuration.mvc.MBBundleDefinition;
+import com.itude.mobile.mobbl.core.model.MBDocument;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.itude.mobile.mobbl.core.configuration.mvc.MBBundleDefinition;
-import com.itude.mobile.mobbl.core.model.MBDocument;
+public class MBBundle extends MBComponent {
+    private String _languageCode;
+    private List<String> _urls;
+    private final Map<String, String> _texts;
 
-public class MBBundle extends MBComponent
-{
-  private String                    _languageCode;
-  private List<String>              _urls;
-  private final Map<String, String> _texts;
+    public MBBundle(MBBundleDefinition definition, MBDocument document, MBComponentContainer parent) {
+        super(definition, document, parent);
 
-  public MBBundle(MBBundleDefinition definition, MBDocument document, MBComponentContainer parent)
-  {
-    super(definition, document, parent);
+        _languageCode = definition.getLanguageCode();
+        _urls = new ArrayList<String>();
+        _texts = new HashMap<String, String>();
 
-    _languageCode = definition.getLanguageCode();
-    _urls = new ArrayList<String>();
-    _texts = new HashMap<String, String>();
+        addUrl(definition.getUrl());
+    }
 
-    addUrl(definition.getUrl());
-  }
+    public void addUrl(String url) {
+        getUrls().add(url);
+    }
 
-  public void addUrl(String url)
-  {
-    getUrls().add(url);
-  }
+    public String getText(String key) {
+        return getTexts().get(key);
+    }
 
-  public String getText(String key)
-  {
-    return getTexts().get(key);
-  }
+    public void putText(String key, String value) {
+        getTexts().put(key, value);
+    }
 
-  public void putText(String key, String value)
-  {
-    getTexts().put(key, value);
-  }
+    public void clear() {
+        getTexts().clear();
+    }
 
-  public void clear()
-  {
-    getTexts().clear();
-  }
+    public String getLanguageCode() {
+        return _languageCode;
+    }
 
-  public String getLanguageCode()
-  {
-    return _languageCode;
-  }
+    public void setLanguageCode(String languageCode) {
+        _languageCode = languageCode;
+    }
 
-  public void setLanguageCode(String languageCode)
-  {
-    _languageCode = languageCode;
-  }
+    public List<String> getUrls() {
+        return _urls;
+    }
 
-  public List<String> getUrls()
-  {
-    return _urls;
-  }
+    public void setUrls(List<String> urls) {
+        _urls = urls;
+    }
 
-  public void setUrls(List<String> urls)
-  {
-    _urls = urls;
-  }
-
-  public Map<String, String> getTexts()
-  {
-    return _texts;
-  }
+    public Map<String, String> getTexts() {
+        return _texts;
+    }
 
 }

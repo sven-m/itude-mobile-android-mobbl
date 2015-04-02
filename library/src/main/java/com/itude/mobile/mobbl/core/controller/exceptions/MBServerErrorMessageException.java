@@ -19,24 +19,21 @@ import com.itude.mobile.mobbl.core.MBException;
 
 /**
  * {@link MBException} class used when there is a general server error
- *
  */
-public class MBServerErrorMessageException extends MBException
-{
+public class MBServerErrorMessageException extends MBException {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = -6064049933371919390L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -6064049933371919390L;
 
-  /**
-   * Constructor for MBServerErrorMessageException.
-   * 
-   * @param msg exception message
-   */
-  public MBServerErrorMessageException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBServerErrorMessageException.
+     *
+     * @param msg exception message
+     */
+    public MBServerErrorMessageException(String msg) {
+        super(msg);
+    }
 
 }

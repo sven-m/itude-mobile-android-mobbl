@@ -18,21 +18,18 @@ package com.itude.mobile.mobbl.core.services.exceptions;
 import com.itude.mobile.mobbl.core.MBException;
 
 /**
- * {@link MBException} class used when there is no datamanager is present 
- *
+ * {@link MBException} class used when there is no datamanager is present
  */
-public class MBNoDataManagerException extends MBException
-{
-  private static final long serialVersionUID = 4055723563060420454L;
+public class MBNoDataManagerException extends MBException {
+    private static final long serialVersionUID = 4055723563060420454L;
 
-  /**
-   * Constructor for MBNoDataManagerException.
-   * 
-   * @param msg exception message
-   */
-  public MBNoDataManagerException(String msg)
-  {
-    super(msg);
-  }
+    /**
+     * Constructor for MBNoDataManagerException.
+     *
+     * @param msg exception message
+     */
+    public MBNoDataManagerException(String msg) {
+        super(msg);
+    }
 
 }

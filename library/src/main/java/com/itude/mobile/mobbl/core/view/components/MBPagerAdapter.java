@@ -15,77 +15,65 @@
  */
 package com.itude.mobile.mobbl.core.view.components;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
-public class MBPagerAdapter<T extends View> extends PagerAdapter
-{
-  private final List<T> views;
+import java.util.ArrayList;
+import java.util.List;
 
-  public MBPagerAdapter()
-  {
-    views = new ArrayList<T>();
-  }
+public class MBPagerAdapter<T extends View> extends PagerAdapter {
+    private final List<T> views;
 
-  public void addView(T v)
-  {
-    views.add(v);
-  }
+    public MBPagerAdapter() {
+        views = new ArrayList<T>();
+    }
 
-  public T getView(int index)
-  {
-    return views.get(index);
-  }
+    public void addView(T v) {
+        views.add(v);
+    }
 
-  @Override
-  public void destroyItem(View view, int arg1, Object object)
-  {
-    ((ViewPager) view).removeView((T) object);
-  }
+    public T getView(int index) {
+        return views.get(index);
+    }
 
-  @Override
-  public void finishUpdate(View view)
-  {
-  }
+    @Override
+    public void destroyItem(View view, int arg1, Object object) {
+        ((ViewPager) view).removeView((T) object);
+    }
 
-  @Override
-  public int getCount()
-  {
-    return views.size();
-  }
+    @Override
+    public void finishUpdate(View view) {
+    }
 
-  @Override
-  public Object instantiateItem(View view, int position)
-  {
-    View myView = views.get(position);
-    ((ViewPager) view).addView(myView);
-    return myView;
-  }
+    @Override
+    public int getCount() {
+        return views.size();
+    }
 
-  @Override
-  public boolean isViewFromObject(View view, Object object)
-  {
-    return view == ((T) object);
-  }
+    @Override
+    public Object instantiateItem(View view, int position) {
+        View myView = views.get(position);
+        ((ViewPager) view).addView(myView);
+        return myView;
+    }
 
-  @Override
-  public void restoreState(Parcelable arg0, ClassLoader arg1)
-  {
-  }
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return view == ((T) object);
+    }
 
-  @Override
-  public Parcelable saveState()
-  {
-    return null;
-  }
+    @Override
+    public void restoreState(Parcelable arg0, ClassLoader arg1) {
+    }
 
-  @Override
-  public void startUpdate(View view)
-  {
-  }
+    @Override
+    public Parcelable saveState() {
+        return null;
+    }
+
+    @Override
+    public void startUpdate(View view) {
+    }
 }

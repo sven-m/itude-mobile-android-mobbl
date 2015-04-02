@@ -18,20 +18,18 @@ package com.itude.mobile.mobbl.core.controller;
 /**
  * {@link MBOutcomeTask} class describing a follow up task
  */
-public class MBFollowUpActionTask extends MBOutcomeTask<Object>
-{
-  private final ResultContainer<MBOutcome> _outcome;
+public class MBFollowUpActionTask extends MBOutcomeTask<Object> {
+    private final ResultContainer<MBOutcome> _outcome;
 
-  public MBFollowUpActionTask(MBOutcomeTaskManager manager, ResultContainer<MBOutcome> outcome)
-  {
-    super(manager);
-    _outcome = outcome;
-  }
+    public MBFollowUpActionTask(MBOutcomeTaskManager manager, ResultContainer<MBOutcome> outcome) {
+        super(manager);
+        _outcome = outcome;
+    }
 
-  @Override
-  protected void execute()
-  {
-    if (_outcome.getResult() != null) MBApplicationController.getInstance().handleOutcome(_outcome.getResult());
-  }
+    @Override
+    protected void execute() {
+        if (_outcome.getResult() != null)
+            MBApplicationController.getInstance().handleOutcome(_outcome.getResult());
+    }
 
 }

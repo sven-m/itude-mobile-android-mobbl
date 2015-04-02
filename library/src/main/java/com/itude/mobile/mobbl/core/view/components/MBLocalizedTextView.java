@@ -21,41 +21,32 @@ import android.widget.TextView;
 
 import com.itude.mobile.mobbl.core.services.MBLocalizationService;
 
-public class MBLocalizedTextView extends TextView
-{
+public class MBLocalizedTextView extends TextView {
 
-  public MBLocalizedTextView(Context context)
-  {
-    super(context);
-  }
-
-  public MBLocalizedTextView(Context context, AttributeSet attrs)
-  {
-    super(context, attrs);
-  }
-
-  public MBLocalizedTextView(Context context, AttributeSet attrs, int defStyle)
-  {
-    super(context, attrs, defStyle);
-  }
-
-  @Override
-  public void setText(CharSequence text, BufferType type)
-  {
-    super.setText(getValue(text.toString()), type);
-  }
-
-  protected String getValue(String text)
-  {
-    if (isInEditMode())
-    {
-      // We're previewing the XML file. Therefore, there is no MOBBL configuration loaded: just show the key
-      return text;
+    public MBLocalizedTextView(Context context) {
+        super(context);
     }
-    else
-    {
-      return MBLocalizationService.getInstance().getTextForKey(text.toString());
+
+    public MBLocalizedTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
-  }
+
+    public MBLocalizedTextView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
+    @Override
+    public void setText(CharSequence text, BufferType type) {
+        super.setText(getValue(text.toString()), type);
+    }
+
+    protected String getValue(String text) {
+        if (isInEditMode()) {
+            // We're previewing the XML file. Therefore, there is no MOBBL configuration loaded: just show the key
+            return text;
+        } else {
+            return MBLocalizationService.getInstance().getTextForKey(text.toString());
+        }
+    }
 
 }

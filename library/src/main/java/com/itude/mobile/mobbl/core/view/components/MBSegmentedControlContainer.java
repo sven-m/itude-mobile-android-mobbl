@@ -59,7 +59,7 @@ public class MBSegmentedControlContainer extends RelativeLayout implements MBOnS
     public MBSegmentedControlContainer(Context context, AttributeSet attrs, int defStyle) {
         this(context);
     }
-    
+
 
     public MBSegmentedControlContainer(Context context, MBPanel segmentedControlPanel) {
         this(context);

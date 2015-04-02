@@ -17,29 +17,23 @@ package com.itude.mobile.mobbl.core.controller.util;
 
 /**
  * {@link MBLifecycleListener} class responsible for the base lifecycle
- *
  */
-public class MBBaseLifecycleListener implements MBLifecycleListener
-{
+public class MBBaseLifecycleListener implements MBLifecycleListener {
 
-  @Override
-  public void onCreate()
-  {
-  }
+    @Override
+    public void onCreate() {
+    }
 
-  @Override
-  public void onResume()
-  {
-  }
+    @Override
+    public void onResume() {
+    }
 
-  @Override
-  public void onPause()
-  {
-  }
+    @Override
+    public void onPause() {
+    }
 
-  @Override
-  public void onDestroy()
-  {
-  }
+    @Override
+    public void onDestroy() {
+    }
 
 }
