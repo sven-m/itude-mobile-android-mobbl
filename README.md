@@ -14,7 +14,7 @@ Documentation about how to get started can be [here](http://mobbl.org/android.ht
 For Api documentation, see the [Android API Reference](http://mobbl.org/apis/android/index.html).
 
 ## [Changelog](https://github.com/ItudeMobile/itude-mobile-android-mobbl/wiki/Changelog)
-Current version: 7.0.0
+Current version: 7.1.0
 
 ## Build
 ### Gradle
@@ -40,7 +40,7 @@ Then declare Android Util within your dependencies:
 ```groovy
 dependencies {
   ...
-  compile ('com.itude.mobile.android.mobbl:android-mobbl-lib:7.0.0@aar') {
+  compile ('com.itude.mobile.android.mobbl:android-mobbl-lib:7.1.0@aar') {
         transitive=true
 	}
 }
@@ -56,7 +56,7 @@ To use Android Util within your Maven build simply add
 <dependency>
 	<groupId>com.itude.mobile.android.mobbl</groupId>
 	<artifactId>android-mobbl-lib</artifactId>
-	<version>7.0.0</version>
+	<version>7.1.0</version>
 	<type>aar</type>
 </dependency>
 ```
