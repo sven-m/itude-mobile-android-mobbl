@@ -11,27 +11,26 @@ import java.util.Map;
 
 public class PageBinder extends BaseViewBinder {
     private final BuildState state;
-    private final Map<String, ViewBinder> childViewBinders;
+    private final MBBasicViewController controller;
+    private final Map<String, ViewBinder> childViewBinders = new HashMap<>();
 
-    public PageBinder(LayoutInflater inflater, MBBasicViewController controller) {
-        controller.getPage().rebuild();
+    public PageBinder(MBBasicViewController controller, ViewGroup rootView) {
 
         state = new BuildState();
         state.element = controller.getPage().getDocument();
         state.component = controller.getPage();
         state.mainViewBinder = this;
         state.context = controller.getActivity();
-        state.inflater = inflater;
+        state.inflater = LayoutInflater.from(state.context);
         state.document = controller.getPage().getDocument();
-        childViewBinders = new HashMap<String, ViewBinder>();
+        state.parent = rootView;
+
+        this.controller = controller;
     }
 
-    public ViewGroup bind(int initialView) {
-        ViewGroup result = (ViewGroup) state.inflater.inflate(initialView, null);
-        state.parent = result;
-
+    public void bind() {
+        controller.getPage().rebuild();
         bindView(state);
-        return result;
     }
 
     public void registerBinding(String componentName, ViewBinder viewBinder) {

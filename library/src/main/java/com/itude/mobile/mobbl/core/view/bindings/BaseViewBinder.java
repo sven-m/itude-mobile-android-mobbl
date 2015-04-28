@@ -20,11 +20,12 @@ public abstract class BaseViewBinder implements ViewBinder {
 
         // process children
         for (MBComponent child : state.component.getChildrenOfKind(MBComponent.class)) {
-            state.component = child;
+            BuildState newState = state.clone();
+            newState.component = child;
             Object element = child.getDocument().getValueForPath(child.getAbsoluteDataPath());
-            state.element = (MBElementContainer) (element instanceof MBElement ? element : null);
-            state.parent = (ViewGroup) (result instanceof ViewGroup ? result : state.parent);
-            state.mainViewBinder.bindView(state);
+            newState.element = (MBElementContainer) (element instanceof MBElement ? element : null);
+            newState.parent = (ViewGroup) (result instanceof ViewGroup ? result : state.parent);
+            newState.mainViewBinder.bindView(newState);
         }
 
         return result;
