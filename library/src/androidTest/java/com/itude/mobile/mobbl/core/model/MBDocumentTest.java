@@ -1,13 +1,17 @@
 package com.itude.mobile.mobbl.core.model;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBMvcConfigurationParser;
 import com.itude.mobile.mobbl.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -121,12 +125,19 @@ public class MBDocumentTest extends MBDocumentAbstractTest {
      */
     public void testParcel()
     {
+        // Obtain an empty parcel
         Parcel p = Parcel.obtain();
+        // Write 'booksdoc' to the parcel
         booksDoc.writeToParcel(p, 0);
+        // Check if the parcel is not null
         assertNotNull(p);
 
-        MBDocument doc = booksDoc.CREATOR.createFromParcel(p);
-        assertNotNull(doc);
+        // Create the document from the parce
+        MBDocument copyDoc = MBDocument.CREATOR.createFromParcel(p);
+
+        // The documents aren't the same. The function does not work.
+        assertNotNull(copyDoc);
+
     }
 
 
