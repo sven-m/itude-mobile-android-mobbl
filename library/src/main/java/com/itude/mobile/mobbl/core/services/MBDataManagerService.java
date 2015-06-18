@@ -68,6 +68,10 @@ public class MBDataManagerService {
         _registeredHandlers = new Hashtable<String, MBDataHandler>();
         _operationListeners = new ConcurrentHashMap<String, Set<OperationListener>>();
 
+        registerDataHandlers();
+    }
+
+    protected void registerDataHandlers() {
         registerDataHandler(new MBFileDataHandler(), DATA_HANDLER_FILE);
         registerDataHandler(new MBSystemDataHandler(), DATA_HANDLER_SYSTEM);
         registerDataHandler(new MBMemoryDataHandler(), DATA_HANDLER_MEMORY);
