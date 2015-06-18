@@ -136,7 +136,7 @@ public class MBDocumentTest extends MBDocumentAbstractTest {
             MBDocumentDefinition def = new MBDocumentDefinition();
             def.setName(documentName);
             MBDocument doc =  new MBDocument(def, this);
-            doc.createElement("testElement").setBodyText("test");
+            //doc.createElement("testElement").setBodyText("test");
             return doc;
         }
 
