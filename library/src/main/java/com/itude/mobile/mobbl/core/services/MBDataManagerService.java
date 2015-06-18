@@ -64,7 +64,7 @@ public class MBDataManagerService {
 
     private final ConcurrentHashMap<String, Set<OperationListener>> _operationListeners;
 
-    private MBDataManagerService() {
+    protected MBDataManagerService() {
         _registeredHandlers = new Hashtable<String, MBDataHandler>();
         _operationListeners = new ConcurrentHashMap<String, Set<OperationListener>>();
 
