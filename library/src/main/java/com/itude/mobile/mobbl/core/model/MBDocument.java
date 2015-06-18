@@ -44,26 +44,43 @@ import java.util.Map;
  * Once a definition is in place (in the application configuration file) an MBDocument can be created in code using the MBMetadataService.
  */
 public class MBDocument extends MBElementContainer {
+    private final MBDataManagerService _dataManagerService;
     private MBDocumentDefinition _definition;
     private Map<String, MBDocument> _sharedContext;
     private final Map<String, MBElement> _pathCache;
     private MBDocument _argumentsUsed;
 
+    @Deprecated
     public MBDocument() {
         super();
         _sharedContext = new HashMap<String, MBDocument>();
         _pathCache = new HashMap<String, MBElement>();
+        _dataManagerService = null;
     }
 
+    @Deprecated
     public MBDocument(MBDocumentDefinition documentDefinition) {
+        this();
         _definition = documentDefinition;
+
+    }
+
+    public MBDocument(MBDocumentDefinition documentDefinition, MBDataManagerService dataManagerService) {
         _sharedContext = new HashMap<String, MBDocument>();
         _pathCache = new HashMap<String, MBElement>();
+        _definition = documentDefinition;
+        _dataManagerService = dataManagerService;
+    }
+
+    public MBDataManagerService getDataManagerService() {
+        if(this._dataManagerService == null)
+            return MBDataManagerService.getInstance();
+        return _dataManagerService;
     }
 
     @Override
     public MBDocument clone() {
-        MBDocument newDoc = new MBDocument(_definition);
+        MBDocument newDoc = new MBDocument(_definition, getDataManagerService());
         copyChildrenInto(newDoc);
         if (_argumentsUsed != null) newDoc.setArgumentsUsed(_argumentsUsed.clone());
 
@@ -113,15 +130,15 @@ public class MBDocument extends MBElementContainer {
     }
 
     public void loadFreshCopyForDelegate(MBDocumentOperationDelegate delegate) {
-        MBDataManagerService.getInstance().loadFreshDocument(_definition.getName(), _argumentsUsed, delegate);
+        getDataManagerService().loadFreshDocument(_definition.getName(), _argumentsUsed, delegate);
     }
 
     public MBDocument loadFreshCopy() {
         MBDocument fresh;
         if (_argumentsUsed == null) {
-            fresh = MBDataManagerService.getInstance().loadDocument(_definition.getName(), _argumentsUsed);
+            fresh = getDataManagerService().loadDocument(_definition.getName(), _argumentsUsed);
         } else {
-            fresh = MBDataManagerService.getInstance().loadFreshDocument(_definition.getName(), _argumentsUsed);
+            fresh = getDataManagerService().loadFreshDocument(_definition.getName(), _argumentsUsed);
         }
         return fresh;
     }
@@ -133,9 +150,9 @@ public class MBDocument extends MBElementContainer {
         MBDocument fresh;
 
         if (_argumentsUsed == null) {
-            fresh = MBDataManagerService.getInstance().loadDocument(_definition.getName());
+            fresh = getDataManagerService().loadDocument(_definition.getName());
         } else {
-            fresh = MBDataManagerService.getInstance().loadFreshDocument(_definition.getName(), _argumentsUsed);
+            fresh = getDataManagerService().loadFreshDocument(_definition.getName(), _argumentsUsed);
         }
 
         setElements(fresh.getElements());
@@ -233,7 +250,7 @@ public class MBDocument extends MBElementContainer {
 
     private MBDocument(Parcel in) {
         super(in);
-
+        _dataManagerService = null;
         _sharedContext = new HashMap<String, MBDocument>();
         _pathCache = new HashMap<String, MBElement>();
 
