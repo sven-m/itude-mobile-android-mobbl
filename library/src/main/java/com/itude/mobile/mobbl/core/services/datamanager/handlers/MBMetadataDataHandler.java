@@ -44,9 +44,9 @@ public class MBMetadataDataHandler extends MBDataHandlerBase {
     }
 
     private MBDocument loadDialogs() {
-        MBDocumentDefinition docDef = MBMetadataService.getInstance().getDefinitionForDocumentName(DIALOGS_DOCUMENT);
+        MBMetadataService service = getMetaDataService();
+        MBDocumentDefinition docDef = getDialogsDefinition(service);
         MBDocument doc = new MBDocument(docDef, MBDataManagerService.getInstance());
-        MBMetadataService service = MBMetadataService.getInstance();
         for (MBDialogDefinition def : service.getDialogs())
             if (def.isShowAsDocument() && def.isPreConditionValid()) {
                 MBElement element = new MBElement(docDef.getElementWithPath("/Dialog"));
@@ -59,5 +59,13 @@ public class MBMetadataDataHandler extends MBDataHandlerBase {
             }
         return doc;
 
+    }
+
+    private MBDocumentDefinition getDialogsDefinition(MBMetadataService metadataService) {
+        return metadataService.getDefinitionForDocumentName(DIALOGS_DOCUMENT);
+    }
+
+    private MBMetadataService getMetaDataService() {
+        return MBMetadataService.getInstance();
     }
 }
