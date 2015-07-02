@@ -19,11 +19,9 @@ import com.itude.mobile.mobbl.core.configuration.mvc.MBDialogDefinition;
 import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
 import com.itude.mobile.mobbl.core.model.MBElement;
+import com.itude.mobile.mobbl.core.services.MBDataManagerService;
 import com.itude.mobile.mobbl.core.services.MBMetadataService;
 import com.itude.mobile.mobbl.core.services.datamanager.MBDataHandlerBase;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Retrieves and stores MBDocument instances as Meta data
@@ -31,26 +29,23 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MBMetadataDataHandler extends MBDataHandlerBase {
 
     public static final String DIALOGS_DOCUMENT = "MBDialogs";
-    private final Map<String, MBDocument> _cache = new ConcurrentHashMap<String, MBDocument>();
 
     @Override
     public MBDocument loadDocument(String documentName) {
         // don't cache dialogs
         if (documentName.equals(DIALOGS_DOCUMENT)) return loadDialogs();
-        if (!_cache.containsKey(documentName))
-            _cache.put(documentName, loadFreshDocument(documentName));
-        return _cache.get(documentName);
+        throw new IllegalArgumentException("documentName should be " + DIALOGS_DOCUMENT);
     }
 
     @Override
     public MBDocument loadFreshDocument(String documentName) {
         if (documentName.equals(DIALOGS_DOCUMENT)) return loadDialogs();
-        else return null;
+        throw new IllegalArgumentException("documentName should be " + DIALOGS_DOCUMENT);
     }
 
     private MBDocument loadDialogs() {
         MBDocumentDefinition docDef = MBMetadataService.getInstance().getDefinitionForDocumentName(DIALOGS_DOCUMENT);
-        MBDocument doc = new MBDocument(docDef);
+        MBDocument doc = new MBDocument(docDef, MBDataManagerService.getInstance());
         MBMetadataService service = MBMetadataService.getInstance();
         for (MBDialogDefinition def : service.getDialogs())
             if (def.isShowAsDocument() && def.isPreConditionValid()) {
