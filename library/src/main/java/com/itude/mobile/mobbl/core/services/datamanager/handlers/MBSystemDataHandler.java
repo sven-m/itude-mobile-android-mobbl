@@ -60,7 +60,7 @@ public class MBSystemDataHandler extends MBDataHandlerBase {
     }
 
     public void setSystemProperty(String name, String value, MBDocument doc) {
-        MBElement prop = doc.createElementWithName("/System[0]/Property");
+        MBElement prop = doc.createElement("/System[0]/Property");
         prop.setAttributeValue(name, "name");
         prop.setAttributeValue(value, "value");
     }
