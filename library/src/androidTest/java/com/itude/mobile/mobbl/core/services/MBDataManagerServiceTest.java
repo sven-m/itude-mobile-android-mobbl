@@ -4,13 +4,7 @@ import android.test.ApplicationTestCase;
 
 import com.itude.mobile.android.util.FileUtil;
 import com.itude.mobile.mobbl.core.MBApplicationCore;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
-import com.itude.mobile.mobbl.core.configuration.mvc.MBElementDefinition;
 import com.itude.mobile.mobbl.core.model.MBDocument;
-import com.itude.mobile.mobbl.core.model.MBElement;
-import com.itude.mobile.mobbl.core.services.datamanager.MBDataHandler;
-
-import java.util.List;
 
 /**
  * Created by Kevin on 6/18/15.
@@ -32,20 +26,33 @@ public class MBDataManagerServiceTest extends ApplicationTestCase<MBApplicationC
         dataManagerService = MBDataManagerService.getInstance();
     }
 
+    /**
+     * Test getting the instance.
+     */
     public void testGetInstance() {
         assertEquals(MBDataManagerService.getInstance(), dataManagerService);
     }
 
+    /**
+     * Test creating a new document
+     */
     public void testCreateDocument() {
         MBDocument doc = dataManagerService.createDocument("TestDocument1");
         assertNotNull(doc);
+        assertEquals(doc.getName(), "TestDocument1");
     }
 
+    /**
+     * Test loading a document.
+     */
     public void testLoadDocument() {
         MBDocument doc = dataManagerService.loadDocument("Books");
         assertEquals(doc.getName(), "Books");
     }
 
+    /**
+     * Test loading a fresh copy of a document.
+     */
     public void testLoadFreshDocument() {
         MBDocument doc = dataManagerService.loadDocument("Books");
         MBDocument cloneDoc = dataManagerService.loadFreshDocument("Books");
