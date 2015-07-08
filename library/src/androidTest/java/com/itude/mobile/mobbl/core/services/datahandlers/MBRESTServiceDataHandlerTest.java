@@ -33,7 +33,7 @@ public class MBRESTServiceDataHandlerTest extends ApplicationTestCase<MBApplicat
     createApplication();
     DataUtil.getInstance().setContext(getContext());
 
-    MBMetadataService.setConfigName("config/config.xml");
+    MBMetadataService.setConfigName("config.xml");
     MBMetadataService.setEndpointsName("config/endpoints.xml");
   }
 

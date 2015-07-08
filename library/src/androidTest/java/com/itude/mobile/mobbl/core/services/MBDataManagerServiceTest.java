@@ -21,7 +21,7 @@ public class MBDataManagerServiceTest extends ApplicationTestCase<MBApplicationC
     public void setUp() throws Exception{
         super.setUp();
         createApplication();
-        MBMetadataService.setConfigName("config/config.xml");
+        MBMetadataService.setConfigName("config.xml");
         FileUtil.getInstance().setContext(getContext());
         dataManagerService = MBDataManagerService.getInstance();
     }

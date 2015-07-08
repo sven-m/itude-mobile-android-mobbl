@@ -26,7 +26,7 @@ public class MBSystemDataHandlerTest extends ApplicationTestCase<MBApplicationCo
         super.setUp();
 
         createApplication();
-        MBMetadataService.setConfigName("config/config.xml");
+        MBMetadataService.setConfigName("config.xml");
         FileUtil.getInstance().setContext(getContext());
 
         handler = new MBSystemDataHandler();

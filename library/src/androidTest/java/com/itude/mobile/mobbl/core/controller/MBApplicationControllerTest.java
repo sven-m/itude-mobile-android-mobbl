@@ -1,13 +1,13 @@
 package com.itude.mobile.mobbl.core.controller;
 import android.test.ApplicationTestCase;
 
-public class MBApplicationControllerTest extends ApplicationTestCase<MBApplicationController> {
+public class MBApplicationControllerTest extends ApplicationTestCase<MockApplicationController> {
 
     private MBApplicationController app;
 
     public MBApplicationControllerTest()
     {
-        super(MBApplicationController.class);
+        super(MockApplicationController.class);
     }
 
     /**
@@ -16,7 +16,8 @@ public class MBApplicationControllerTest extends ApplicationTestCase<MBApplicati
      */
     @Override
     public void setUp() throws Exception {
-        app = MBApplicationController.getInstance();
+        createApplication();
+        app = this.getApplication();
     }
 
     /**
@@ -25,15 +26,21 @@ public class MBApplicationControllerTest extends ApplicationTestCase<MBApplicati
      */
     public void testGetInstance() throws Exception {
         assertNotNull(app);
+        assertEquals(app, MBApplicationController.getInstance());
     }
 
     /**
-     * Test if getViewManager returns the correct instance
-     * @throws Exception
+     * Test if getViewManager returns a ViewManager
      */
-    public void testGetViewManager() throws Exception {
+    public void testGetViewManager() {
         MBViewManager viewManager = this.app.getViewManager();
-        assertEquals(viewManager, MBViewManager.getInstance());
+        try {
+            String test = ((MockViewManager) viewManager).validate();
+            assertEquals(test, "Test");
+        }
+        catch(Exception e) {
+            fail();
+        }
     }
 
     /**
@@ -53,5 +60,7 @@ public class MBApplicationControllerTest extends ApplicationTestCase<MBApplicati
         boolean result = app.shouldHandleOutcome(new MBOutcome());
         assertTrue(result);
     }
+
+
 }
 
