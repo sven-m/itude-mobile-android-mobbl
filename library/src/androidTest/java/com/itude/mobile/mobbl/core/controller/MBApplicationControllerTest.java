@@ -1,9 +1,15 @@
 package com.itude.mobile.mobbl.core.controller;
 import android.test.ApplicationTestCase;
 
+import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
+import com.itude.mobile.mobbl.core.model.MBDocument;
+import com.itude.mobile.mobbl.core.services.MBDataManagerService;
+import com.itude.mobile.mobbl.core.view.MBPage;
+
 public class MBApplicationControllerTest extends ApplicationTestCase<MockApplicationController> {
 
-    private MBApplicationController app;
+    private MockApplicationController app;
 
     public MBApplicationControllerTest()
     {
@@ -18,6 +24,14 @@ public class MBApplicationControllerTest extends ApplicationTestCase<MockApplica
     public void setUp() throws Exception {
         createApplication();
         app = this.getApplication();
+    }
+
+    /**
+     * Test that checks if the application starts correctly.
+     */
+    public void testStartApplication() {
+        app.startController();
+        assertTrue(app.outcomeHandlerStarted && app.initialOutcomesFired);
     }
 
     /**
@@ -59,6 +73,15 @@ public class MBApplicationControllerTest extends ApplicationTestCase<MockApplica
     {
         boolean result = app.shouldHandleOutcome(new MBOutcome());
         assertTrue(result);
+    }
+
+    public void testPageBuildResult() {
+        MBOutcome testOutcome = new MBOutcome();
+        MBPage testPage = new MBPage(new MBPageDefinition(),new MBDocument(new MBDocumentDefinition(), MBDataManagerService.getInstance()),"");
+        MBApplicationController.PageBuildResult result = new MBApplicationController.PageBuildResult(testOutcome,testPage,false);
+        assertEquals(result.outcome, testOutcome);
+        assertEquals(result.page, testPage);
+        assertEquals(result.backstackEnabled, false);
     }
 
 
