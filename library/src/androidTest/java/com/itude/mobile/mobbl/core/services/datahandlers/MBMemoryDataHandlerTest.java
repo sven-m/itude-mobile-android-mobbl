@@ -41,7 +41,7 @@ public class MBMemoryDataHandlerTest extends ApplicationTestCase<MBApplicationCo
     createApplication();
     DataUtil.getInstance().setContext(getContext());
 
-    MBMetadataService.setConfigName("config/config.xml");
+    MBMetadataService.setConfigName("config.xml");
   }
 
   public void testLoadDocumentString()

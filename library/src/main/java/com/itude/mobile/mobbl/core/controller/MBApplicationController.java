@@ -63,13 +63,13 @@ import java.util.List;
  */
 public class MBApplicationController extends Application implements MBOutcomeListenerProtocol {
     private MBApplicationFactory _applicationFactory;
-    private MBViewManager _viewManager;
+    protected MBViewManager _viewManager;
     private boolean _suppressPageSelection;
     private boolean _backStackEnabled;
-    private MBOutcomeHandler _outcomeHandler;
+    protected MBOutcomeHandler _outcomeHandler;
     private boolean _shuttingDown = false;
 
-    private static MBApplicationController _instance = null;
+    protected static MBApplicationController _instance = null;
 
     private ApplicationState _currentApplicationState = ApplicationState.NOTSTARTED;
 
@@ -103,6 +103,8 @@ public class MBApplicationController extends Application implements MBOutcomeLis
     ////////////////////////////////////////////////
 
     public MBViewManager getViewManager() {
+        if(_viewManager == null)
+            _viewManager = MBViewManager.getInstance();
         return _viewManager;
     }
 
@@ -123,10 +125,7 @@ public class MBApplicationController extends Application implements MBOutcomeLis
 
         _applicationFactory = applicationFactory;
 
-        // FIXME: there must be a better way of getting the root Activity
-        _viewManager = MBViewManager.getInstance();
-
-        _viewManager.prepareForApplicationStart();
+        getViewManager().prepareForApplicationStart();
         MBImageUtil.loadImageCache(getBaseContext().getCacheDir());
 
         fireInitialOutcomes();

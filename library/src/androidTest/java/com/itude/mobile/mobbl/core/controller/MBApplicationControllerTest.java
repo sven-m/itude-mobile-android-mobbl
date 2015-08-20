@@ -1,13 +1,19 @@
 package com.itude.mobile.mobbl.core.controller;
 import android.test.ApplicationTestCase;
 
-public class MBApplicationControllerTest extends ApplicationTestCase<MBApplicationController> {
+import com.itude.mobile.mobbl.core.configuration.mvc.MBDocumentDefinition;
+import com.itude.mobile.mobbl.core.configuration.mvc.MBPageDefinition;
+import com.itude.mobile.mobbl.core.model.MBDocument;
+import com.itude.mobile.mobbl.core.services.MBDataManagerService;
+import com.itude.mobile.mobbl.core.view.MBPage;
 
-    private MBApplicationController app;
+public class MBApplicationControllerTest extends ApplicationTestCase<MockApplicationController> {
+
+    private MockApplicationController app;
 
     public MBApplicationControllerTest()
     {
-        super(MBApplicationController.class);
+        super(MockApplicationController.class);
     }
 
     /**
@@ -16,7 +22,16 @@ public class MBApplicationControllerTest extends ApplicationTestCase<MBApplicati
      */
     @Override
     public void setUp() throws Exception {
-        app = MBApplicationController.getInstance();
+        createApplication();
+        app = this.getApplication();
+    }
+
+    /**
+     * Test that checks if the application starts correctly.
+     */
+    public void testStartApplication() {
+        app.startController();
+        assertTrue(app.outcomeHandlerStarted && app.initialOutcomesFired);
     }
 
     /**
@@ -25,15 +40,21 @@ public class MBApplicationControllerTest extends ApplicationTestCase<MBApplicati
      */
     public void testGetInstance() throws Exception {
         assertNotNull(app);
+        assertEquals(app, MBApplicationController.getInstance());
     }
 
     /**
-     * Test if getViewManager returns the correct instance
-     * @throws Exception
+     * Test if getViewManager returns a ViewManager
      */
-    public void testGetViewManager() throws Exception {
+    public void testGetViewManager() {
         MBViewManager viewManager = this.app.getViewManager();
-        assertEquals(viewManager, MBViewManager.getInstance());
+        try {
+            String test = ((MockViewManager) viewManager).validate();
+            assertEquals(test, "Test");
+        }
+        catch(Exception e) {
+            fail();
+        }
     }
 
     /**
@@ -53,5 +74,16 @@ public class MBApplicationControllerTest extends ApplicationTestCase<MBApplicati
         boolean result = app.shouldHandleOutcome(new MBOutcome());
         assertTrue(result);
     }
+
+    public void testPageBuildResult() {
+        MBOutcome testOutcome = new MBOutcome();
+        MBPage testPage = new MBPage(new MBPageDefinition(),new MBDocument(new MBDocumentDefinition(), MBDataManagerService.getInstance()),"");
+        MBApplicationController.PageBuildResult result = new MBApplicationController.PageBuildResult(testOutcome,testPage,false);
+        assertEquals(result.outcome, testOutcome);
+        assertEquals(result.page, testPage);
+        assertEquals(result.backstackEnabled, false);
+    }
+
+
 }
 

@@ -89,7 +89,7 @@ public class MBDataManagerService {
 
     public MBDocument createDocument(String documentName) {
         MBDocumentDefinition def = MBMetadataService.getInstance().getDefinitionForDocumentName(documentName);
-        return new MBDocument(def);
+        return new MBDocument(def, MBDataManagerService.getInstance());
     }
 
     private MBDocumentOperation getLoaderForDocumentName(String documentName, MBDocument arguments) {
